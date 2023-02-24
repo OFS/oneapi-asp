@@ -1,0 +1,6 @@
+[submodule "common/source/extra/intel-fpga-bbb"]
+	path = common/source/extra/intel-fpga-bbb
+	url = https://github.com/OPAE/intel-fpga-bbb.git
+[submodule "common/source/extra/intel-fpga-bbb"]
+	path = common/source/extra/intel-fpga-bbb
+	url = https://github.com/OPAE/intel-fpga-bbb.git
