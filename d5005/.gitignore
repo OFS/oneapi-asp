@@ -1,0 +1,54 @@
+# Temp files
+*~
+*#
+
+# Program Temp files
+*.pyc
+*.swp
+
+# Klocwork files
+*.kwlp
+*.kwps
+
+# Build directory
+/build
+
+# MMD compiler output
+linux64/lib/
+linux64/include
+linux64/libexec/diagnose
+linux64/libexec/program
+
+# Generated BSP file
+opencl-bsp.tar.gz
+
+# Generated default aocx files
+bringup/aocxs/
+
+# Hardware files that are copied from IOFS build
+hardware/*/afu_opencl_kernel.qsf
+hardware/*/bsp_dir_filelist.txt
+hardware/*/build/afu_flat.qsf
+hardware/*/build/build_env_db.txt
+hardware/*/build/config_env.tcl
+hardware/*/build/d5005.out.sdc
+hardware/*/build/d5005.qdb
+hardware/*/build/d5005.qpf
+hardware/*/build/d5005.qsf
+hardware/*/build/d5005_assignment_defaults.qdf
+hardware/*/build/fme*.txt
+hardware/*/build/fme*.mif
+hardware/*/build/iofs_pr_afu_sources.tcl
+hardware/*/build/ip/BBB_cci_mpf/
+hardware/*/build/ip/BBB_mpf_vtp/
+hardware/*/build/ipss/
+hardware/*/build/ofs_partial_reconfig/
+hardware/*/build/output_files/
+hardware/*/build/platform/
+hardware/*/build/quartus.ini
+hardware/*/build/src/
+hardware/*/build/syn/
+hardware/*/build/tools/
+hardware/*/build/write_sdc.tcl
+hardware/*/d5005.qpf
+hardware/**/ip_lib/

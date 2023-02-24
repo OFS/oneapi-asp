@@ -1,0 +1,40 @@
+#! /bin/bash
+
+# Copyright 2020 Intel Corporation.
+#
+# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
+# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+###############################################################################
+# Scripts initialized OFS card with default aocx that ships with BSP. This
+# allows other OpenCL programs to access BSP functionality before loading
+# application specific aocx.
+###############################################################################
+
+SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
+BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/../..")"
+
+device_name="$1"
+board_variant="$2"
+
+aocx_file="$BSP_ROOT/bringup/aocxs/$board_variant.aocx"
+if [ ! -f "$aocx_file" ]; then
+  echo "Error: cannot find '$aocx_file' to initialize $board_variant"
+  exit 1
+fi
+
+"$BSP_ROOT/linux64/libexec/setup_permissions.sh"
+
+"$BSP_ROOT/linux64/libexec/program" "$device_name" "unused_param" "$aocx_file"
+return_val=$?
+exit $return_val

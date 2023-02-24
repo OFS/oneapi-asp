@@ -1,0 +1,20 @@
+{
+   "version": 1,
+   "afu-image": {
+      "power": 0,
+      "clock-frequency-high": "auto",
+      "clock-frequency-low": "auto",
+      "afu-top-interface":
+         {
+            "class": "ofs_plat_afu"
+         },
+      "accelerator-clusters":
+         [
+            {
+               "name": "ofs_d5005",
+               "total-contexts": 1,
+               "accelerator-type-uuid": "63b3779b-8bdd-4f03-9ceb-0301181d6aef"
+            }
+         ]
+   }
+}

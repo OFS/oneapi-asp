@@ -1,0 +1,62 @@
+# Copyright 2020 Intel Corporation.
+#
+# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
+# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+include(CMakePrintHelpers)
+project(intel_opae_mmd)
+
+enable_language(C ASM)
+
+set(ASM_OPTIONS "-x assembler-with-cpp")
+if(${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
+  set(ASM_OPTIONS "${ASM_OPTIONS} -no-integrated-as")
+endif()
+
+set(CMAKE_ASM_FLAGS "${CFLAGS} ${ASM_OPTIONS}")
+
+set(MMD_SRC
+   mmd.cpp
+   mmd_device.cpp
+   fpgaconf.c
+   kernel_interrupt.cpp
+   mmd_dma.cpp
+   zlib_inflate.c
+)
+
+add_library(intel_opae_mmd SHARED ${MMD_SRC})
+
+add_library(libmpf STATIC IMPORTED)
+set_property(TARGET libmpf PROPERTY IMPORTED_LOCATION ${CMAKE_INSTALL_PREFIX}/lib/libMPF.so)
+
+#cmake_print_variables(CMAKE_CURRENT_SOURCE_DIR)
+
+#target_include_directories(intel_opae_mmd ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(intel_opae_mmd
+   libmpf
+   ${LIBOPAE_C_OR_ASE}
+   pkg_editor.a
+   ${libaocelf_LIBRARIES}
+   ${libnuma_LIBRARIES}
+   ${libMPF_LIBRARIES}
+   -lpthread
+   -lz
+   -luuid
+   -lstdc++
+)
+
+install(TARGETS intel_opae_mmd
+   LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+   COMPONENT intel_opae_mmd
+)

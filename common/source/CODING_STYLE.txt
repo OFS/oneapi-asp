@@ -1,0 +1,27 @@
+# Coding style
+
+The coding style for MMD C and C++ code is based on LLVM coding style in order
+to support consistency with other projects in the oneAPI software stack. The
+style is documented at LLVM website: https://llvm.org/docs/CodingStandards.html
+however, some requirements may by LLVM specific. For MMD purposes the most
+important thing is to conform to the conventions that are enforced by
+clang-format.
+
+Code should be formatted using clang-format with included style file that
+is based on LLVM style. Code that is committed to repository should not change
+when clang-format is applied. In the event that changes to LLVM coding
+convention result in code churn the .clang-format file may be modified.
+
+For cases where clang-format produces unacceptable results directives should
+be added to instruct clang-format to skip these blocks of code. The 
+directives are:
+
+// clang-format off
+code to be skipped
+// clang-format on
+
+Code that is not formatted by clang-format should be minimized.
+
+To apply clang-format on files that you edit run the command
+
+clang-format -i <filename>

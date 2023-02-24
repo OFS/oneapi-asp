@@ -1,0 +1,35 @@
+# Copyright 2020 Intel Corporation.
+#
+# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
+# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+set_global_assignment -name SOURCE_TCL_SCRIPT_FILE bsp_design_files.tcl
+
+#increase placement and routing effort (at the expense of extra time)
+set_global_assignment -name PLACEMENT_EFFORT_MULTIPLIER 4.0
+set_global_assignment -name FINAL_PLACEMENT_OPTIMIZATION ALWAYS
+set_global_assignment -name ROUTER_EFFORT_MULTIPLIER 4.0
+
+
+#The following lines should be included when compiling with SignalTap.
+#  Rename the .stp file as appropriate.
+#set_global_assignment -name VERILOG_MACRO INCLUDE_REMOTE_STP
+#set_global_assignment -name ENABLE_SIGNALTAP ON
+#set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
+#set_global_assignment -name SIGNALTAP_FILE stp1.stp
+
+#force duplication of local reset signals
+set_instance_assignment -name MAX_FANOUT 50 -to green_bs|pim_green_bs|*bsp_logic_inst|dma_controller_inst|*rst_local
+set_instance_assignment -name MAX_FANOUT 50 -to green_bs|pim_green_bs|*bsp_logic_inst|bsp_host_mem_if_mux_inst|*rst_local
+
+set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2012
