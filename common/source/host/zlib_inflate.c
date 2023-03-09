@@ -76,6 +76,8 @@ int inf(void *in_data, size_t in_size, void **out_data, size_t *out_size) {
   strm.opaque = Z_NULL;
   strm.avail_in = 0;
   strm.next_in = Z_NULL;
+  strm.total_in = 0;
+  strm.total_out = 0;
   // notes from zlib.h
   // The default value is 15 if inflateInit is used
   // Add 32 to windowBits to enable zlib and gzip decoding with automatic header

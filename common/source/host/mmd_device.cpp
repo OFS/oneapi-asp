@@ -173,10 +173,18 @@ Device::Device(uint64_t obj_id)
   }
 
   for (i = 0 ; i < num_matches ; ++i) {
-    fpgaGetProperties(tokens[i], &props);
+    res = fpgaGetProperties(tokens[i], &props);
+    if (res != FPGA_OK) {
+        throw std::runtime_error(std::string("Error calling API fpgaGetProperties() : ") +
+                                 std::string(fpgaErrStr(res)));
+    }
 
     uint64_t oid = 0;
-    fpgaPropertiesGetObjectID(props, &oid);
+    res = fpgaPropertiesGetObjectID(props, &oid);
+    if (res != FPGA_OK) {
+        throw std::runtime_error(std::string("Error calling API fpgaPropertiesGetObjectID() : ") +
+                                 std::string(fpgaErrStr(res)));
+    }
 
     if (oid == obj_id) {
       // We've found our Port..
@@ -202,8 +210,8 @@ Device::Device(uint64_t obj_id)
   }
 
   if (!port_token || !fme_token) {
-      throw std::runtime_error(std::string("Couldn't find tokens: ") +
-                               std::string(fpgaErrStr(res)));
+      printf("port token : %p \n fme token : %p \n", port_token, fme_token);
+      throw std::runtime_error(std::string("Couldn't find tokens\n "));
   }
 
   for(int count = 0; count <= 1; count++) {
@@ -731,6 +739,8 @@ int Device::program_bitstream(uint8_t *data, size_t data_size) {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Connecting MPF after program bitstream \n");
   }
+
+  mpf_handle = nullptr;
   mpfConnect(mmio_handle, 0, mpf_mmio_offset, &mpf_handle, 0);
 
   if (kernel_interrupt_thread) {
@@ -1134,11 +1144,7 @@ int Device::write_mmio(const void *host_addr, size_t mmio_addr,
     size -= chunk_size;
   }
 
-  if (res == FPGA_OK) {
-    return 0;
-  } else {
-    return -1;
-  }
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -102,4 +102,8 @@ package dc_bsp_pkg;
     // DFH end-of-list flag - '0' means this is the end of the DFH list
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
     
+    //USM clock-crossing bridge response FIFO depth (controls the number of
+    // outstanding read requests to the host) (default was 256, but that was too low)
+    parameter USM_CCB_RESPONSE_FIFO_DEPTH = 512;
+    
 endpackage : dc_bsp_pkg

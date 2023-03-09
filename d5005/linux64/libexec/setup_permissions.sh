@@ -125,4 +125,15 @@ set_memlock_limits
 set_dev_permission
 set_hugepages
 
+################################################################################
+# Set aocl initialize permissions
+#
+# To run aocl initialize, read and write permissions are needed for Others class
+################################################################################
+set_devuio_permissions()
+{
+  echo "Setting access permisions of /dev/uio to 666"
+  sudo chmod 666 /dev/uio*
+}
+
 echo "Finished setup_permissions.sh script. All configuration settings are persistent."

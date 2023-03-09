@@ -153,18 +153,32 @@ int scan_devices(const char *device_name) {
 
     // found a working supported device
     o_list_stream << "\n";
-    aocl_mmd_get_info(handle, AOCL_MMD_BOARD_NAME, sizeof(board_name),
+    try {
+      aocl_mmd_get_info(handle, AOCL_MMD_BOARD_NAME, sizeof(board_name),
                       board_name, NULL);
+    } catch(...) {
+      return -1;
+    }
+
     o_list_stream << std::left << std::setw(20) << dev_name << std::left
                   << std::setw(18) << "Passed   " << board_name << "\n";
 
-    aocl_mmd_get_info(handle, AOCL_MMD_PCIE_INFO, sizeof(pcie_info), pcie_info,
+    try {
+      aocl_mmd_get_info(handle, AOCL_MMD_PCIE_INFO, sizeof(pcie_info), pcie_info,
                       NULL);
+    } catch(...) {
+      return -1;
+    }
+
     o_list_stream << std::left << std::setw(38) << " "
                   << "PCIe " << pcie_info << "\n";
 
-    aocl_mmd_get_info(handle, AOCL_MMD_TEMPERATURE, sizeof(float), &temperature,
+    try {
+      aocl_mmd_get_info(handle, AOCL_MMD_TEMPERATURE, sizeof(float), &temperature,
                       NULL);
+    } catch(...) {
+      return -1;
+    }
 
     // There is a bug with Darby Creek where temperature is reported as 0.
     // If this happens skip printing temperature
@@ -264,7 +278,7 @@ int main(int argc, char *argv[]) {
   int maxbytes = DEFAULT_MAXNUMBYTES;
   if (argc >= 3) {
     maxbytes = atoi(argv[2]);
-    if (maxbytes < 0 || maxbytes > std::numeric_limits<int>::max())
+    if ((atol(argv[2]) < std::numeric_limits<int>::min()) || (atol(argv[2]) > std::numeric_limits<int>::max()))
       maxbytes = DEFAULT_MAXNUMBYTES;
   }
 

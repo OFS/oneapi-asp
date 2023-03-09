@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "aocl_mmd.h"
 #include "mmd.h"
@@ -40,6 +41,11 @@ unsigned char *acl_loadFileIntoMemory(const char *in_file,
 
   // get file size
   fseek(f, 0, SEEK_END);
+  if(ftell(f) == -1){
+    fprintf(stderr, "Error determining file size, Error Number : %d\n", errno);    
+    fclose(f);
+    return NULL;
+  }
   file_size = (size_t)ftell(f);
   rewind(f);
 

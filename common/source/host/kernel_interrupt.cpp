@@ -197,7 +197,7 @@ void KernelInterrupt::wait_for_event() {
     uint64_t val = 0;
     ssize_t bytes_read = read(pfd.fd, &val, sizeof(val));
     if (bytes_read < 0) {
-      std::string err(num_events < 0 ? strerror(errno) : "timed out");
+      std::string err(strerror(errno));
       std::string err_str("read: ");
       debug_print(err_str.append(err), 1);
     }
