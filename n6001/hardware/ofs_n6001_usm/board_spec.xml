@@ -29,7 +29,7 @@
   </device>
 
   <global_mem name="host" max_bandwidth="30000" interleaved_bytes="1024" config_addr="0x018" allocation_type="host, shared">
-    <interface name="board" port="kernel_mem" type="slave" width="512" maxburst="16" address="0x000000000" size="0x1000000000000" latency="800" waitrequest_allowance="7"/>
+    <interface name="board" port="kernel_mem" type="slave" width="512" maxburst="16" address="0x000000000" size="0x1000000000000" latency="1500" waitrequest_allowance="7"/>
   </global_mem>
   
   <!-- DDR4-2400 -->

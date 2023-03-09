@@ -129,7 +129,7 @@ if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
     OPAESIM_INSTALL_DIR="$OPAESIM_BUILD_PREFIX/install"
     # default opae-sim repo address
     if [ -z "${OPAESIM_REPO}" ]; then
-        OPAESIM_REPO="https://github.com/OPAE/opae-sim.git"
+        OPAESIM_REPO="https://github.com/OFS/opae-sim.git"
     fi
     # Default branch to 'master' if the branch variable is not set
     if [ -z "${OPAESIM_REPO_BRANCH}" ]; then

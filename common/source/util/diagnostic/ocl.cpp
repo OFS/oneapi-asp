@@ -158,7 +158,10 @@ void ocl_device_init(int maxbytes, char *device_name) {
     dump_error("Failed clCreateContext.", status);
 
   // create a command queue
-  const cl_queue_properties *properties=NULL;
+  const cl_queue_properties properties[] = {
+    CL_QUEUE_PROPERTIES, CL_QUEUE_PROFILING_ENABLE,
+    0
+  };
   queue =
       clCreateCommandQueueWithProperties(context, device, properties, &status);
   if (status != CL_SUCCESS)

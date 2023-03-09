@@ -502,9 +502,19 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
   }
 
   if (bsp_only) {
+    if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
+      if(std::getenv("MMD_ENABLE_DEBUG")){ 
+        DEBUG_LOG("Error parsing pci guid '%s'\n", pci_guid);
+      }
+      return false;
+    }
 
-    uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid);
-    uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid);
+    if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
+      if(std::getenv("MMD_ENABLE_DEBUG")){ 
+        DEBUG_LOG("Error parsing svm guid '%s'\n", svm_guid);
+      }
+      return false;
+    }
 
     std::vector<fpga_token> bsp_tokens;
 
@@ -918,11 +928,7 @@ int aocl_mmd_get_offline_info(aocl_mmd_offline_info_t requested_info_id,
     RESULT_STR(AOCL_MMD_VERSION_STRING);
     break;
   case AOCL_MMD_NUM_BOARDS: {
-    if (num_acl_boards >= 0) {
-      RESULT_INT(num_acl_boards);
-    } else {
-      return MMD_AOCL_ERR;
-    }
+    RESULT_INT(num_acl_boards);
     break;
   }
   case AOCL_MMD_VENDOR_NAME:
@@ -1426,7 +1432,7 @@ AOCL_MMD_CALL int aocl_mmd_free(void *mem) {
       if(std::getenv("MMD_PROGRAM_DEBUG")){
         DEBUG_LOG("DEBUG LOG : ERROR aocl_mmd_free - device not found for handle : %d \n", handle );
       }
-      rc = -1;
+      return -1;
     }
   }
   DEBUG_PRINT("aocl_mmd_free: munmap: %p %zu\n", mem,
@@ -1440,12 +1446,13 @@ AOCL_MMD_CALL int aocl_mmd_free(void *mem) {
       DEBUG_LOG("DEBUG LOG : aocl_mmd_free: munmap FAILED\n");
     }
     perror("munmap failed");
+    return rc;
   }
   mem_to_handles_map.erase(handle_iter);
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : aocl_mmd_free: munmap SUCCESS, freed memory allocated at address : %p\n", mem);
+    DEBUG_LOG("DEBUG LOG : aocl_mmd_free: munmap SUCCESS\n");
   }
-  return rc;
+  return 0;
 }
 
 int mmd_get_handle(const char *name) {
