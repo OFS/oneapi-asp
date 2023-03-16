@@ -65,19 +65,20 @@ using namespace intel_opae_mmd;
 
 #define ACL_PKG_SECTION_DCP_GBS_GZ ".acl.gbs.gz"
 
-// Keep a mapping between allocated memory and associated handle
+/** Keep a mapping between allocated memory and associated handle*/
 // XXX: Note that this is not thread-safe.  Not recommened in long term
 // likely should reevalute soon.
 static std::unordered_map<void *,
                           std::pair<size_t, std::unique_ptr<std::vector<int>>>>
     mem_to_handles_map;
 
-// If the MMD is loaded dynamically, destructors in the MMD will execute before
-// the destructors in the runtime upon program termination. The DeviceMapManager
-// guards accesses to the device/handle maps to make sure the runtime doesn't
-// get to reference them after MMD destructors have been called. Destructor
-// makes sure that all devices are closed at program termination regardless of
-// what the runtime does. Implemented as a singleton.
+/** If the MMD is loaded dynamically, destructors in the MMD will execute before
+    the destructors in the runtime upon program termination. The DeviceMapManager
+    guards accesses to the device/handle maps to make sure the runtime doesn't
+    get to reference them after MMD destructors have been called. Destructor
+    makes sure that all devices are closed at program termination regardless of
+    what the runtime does. Implemented as a singleton.
+*/
 class DeviceMapManager final {
 public:
   typedef std::map<int, Device *> t_handle_to_dev_map;
@@ -86,27 +87,30 @@ public:
   static const int SUCCESS = 0;
   static const int FAILURE = -1;
 
-  // Returns handle and device pointer to the device with the specified name
-  // Creates a new entry for this device if it doesn't already exist
-  // Return 0 on success, -1 on failure
+  /** Returns handle and device pointer to the device with the specified name
+      Creates a new entry for this device if it doesn't already exist
+      Return 0 on success, -1 on failure
+  */
   int get_or_create_device(const char *board_name, int *handle,
                            Device **device);
 
-  // Return obj id based on BSP name.
+  /** Return obj id based on BSP name.*/
   uint64_t id_from_name(const char *board_name);
 
-  // Return MMD handle based on obj id. Returned value is negative if board
-  // doesn't exist
+  /** Return MMD handle based on obj id. Returned value is negative if board
+      doesn't exist
+  */
   inline int handle_from_id(uint64_t obj_id);
 
-  // Return pointer to device based on MMD handle. Returned value is null
-  // if board doesn't exist
+  /** Return pointer to device based on MMD handle. Returned value is null
+      if board doesn't exist
+  */
   Device *device_from_handle(int handle);
 
-  // Closes specified device if it exists
+  /** Closes specified device if it exists */
   void close_device_if_exists(int handle);
 
-  // Returns a reference to the class singleton
+  /* Returns a reference to the class singleton */
   static DeviceMapManager &get_instance() {
     static DeviceMapManager instance;
     return instance;
@@ -280,7 +284,7 @@ void DeviceMapManager::close_device_if_exists(int handle) {
 // Local function definition
 static int program_aocx(int handle, void *data, size_t data_size);
 
-// Interface for programing device that does not have a BSP loaded
+/* Interface for programing device that does not have a BSP loaded */
 int mmd_device_reprogram(const char *device_name, void *data,
                               size_t data_size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -299,7 +303,7 @@ int mmd_device_reprogram(const char *device_name, void *data,
   }
 }
 
-// Interface for checking if AFU has BSP loaded
+/* Interface for checking if AFU has BSP loaded */
 bool mmd_bsp_loaded(const char *name) {
   uint64_t obj_id = device_manager.id_from_name(name);
   if (!obj_id) {
@@ -1105,7 +1109,7 @@ int AOCL_MMD_CALL aocl_mmd_set_status_handler(int handle,
   return 0;
 }
 
-// Host to device-global-memory write
+/* Host to device-global-memory write */
 int AOCL_MMD_CALL aocl_mmd_write(int handle, aocl_mmd_op_t op, size_t len,
                                  const void *src, int mmd_interface,
                                  size_t offset) {
@@ -1496,17 +1500,17 @@ AOCL_MMD_CALL void *aocl_mmd_shared_alloc(int handle, size_t size,
   return return_value;
 }
 
-AOCL_MMD_CALL int aocl_mmd_shared_migrate(int handle, void *shared_ptr,
-                                          size_t size,
-                                          aocl_mmd_migrate_t destination) {
-
-  /*aocl_mmd_shared_migrate API is being used for completeness but not doing any
+/** aocl_mmd_shared_migrate API is being used for completeness but not doing any
     work other than validating API params. Since shared allocation is always
     allocated on host no migration needs to be done between device and host. In
     the future a fully functioning aocl_mmd_shared_alloc() API may be
     implemented with memory being allocated on the device and migrated between
     host and device.
-  */
+*/
+AOCL_MMD_CALL int aocl_mmd_shared_migrate(int handle, void *shared_ptr,
+                                          size_t size,
+                                          aocl_mmd_migrate_t destination) {
+
   DEBUG_PRINT(
       "aocl_mmd_shared_migrate API is being used for completeness but not "
       "doing any work other than validating API params.\nSince shared "

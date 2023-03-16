@@ -241,10 +241,10 @@ int KernelInterrupt::yield() {
   return 0;
 }
 
-// Configure interrupts or polling using environment variable
-// * if less than -1 then use interrupts
-// * if equal -1 then yield but no sleep
-// * if greater than or equal 0 then yield for that many us
+/** Configure interrupts or polling using environment variable
+    if less than -1 then use interrupts
+    if equal -1 then yield but no sleep
+    if greater than or equal 0 then yield for that many us */
 void KernelInterrupt::read_env_vars() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Configure interrupts or polling using environment variable\n"

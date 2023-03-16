@@ -309,8 +309,9 @@ Device::Device(uint64_t obj_id)
   }
 }
 
-// Return true if board name parses correctly, false if it does not
-// Return the parsed object_id in obj_id as an [out] parameter
+/** Return true if board name parses correctly, false if it does not
+   Return the parsed object_id in obj_id as an [out] parameter
+*/
 bool Device::parse_board_name(const char *board_name_str,
                                   uint64_t &obj_id) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -338,10 +339,11 @@ bool Device::parse_board_name(const char *board_name_str,
   return true;
 }
 
-// Read information directly from sysfs.  This is non-portable and relies on
-// paths set in driver (will not interoperate between DFH driver in up-stream
-// kernel and Intel driver distributed with OFS cards).  In the future hopefully
-// OPAE can provide SDK to read this information
+/** Read information directly from sysfs.  This is non-portable and relies on
+   paths set in driver (will not interoperate between DFH driver in up-stream
+   kernel and Intel driver distributed with OFS cards).  In the future hopefully
+   OPAE can provide SDK to read this information
+*/
 void Device::initialize_fme_sysfs() {
   const int MAX_LEN = 250;
   char numa_path[MAX_LEN];

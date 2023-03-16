@@ -14,10 +14,10 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-/*
+/**
  * @file fpgaconf.c
  *
- * @brief handles FPGA configuration for OpenCL MMD
+ * @brief handles FPGA configuration for OneAPI-ASP MMD
  *
  */
 
@@ -66,7 +66,7 @@ void print_msg(unsigned int verbosity, const char *s) {
     printf("%s\n", s);
 }
 
-/*
+/**
  * Find first FPGA matching the interface ID of the GBS
  *
  * @returns the total number of FPGAs matching the interface ID

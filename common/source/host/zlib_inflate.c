@@ -44,7 +44,7 @@
 #define CHUNK 16384
 #define INITIAL_OUT_BUFFER_SIZE (32 * 1024 * 1024)
 
-/* Decompress from file source to file dest until stream ends or EOF.
+/** Decompress from file source to file dest until stream ends or EOF.
    inf() returns Z_OK on success, Z_MEM_ERROR if memory could not be
    allocated for processing, Z_DATA_ERROR if the deflate data is
    invalid or incomplete, Z_VERSION_ERROR if the version of zlib.h and
