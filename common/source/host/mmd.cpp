@@ -73,14 +73,17 @@ static std::unordered_map<void *,
     mem_to_handles_map;
 
 /** If the MMD is loaded dynamically, destructors in the MMD will execute before
-    the destructors in the runtime upon program termination. The DeviceMapManager
-    guards accesses to the device/handle maps to make sure the runtime doesn't
-    get to reference them after MMD destructors have been called. Destructor
-    makes sure that all devices are closed at program termination regardless of
-    what the runtime does. Implemented as a singleton.
-*/
+ *  the destructors in the runtime upon program termination. The DeviceMapManager
+ *  guards accesses to the device/handle maps to make sure the runtime doesn't
+ *  get to reference them after MMD destructors have been called. Destructor
+ *  makes sure that all devices are closed at program termination regardless of
+ *  what the runtime does. Implemented as a singleton.
+ */
 class DeviceMapManager final {
 public:
+  /** C++ std map data structure to keep track of 
+   *  object id -> handle and handle -> device 
+   */
   typedef std::map<int, Device *> t_handle_to_dev_map;
   typedef std::map<uint64_t, int> t_id_to_handle_map;
 
@@ -88,9 +91,9 @@ public:
   static const int FAILURE = -1;
 
   /** Returns handle and device pointer to the device with the specified name
-      Creates a new entry for this device if it doesn't already exist
-      Return 0 on success, -1 on failure
-  */
+   *  Creates a new entry for this device if it doesn't already exist
+   *  Return 0 on success, -1 on failure
+   */
   int get_or_create_device(const char *board_name, int *handle,
                            Device **device);
 
@@ -98,13 +101,13 @@ public:
   uint64_t id_from_name(const char *board_name);
 
   /** Return MMD handle based on obj id. Returned value is negative if board
-      doesn't exist
-  */
+   *   doesn't exist
+   */
   inline int handle_from_id(uint64_t obj_id);
 
   /** Return pointer to device based on MMD handle. Returned value is null
-      if board doesn't exist
-  */
+   *   if board doesn't exist
+   */
   Device *device_from_handle(int handle);
 
   /** Closes specified device if it exists */
@@ -151,6 +154,10 @@ private:
 };
 static DeviceMapManager &device_manager = DeviceMapManager::get_instance();
 
+/** Returns handle and device pointer to the device with the specified name
+ *  Creates a new entry for this device if it doesn't already exist
+ *  Return 0 on success, -1 on failure
+ */
 int DeviceMapManager::get_or_create_device(const char *board_name, int *handle,
                                            Device **device) {
   int _handle = MMD_INVALID_PARAM;
@@ -204,6 +211,7 @@ int DeviceMapManager::get_or_create_device(const char *board_name, int *handle,
   return DeviceMapManager::SUCCESS;
 }
 
+/** Return obj id based on BSP name.*/
 uint64_t DeviceMapManager::id_from_name(const char *board_name) {
   uint64_t obj_id = 0;
   if (Device::parse_board_name(board_name, obj_id)) {
@@ -221,6 +229,9 @@ uint64_t DeviceMapManager::id_from_name(const char *board_name) {
   }
 }
 
+/** Return MMD handle based on obj id. Returned value is negative if board
+ *  doesn't exist
+ */
 inline int DeviceMapManager::handle_from_id(uint64_t obj_id) {
   int handle = MMD_INVALID_PARAM;
   if (id_to_handle_map) {
@@ -239,6 +250,9 @@ inline int DeviceMapManager::handle_from_id(uint64_t obj_id) {
   return handle;
 }
 
+/** Return pointer to device based on MMD handle. Returned value is null
+ *  if board doesn't exist
+ */
 Device *DeviceMapManager::device_from_handle(int handle) {
   Device *dev = nullptr;
   if (handle_to_dev_map) {
@@ -257,6 +271,7 @@ Device *DeviceMapManager::device_from_handle(int handle) {
   return dev;
 }
 
+/** Closes specified device if it exists */
 void DeviceMapManager::close_device_if_exists(int handle) {
   if (handle_to_dev_map) {
     if (handle_to_dev_map->count(handle) > 0) {
@@ -284,7 +299,7 @@ void DeviceMapManager::close_device_if_exists(int handle) {
 // Local function definition
 static int program_aocx(int handle, void *data, size_t data_size);
 
-/* Interface for programing device that does not have a BSP loaded */
+/** Interface for programing green bitstream(BSP + OneAPI Kernel) on device */
 int mmd_device_reprogram(const char *device_name, void *data,
                               size_t data_size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -303,7 +318,7 @@ int mmd_device_reprogram(const char *device_name, void *data,
   }
 }
 
-/* Interface for checking if AFU has BSP loaded */
+/** Interface for checking if AFU has BSP loaded */
 bool mmd_bsp_loaded(const char *name) {
   uint64_t obj_id = device_manager.id_from_name(name);
   if (!obj_id) {
@@ -347,6 +362,9 @@ bool mmd_bsp_loaded(const char *name) {
   }
 }
 
+/** Function called as part of aocl_mmd_get_offline_info() 
+ *  to determine number of baords in system
+ */
 static unsigned int get_offline_num_acl_boards(const char *bsp_uuid) {
   bool bsp_only = true; // TODO: looks like this is alway true now, verify then
                         // remove check.
@@ -403,6 +421,9 @@ out:
   }
 }
 
+/** Function called as part of aocl_mmd_get_offline_info() 
+ *  to retrieve DFL tokens 
+ */
 fpga_result get_dfl_tokens(std::vector<fpga_token> &tokens)
 {
   fpga_interface filter_list[2] {FPGA_IFC_DFL, FPGA_IFC_SIM_DFL}; 
@@ -452,6 +473,10 @@ cleanup:
   return res;
 }
 
+/** Function called as part of aocl_mmd_get_offline_info()
+ *  which calls get_offline_board_names()
+ *  to determine names of boards in the system 
+ */
 fpga_result build_board_names(std::vector<fpga_token> &toks, std::string &boards)
 {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -487,6 +512,9 @@ fpga_result build_board_names(std::vector<fpga_token> &toks, std::string &boards
   return FPGA_OK;
 }
 
+/** Function called as part of aocl_mmd_get_offline_info()
+ *  to determine names of boards in the system 
+ */
 static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
   fpga_guid pci_guid;
   fpga_guid svm_guid;
@@ -652,6 +680,12 @@ AOCL_MMD_CALL void aocl_mmd_shared_mem_release_buffer(const char *name,
   }
 }
 
+/** Function called in aocl_mmd_program()
+ *  If environment variable (AOCL_MMD_PROGRAM_PRESERVE_GLOBAL_MEM)
+ *  is set to preserve global memory
+ *  we unpin memory allocated through MMD memory allocation APIs
+ *  before programming bitstream
+ */
 static void unpin_all_mem_for_handle(int handle) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Trying to unpin all memory allocations for handle : %d \n", handle);
@@ -682,6 +716,14 @@ static void unpin_all_mem_for_handle(int handle) {
   }
 }
 
+/** Function called in aocl_mmd_program()
+ *  If environment variable (AOCL_MMD_PROGRAM_PRESERVE_GLOBAL_MEM)
+ *  is set to preserve global memory
+ *  we unpin memory allocated through MMD memory allocation APIs
+ *  before programming bitstream
+ *  Once done programming bitstream we need to repin 
+ *  which will help us preserve global memory 
+ */
 static int repin_all_mem_for_handle(int handle) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Trying to repin all memory allocations for handle : %d \n", handle);
@@ -721,6 +763,9 @@ static int repin_all_mem_for_handle(int handle) {
   return 0;
 }
 
+/** Funtion called in aocl_mmd_program()
+ *  It uses OPAE API fpgaReconfigureSlot() under the hood
+ */
 static int program_aocx(int handle, void *data, size_t data_size) {
   Device *afu = device_manager.device_from_handle(handle);
   if (afu == NULL) {
@@ -1031,7 +1076,6 @@ int mmd_get_offline_board_names(size_t param_value_size, void *param_value,
  *
  *  Returns: a negative value to indicate error.
  */
-
 int aocl_mmd_get_info(int handle, aocl_mmd_info_t requested_info_id,
                       size_t param_value_size, void *param_value,
                       size_t *param_size_ret) {
