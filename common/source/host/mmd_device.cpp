@@ -53,6 +53,13 @@ std::string Device::get_board_name(std::string prefix, uint64_t obj_id) {
   return stream.str();
 }
 
+/**
+ * The Device object is created for each device/board opened and
+ * it has methods to interact with fpga device. 
+ * The entry point for Device is in DeviceMapManager Class 
+ * which maintains mapping between device names and handles.
+ * Device Object is foundation for interacting with device. 
+ */
 Device::Device(uint64_t obj_id)
     : fpga_obj_id(obj_id), kernel_interrupt_thread(NULL), event_update(NULL),
       event_update_user_data(NULL), enable_set_numa(false),
@@ -80,6 +87,10 @@ Device::Device(uint64_t obj_id)
     + std::string(strerror(pma_res)));
   }
 
+  /** Initializing filter list for DFL and VFIO
+   *  filters are used in OPAE API fpgaPropertiesSetInterface()
+   *  which helps in enumeration
+   */
   fpga_interface filter_list[2] {FPGA_IFC_DFL, FPGA_IFC_SIM_DFL};
   fpga_interface filter_vfio_list[2] {FPGA_IFC_VFIO, FPGA_IFC_SIM_VFIO};
   fpga_result res = FPGA_OK;
@@ -90,6 +101,9 @@ Device::Device(uint64_t obj_id)
   fpga_guid d5005_guid, n6001_guid;
   fpga_properties props = nullptr;
 
+  /** We use two seperate BSPs for PCIe and USM (Unified Shared Memory) Support
+   *  We use two GUIDs to distinguish and determine which BSP we are using 
+   */
   if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
     LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -126,7 +140,11 @@ Device::Device(uint64_t obj_id)
     board_type = 0;
   }
 
-  
+  /** Below is fpga enumeration flow
+   *  We first enumerate the Port, Physical Function (PF), FME (FPGA Management Engine)
+   *  Using Bus, Device we retrieve from above we enumerate Virtual Function (VF) 
+   *  using VFIO filter
+   */
   for(int count = 0; count <= 1; count++) {
     fpgaGetProperties(NULL, &filter);
     fpgaPropertiesSetInterface(filter, filter_list[count]);
@@ -310,8 +328,8 @@ Device::Device(uint64_t obj_id)
 }
 
 /** Return true if board name parses correctly, false if it does not
-   Return the parsed object_id in obj_id as an [out] parameter
-*/
+ *  Return the parsed object_id in obj_id as an [out] parameter
+ */
 bool Device::parse_board_name(const char *board_name_str,
                                   uint64_t &obj_id) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -340,10 +358,10 @@ bool Device::parse_board_name(const char *board_name_str,
 }
 
 /** Read information directly from sysfs.  This is non-portable and relies on
-   paths set in driver (will not interoperate between DFH driver in up-stream
-   kernel and Intel driver distributed with OFS cards).  In the future hopefully
-   OPAE can provide SDK to read this information
-*/
+ *  paths set in driver (will not interoperate between DFH driver in up-stream
+ *  kernel and Intel driver distributed with OFS cards).  In the future hopefully
+ *  OPAE can provide SDK to read this information
+ */
 void Device::initialize_fme_sysfs() {
   const int MAX_LEN = 250;
   char numa_path[MAX_LEN];
@@ -388,6 +406,11 @@ void Device::initialize_fme_sysfs() {
   }
 }
 
+/** find_dma_dfh_offsets() function is used in Device::initialize_bsp() 
+ *  We need to reinitialize DMA after we initialize bsp 
+ *  because we fpgaReset() as part of initializing BSP
+ *  find_dma_dfh_offsets() helps us find the appropriate DFH offsets
+ */ 
 bool Device::find_dma_dfh_offsets() {
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
@@ -426,6 +449,9 @@ bool Device::find_dma_dfh_offsets() {
   return true;
 }
 
+/** initialize_bsp() function is used in aocl_mmd_open() API
+ *  It resets AFC and reinitializes DMA, Kernel Interrupts if in use 
+ */ 
 bool Device::initialize_bsp() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Initializing BSP ... \n");
@@ -556,6 +582,12 @@ bool Device::initialize_bsp() {
   return bsp_initialized;
 }
 
+/** Device Class Destructor implementation
+ *  Properly releasing and free-ing memory
+ *  part of best coding practices and help
+ *  with stable system performance and 
+ *  helps reduce bugs
+ */
 Device::~Device() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Destructing Device object \n");
@@ -623,6 +655,10 @@ Device::~Device() {
   }
 }
 
+/** progam_bitstream() is used in program_aocx() function
+ *  it calls program_gbs_bitstream() function which is implemented in fpgaconf.c
+ *  it reconnects MPF and re-initializes DMA after programming bitstream
+ */ 
 int Device::program_bitstream(uint8_t *data, size_t data_size) {
   if (!afu_initialized) {
    if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
@@ -784,6 +820,7 @@ int Device::program_bitstream(uint8_t *data, size_t data_size) {
   return result;
 }
 
+/** Calls kernel_interrupt_thread->yield() */
 int Device::yield() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Device::yield() \n");
@@ -795,6 +832,9 @@ int Device::yield() {
   }
 }
 
+/** bsp_loaded() function which checks if bsp is loaded on board
+ *  it is used in aocl_mmd_open() API
+ */
 bool Device::bsp_loaded() {
 
   fpga_guid pci_guid;
@@ -867,6 +907,11 @@ std::string Device::get_bdf() {
   return bdf.str();
 }
 
+/** get_temperature() function is called 
+ *  in aocl_mmd_get_info() API
+ *  We currently use hardcoded paths to retrieve temperature information
+ *  We will replace with OPAE APIs in future
+ */
 float Device::get_temperature() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Reading temperature ... \n");
@@ -895,6 +940,8 @@ float Device::get_temperature() {
   return temp;
 }
 
+/**
+*/
 void Device::set_kernel_interrupt(aocl_mmd_interrupt_handler_fn fn,
                                       void *user_data) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
