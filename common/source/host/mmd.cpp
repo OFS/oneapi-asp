@@ -879,6 +879,17 @@ AOCL_MMD_CALL int aocl_mmd_program(int handle, void *user_data, size_t size,
   }
 }
 
+/** If AOCL_MMD_USES_YIELD is 1, this function is called when the host is idle
+ * and hence possibly waiting for events to be processed by the device.
+ * If AOCL_MMD_USES_YIELD is 0, this function is never called and the MMD is
+ * assumed to provide status/event updates via some other execution thread
+ * such as through an interrupt handler.
+ *
+ * Returns: non-zero if the yield function performed useful work such as
+ * processing DMA transactions, 0 if there is no useful work to be performed
+ *
+ * NOTE: yield may be called continuously as long as it reports that it has useful work
+ */
 int AOCL_MMD_CALL aocl_mmd_yield(int handle) {
   DEBUG_PRINT("* Called: aocl_mmd_yield\n");
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
@@ -914,12 +925,31 @@ int AOCL_MMD_CALL aocl_mmd_yield(int handle) {
       *param_size_ret = Xcpylen;                                               \
   } while (0)
 
+/** Get information about the board using the enum aocl_mmd_offline_info_t for
+ *  offline info (called without a handle), and the enum aocl_mmd_info_t for
+ *  info specific to a certain board.
+ *  Arguments:
+ *
+ *    requested_info_id - a value from the aocl_mmd_offline_info_t enum
+ *
+ *    param_value_size - size of the param_value field in bytes. This should
+ *      match the size of the return type expected as indicated in the enum
+ *      definition.
+ *
+ *    param_value - pointer to the variable that will receive the returned info
+ *
+ *    param_size_ret - receives the number of bytes of data actually returned
+ *
+ *  Returns: a negative value to indicate error.
+ */
+
 int aocl_mmd_get_offline_info(aocl_mmd_offline_info_t requested_info_id,
                               size_t param_value_size, void *param_value,
                               size_t *param_size_ret) {
-  // aocl_mmd_get_offline_info can be called many times by the runtime
-  // and it is expensive to query the system.  Only compute values first
-  // time aocl_mmd_get_offline_info called future iterations use saved results
+  /** aocl_mmd_get_offline_info can be called many times by the runtime
+   *  and it is expensive to query the system.  Only compute values first
+   *  time aocl_mmd_get_offline_info called future iterations use saved results
+   */
   static bool initialized = false;
   static int mem_type_info;
   static unsigned int num_acl_boards;
@@ -982,6 +1012,25 @@ int mmd_get_offline_board_names(size_t param_value_size, void *param_value,
 
   return 0;
 }
+
+/** Get information about the board using the enum aocl_mmd_info_t for
+ *  info specific to a certain board.
+ *  Arguments:
+ *
+ *  requested_info_id - a value from the aocl_mmd_info_t enum
+ *
+ *  param_value_size - size of the param_value field in bytes. This should
+ *    match the size of the return type expected as indicated in the enum
+ *    definition. For example, the AOCL_MMD_TEMPERATURE returns a float, so
+ *    the param_value_size should be set to sizeof(float) and you should
+ *    expect the same number of bytes returned in param_size_ret.
+ *
+ *  param_value - pointer to the variable that will receive the returned info
+ *
+ *  param_size_ret - receives the number of bytes of data actually returned
+ *
+ *  Returns: a negative value to indicate error.
+ */
 
 int aocl_mmd_get_info(int handle, aocl_mmd_info_t requested_info_id,
                       size_t param_value_size, void *param_value,
@@ -1088,6 +1137,20 @@ int aocl_mmd_get_info(int handle, aocl_mmd_info_t requested_info_id,
 #undef RESULT_INT
 #undef RESULT_STR
 
+/** Set the interrupt handler for the opened device.
+ *  The interrupt handler is called whenever the client needs to be notified
+ *  of an asynchronous event signaled by the device internals.
+ *  For example, the kernel has completed or is stalled.
+ *
+ *  Important: Interrupts from the kernel must be ignored until this handler is
+ *  set
+ *
+ *  Arguments:
+ *    fn - the callback function to invoke when a kernel interrupt occurs
+ *    user_data - the data that should be passed to fn when it is called.
+ *
+ *  Returns: 0 if successful, negative on error
+ */
 int AOCL_MMD_CALL aocl_mmd_set_interrupt_handler(
     int handle, aocl_mmd_interrupt_handler_fn fn, void *user_data) {
   Device *dev = device_manager.device_from_handle(handle);
@@ -1105,6 +1168,19 @@ int AOCL_MMD_CALL aocl_mmd_set_interrupt_handler(
   return 0;
 }
 
+/** Set the operation status handler for the opened device.
+ *  The operation status handler is called with
+ *     status 0 when the operation has completed successfully.
+ *     status negative when the operation completed with errors.
+ *
+ *  Arguments:
+ *    fn - the callback function to invoke when a status update is to be
+ *    performed.
+ *    user_data - the data that should be passed to fn when it is called.
+ *
+ *  Returns: 0 if successful, negative on error
+ */
+
 int AOCL_MMD_CALL aocl_mmd_set_status_handler(int handle,
                                               aocl_mmd_status_handler_fn fn,
                                               void *user_data) {
@@ -1119,7 +1195,35 @@ int AOCL_MMD_CALL aocl_mmd_set_status_handler(int handle,
   return 0;
 }
 
-/* Host to device-global-memory write */
+/** Host to device-global-memory write (HOST DDR -> FPGA DDR)
+ *  If op is NULL
+ *     - Then these calls must block until the operation is complete.
+ *     - The status handler is not called for this operation.
+ *
+ *  If op is non-NULL, then:
+ *     - These may be non-blocking calls
+ *     - The status handler must be called upon completion, with status 0
+ *     for success, and a negative value for failure.
+ *
+ *  Arguments:
+ *    op - the operation object used to track this operations progress
+ *
+ *    len - the size in bytes to transfer
+ *
+ *    src - the host buffer being read from
+ *
+ *    dst - the host buffer being written to
+ *
+ *    mmd_interface - the handle to the interface being accessed. E.g. To
+ *    access global memory this handle will be whatever is returned by
+ *    aocl_mmd_get_info when called with AOCL_MMD_MEMORY_INTERFACE.
+ *
+ *    offset/src_offset/dst_offset - the byte offset within the interface that
+ *    the transfer will begin at.
+ *
+ *  The return value is 0 if the operation launch was successful, and
+ *  negative otherwise.
+ */
 int AOCL_MMD_CALL aocl_mmd_write(int handle, aocl_mmd_op_t op, size_t len,
                                  const void *src, int mmd_interface,
                                  size_t offset) {
@@ -1139,6 +1243,35 @@ int AOCL_MMD_CALL aocl_mmd_write(int handle, aocl_mmd_op_t op, size_t len,
   }
 }
 
+/** Host reading from device-global-memory (FPGA DDR -> HOST DDR)
+ *  If op is NULL
+ *     - Then these calls must block until the operation is complete.
+ *     - The status handler is not called for this operation.
+ *
+ *  If op is non-NULL, then:
+ *     - These may be non-blocking calls
+ *     - The status handler must be called upon completion, with status 0
+ *     for success, and a negative value for failure.
+ *
+ *  Arguments:
+ *    op - the operation object used to track this operations progress
+ *
+ *    len - the size in bytes to transfer
+ *
+ *    src - the host buffer being read from
+ *
+ *    dst - the host buffer being written to
+ *
+ *    mmd_interface - the handle to the interface being accessed. E.g. To
+ *    access global memory this handle will be whatever is returned by
+ *    aocl_mmd_get_info when called with AOCL_MMD_MEMORY_INTERFACE.
+ *
+ *    offset/src_offset/dst_offset - the byte offset within the interface that
+ *    the transfer will begin at.
+ *
+ *  The return value is 0 if the operation launch was successful, and
+ *  negative otherwise.
+ */
 int AOCL_MMD_CALL aocl_mmd_read(int handle, aocl_mmd_op_t op, size_t len,
                                 void *dst, int mmd_interface, size_t offset) {
   DCP_DEBUG_MEM("\n+ aocl_mmd_read: %d\t %p\t %lu\t %p\t %d\t %lu\n", handle,
@@ -1157,6 +1290,34 @@ int AOCL_MMD_CALL aocl_mmd_read(int handle, aocl_mmd_op_t op, size_t len,
   }
 }
 
+/** If op is NULL
+ *     - Then these calls must block until the operation is complete.
+ *     - The status handler is not called for this operation.
+ *
+ *  If op is non-NULL, then:
+ *     - These may be non-blocking calls
+ *     - The status handler must be called upon completion, with status 0
+ *     for success, and a negative value for failure.
+ *
+ *  Arguments:
+ *    op - the operation object used to track this operations progress
+ *
+ *    len - the size in bytes to transfer
+ *
+ *    src - the host buffer being read from
+ *
+ *    dst - the host buffer being written to
+ *
+ *    mmd_interface - the handle to the interface being accessed. E.g. To
+ *    access global memory this handle will be whatever is returned by
+ *    aocl_mmd_get_info when called with AOCL_MMD_MEMORY_INTERFACE.
+ *
+ *    offset/src_offset/dst_offset - the byte offset within the interface that
+ *    the transfer will begin at.
+ *
+ *  The return value is 0 if the operation launch was successful, and
+ *  negative otherwise.
+ */
 int AOCL_MMD_CALL aocl_mmd_copy(int handle, aocl_mmd_op_t op, size_t len,
                                 int mmd_interface, size_t src_offset,
                                 size_t dst_offset) {
@@ -1176,6 +1337,20 @@ int AOCL_MMD_CALL aocl_mmd_copy(int handle, aocl_mmd_op_t op, size_t len,
     return MMD_AOCL_ERR;
 }
 
+/** Open and initialize the named device.
+ *
+ *  The name is typically one specified by the AOCL_MMD_BOARD_NAMES offline
+ *  info.
+ *
+ *  Arguments:
+ *     name - open the board with this name (provided as a C-style string,
+ *            i.e. NUL terminated ASCII.)
+ *
+ *  Returns: the non-negative integer handle for the board, otherwise a
+ *  negative value to indicate error. Upon receiving the error, the OpenCL
+ *  runtime will proceed to open other known devices, hence the MMD mustn't
+ *  exit the application if an open call fails.
+ */
 int AOCL_MMD_CALL aocl_mmd_open(const char *name) {
   DEBUG_PRINT("Opening device: %s\n", name);
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
@@ -1222,6 +1397,9 @@ int AOCL_MMD_CALL aocl_mmd_open(const char *name) {
   return handle;
 }
 
+/** Close an opened device, by its handle.
+ *  Returns: 0 on success, negative values on error.
+ */
 int AOCL_MMD_CALL aocl_mmd_close(int handle) {
   #ifndef SIM
     device_manager.close_device_if_exists(handle);
@@ -1231,6 +1409,29 @@ int AOCL_MMD_CALL aocl_mmd_close(int handle) {
   return 0;
 }
 
+/**
+ *  Host allocations provide memory that is allocated on the host. Host
+ *  allocations are accessible by the host and one or more devices.
+ *  The same pointer to a host allocation may be used on the host and all
+ *  supported devices; they have address equivalence. This memory must be
+ *  deallocated with aocl_mmd_free();
+ *
+ *  Once the device has signaled completion through
+ *  aocl_mmd_interrupt_handler_fn() the host can assume it has access to the
+ *  latest contents of the memory, allocated by this call.
+ *
+ *  @param handles Handles for devices that will need access to this memory
+ *  @param num_devices Number of devices in the handles
+ *  @param size The size of the memory region
+ *  @param alignment The alignment in bytes of the allocation
+ *  @param properties Specifies additional information about the allocated
+ *    memory, described by a property type name and its corresponding value.
+ *    Each property type name is immediately followed by the corresponding
+ *    desired value. The list is terminated with 0. Supported values are
+ *    described above. Example: [<property1>, <value1>, <property2>, <value2>, 0]
+ *  @param error The error code defined by AOCL_MMD_ERROR*
+ *  @return valid pointer, on error NULL
+ */
 AOCL_MMD_CALL void *aocl_mmd_host_alloc(int *handles, size_t num_devices,
                                         size_t size, size_t alignment,
                                         aocl_mmd_mem_properties_t *properties,
@@ -1413,6 +1614,13 @@ AOCL_MMD_CALL void *aocl_mmd_host_alloc(int *handles, size_t num_devices,
   return addr;
 }
 
+/**
+ * Frees memory that has been allocated by MMD
+ *
+ * @param mem The pointer to the memory region. Must be a pointer that is
+ *   allocated by the MMD.
+ * @return AOCL_MMD_ERROR_SUCCESS if success, else error code
+ */
 AOCL_MMD_CALL int aocl_mmd_free(void *mem) {
 
   // TODO: check on return code in case of freeing null
@@ -1487,6 +1695,41 @@ int mmd_get_handle(const char *name) {
   }
 }
 
+/**
+ *  Shared allocations may migrate between the host and one or more associated
+ *  device. The same pointer to a shared allocation may be used on the host and
+ *  the supported device; they have address equivalence.
+ *
+ *  If the device does not support concurrent access to memory allocated by
+ *  aocl_mmd_shared_alloc() then a call must be made to
+ *  aocl_mmd_shared_mem_migrate() to indicate that the shared allocation should
+ *  be migrated to the device before the device accesses this memory.  For
+ *  example, a call to aocl_mmd_shared_mem_migrate() should be made before a
+ *  kernel accessing this memory is launched).  Conversely,
+ *  aocl_mmd_shared_mem_migrate() should be called again to indicate that the
+ *  shared allocation should be migrated to the host before the host accesses
+ *  this memory again.  If the device supports concurrent access to memory
+ *  allocated with aocl_mmd_shared_alloc(), then the call to
+ *  aocl_mmd_shared_mem_migrate() is not necessary, but may still be made.  In
+ *  the case of concurrent access, it is the responsibility of the MMD to ensure
+ *  both the device and host can access aocl_mmd_shared_alloc() allocations at
+ *  all times.
+ *
+ *  Memory allocated by aocl_mmd_shared_alloc() must be deallocated with
+ *  aocl_mmd_free().
+ *
+ *  @param  handle Device that will have access to this memory
+ *  @param  size The size of the memory region
+ *  @param alignment The alignment in bytes of the memory region
+ *  @param  properties Specifies additional information about the allocated
+ *    memory, described by a property type name and its corresponding value.
+ *    Each property type name is immediately followed by the corresponding
+ *    desired value. The list is terminated with 0. Supported properties are
+ *    listed above and have the prefix AOCL_MMD_MEM_PROPERTIES_.
+ *    Example: [<property1>, <value1>, <property2>, <value2>, 0]
+ *  @param error The error code defined by AOCL_MMD_ERROR*
+ *  @return valid pointer, on error NULL
+ */
 AOCL_MMD_CALL void *aocl_mmd_shared_alloc(int handle, size_t size,
                                           size_t alignment,
                                           aocl_mmd_mem_properties_t *properties,
@@ -1511,11 +1754,29 @@ AOCL_MMD_CALL void *aocl_mmd_shared_alloc(int handle, size_t size,
 }
 
 /** aocl_mmd_shared_migrate API is being used for completeness but not doing any
-    work other than validating API params. Since shared allocation is always
-    allocated on host no migration needs to be done between device and host. In
-    the future a fully functioning aocl_mmd_shared_alloc() API may be
-    implemented with memory being allocated on the device and migrated between
-    host and device.
+ *  work other than validating API params. Since shared allocation is always
+ *  allocated on host no migration needs to be done between device and host. In
+ *  the future a fully functioning aocl_mmd_shared_alloc() API may be
+ *  implemented with memory being allocated on the device and migrated between
+ *  host and device.
+
+ *  A call to aocl_mmd_shared_migrate() must be made for non-concurrent shared
+ *  allocations any time the accessor of the allocation changes.  For example,
+ *  aocl_mmd_shared_migrate() should be called indicating that the allocation
+ *  should be migrated to the device before a kernel accessing the allocation
+ *  is launched on the device.  Similarly, aocl_mmd_shared_migrate() should be
+ *  called indicating that the allocation is migrated to the host before the
+ *  host accesses the memory after kernel completion.
+ *
+ *  For concurrent allocations this call may be used as a performance hint, but
+ *  is not strictly required for functionality.
+ *
+ *  @param  handle Device that will have access to this memory
+ *  @param shared_ptr Pointer allocated by aocl_mmd_shared_alloc()
+ *  @param size In bytes, the size of the migration. Must be of multiple of a
+ *  page boundary that the BSP supports.
+ *  @param destination The destination of migration
+ *  @return The error code defined by AOCL_MMD_ERROR*
 */
 AOCL_MMD_CALL int aocl_mmd_shared_migrate(int handle, void *shared_ptr,
                                           size_t size,
