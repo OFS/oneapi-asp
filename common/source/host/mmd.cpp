@@ -828,6 +828,16 @@ static int program_aocx(int handle, void *data, size_t data_size) {
   return MMD_AOCL_ERR;
 }
 
+/** program modes - bitfield
+ *
+ * AOCL_MMD_PROGRAM_PRESERVE_GLOBAL_MEM - preserve contents of global memory
+ * when this bit is set to 1. If programming can't occur without preserving
+ * global memory contents, the program function must fail, in which case the
+ * runtime may re-invoke program with this bit set to 0, allowing programming
+ * to occur even if doing so destroys global memory contents.
+ *
+ * more modes are reserved for stacking on in the future
+ */
 AOCL_MMD_CALL int aocl_mmd_program(int handle, void *user_data, size_t size,
                                    aocl_mmd_program_mode_t program_mode) {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
