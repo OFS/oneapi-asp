@@ -634,52 +634,6 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
   return true;
 }
 
-AOCL_MMD_CALL void aocl_mmd_dump_mpf_stats(const char *name) {
-  DEBUG_PRINT("\n- aocl_mmd_dump_mpf_stats:: Dumping MPF statistics\n");
-  if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : aocl_mmd_dump_mpf_stats:: Dumping MPF statistics\n");
-  }
-  int handle = aocl_mmd_open(name);
-  Device *dev = device_manager.device_from_handle(handle);
-  if (dev)
-    return dev->dump_mpf_stats();
-  else
-    fprintf(stderr, "aocl_mmd_dump_mpf_stats:: FAILED getting device\n");
-}
-
-AOCL_MMD_CALL void aocl_mmd_shared_mem_prepare_buffer(const char *name,
-                                                      size_t size,
-                                                      void *host_ptr) {
-  DCP_DEBUG_MEM("\n- aocl_mmd_shared_mem_prepare_buffer: %s\t %lu\t %p\t \n",
-                name, size, host_ptr);
-  if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : aocl_mmd_shared_mem_prepare_buffer: %s\t %lu\t %p\t \n", name, size, host_ptr);
-  }
-  int handle = aocl_mmd_open(name);
-  Device *dev = device_manager.device_from_handle(handle);
-  if (dev) {
-    return dev->shared_mem_prepare_buffer(size, host_ptr);
-  } else {
-    fprintf(stderr, "aocl_mmd_shared_mem_alloc FAILED getting device\n");
-  }
-}
-
-AOCL_MMD_CALL void aocl_mmd_shared_mem_release_buffer(const char *name,
-                                                      void *host_ptr) {
-  DCP_DEBUG_MEM("\n- aocl_mmd_shared_mem_release_buffer: %s\t %p\t \n", name,
-                host_ptr);
-  if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : aocl_mmd_shared_mem_release_buffer: %s\t %p\t \n", name, host_ptr);
-  }
-  int handle = aocl_mmd_open(name);
-  Device *dev = device_manager.device_from_handle(handle);
-  if (dev) {
-    return dev->shared_mem_release_buffer(host_ptr);
-  } else {
-    fprintf(stderr, "aocl_mmd_shared_mem_alloc FAILED getting device\n");
-  }
-}
-
 /** Function called in aocl_mmd_program()
  *  If environment variable (AOCL_MMD_PROGRAM_PRESERVE_GLOBAL_MEM)
  *  is set to preserve global memory
