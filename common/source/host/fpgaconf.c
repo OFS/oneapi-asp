@@ -68,7 +68,7 @@ void print_msg(unsigned int verbosity, const char *s) {
 
 /**
  * Find first FPGA matching the interface ID of the GBS
- *
+ * Used in program_bitstream() function in mmd_device.cpp
  * @returns the total number of FPGAs matching the interface ID
  */
 int find_fpga(struct find_fpga_target target, fpga_token *fpga) {
@@ -120,6 +120,10 @@ out_err:
   return retval;
 }
 
+/** program_bitstream() function uses OPAE API fpgaOpen() to open device
+ *  then it uses fpgaReconfigureSlot() to program the green bitstream on board 
+ *  eventually calls fpgaClose() to close the device
+ */
 int program_bitstream(fpga_token token, uint32_t slot_num,
                       struct bitstream_info *info) {
   fpga_handle handle;
@@ -155,6 +159,9 @@ out_err:
   return -1;
 }
 
+/** program_gbs_bitstream() function is used in program_bitstream() function in mmd_device.cpp
+ *  it calls program_bitstream() function in fpgaconf.c
+ */
 int program_gbs_bitstream(fpga_token fpga, uint8_t *gbs_data, size_t gbs_len) {
   int res;
   int retval = 0;

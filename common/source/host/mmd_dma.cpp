@@ -56,6 +56,14 @@ static inline void check_result(fpga_result res, const char *err_str) {
                              std::string(fpgaErrStr(res));
 }
 
+/** mmd_dma class constructor
+ *  it initializes various attributes like CSR offsets for DMA
+ *  it determines if its s host to foga or fpga to host DMA object
+ *  determines if interrupt is used or 'magic number' methodology
+ *  create a dma work thread
+ *  we use two work threads, one for HOST -> FPGA DMA , one for FPGA -> HOST DMA
+ *  hence we create two mmd_dma objects
+ */
 mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
                  mpf_handle_t mpf_handle_in, uint64_t dfh_offset_arg,
                  int interrupt_num_arg, dma_mode mode)
@@ -145,6 +153,10 @@ mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
   }
 }
 
+/** mmd_dma destructor 
+ *  free-ing , releasing various resources created during object construction is a good idea
+ * it helps with system stability and reduces code bugs
+ */
 mmd_dma::~mmd_dma() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Destructing DMA %s\n", op_mode);
