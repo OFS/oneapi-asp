@@ -145,6 +145,9 @@ mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
     printf("Error allocating DMA buffer\n");
   }
 
+  /** launch of new thread, creating new thread object
+   *  using lambda and calling work_thread()
+   */
   m_thread = new std::thread([this] { this->work_thread(); });
   m_initialized = true;
 
@@ -155,7 +158,7 @@ mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
 
 /** mmd_dma destructor 
  *  free-ing , releasing various resources created during object construction is a good idea
- * it helps with system stability and reduces code bugs
+ *  it helps with system stability and reduces code bugs
  */
 mmd_dma::~mmd_dma() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG")){
@@ -169,6 +172,14 @@ mmd_dma::~mmd_dma() {
   m_initialized = false;
 }
 
+/** work_thread() called while creating new threads in mmd_dma 
+ *  We check m_work_queue to check if it has queued any DMA transactions 
+ *  if not we use 'wait()' which comes with 'condition_variable' m_dma_notify
+ *  basically if queue is empty we block current thread 
+ *  and unlock other threads which share the mutex to proceed
+ *  when this thread is notified and woekn up again it locks the mutex and does same check again
+ *  once queue has work enqueued we pop an item of work and do_dma() on it.
+ */
 void mmd_dma::work_thread() {
   while (m_work_thread_active) {
     std::unique_lock<std::mutex> lock(m_work_queue_mutex);
