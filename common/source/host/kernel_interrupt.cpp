@@ -46,6 +46,9 @@ static inline void check_result(fpga_result res, const char *err_str) {
                              std::string(fpgaErrStr(res));
 }
 
+/** KernelInterrupt constructor
+ *  we call read_env_vars() and enable_interrupts() functions
+ */
 KernelInterrupt::KernelInterrupt(fpga_handle fpga_handle_arg, int mmd_handle)
     : m_work_thread_active(false), m_eventfd(0), m_kernel_interrupt_fn(nullptr),
       m_kernel_interrupt_user_data(nullptr), m_fpga_handle(fpga_handle_arg),
@@ -57,6 +60,9 @@ KernelInterrupt::KernelInterrupt(fpga_handle fpga_handle_arg, int mmd_handle)
   enable_interrupts();
 }
 
+/** KernelInterrupt destructor
+ *  calls disable_interrupts() 
+ */
 KernelInterrupt::~KernelInterrupt() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : KernelInterrupt Destructor\n");
@@ -69,6 +75,15 @@ KernelInterrupt::~KernelInterrupt() {
   }
 }
 
+/** disable_interrupts() function is used in KernelInterrupt destructor
+ *  if interupt not enabled , !enable_thread
+ *  then disable interrupt mask
+ *  else if interrupts are used,
+ *  call noftify_work_thread(), join the thread
+ *  we call OPAE API fpgaUnregisterEvent() to unregister FPGA event,
+ *  it tells driver caller is no longer interested in notification for event associated with m_event_handle
+ *  we call OPAE API fpgaDestroyEventHandle() to free resources
+ */
 void KernelInterrupt::disable_interrupts() {
   if (!enable_thread) {
     if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -99,6 +114,14 @@ void KernelInterrupt::disable_interrupts() {
   }
 }
 
+/** notify_work_thread() function is called by disable_interrupts() function
+ *  eventfd object created by OPAE API fpgaGetOSObjectFromEventHandle() , m_eventfd,
+ *  can be used as an event wait/notify mechanism by user space applications and by kernel,
+ *  to notify user space applications of events   
+ *  every time write() is performed on eventfd, 
+ *  the value of uint64_t being written is added to count and wakeup is performed.
+ * We dont use read() below but read() will return count value to user space and reset count to 0
+ */
 void KernelInterrupt::notify_work_thread() {
   uint64_t val = 1;
   ssize_t res = write(m_eventfd, &val, sizeof(val));
@@ -109,6 +132,19 @@ void KernelInterrupt::notify_work_thread() {
   }
 }
 
+/** enable_interrupts() function is called by Kernel Interrupt constructor
+ *  if interrupt is not enabled it will disable interrupt mask , set thread active as false and return 
+ *  if interrupt is enabled, it will use OPAE APIs to create event handle fpgaCreateEventHandle()
+ *  OPAE event APIs provide functions for handling asynchronous events such as errors and interrupts
+ *  Associated with every event a process has registered for is an fpga_event_handle, 
+ *  which encapsulates OS specific data structure for event objects
+ *  On Linux fpga_event_handle can be used as file descriptor 
+ *  and passed to select(), poll() and similar functions to wait for asynchronous events
+ *  OPAE API fpgaRegisterEvent() is used to tell driver that caller is interested in notification for event specified
+ *  OPAE API fpgaGetOSObjectFromEventHandle() checks validity of event handle and
+ *  gets OS object used to subscribe and unsubscribe to events
+ *  we create a thread and call work_thread()
+ */
 void KernelInterrupt::enable_interrupts() {
   if (!enable_thread) {
     if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -150,6 +186,10 @@ void KernelInterrupt::set_interrupt_mask(uint32_t intr_mask) {
   check_result(res, "Error fpgaWriteMMIO32");
 }
 
+/** work_thread() is called from enable_interrupts() function while creating new thread
+ *  it calls wait_for_event(), disables interrupt mask
+ *  creates lock_guard with m_mutex, calls kernel interrupt function and then enables interrupt mask
+ */
 void KernelInterrupt::work_thread() {
   while (m_work_thread_active) {
     wait_for_event();
@@ -162,6 +202,19 @@ void KernelInterrupt::work_thread() {
   }
 }
 
+/** wait_for_event() is called from work_thread() function
+ *  it uses poll() function to wait for event on a file descriptor,
+ *  the m_event_fd file descriptor which we got from fpgaOSObjectFromEventHandle()  
+ *  poll() uses pollfd struct, which inncludes
+ *  fd - file descriptor, events - requested events, revents - returned events
+ *  timeout argument in poll() specifies number of milliseconds, 
+ *  poll() will block waiting for file descriptor
+ *  On success, poll() returns a nonnegative value which is the
+ *  number of elements in the pollfds whose revents fields have been
+ *  set to a nonzero value (indicating an event or an error).  A
+ *  return value of zero indicates that the system call timed out
+ *  before any file descriptors became read
+ */
 void KernelInterrupt::wait_for_event() {
   // Use timeout when polling eventfd because sometimes interrupts are missed.
   // This may be caused by knonw race condition with runtime, or there may
@@ -201,6 +254,9 @@ void KernelInterrupt::set_kernel_interrupt(aocl_mmd_interrupt_handler_fn fn,
   m_kernel_interrupt_user_data = user_data;
 }
 
+/** yield_is_enabled() is called in aocl_mmd_get_offline_info() API
+ *  it uses return_env_vars() to return appropriate value
+ */
 int KernelInterrupt::yield_is_enabled() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : KernelInterrupt enabling yield\n");
@@ -209,6 +265,11 @@ int KernelInterrupt::yield_is_enabled() {
   return aocl_mmd_yield_val;
 }
 
+/** yield() is called through yield() method in Device object
+ *  refer file mmd_device.cpp , mmd_device.h for Device Class
+ *  this_thread::yield() provides hint to OS to reshcedule execution of threads,
+ *  allowing other threads to run
+ */
 int KernelInterrupt::yield() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : KernelInterrupt::yield()\n");
@@ -229,9 +290,11 @@ int KernelInterrupt::yield() {
 }
 
 /** Configure interrupts or polling using environment variable
-    if less than -1 then use interrupts
-    if equal -1 then yield but no sleep
-    if greater than or equal 0 then yield for that many us */
+ *  if less than -1 then use interrupts
+ *  if equal -1 then yield but no sleep
+ *  if greater than or equal 0 then yield for that many us
+ *  read_env_vars() called from KernelInterrupts constructor
+ */
 void KernelInterrupt::read_env_vars() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Configure interrupts or polling using environment variable\n"
