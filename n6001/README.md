@@ -1,4 +1,4 @@
-# HDL Shim / OpenCL BSP
+# OneAPI-ASP 
 
 ## Overview
 This repository contains files necessary to generate Shim/BSP for OFS ADP cards.
