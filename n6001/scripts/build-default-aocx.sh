@@ -40,11 +40,11 @@ echo "Generating default aocx for board variant: $BOARD"
 # Select cl file for building default aocx
 case $BOARD in
   ofs_n6001)
-    CL_FILE="bringup/source/boardtest/boardtest.cl"
-    INTERLEAVE_OPTION="-no-interleaving=default"
+    CL_FILE="bringup/source/hello_world/device/hello_world.cl"
+    INTERLEAVE_OPTION=""
     ;;
   ofs_n6001_usm)
-    CL_FILE="bringup/source/mem_bandwidth_svm/device/mem_bandwidth_svm_ddr.cl"
+    CL_FILE="bringup/source/hello_world/device/hello_world.cl"
     INTERLEAVE_OPTION="" 
     ;;
   *)
