@@ -1,23 +1,10 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 
-/*
+/**
  * @file fpgaconf.c
  *
- * @brief handles FPGA configuration for OpenCL MMD
+ * @brief handles FPGA configuration for OneAPI-ASP MMD
  *
  */
 
@@ -66,9 +53,9 @@ void print_msg(unsigned int verbosity, const char *s) {
     printf("%s\n", s);
 }
 
-/*
+/**
  * Find first FPGA matching the interface ID of the GBS
- *
+ * Used in program_bitstream() function in mmd_device.cpp
  * @returns the total number of FPGAs matching the interface ID
  */
 int find_fpga(struct find_fpga_target target, fpga_token *fpga) {
@@ -120,6 +107,10 @@ out_err:
   return retval;
 }
 
+/** program_bitstream() function uses OPAE API fpgaOpen() to open device
+ *  then it uses fpgaReconfigureSlot() to program the green bitstream on board 
+ *  eventually calls fpgaClose() to close the device
+ */
 int program_bitstream(fpga_token token, uint32_t slot_num,
                       struct bitstream_info *info) {
   fpga_handle handle;
@@ -155,6 +146,9 @@ out_err:
   return -1;
 }
 
+/** program_gbs_bitstream() function is used in program_bitstream() function in mmd_device.cpp
+ *  it calls program_bitstream() function in fpgaconf.c
+ */
 int program_gbs_bitstream(fpga_token fpga, uint8_t *gbs_data, size_t gbs_len) {
   int res;
   int retval = 0;

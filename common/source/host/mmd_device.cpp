@@ -1,18 +1,5 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 
 #include <assert.h>
 #include <numa.h>
@@ -53,6 +40,13 @@ std::string Device::get_board_name(std::string prefix, uint64_t obj_id) {
   return stream.str();
 }
 
+/**
+ * The Device object is created for each device/board opened and
+ * it has methods to interact with fpga device. 
+ * The entry point for Device is in DeviceMapManager Class 
+ * which maintains mapping between device names and handles.
+ * Device Object is foundation for interacting with device. 
+ */
 Device::Device(uint64_t obj_id)
     : fpga_obj_id(obj_id), kernel_interrupt_thread(NULL), event_update(NULL),
       event_update_user_data(NULL), enable_set_numa(false),
@@ -80,6 +74,10 @@ Device::Device(uint64_t obj_id)
     + std::string(strerror(pma_res)));
   }
 
+  /** Initializing filter list for DFL and VFIO
+   *  filters are used in OPAE API fpgaPropertiesSetInterface()
+   *  which helps in enumeration
+   */
   fpga_interface filter_list[2] {FPGA_IFC_DFL, FPGA_IFC_SIM_DFL};
   fpga_interface filter_vfio_list[2] {FPGA_IFC_VFIO, FPGA_IFC_SIM_VFIO};
   fpga_result res = FPGA_OK;
@@ -90,6 +88,9 @@ Device::Device(uint64_t obj_id)
   fpga_guid d5005_guid, n6001_guid;
   fpga_properties props = nullptr;
 
+  /** We use two seperate BSPs for PCIe and USM (Unified Shared Memory) Support
+   *  We use two GUIDs to distinguish and determine which BSP we are using 
+   */
   if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
     LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -126,7 +127,11 @@ Device::Device(uint64_t obj_id)
     board_type = 0;
   }
 
-  
+  /** Below is fpga enumeration flow
+   *  We first enumerate the Port, Physical Function (PF), FME (FPGA Management Engine)
+   *  Using Bus, Device we retrieve from above we enumerate Virtual Function (VF) 
+   *  using VFIO filter
+   */
   for(int count = 0; count <= 1; count++) {
     fpgaGetProperties(NULL, &filter);
     fpgaPropertiesSetInterface(filter, filter_list[count]);
@@ -309,8 +314,9 @@ Device::Device(uint64_t obj_id)
   }
 }
 
-// Return true if board name parses correctly, false if it does not
-// Return the parsed object_id in obj_id as an [out] parameter
+/** Return true if board name parses correctly, false if it does not
+ *  Return the parsed object_id in obj_id as an [out] parameter
+ */
 bool Device::parse_board_name(const char *board_name_str,
                                   uint64_t &obj_id) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -338,10 +344,11 @@ bool Device::parse_board_name(const char *board_name_str,
   return true;
 }
 
-// Read information directly from sysfs.  This is non-portable and relies on
-// paths set in driver (will not interoperate between DFH driver in up-stream
-// kernel and Intel driver distributed with OFS cards).  In the future hopefully
-// OPAE can provide SDK to read this information
+/** Read information directly from sysfs.  This is non-portable and relies on
+ *  paths set in driver (will not interoperate between DFH driver in up-stream
+ *  kernel and Intel driver distributed with OFS cards).  In the future hopefully
+ *  OPAE can provide SDK to read this information
+ */
 void Device::initialize_fme_sysfs() {
   const int MAX_LEN = 250;
   char numa_path[MAX_LEN];
@@ -386,6 +393,11 @@ void Device::initialize_fme_sysfs() {
   }
 }
 
+/** find_dma_dfh_offsets() function is used in Device::initialize_bsp() 
+ *  We need to reinitialize DMA after we initialize bsp 
+ *  because we fpgaReset() as part of initializing BSP
+ *  find_dma_dfh_offsets() helps us find the appropriate DFH offsets
+ */ 
 bool Device::find_dma_dfh_offsets() {
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
@@ -424,6 +436,9 @@ bool Device::find_dma_dfh_offsets() {
   return true;
 }
 
+/** initialize_bsp() function is used in aocl_mmd_open() API
+ *  It resets AFC and reinitializes DMA, Kernel Interrupts if in use 
+ */ 
 bool Device::initialize_bsp() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Initializing BSP ... \n");
@@ -554,6 +569,12 @@ bool Device::initialize_bsp() {
   return bsp_initialized;
 }
 
+/** Device Class Destructor implementation
+ *  Properly releasing and free-ing memory
+ *  part of best coding practices and help
+ *  with stable system performance and 
+ *  helps reduce bugs
+ */
 Device::~Device() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Destructing Device object \n");
@@ -621,6 +642,10 @@ Device::~Device() {
   }
 }
 
+/** progam_bitstream() is used in program_aocx() function
+ *  it calls program_gbs_bitstream() function which is implemented in fpgaconf.c
+ *  it reconnects MPF and re-initializes DMA after programming bitstream
+ */ 
 int Device::program_bitstream(uint8_t *data, size_t data_size) {
   if (!afu_initialized) {
    if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
@@ -782,6 +807,7 @@ int Device::program_bitstream(uint8_t *data, size_t data_size) {
   return result;
 }
 
+/** Calls kernel_interrupt_thread->yield() */
 int Device::yield() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Device::yield() \n");
@@ -793,6 +819,9 @@ int Device::yield() {
   }
 }
 
+/** bsp_loaded() function which checks if bsp is loaded on board
+ *  it is used in aocl_mmd_open() API
+ */
 bool Device::bsp_loaded() {
 
   fpga_guid pci_guid;
@@ -865,6 +894,11 @@ std::string Device::get_bdf() {
   return bdf.str();
 }
 
+/** get_temperature() function is called 
+ *  in aocl_mmd_get_info() API
+ *  We currently use hardcoded paths to retrieve temperature information
+ *  We will replace with OPAE APIs in future
+ */
 float Device::get_temperature() {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Reading temperature ... \n");
@@ -893,6 +927,8 @@ float Device::get_temperature() {
   return temp;
 }
 
+/** set_kernel_interrupt() function is used in aocl_mmd_set_interrupt_handler() API
+ */
 void Device::set_kernel_interrupt(aocl_mmd_interrupt_handler_fn fn,
                                       void *user_data) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -903,6 +939,8 @@ void Device::set_kernel_interrupt(aocl_mmd_interrupt_handler_fn fn,
   }
 }
 
+/** set_kernel_interrupt() function is used in aocl_mmd_set_status_handler() API
+ */
 void Device::set_status_handler(aocl_mmd_status_handler_fn fn,
                                     void *user_data) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -914,6 +952,10 @@ void Device::set_status_handler(aocl_mmd_status_handler_fn fn,
   dma_fpga_to_host->set_status_handler(fn, user_data);
 }
 
+/** event_update_fn() is used in read_block(), write_block(), copy_block() functions
+ *  OPAE provides event API for handling asynchronous events sucj as errors and interrupts
+ *  under the hood those are used
+ */
 void Device::event_update_fn(aocl_mmd_op_t op, int status) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Device::event_update_fn() \n");
@@ -921,6 +963,9 @@ void Device::event_update_fn(aocl_mmd_op_t op, int status) {
   event_update(mmd_handle, event_update_user_data, op, status);
 }
 
+/** read_block() is used in aocl_mmd_read() API
+ *  as name suggests its used for fpga->host DMA and MMIO transfers
+ */
 int Device::read_block(aocl_mmd_op_t op, int mmd_interface, void *host_addr,
                            size_t offset, size_t size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -951,6 +996,9 @@ int Device::read_block(aocl_mmd_op_t op, int mmd_interface, void *host_addr,
   return res;
 }
 
+/** write_block() is used in aocl_mmd_write() API
+ *  as name suggests its used for host->fpga DMA and MMIO transfers
+ */
 int Device::write_block(aocl_mmd_op_t op, int mmd_interface,
                             const void *host_addr, size_t offset, size_t size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -980,6 +1028,11 @@ int Device::write_block(aocl_mmd_op_t op, int mmd_interface,
   return res;
 }
 
+/** copy_block() is used in aocl_mmd_copy() API
+ *  as name suggests its used for copies from source to destination 
+ *  currently we use intermediate buffer for copies
+ *  implementation can be optimized to use direct copy in future
+ */
 int Device::copy_block(aocl_mmd_op_t op, int mmd_interface,
                            size_t src_offset, size_t dst_offset, size_t size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -1029,6 +1082,9 @@ int Device::copy_block(aocl_mmd_op_t op, int mmd_interface,
   return status;
 }
 
+/** read_mmio() is used in read_block() function
+ *  it uses OPAE APIs fpgaReadMMIO64() fpgaReadMMIO32
+ */
 int Device::read_mmio(void *host_addr, size_t mmio_addr, size_t size) {
   fpga_result res = FPGA_OK;
 
@@ -1094,6 +1150,9 @@ int Device::read_mmio(void *host_addr, size_t mmio_addr, size_t size) {
   return res;
 }
 
+/** write_mmio() is used in write_block() function
+ *  it uses OPAE APIs fpgaWriteMMIO64() fpgaWriteMMIO32
+ */
 int Device::write_mmio(const void *host_addr, size_t mmio_addr,
                            size_t size) {
   fpga_result res = FPGA_OK;
@@ -1147,78 +1206,10 @@ int Device::write_mmio(const void *host_addr, size_t mmio_addr,
   return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Begin code to check about removing
-////////////////////////////////////////////////////////////////////////////////
-
-// TODO: remove this function
-void Device::dump_mpf_stats() {
-  DEBUG_PRINT("Device::dump_mpf_stats\n");
-  if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Device::dump_mpf_stats\n");
-  }
-  fpga_result res = FPGA_OK;
-  mpf_vtp_stats vtp_stats;
-  uint64_t mhz = 250; // AFU frequency known to be 250 MHz
-  double usec_per_cycle = 0;
-  if (mhz)
-    usec_per_cycle = 1.0 / double(mhz);
-  res = mpfVtpGetStats(mpf_handle, &vtp_stats);
-  if (res != FPGA_OK) {
-    fprintf(stderr, "Error on mpfVtpGetStats\n");
-  }
-
-  printf("\n# MPF Stats\n");
-  if (vtp_stats.numFailedTranslations) {
-    std::cout << "#   VTP failed:         " << vtp_stats.numFailedTranslations
-              << std::endl;
-    printf("# VTP failed translating VA: 0x%lx \n",
-           uint64_t(vtp_stats.ptWalkLastVAddr));
-  }
-  printf("# VTP PT walk cycles: %lu \n", vtp_stats.numPTWalkBusyCycles);
-  printf("# VTP L2 4KB hit / miss: %lu / %lu \n", vtp_stats.numTLBHits4KB,
-         vtp_stats.numTLBMisses4KB);
-  printf("# VTP L2 2MB hit / miss: %lu / %lu \n\n", vtp_stats.numTLBHits2MB,
-         vtp_stats.numTLBMisses2MB);
-  std::cout << "# AFU frequency: " << mhz << " MHz" << std::endl;
-  double cycles_per_pt =
-      double(vtp_stats.numPTWalkBusyCycles) /
-      double(vtp_stats.numTLBMisses4KB + vtp_stats.numTLBMisses2MB);
-  std::cout << "#   VTP usec / PT walk: " << (cycles_per_pt * usec_per_cycle)
-            << std::endl;
-}
-
-// TODO: remove this function
-void Device::shared_mem_prepare_buffer(size_t size, void *host_ptr) {
-  DEBUG_PRINT("Device::shared_mem_prepare_buffer\n");
-  DEBUG_PRINT("Address of pre allocated pointer is %p\n", (void *)host_ptr);
-  if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Device::shared_mem_prepare_buffer\n Address of pre allocated pointer is %p\n", (void *)host_ptr);
-  }
-  fpga_result res = FPGA_OK;
-  res = mpfVtpPrepareBuffer(mpf_handle, size, &host_ptr, FPGA_BUF_PREALLOCATED);
-  if (res != FPGA_OK) {
-    fprintf(stderr, "Error mpfVtpPrepareBuffer \n");
-  }
-}
-
-// TODO: remove this function
-void Device::shared_mem_release_buffer(void *host_ptr) {
-  DEBUG_PRINT("Device::shared_mem_release_buffer\n");
-  if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Device::shared_mem_release_buffer\n Address of decalloc pointer is %p\n ",(void *)host_ptr );
-  }
-  fpga_result res = FPGA_OK;
-  DEBUG_PRINT("Address of decalloc pointer is %p\n", (void *)host_ptr);
-  res = mpfVtpReleaseBuffer(mpf_handle, (void *)host_ptr);
-  if (res != FPGA_OK) {
-    fprintf(stderr, "Error mpfVtpReleaseBuffer \n");
-  }
-}
-// End code to check about removing
-////////////////////////////////////////////////////////////////////////////////
-
-// TODO: need to handle error checking
+/** pin_alloc() function is used in aocl_mmd_host_alloc() aocl_mmd_shared_alloc() APIs 
+ *  it is also used in repin_all_mem_for_handle() function
+ *  it uses mpfVtpPrepareBuffer() API provied by MPF VTP
+ */
 void *Device::pin_alloc(void **addr, size_t size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Device::pin_alloc() : addr : %p, size : %ld\n",addr, size );
@@ -1239,6 +1230,9 @@ void *Device::pin_alloc(void **addr, size_t size) {
   }
 }
 
+/** free_prepinned_mem() function is used in aocl_mmd_free() API and unpin_all_mem_for_handle() function
+ *  it uses mpfVtpReleaseBuffer() API provided by MPF VTP
+ */
 int Device::free_prepinned_mem(void *mem) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Device::free_prepinned_mem() : addr : %p\n",mem );

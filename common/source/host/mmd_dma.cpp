@@ -1,18 +1,5 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 
 #include <cassert>
 #include <cstdlib>
@@ -56,6 +43,14 @@ static inline void check_result(fpga_result res, const char *err_str) {
                              std::string(fpgaErrStr(res));
 }
 
+/** mmd_dma class constructor
+ *  it initializes various attributes like CSR offsets for DMA
+ *  it determines if its s host to foga or fpga to host DMA object
+ *  determines if interrupt is used or 'magic number' methodology
+ *  create a dma work thread
+ *  we use two work threads, one for HOST -> FPGA DMA , one for FPGA -> HOST DMA
+ *  hence we create two mmd_dma objects
+ */
 mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
                  mpf_handle_t mpf_handle_in, uint64_t dfh_offset_arg,
                  int interrupt_num_arg, dma_mode mode)
@@ -137,6 +132,9 @@ mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
     printf("Error allocating DMA buffer\n");
   }
 
+  /** launch of new thread, creating new thread object
+   *  using lambda and calling work_thread()
+   */
   m_thread = new std::thread([this] { this->work_thread(); });
   m_initialized = true;
 
@@ -145,6 +143,10 @@ mmd_dma::mmd_dma(fpga_handle fpga_handle_arg, int mmd_handle,
   }
 }
 
+/** mmd_dma destructor 
+ *  free-ing , releasing various resources created during object construction is a good idea
+ *  it helps with system stability and reduces code bugs
+ */
 mmd_dma::~mmd_dma() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Destructing DMA %s\n", op_mode);
@@ -157,6 +159,14 @@ mmd_dma::~mmd_dma() {
   m_initialized = false;
 }
 
+/** work_thread() called while creating new threads in mmd_dma 
+ *  We check m_work_queue to check if it has queued any DMA transactions 
+ *  if not we use 'wait()' which comes with 'condition_variable' m_dma_notify
+ *  basically if queue is empty we block current thread 
+ *  and unlock other threads which share the mutex to proceed
+ *  when this thread is notified and woekn up again it locks the mutex and does same check again
+ *  once queue has work enqueued we pop an item of work and do_dma() on it.
+ */
 void mmd_dma::work_thread() {
   while (m_work_thread_active) {
     std::unique_lock<std::mutex> lock(m_work_queue_mutex);
@@ -176,6 +186,14 @@ void mmd_dma::work_thread() {
   }
 }
 
+/** We create an unique_lock using m_work_queue_mutex
+ *  same mutex we used in work_thread()
+ *  once we acquire lock we push DMA work item to m_work_queue, which is DMA work queue
+ *  and release the lock
+ *  we use condition_variable m_dma_notify to unblock thread waiting 
+ *  eventually we call do_dma() function which performs dma
+ *  work item has all data needed to perform DMA
+ */  
 int mmd_dma::enqueue_dma(dma_work_item &item) {
 
   // When item.op is not null DMA is non-blocking and queued to worked thread
@@ -237,6 +255,15 @@ void mmd_dma::read_register(uint64_t offset, const char* name)
   }
 }
 
+/** send_descriptors() function is called by do_dma() function
+ *  we use OPAE API fpgaWriteMMIO64() to write dma source, destination addresses to CSRs
+ *  and also to write dma transaction length to CSR
+ *  for host->fpga DMA we wait for interrupt and 
+ *  for fpga->host DMA we use 'magic number' methodology which is known as polling method, instead of using interrupt
+ *  in future we plan to enable interrupts for fpga->host direction as well
+ *  we can do without lock_guard it seems, there is no shared variable , but not tested yet, will remove in future release
+ *  it won't affect performance or functionality
+ */  
 int mmd_dma::send_descriptors(uint64_t dma_src_addr, uint64_t dma_dst_addr, uint64_t dma_len) {
 
   std::lock_guard<std::mutex> lock(m_dma_op_mutex);
@@ -356,7 +383,15 @@ int mmd_dma::send_descriptors(uint64_t dma_src_addr, uint64_t dma_dst_addr, uint
   return 0;
 }
 
-
+/** do_dma() function is called by enqueue_dma() function
+ *  it determines the dma host, src addresses from work item
+ *  it pins host memory to improve performance
+ *  if transfer size is less than 'threshold' which can be tuned,
+ *  it uses intermediate buffer to perforam DMA,
+ *  because performance won't be affected a lot at small transfer size
+ *  if transfer size > 'threshold' it pins the host memory and unpins when done with DMA
+ *  it determines appropriate dma src, dst, len and calles send_descriptors() function  
+ */
 int mmd_dma::do_dma(dma_work_item &item) {
 #if 0 
   printf("do_dma\t");
@@ -464,6 +499,10 @@ int mmd_dma::do_dma(dma_work_item &item) {
   return dma_res;
 }
 
+/** fpga_to_host() function as name suggests for fpga -> host DMA
+ *  it constructs a dma work item and adds it to a queue
+ *  DMA uses two queues, one for host to fpga and one for fpga to host DMA
+ */
 int mmd_dma::fpga_to_host(aocl_mmd_op_t op, void *host_addr,
                                   size_t dev_addr, size_t size) {
   transaction_id++;
@@ -479,6 +518,10 @@ int mmd_dma::fpga_to_host(aocl_mmd_op_t op, void *host_addr,
   return enqueue_dma(item);
 }
 
+/** host_to_fpga() function as name suggests for host -> fpga DMA
+ *  it constructs a dma work item and adds it to a queue
+ *  DMA uses two queues, one for host to fpga and one for fpga to host DMA
+ */
 int mmd_dma::host_to_fpga(aocl_mmd_op_t op, const void *host_addr,
                                   size_t dev_addr, size_t size) {
   transaction_id++;
