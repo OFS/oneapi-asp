@@ -18,12 +18,6 @@
 #include "afu_bbb_util.h"
 
 #define MMD_COPY_BUFFER_SIZE (2 * 1024 * 1024)
-
-
-//ToDo: Why is this also defined in fpga_dma_internal.h? Seems silly to have the same number defined
-// in two places, slightly differently. We should use the hi/lo definitions from the h file and then 
-// create a define that combines two 32-bit numbers into a single 64 bit DFH GUID?
-//#define MSGDMA_BBB_GUID "ef82def7-f6ec-40fc-a914-9a35bace01ea"
 #define MSGDMA_BBB_GUID   "BC24AD4F-8738-F840-575F-BAB5B61A8DAE"
 #define MSGDMA_BBB_SIZE 256
 
