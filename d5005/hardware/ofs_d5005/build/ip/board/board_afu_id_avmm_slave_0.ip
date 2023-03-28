@@ -508,12 +508,12 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="AFU_ID_H" type="string">
           <ipxact:name>AFU_ID_H</ipxact:name>
           <ipxact:displayName>AFU_ID_H</ipxact:displayName>
-          <ipxact:value>7184217340536246019</ipxact:value>
+          <ipxact:value>4321049568533169365</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="AFU_ID_L" type="string">
           <ipxact:name>AFU_ID_L</ipxact:name>
           <ipxact:displayName>AFU_ID_L</ipxact:displayName>
-          <ipxact:value>11307134592678193903</ipxact:value>
+          <ipxact:value>10405505937064299571</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="DFH_FEATURE_TYPE" type="string">
           <ipxact:name>DFH_FEATURE_TYPE</ipxact:name>
