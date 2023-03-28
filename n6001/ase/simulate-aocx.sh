@@ -133,7 +133,6 @@ sed -i '/.hex$/d' ./vlog_files.list
 
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./qsys_files/
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./sim_files/
-cp -prf "$ASE_DIR_PATH"/hack_ip_files/test_data ../kernel/
 
 OPAE_BASEDIR="$LIBOPAE_C_ROOT/../opae_src" make
 cp ./*.hex ./work/

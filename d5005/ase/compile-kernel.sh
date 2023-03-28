@@ -28,7 +28,7 @@ if [ -z "$OFS_OCL_ENV_ENABLE_ASE" ]; then
 fi 
 
 function usage() {
-  echo "Usage: $0 [-b board-type] <cl_file>"
+  echo "Usage: $0 [-b board-type] <cl_file/path-to-OneAPI-Makefile>"
   exit 1
 }
 
@@ -43,7 +43,7 @@ done
 shift $((OPTIND - 1))
 
 if (($# == 0)); then
-  usage
+    usage
 fi
 
 DESIGN_SRC="$1"
@@ -57,37 +57,35 @@ if [ ! -f "$BSP_ROOT/hardware/$BOARD/build/d5005.qdb" ]; then
 fi
 echo "Running ASE for board variant: $BOARD"
 
-if [ ! -d "$DESIGN_SRC" ]; then
-  echo "Error: cannot find requested directory '$DESIGN_SRC'"	
-  exit 1
+if [ -f "$DESIGN_SRC" ]; then
+    echo "Running ASE with design: $DESIGN_SRC"
+    echo "aoc command is next"
+    aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
+elif [ -d "$DESIGN_SRC" ]; then
+    echo "Running ASE with oneAPI design: $DESIGN_SRC"
+    echo "pwd is  $PWD"
+    mkdir -p d5005 
+    echo "pwd is $PWD"
+    cd d5005 
+    echo "pwd is $PWD, cmake is next"
+    export USM_TAIL=""
+    if [ ${BOARD} == "ofs_d5005_usm" ]; then
+        export USM_TAIL="_usm"
+    fi
+    export BOARD_TYPE=pac_s10${USM_TAIL}
+    cmake "$DESIGN_SRC" -DFPGA_BOARD=${BOARD_TYPE}
+    echo "after cmake"
+    sed -i "s/$BOARD_TYPE/$BOARD/g" src/CMakeFiles/*/link.txt
+    make fpga
+    echo "make fpga is done; break out the aocx file"
+    FPGAFILE=`ls *.fpga`
+    AOCXFILE=`echo $FPGAFILE | sed 's/fpga/aocx/g'`
+    echo "FPGAFILE is $FPGAFILE"
+    echo "AOCXFILE is $AOCXFILE"
+    ${INTELFPGAOCLSDKROOT}/host/linux64/bin/aocl-extract-aocx -i $FPGAFILE -o $AOCXFILE
+else
+    echo "Error: cannot find: '$DESIGN_SRC'"
+    exit 1
 fi
-echo "Running ASE with oneAPI design: $DESIGN_SRC"
-
-aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$CL_FILE"
-
-echo "pwd is  $PWD"
-
-#cd "$DESIGN_SRC"
-mkdir -p d5005 
-echo "pwd is $PWD"
-cd d5005 
-echo "pwd is $PWD, cmake is next"
-export USM_TAIL=""
-if [ ${BOARD} == "ofs_d5005_usm" ]; then
-    export USM_TAIL="_usm"
-elif [ ${BOARD} == "ofs_d5005_ddr_4ch_usm" ]; then
-    export USM_TAIL="_usm"
-fi
-export BOARD_TYPE=pac_s10${USM_TAIL}
-cmake "$DESIGN_SRC" -DFPGA_BOARD=${BOARD_TYPE}
-echo "after cmake"
-sed -i "s/$BOARD_TYPE/$BOARD/g" src/CMakeFiles/*/link.txt
-make fpga
-echo "make fpga is done; break out the aocx file"
-FPGAFILE=`ls *.fpga`
-AOCXFILE=`echo $FPGAFILE | sed 's/fpga/aocx/g'`
-echo "FPGAFILE is $FPGAFILE"
-echo "AOCXFILE is $AOCXFILE"
-/p/psg/swip/releases_hld/aclsycltest/2022.3/170.1/linux64/host/linux64/bin/aocl-extract-aocx -i $FPGAFILE -o $AOCXFILE
 
 echo "Done with compile-kernel.sh."

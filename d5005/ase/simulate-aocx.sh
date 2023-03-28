@@ -109,15 +109,15 @@ else
 fi
 
 #all of the base files are the same right now, just pick a base-list and go
-#if [ "${board_name}" == "ofs_d5005" ]; then
-#    cp -prf vlog_files_base_ofs_d5005.list vlog_files.list
-#elif [ "${board_name}" == "ofs_d5005_usm" ]; then
-#    cp -prf vlog_files_base_ofs_d5005_usm.list vlog_files.list
-#else
-#    echo "Invalid board_name value of $board_name -- you MUST set it to a correct value"
-#    exit 1
-#fi
-cp -prf vlog_files_base_ofs_d5005.list vlog_files.list
+if [ "${board_name}" == "ofs_d5005" ]; then
+    cp -prf vlog_files_base_ofs_d5005.list vlog_files.list
+elif [ "${board_name}" == "ofs_d5005_usm" ]; then
+    cp -prf vlog_files_base_ofs_d5005_usm.list vlog_files.list
+else
+    echo "Invalid board_name value of $board_name -- you MUST set it to a correct value"
+    exit 1
+fi
+
 
 # Put package files first
 {
@@ -135,7 +135,6 @@ sed -i '/.hex$/d' ./vlog_files.list
 
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./qsys_files/
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./sim_files/
-cp -prf "$ASE_DIR_PATH"/hack_ip_files/test_data ../kernel/
 
 OPAE_BASEDIR="$LIBOPAE_C_ROOT/../opae_src" make
 cp ./*.hex ./work/

@@ -28,13 +28,18 @@ if [ "$#" -lt 2 ]; then
   exit 1
 fi
 
-cl_file="$1"
-echo "cl_file is $cl_file"
-#cl_file="$(readlink -f "$1")"
+this_design="$1"
+this_design="$(readlink -f "$1")"
 board_name="$2"
+this_is_oneapi_design=0
 
-if [ ! -d "$cl_file" ]; then
-  echo "Error: cannot find directory: $cl_file"
+if [ -f "$this_design" ]; then
+    echo "Found OpenCL .cl file $this_design"
+elif [ -d "$this_design" ]; then
+    echo "Found OneAPI Makefile at $this_design"
+    this_is_oneapi_design=1
+else
+  echo "Error: cannot find: $this_design"
   exit 1
 fi
 
@@ -47,8 +52,12 @@ cd "$SIM_DIR" || exit
 
 mkdir -p kernel
 pushd kernel || exit
-"$ASE_DIR_PATH/compile-kernel.sh" -b "$board_name" "$cl_file" || exit
-aocx_file="$(readlink -f "$(ls -1 ./n6001/*.aocx)")"
+"$ASE_DIR_PATH/compile-kernel.sh" -b "$board_name" "$this_design" || exit
+if [ "$this_is_oneapi_design" -eq "1" ]; then
+    aocx_file="$(readlink -f "$(ls -1 ./n6001/*.aocx)")"
+else
+    aocx_file="$(readlink -f "$(ls -1 ./*.aocx)")"
+fi
 popd || exit
 
 mkdir -p sim
