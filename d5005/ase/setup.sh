@@ -16,8 +16,6 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 echo "Start of setup.sh"
-board_name="$2"
-echo "board_name is $board_name"
 
 if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
   echo "Running ${BASH_SOURCE[0]} with debug logging"
@@ -65,6 +63,10 @@ function set_libopae_c_root() {
   if [ -z "$LIBOPAE_C_ROOT" ]; then
     if /sbin/ldconfig -p | grep libopae-c.so.2 -q && afu_synth=$(command -v afu_synth_setup); then
       LIBOPAE_C_ROOT="$(dirname "$(dirname "$afu_synth")")"
+    elif [ -d "$BSP_ROOT/build/opae/install" ]
+    then
+      echo "libopae-c-root exists : $BSP_ROOT/build/opae/install "
+      LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
     else
       echo "libopae-c-root doesn't exist, running build-opae.sh"	    
       "$SCRIPT_DIR_PATH/build-opae.sh" || exit
@@ -83,14 +85,9 @@ if ! command -v vcs; then
 fi
 
 export OFS_OCL_ENV_ENABLE_ASE=1
-if [ ! -f "$BSP_ROOT/hardware/$board_name/d5005.qpf" ]; then
-  unset LIBOPAE_C_ROOT
+if [ ! -f "$BSP_ROOT/hardware/ofs_d5005/d5005.qpf" ]; then
   echo "The qpf file doesn't exist, so we need to run build-bsp.sh"
-  build_bsp_type=""
-  if [[ "$board_name" == *"4ch"* ]]; then
-    build_bsp_type="ofs_d5005_ddr_4ch"
-  fi
-  $BSP_ROOT/scripts/build-bsp.sh "$build_bsp_type"
+  "$BSP_ROOT/scripts/build-bsp.sh"
   set_libopae_c_root
 else
   echo "BSP setup already complete (delete hardware setup files to regenerate)"
@@ -122,8 +119,8 @@ export CL_CONTEXT_COMPILER_MODE_INTELFPGA=3
 echo "CL_CONTEXT_COMPILER_MODE_INTELFPGA is $CL_CONTEXT_COMPILER_MODE_INTELFPGA"
 export PATH="$LIBOPAE_C_ROOT/bin:$LIBOPAE_C_ASE_ROOT/bin:$PATH"
 echo "added libopae-c-root/bin to PATH"
+echo "LIBOPAE_C_ROOT is $LIBOPAE_C_ROOT"
 export OFS_OCL_ENV_ENABLE_ASE=1
-
 echo "export OFS_OCL_ENV_ENABLE_ASE=1"
 
 # shellcheck source=/dev/null
