@@ -26,10 +26,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "ccip_mmd_device.h"
+#include "mmd_device.h"
 #include "mmd_iopipes.h"
 
-namespace intel_opae_mmd {
+using namespace intel_opae_mmd;
 
 //using namespace intel_opae_mmd;
 
@@ -65,11 +65,21 @@ namespace intel_opae_mmd {
 
 #define N 50 // data size
 
+iopipes::iopipes(int mmd_handle): m_mmd_handle(mmd_handle){
+
+}
+
+iopipes::~iopipes(){}
 // setting IP/gateway/netmask to PAC
 //void setup_pac(unsigned long mac, const char *fpga_ip,const char *gw_ip,const char *netmask)
-void setup_pac(fpga_handle afc_handle, unsigned long mac, const std::string& fpga_ip, const std::string&  gw_ip, const std::string& netmask)
+//void setup_pac(fpga_handle afc_handle, unsigned long mac, const std::string& fpga_ip, const std::string&  gw_ip, const std::string& netmask)
 //void setup_pac()
+void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
+  std::string fpga_ip = FPGA_IP;
+  std::string gw_ip = GW_IP;
+  std::string netmask = NETMASK;
+  int mac = MAC;
   fpga_result res = FPGA_OK;
   
   printf("Doug - inside setup-pac function (a)\n");
@@ -230,4 +240,3 @@ void setup_pac(fpga_handle afc_handle, unsigned long mac, const std::string& fpg
   }
   */
 }
-}; 

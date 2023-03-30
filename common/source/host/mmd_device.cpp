@@ -26,6 +26,7 @@
 #include <string.h>
 #include "mmd_device.h"
 #include "fpgaconf.h"
+#include "mmd_iopipes.h"
 
 // TODO: better encapsulation of afu_bbb_util functions
 #include "afu_bbb_util.h"
@@ -42,6 +43,8 @@
 
 #define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
 #define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
+
+#define IOPIPES_GUID "a2aa84f4-48a3-43b9-af77-f9c3123ff955"
 
 using namespace intel_opae_mmd;
 
@@ -62,7 +65,7 @@ Device::Device(uint64_t obj_id)
       mmio_token(NULL), mmio_handle(NULL),
       filter_fme(NULL), fme_token(NULL), guid(), ddr_offset(0), mpf_mmio_offset(0),
       dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0),
-      dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), mmd_copy_buffer(NULL) {
+      dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), io_pipes(NULL), mmd_copy_buffer(NULL) {
   // Note that this constructor is not thread-safe because next_mmd_handle
   // is shared between all class instances
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -424,6 +427,27 @@ bool Device::find_dma_dfh_offsets() {
   return true;
 }
 
+bool Device::find_iopipes_dfh_offsets() {
+  uint64_t dfh_offset = 0;
+  uint64_t next_dfh_offset = 0;
+  if (find_dfh_by_guid(mmio_handle, IOPIPES_GUID, &dfh_offset,
+                       &next_dfh_offset)) {
+    iopipes_dfh_offset = dfh_offset;
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset, IOPIPES_GUID);
+    }
+    DEBUG_PRINT("IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset,
+                IOPIPES_GUID);
+  } else {
+      printf("IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+    return false;
+  }
+  
+  assert(iopipes_dfh_offset != 0);
+
+  return true;
+}
+
 bool Device::initialize_bsp() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Initializing BSP ... \n");
@@ -519,7 +543,14 @@ bool Device::initialize_bsp() {
     }
     return false;
   }
-  
+
+  /** IO Pipes initialization*/
+  bool iopipes_enabled = find_iopipes_dfh_offsets();
+  if(iopipes_enabled) {
+    io_pipes = new iopipes(mmd_handle);
+    io_pipes->setup_iopipes_asp(mmio_handle);
+  }
+   
   //set the magic-number memory location on the host
   //dma_h->magic_iova
   //res = MMIOWrite64Blk(dma_h, dma_h->dma_desc_base, (uint64_t)desc,
