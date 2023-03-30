@@ -1,7 +1,7 @@
 # OneAPI-ASP 
 
 ## Overview
-This repository contains files necessary to generate Shim/BSP for OFS ADP cards.
+This repository contains files necessary to generate ASP for OFS ADP cards.
 The hardware currently relies on platforms that implement the OFS PCIe TLP
 format using AXI-S interfaces, and the software uses OPAE SDK interfaces.
 
@@ -10,42 +10,39 @@ format using AXI-S interfaces, and the software uses OPAE SDK interfaces.
 The repository is structured as follows:
 
 * bringup: contains files used by 'aocl install' command to install prerequisite
-software on a target system and to load a Shim/BSP.  The files are stored in two
+software on a target system and to load a ASP.  The files are stored in two
 separate git submodules that each use git-lfs to store their contents.
 
-* hardware: contains files used by the OneAPI/OpenCL compiler to integrate the 
+* hardware: contains files used by the OneAPI compiler to integrate the 
 generated kernel code with platform specific code.  Contains distinct shim 
 targets with distinct functionalities (ex. USM and non-USM variants targeting
 the same board platform).
 
-* linux64: contains the libraries and utilities that are used by the OneAPI/OpenCL
+* linux64: contains the libraries and utilities that are used by the OneAPI
 software stack. The repository itself contains a few scripts that are checked-in
 to linux64/libexec. The linux64 directory is also the target for files compiled
 from the source directory.
 
-* scripts: a variety of helper scripts used for configuring Shim/BSP and for 
+* scripts: a variety of helper scripts used for configuring ASP and for 
 running tests
 
-* source: the source code that is used to compile MMD and utilities that are
-used by the OpenCL runtime to interface with the Shim/BSP.
+## ASP variants
 
-## Shim/BSP variants
+The `hardware` folder contains subdirectories with the 2 different ASP variants:
 
-The `hardware` folder contains subdirectories with the 2 different Shim/BSP variants:
-
-* `ofs_d5005_usm`: Shim/BSP that supports shared virtual memory between host and device. This 
+* `ofs_d5005_usm`: ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM variant with the addition of the USM path between 
 the kernel-system and the host.
 
-* `ofs_d5005`:  DMA-based Shim/BSP that supports local memory and host memory interfaces for the 
+* `ofs_d5005`:  DMA-based ASP that supports local memory and host memory interfaces for the 
 kernel system.
 
-## Generating Shim/BSP
+## Generating ASP
 
-Generating a Shim/BSP requires 2 primary steps: generating hardware and compiling
+Generating a ASP requires 2 primary steps: generating hardware and compiling
 the software.
 
-The hardware folder contains code that implements the Shim/BSP modules, but it needs
+The hardware folder contains code that implements the ASP modules, but it needs
 copies of the OFS FIM pr-release-template files to work with a specific platform. 
 The setup_bsp.py script copies the required files from the FIM pr-release-template
 and updates the project qsf files appropriately.
@@ -54,24 +51,24 @@ Need to set **OPAE_PLATFORM_ROOT** to point to ofs-dev/work_ofs_ac_base_adp-A1/p
 
 Need to set **OFS_OCL_SHIM_ROOT** to point to opencl-bsp/d5005.
 
-To generate Shim/BSP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
+To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
-To generate MMD software only run: `scripts/build_mmd.sh`
+To generate ASP software only run: `scripts/build_mmd.sh`
 
-To package generated Shim/BSP into tarball run: `scripts/create-tarball.sh`
+To package generated ASP into tarball run: `scripts/create-tarball.sh`
 
 ## Kernel Compilation Options
 
-* Default Kernels - boardtest.cl (for non-USM) , mem_bandwidth_svm (for USM).
+* Default Kernels - hello_world.cl (for non-USM) , hello_world.cl (for USM).
   Use script - scripts/build-default-aocx.sh.
   Generated aocx will be in $OFS_OCL_SHIM_ROOT/build/bringup folder.
   Host code will be in $OFS_OCL_SHIM_ROOT/bringup/source folder
 
-* Flat: This flow compiles both the Shim/BSP and the kernel - the entire
+* Flat: This flow compiles both the ASP and the kernel - the entire
   partial reconfiguration (PR) region - without any additional floorplan
   constraints (beyond the existing static region (SR) / PR region constraints).
   This will execute a new place-and-route of the entire PR region - the
-  Shim/BSP's synthesis/placement/routing is not locked-down when using this flow.
+  ASP's synthesis/placement/routing is not locked-down when using this flow.
   Timing violations in the fixed-clock domains (DDR, ASP/PCIe) are possible
   when using this flow.  Example compilation command:
   $OFS_OCL_SHIM_ROOT/$ aoc -v -board=ofs_d5005
