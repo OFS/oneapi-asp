@@ -18,11 +18,7 @@ post_message "Running compile_script.tcl script"
 
 # get flow type (from quartus(args) variable)
 set flow [lindex $quartus(args) 0]
-# cp ipss to ../../../ to fix folder issue.
-puts [exec cp -r ipss ../../../ipss]
 
-#cp src to fix STP issue
-puts [exec cp -r src ../../../src]
 # simplified PR Quartus flow
 qexec "quartus_syn --read_settings_files=on --write_settings_files=off d5005 -c afu_$flow"
 qexec "quartus_fit --read_settings_files=on --write_settings_files=off d5005 -c afu_$flow"
