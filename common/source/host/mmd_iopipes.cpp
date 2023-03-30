@@ -65,9 +65,10 @@ using namespace intel_opae_mmd;
 
 #define N 50 // data size
 
-iopipes::iopipes(int mmd_handle): m_mmd_handle(mmd_handle){
-
-}
+iopipes::iopipes(int mmd_handle, std::string local_ip_address, int local_mac_address, std::string local_netmask, int local_udp_port,
+                 std::string remote_ip_address, int remote_mac_address, int remote_udp_port)
+                : m_mmd_handle(mmd_handle), m_local_ip_address(local_ip_address), m_local_mac_address(local_mac_address), m_local_netmask(local_netmask),
+                  m_local_udp_port(local_udp_port), m_remote_ip_address(remote_ip_address), m_remote_mac_address(remote_mac_address), m_remote_udp_port(remote_udp_port){ }
 
 iopipes::~iopipes(){}
 // setting IP/gateway/netmask to PAC
@@ -76,10 +77,27 @@ iopipes::~iopipes(){}
 //void setup_pac()
 void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
-  std::string fpga_ip = FPGA_IP;
-  std::string gw_ip = GW_IP;
-  std::string netmask = NETMASK;
-  int mac = MAC;
+  std::string local_ip_addr = m_local_ip_address;
+  printf("local ip address= %s", local_ip_addr.c_str());
+  
+  int local_mac_addr = m_local_mac_address;
+  printf("local mac address= %d", local_mac_addr);
+
+  std::string local_netmask = m_local_netmask;
+  printf("local netmask = %s", local_netmask.c_str());
+
+  int local_udp_port = m_local_udp_port;
+  printf("local udp port= %d", local_udp_port);
+
+  std::string remote_ip_addr = m_remote_ip_address;
+  printf("remote ip address= %s", remote_ip_addr.c_str());
+  
+  int remote_mac_addr = m_remote_mac_address;
+  printf("remote mac address= %d", remote_mac_addr);
+
+  int remote_udp_port = m_remote_udp_port;
+  printf("remote udp port= %d", remote_udp_port);
+
   fpga_result res = FPGA_OK;
   
   printf("Doug - inside setup-pac function (a)\n");
@@ -143,6 +161,8 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 */
   uint64_t data = 0;
   
+  // TO DO - Will need to update CSR names and write to appropriate CSRs , mayeb add and remove some CSRs
+  // Also code to then loop over number of IO Pipes and read from config status CSR or each io pipe if needed or initialize them if needed
   fprintf(stderr, "iopipes.cpp - dump the DFH registers...\n");
   for (uint64_t this_addr = REG_UDPOE_BASE_ADDR; this_addr<=CSR_STATUS_REG_ADDR;this_addr+=8) {
       fprintf(stderr, "******* Read/write/read the UDP OE register 0x%lx\n",this_addr);
@@ -182,11 +202,11 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   //
   // UOE register settings. These registers are not reset even after fpgaClose().
   //
-  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_MAC_ADR_ADDR, mac)) != FPGA_OK) {
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_MAC_ADR_ADDR, local_mac_addr)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
   }
-  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_HOST_MAC_ADR_ADDR, mac)) != FPGA_OK) {
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_HOST_MAC_ADR_ADDR, remote_mac_addr)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
   }
@@ -203,8 +223,8 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
   
 
-  unsigned long tmp1 = htonl(inet_addr(fpga_ip.c_str()));
-  unsigned long tmp2 = htonl(inet_addr(gw_ip.c_str()));
+  unsigned long tmp1 = htonl(inet_addr(local_ip_addr.c_str()));
+  unsigned long tmp2 = htonl(inet_addr(local_netmask.c_str()));
   if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
@@ -213,7 +233,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing CSR");
     exit(1);
   }
-  unsigned long tmp3 = htonl(inet_addr(netmask.c_str()));
+  unsigned long tmp3 = htonl(inet_addr(local_netmask.c_str()));
   if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_NETMASK_ADDR, tmp3)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
