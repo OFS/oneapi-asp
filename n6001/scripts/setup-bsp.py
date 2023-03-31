@@ -260,7 +260,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #remove the paths and files listed in the ofs_pr_afu_sources.tcl file
     ofs_pr_afu_source_tcl_file=os.path.join(bsp_qsf_dir, 'ofs_pr_afu_sources.tcl')
     #this still needs to be done in order to eliminate Quartus warnings
-    replace_text_in_file(ofs_pr_afu_source_tcl_file, '"../../', '$::env(BUILD_ROOT_REL)/')
+    replace_text_in_file(ofs_pr_afu_source_tcl_file, '../../', '$::env(BUILD_ROOT_REL)/')
     replace_lines_in_file(afu_flat_qsf_path, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl')
     
     #update the build_env_db.txt file with the appropriate BUILD_ROOT_REL path
