@@ -1,3 +1,5 @@
+# Copyright 2022 Intel Corporation
+# SPDX-License-Identifier: MIT
 
 #Full compiles are not supported on Windows
 switch $tcl_platform(platform) {
