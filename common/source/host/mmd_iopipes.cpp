@@ -222,7 +222,8 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     exit(1);
   }
   
-
+// TO do - need to clean code to write to CSRs, we dont need below calculations
+// just write to CSRs what we got from environment variables or initialize to known values
   unsigned long tmp1 = htonl(inet_addr(local_ip_addr.c_str()));
   unsigned long tmp2 = htonl(inet_addr(local_netmask.c_str()));
   if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
