@@ -1,3 +1,6 @@
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT`ifndef
+
 `ifndef opencl_bsp_vh
 
     `define opencl_bsp_vh
