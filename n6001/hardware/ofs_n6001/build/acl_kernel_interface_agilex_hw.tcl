@@ -13,7 +13,7 @@
 # license agreement, including, without limitation, that your use is for the     
 # sole purpose of programming logic devices manufactured by Intel and sold by    
 # Intel or its authorized distributors.  Please refer to the applicable          
-# agreement for further details.  
+# agreement for further details.                                                 
 package require -exact qsys 17.0
 
 # module properties
