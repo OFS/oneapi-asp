@@ -103,7 +103,8 @@ package dc_bsp_pkg;
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
     
     //USM clock-crossing bridge response FIFO depth (controls the number of
-    // outstanding read requests to the host) (default was 256, but that was too low)
-    parameter USM_CCB_RESPONSE_FIFO_DEPTH = 512;
+    // outstanding read requests to the host) (default is 256, but it caps 
+    // read bandwidth; anything larger can result in host crashes)
+    parameter USM_CCB_RESPONSE_FIFO_DEPTH = 256;
     
 endpackage : dc_bsp_pkg
