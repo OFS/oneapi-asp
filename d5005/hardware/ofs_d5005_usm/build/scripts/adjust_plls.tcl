@@ -256,14 +256,6 @@ proc get_kernel_clks_and_fmax { k_clk_name k_clk2x_name jitter_compensation} {
         post_message "Both kernel clocks are used in this design."
         post_message "clk1x worst-case negative slack is $k_clk_wc_slack"
         post_message "clk2x worst-case negative slack is $k_clk2x_wc_slack"
-        if {$k_clk_wc_slack >= $k_clk2x_wc_slack} {
-            post_message "Update clk2x based on clk1x because the clk1x slack is worse."
-            set fmax2 [expr 2.0 * $fmax1]
-        } else {
-            post_message "Update clk1x based on clk2x because the clk2x slack is worse."
-            set fmax1 [ expr 0.50 * $fmax2 ]
-            set k_fmax $fmax1
-        }
     }
     
     return [list $k_fmax $fmax1 $k_clk_name $fmax2 $k_clk2x_name]
