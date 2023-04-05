@@ -257,14 +257,6 @@ proc get_kernel_clks_and_fmax { k_clk_name k_clk2x_name jitter_compensation} {
         post_message "Both kernel clocks are used in this design."
         post_message "clk1x worst-case negative slack is $k_clk_wc_slack"
         post_message "clk2x worst-case negative slack is $k_clk2x_wc_slack"
-        if {$k_clk_wc_slack >= $k_clk2x_wc_slack} {
-            post_message "Update clk2x based on clk1x because the clk1x slack is worse."
-            set fmax2 [expr 2.0 * $fmax1]
-        } else {
-            post_message "Update clk1x based on clk2x because the clk2x slack is worse."
-            set fmax1 [ expr 0.50 * $fmax2 ]
-            set k_fmax $fmax1
-        }
     }
     
     return [list $k_fmax $fmax1 $k_clk_name $fmax2 $k_clk2x_name]
@@ -350,9 +342,10 @@ while { $timing_clean == 0 && $timing_loop_cnt <= $max_num_loops} {
     set m9k       [get_fitter_resource_usage -resource "M?0K*"]
     
     set pll_1x_setting [expr int($fmax1)]
+    set pll_2x_setting [expr int($fmax2)]
     if { $fmax2 < $unused_clock_freq} {
-        #set the max frequency to PLL_1x2x_MAX because 2x clock can't go higher than (PLL_1x2x_MAX*2)
-        set pll_1x_setting [expr min($pll_1x_setting,$PLL_1x2x_MAX) ]
+	#the 1x kernel clock will be limited by the 2x kernel clock
+        set pll_1x_setting [expr min($pll_1x_setting, $PLL_1x2x_MAX, $pll_2x_setting / 2)]
         set pll_2x_setting [expr int($pll_1x_setting * 2)]
         set clk2x_has_no_fanout 0
     } else {

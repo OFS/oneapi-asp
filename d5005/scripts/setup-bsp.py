@@ -257,8 +257,6 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     with open(afu_flat_qsf_path, 'a') as f:
         f.write('set_global_assignment -name SEARCH_PATH "./platform"\n')
         f.write('set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "./platform/ofs_plat_if/par/ofs_plat_if_addenda.qsf"\n')
-        # Map FIM interfaces to the PIM
-        f.write('set_global_assignment -name SYSTEMVERILOG_FILE "./src/port_gasket/stratix10/afu_main_pim/afu_main.sv"\n')
 
     #remove the hw folder; it isn't needed
     rel_template_hw_folder_path=os.path.join(bsp_qsf_dir, '../hw')
@@ -272,7 +270,10 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     replace_lines_in_file(iofs_pr_afu_source_tcl_file, 'set FIM_SCRIPT_DIR "../setup"', 'set FIM_SCRIPT_DIR "./syn/setup"')
     #hierarchy is different
     replace_lines_in_file(iofs_pr_afu_source_tcl_file, '"../../..', '".')
-    
+
+    # set up paths correctly to find afu_main.tcl
+    replace_lines_in_file(iofs_pr_afu_source_tcl_file, "#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE \"../.././ofs-common/src/fpga_family/stratix10/afu_main.tcl\"", "set_global_assignment -name SOURCE_TCL_SCRIPT_FILE $::env(BUILD_ROOT_REL)/ofs-common/src/fpga_family/stratix10/afu_main.tcl")
+
     #update the build_env_db.txt file with the appropriate BUILD_ROOT_REL path
     build_env_db_path=os.path.join(bsp_qsf_dir, 'build_env_db.txt')
     remove_lines_in_file(build_env_db_path, 'BUILD_ROOT_REL=')
