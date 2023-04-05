@@ -247,11 +247,11 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     shutil.move(ofs_pr_afu_qsf_file,afu_flat_qsf_path)
     
     #write some stuff into afu_flat.qsf - this is to replace some lines in ofs_pr_afu_sources.tcl where the paths aren't correct
-    with open(afu_flat_qsf_path, 'a') as f:
-        f.write('set_global_assignment -name SEARCH_PATH "./platform"\n')
-        f.write('set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "./platform/ofs_plat_if/par/ofs_plat_if_addenda.qsf"\n')
-        # Map FIM interfaces to the PIM
-        f.write('set_global_assignment -name SYSTEMVERILOG_FILE "./src/port_gasket/agilex/afu_main_pim/afu_main.sv"\n')
+    #with open(afu_flat_qsf_path, 'a') as f:
+    #    f.write('set_global_assignment -name SEARCH_PATH "./platform"\n')
+    #    f.write('set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "./platform/ofs_plat_if/par/ofs_plat_if_addenda.qsf"\n')
+    #    # Map FIM interfaces to the PIM
+    #    f.write('set_global_assignment -name SYSTEMVERILOG_FILE "./src/port_gasket/agilex/afu_main_pim/afu_main.sv"\n')
         
     #remove the hw folder; it isn't needed
     rel_template_hw_folder_path=os.path.join(bsp_qsf_dir, '../hw')
@@ -260,7 +260,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #remove the paths and files listed in the ofs_pr_afu_sources.tcl file
     ofs_pr_afu_source_tcl_file=os.path.join(bsp_qsf_dir, 'ofs_pr_afu_sources.tcl')
     #this still needs to be done in order to eliminate Quartus warnings
-    replace_lines_in_file(ofs_pr_afu_source_tcl_file, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "../../', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "../../')
+    replace_text_in_file(ofs_pr_afu_source_tcl_file, '../../', '$::env(BUILD_ROOT_REL)/')
     replace_lines_in_file(afu_flat_qsf_path, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl')
     
     #update the build_env_db.txt file with the appropriate BUILD_ROOT_REL path
@@ -310,7 +310,7 @@ def remove_lines_in_file(file_name, search_text):
             f.write(line)
 
 
-# replace search_text with replace_text in file
+# replace a line containing search_text with replace_text in file
 def replace_lines_in_file(file_name, search_text, replace_text):
     lines = []
     with open(file_name) as f:
@@ -323,6 +323,15 @@ def replace_lines_in_file(file_name, search_text, replace_text):
     with open(file_name, 'w') as f:
         for line in lines:
             f.write(line)
+
+
+# replace search_text with replace_text in file
+def replace_text_in_file(file_name, search_text, replace_text):
+    with open(file_name, 'r') as f:
+        data = f.read()
+        data = data.replace(search_text, replace_text)
+    with open(file_name, 'w') as f:
+        f.write(data)
 
 
 # python equivalent of "chmod +w"
