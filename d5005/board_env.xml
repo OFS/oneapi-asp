@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<board_env version="22.3" name="ofs_d5005_shim">
+<board_env version="23.1" name="ofs_d5005_shim">
 
   <hardware dir="hardware" default="ofs_d5005"></hardware>
   <platform name="linux64">
