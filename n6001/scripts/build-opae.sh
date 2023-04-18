@@ -76,7 +76,7 @@ fi
 
 # Default branch to 'master' if the branch variable is not set
 if [ -z "${OPAE_SDK_REPO_BRANCH}" ]; then
-    OPAE_SDK_REPO_BRANCH="master"
+    OPAE_SDK_REPO_BRANCH="release/2.5.0"
 fi
 
 # Default location to clone is $OPAESDK_BUILD_PREFIX/opae-sdk
@@ -121,7 +121,7 @@ if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
     fi
     # Default branch to 'master' if the branch variable is not set
     if [ -z "${OPAESIM_REPO_BRANCH}" ]; then
-        OPAESIM_REPO_BRANCH="master"
+        OPAESIM_REPO_BRANCH="release/2.5.0"
     fi
     # Default location to clone is $BUILD_PREFIX/opae-sim
     if [ -z "${OPAESIM_PATH}" ]; then
