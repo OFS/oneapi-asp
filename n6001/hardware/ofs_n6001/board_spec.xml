@@ -19,7 +19,7 @@
     </auto_migrate>
   </compile>
 
-  <device device_model="agfb014r24a2e2vr0_dm.xml">
+  <device device_model="agfb014r24a3e3vr0_dm.xml">
     <used_resources>
       <alms num="344709"/>
       <ffs num="1249098"/>
