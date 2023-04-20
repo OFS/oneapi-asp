@@ -12,7 +12,7 @@ echo "This is the OFS HLD shim BSP run.sh script."
 # set BSP flow
 if [ $# -eq 0 ]
 then
-    BSP_FLOW="flat"
+    BSP_FLOW="afu_flat"
 else
     BSP_FLOW="$1"
 fi
@@ -114,7 +114,7 @@ FLOW_SUCCESS=$?
 # =============
 if [ $FLOW_SUCCESS -eq 0 ]
 then
-    quartus_sh -t scripts/adjust_plls.tcl d5005 afu_"${BSP_FLOW}"
+    quartus_sh -t scripts/adjust_plls.tcl d5005 "${BSP_FLOW}"
 else
     echo "ERROR: kernel compilation failed. Please see quartus_sh_compile.log for more information."
     exit 1
@@ -138,15 +138,15 @@ else
 fi
 
 #check for generated rbf and gbs files
-if [ ! -f "./output_files/afu_${BSP_FLOW}.persona1.rbf" ]; then
-    echo "ERROR: ./output_files/afu_${BSP_FLOW}.persona1.rbf is missing!"
+if [ ! -f "./output_files/${BSP_FLOW}.persona1.rbf" ]; then
+    echo "ERROR: ./output_files/${BSP_FLOW}.persona1.rbf is missing!"
     exit 1
 fi
 
 rm -f afu.gbs
 $PACKAGER_BIN create-gbs \
-    --rbf "./output_files/afu_${BSP_FLOW}.persona1.rbf" \
-    --gbs "./output_files/afu_${BSP_FLOW}.gbs" \
+    --rbf "./output_files/${BSP_FLOW}.persona1.rbf" \
+    --gbs "./output_files/${BSP_FLOW}.gbs" \
     --afu-json opencl_afu.json \
     --set-value \
         interface-uuid:"$FME_IFC_ID" \
@@ -160,21 +160,21 @@ fi
 
 rm -rf fpga.bin
 
-gzip -9c ./output_files/afu_"${BSP_FLOW}".gbs > afu_"${BSP_FLOW}".gbs.gz
+gzip -9c ./output_files/"${BSP_FLOW}".gbs > "${BSP_FLOW}".gbs.gz
 aocl binedit fpga.bin create
-aocl binedit fpga.bin add .acl.gbs.gz "./afu_${BSP_FLOW}.gbs.gz"
+aocl binedit fpga.bin add .acl.gbs.gz "./${BSP_FLOW}.gbs.gz"
 
 echo "run.sh: done zipping up the gbs into gbs.gz, and creating fpga.bin"
 
-if [ -f "afu_${BSP_FLOW}.failing_clocks.rpt" ]; then
-    aocl binedit fpga.bin add .failing_clocks.rpt "./afu_${BSP_FLOW}.failing_clocks.rpt"
-    cp "./afu_${BSP_FLOW}.failing_clocks.rpt" ../
+if [ -f "${BSP_FLOW}.failing_clocks.rpt" ]; then
+    aocl binedit fpga.bin add .failing_clocks.rpt "./${BSP_FLOW}.failing_clocks.rpt"
+    cp "./${BSP_FLOW}.failing_clocks.rpt" ../
     echo "run.sh: done appending failing clocks report to fpga.bin"
 fi
 
-if [ -f "afu_${BSP_FLOW}.failing_paths.rpt" ]; then
-    aocl binedit fpga.bin add .failing_paths.rpt "./afu_${BSP_FLOW}.failing_paths.rpt"
-    cp "./afu_${BSP_FLOW}.failing_paths.rpt" ../
+if [ -f "${BSP_FLOW}.failing_paths.rpt" ]; then
+    aocl binedit fpga.bin add .failing_paths.rpt "./${BSP_FLOW}.failing_paths.rpt"
+    cp "./${BSP_FLOW}.failing_paths.rpt" ../
     echo "run.sh: done appending failing paths report to fpga.bin"
 fi
 

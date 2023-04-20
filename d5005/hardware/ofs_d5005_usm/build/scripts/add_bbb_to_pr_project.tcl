@@ -15,7 +15,7 @@ proc add_bbb_assignments { } {
 # get flow type (from quartus(args) variable)
 set flow [lindex $quartus(args) 0]
 
-project_open -revision afu_$flow d5005
+project_open -revision $flow d5005
 add_bbb_assignments
 export_assignments
 project_close
