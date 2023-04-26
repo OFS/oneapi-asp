@@ -41,4 +41,4 @@ for i in "${!bsp_files[@]}"; do
 done
 
 tar --transform='s,^,opencl-bsp/,' --create --verbose --gzip \
-    --file="$BSP_ROOT/opencl-bsp.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"
+    --file="$BSP_ROOT/oneapi-asp-d5005.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"
