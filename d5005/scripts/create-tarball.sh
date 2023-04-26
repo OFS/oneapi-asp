@@ -4,8 +4,8 @@
 ## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# Script to generate the tarball used for distributing the OpenCL BSP.  Creates
-# tarball with directory prefix opencl-bsp and includes files for hardward
+# Script to generate the tarball used for distributing the OneAPI ASP.  Creates
+# tarball with directory prefix opencl-bsp and includes files for hardware
 # targets, MMD, and the default aocx in bringup directory.
 ###############################################################################
 
@@ -18,11 +18,11 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 cd "$BSP_ROOT" || exit
 
-bsp_files=("scripts/build-mmd.sh" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install")
+bsp_files=("README.md" "scripts" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install")
 
 if [ -d "$OPAE_PLATFORM_ROOT" ]; then
-    mkdir fim_binaries
-    cp "$OPAE_PLATFORM_ROOT/hw/blue_bits/*.bin" fim_binaries/
+    mkdir -p fim_binaries
+    cp "$OPAE_PLATFORM_ROOT/hw/blue_bits"/*.bin fim_binaries/
     bsp_files+=("fim_binaries")
 else
     echo "Warning: OPAE_PLATFORM_ROOT is not defined, so the FIM binary programming files will not be included in the tarball."
@@ -40,5 +40,5 @@ for i in "${!bsp_files[@]}"; do
   fi
 done
 
-tar --transform='s,^,opencl-bsp/,' --create --verbose --gzip \
+tar --transform='s,^,oneapi-asp-d5005/,' --create --gzip \
     --file="$BSP_ROOT/oneapi-asp-d5005.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"
