@@ -68,8 +68,8 @@ echo "Starting aocx compile at: $(date)"
 echo -e "Using OpenCL version:\n$(aoc -version)\n"
 echo -e "Using Quartus version:\n$(quartus_sh --version)"
 echo "---------------------------------------------------------------"
-echo -e "aoc -no-env-check -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE""
-aoc -no-env-check -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE"
+echo -e "aoc -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE""
+aoc -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE"
 echo "Finished aocx compile at: $(date)"
 
 if [ -f "$BUILD_DIR/${BOARD}.aocx" ]; then
