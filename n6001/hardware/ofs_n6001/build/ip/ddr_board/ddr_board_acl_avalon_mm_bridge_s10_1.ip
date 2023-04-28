@@ -14,8 +14,8 @@ refer to the applicable agreement for further details, at
 https://fpgasoftware.intel.com/eula.-->
 <ipxact:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
   <ipxact:vendor>Intel Corporation</ipxact:vendor>
-  <ipxact:library>acl_avalon_mm_bridge_s10_0</ipxact:library>
-  <ipxact:name>acl_avalon_mm_bridge_s10_0</ipxact:name>
+  <ipxact:library>ddr_board_acl_avalon_mm_bridge_s10_1</ipxact:library>
+  <ipxact:name>acl_avalon_mm_bridge_s10_1</ipxact:name>
   <ipxact:version>16.930</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
@@ -227,7 +227,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="bridgesToMaster" type="string">
           <ipxact:name>bridgesToMaster</ipxact:name>
           <ipxact:displayName>Bridges to host</ipxact:displayName>
-          <ipxact:value>acl_avalon_mm_bridge_s10_0.m0</ipxact:value>
+          <ipxact:value>ddr_board_acl_avalon_mm_bridge_s10_1.m0</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="burstOnBurstBoundariesOnly" type="bit">
           <ipxact:name>burstOnBurstBoundariesOnly</ipxact:name>
@@ -287,7 +287,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="maximumPendingReadTransactions" type="int">
           <ipxact:name>maximumPendingReadTransactions</ipxact:name>
           <ipxact:displayName>Maximum pending read transactions</ipxact:displayName>
-          <ipxact:value>1</ipxact:value>
+          <ipxact:value>64</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="maximumPendingWriteTransactions" type="int">
           <ipxact:name>maximumPendingWriteTransactions</ipxact:name>
@@ -774,7 +774,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>4</ipxact:right>
+              <ipxact:right>6</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -929,7 +929,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>4</ipxact:right>
+              <ipxact:right>6</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -1038,7 +1038,7 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:vendorExtensions>
     <altera:entity_info>
       <ipxact:vendor>Intel Corporation</ipxact:vendor>
-      <ipxact:library>acl_avalon_mm_bridge_s10_0</ipxact:library>
+      <ipxact:library>ddr_board_acl_avalon_mm_bridge_s10_1</ipxact:library>
       <ipxact:name>acl_avalon_mm_bridge_s10</ipxact:name>
       <ipxact:version>16.930</ipxact:version>
     </altera:entity_info>
@@ -1097,12 +1097,12 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="MAX_BURST_SIZE" type="int">
           <ipxact:name>MAX_BURST_SIZE</ipxact:name>
           <ipxact:displayName>Maximum burst size (words)</ipxact:displayName>
-          <ipxact:value>16</ipxact:value>
+          <ipxact:value>64</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="MAX_PENDING_RESPONSES" type="int">
           <ipxact:name>MAX_PENDING_RESPONSES</ipxact:name>
           <ipxact:displayName>Maximum pending read transactions</ipxact:displayName>
-          <ipxact:value>1</ipxact:value>
+          <ipxact:value>64</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="LINEWRAPBURSTS" type="int">
           <ipxact:name>LINEWRAPBURSTS</ipxact:name>
@@ -1151,7 +1151,7 @@ https://fpgasoftware.intel.com/eula.-->
          type = "String";
       }
    }
-   element acl_avalon_mm_bridge_s10_0
+   element acl_avalon_mm_bridge_s10_1
    {
    }
 }
@@ -1268,7 +1268,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;s0_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
-                    &lt;width&gt;5&lt;/width&gt;
+                    &lt;width&gt;7&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -1388,7 +1388,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                        &lt;value&gt;acl_avalon_mm_bridge_s10_0.m0&lt;/value&gt;
+                        &lt;value&gt;ddr_board_acl_avalon_mm_bridge_s10_1.m0&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -1436,7 +1436,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                        &lt;value&gt;1&lt;/value&gt;
+                        &lt;value&gt;64&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -1553,7 +1553,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;m0_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
-                    &lt;width&gt;5&lt;/width&gt;
+                    &lt;width&gt;7&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -1805,10 +1805,10 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="clk" altera:internal="acl_avalon_mm_bridge_s10_0.clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="clk" altera:internal="acl_avalon_mm_bridge_s10_1.clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="clk" altera:internal="clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="m0" altera:internal="acl_avalon_mm_bridge_s10_0.m0" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="m0" altera:internal="acl_avalon_mm_bridge_s10_1.m0" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="m0_address" altera:internal="m0_address"></altera:port_mapping>
         <altera:port_mapping altera:name="m0_burstcount" altera:internal="m0_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="m0_byteenable" altera:internal="m0_byteenable"></altera:port_mapping>
@@ -1820,10 +1820,10 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="m0_write" altera:internal="m0_write"></altera:port_mapping>
         <altera:port_mapping altera:name="m0_writedata" altera:internal="m0_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="reset" altera:internal="acl_avalon_mm_bridge_s10_0.reset" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="reset" altera:internal="acl_avalon_mm_bridge_s10_1.reset" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="reset" altera:internal="reset"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="s0" altera:internal="acl_avalon_mm_bridge_s10_0.s0" altera:type="avalon" altera:dir="end">
+      <altera:interface_mapping altera:name="s0" altera:internal="acl_avalon_mm_bridge_s10_1.s0" altera:type="avalon" altera:dir="end">
         <altera:port_mapping altera:name="s0_address" altera:internal="s0_address"></altera:port_mapping>
         <altera:port_mapping altera:name="s0_burstcount" altera:internal="s0_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="s0_byteenable" altera:internal="s0_byteenable"></altera:port_mapping>

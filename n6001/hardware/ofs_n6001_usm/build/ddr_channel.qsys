@@ -40,6 +40,9 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>bonusData</ipxact:displayName>
           <ipxact:value>bonusData 
 {
+   element $system
+   {
+   }
    element ddr4_cross_to_host
    {
       datum _sortIndex
@@ -149,7 +152,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="deviceFamily" type="string">
           <ipxact:name>deviceFamily</ipxact:name>
           <ipxact:displayName>Device family</ipxact:displayName>
-          <ipxact:value>Agilex</ipxact:value>
+          <ipxact:value>Agilex 7</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="deviceSpeedGrade" type="string">
           <ipxact:name>deviceSpeedGrade</ipxact:name>
@@ -189,11 +192,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="lockedInterfaceDefinition" type="string">
           <ipxact:name>lockedInterfaceDefinition</ipxact:name>
           <ipxact:displayName>lockedInterfaceDefinition</ipxact:displayName>
-          <ipxact:value></ipxact:value>
-        </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
           <ipxact:value></ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="sopcBorderPoints" type="bit">
@@ -248,7 +246,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;suppliedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;3&lt;/value&gt;
+                        &lt;value&gt;9&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -256,7 +254,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;3&lt;/value&gt;
+                        &lt;value&gt;9&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/suppliedSystemInfos&gt;
                 &lt;consumedSystemInfos/&gt;
@@ -286,7 +284,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;suppliedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;6&lt;/value&gt;
+                        &lt;value&gt;13&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -294,7 +292,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;6&lt;/value&gt;
+                        &lt;value&gt;13&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/suppliedSystemInfos&gt;
                 &lt;consumedSystemInfos/&gt;
@@ -307,7 +305,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;suppliedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;7&lt;/value&gt;
+                        &lt;value&gt;14&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -315,7 +313,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;7&lt;/value&gt;
+                        &lt;value&gt;14&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/suppliedSystemInfos&gt;
                 &lt;consumedSystemInfos/&gt;
@@ -1018,6 +1016,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;writeWaitTime&lt;/key&gt;
+                            &lt;value&gt;0&lt;/value&gt;
+                        &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
@@ -1808,7 +1810,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -2489,6 +2490,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;writeWaitTime&lt;/key&gt;
+                            &lt;value&gt;0&lt;/value&gt;
+                        &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
@@ -3272,14 +3277,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_channel_acl_clock_crossing_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_channel_acl_clock_crossing_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -3911,6 +3909,10 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;writeWaitTime&lt;/key&gt;
+                            &lt;value&gt;0&lt;/value&gt;
+                        &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
@@ -4598,14 +4600,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_kernel&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_kernel&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -5302,6 +5297,10 @@ https://fpgasoftware.intel.com/eula.-->
                             &lt;key&gt;writeWaitTime&lt;/key&gt;
                             &lt;value&gt;0&lt;/value&gt;
                         &lt;/entry&gt;
+                        &lt;entry&gt;
+                            &lt;key&gt;enableConcurrentSubordinateAccess&lt;/key&gt;
+                            &lt;value&gt;0&lt;/value&gt;
+                        &lt;/entry&gt;
                     &lt;/parameterValueMap&gt;
                 &lt;/parameters&gt;
             &lt;/interface&gt;
@@ -5987,14 +5986,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4emif_pipe_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4emif_pipe_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -6343,14 +6335,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_board_clock_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_board_clock_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -6678,14 +6663,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_channel_reset_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_channel_reset_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -6971,14 +6949,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_clk&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_clk&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -7264,14 +7235,7 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;kernel_clk&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;kernel_clk&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
-    &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="hdlParameters" type="string">
@@ -7306,7 +7270,7 @@ https://fpgasoftware.intel.com/eula.-->
       </altera:module>
     </altera:modules>
     <altera:connections>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_pipe_to_kernel.m0" altera:end="ddr4_cross_to_kernel_aclccb.slave">
+      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="ddr4_pipe_to_kernel.m0" altera:end="ddr4_cross_to_kernel_aclccb.slave">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -7316,6 +7280,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableAllPipelines" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableEccProtection" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableInstrumentation" altera:parameter_value="FALSE"></altera:connection_parameter>
+        <altera:connection_parameter altera:parameter_name="qsys_mm.enableOutOfOrderSupport" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.insertDefaultSlave" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectResetSource" altera:parameter_value="DEFAULT"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectType" altera:parameter_value="STANDARD"></altera:connection_parameter>
@@ -7326,7 +7291,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_cross_to_kernel_aclccb.master" altera:end="ddr4emif_pipe_0.s0">
+      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="ddr4_cross_to_kernel_aclccb.master" altera:end="ddr4emif_pipe_0.s0">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -7336,6 +7301,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableAllPipelines" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableEccProtection" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableInstrumentation" altera:parameter_value="FALSE"></altera:connection_parameter>
+        <altera:connection_parameter altera:parameter_name="qsys_mm.enableOutOfOrderSupport" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.insertDefaultSlave" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectResetSource" altera:parameter_value="DEFAULT"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectType" altera:parameter_value="STANDARD"></altera:connection_parameter>
@@ -7346,7 +7312,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_cross_to_host.master" altera:end="ddr4emif_pipe_0.s0">
+      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="ddr4_cross_to_host.master" altera:end="ddr4emif_pipe_0.s0">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -7356,6 +7322,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableAllPipelines" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableEccProtection" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.enableInstrumentation" altera:parameter_value="FALSE"></altera:connection_parameter>
+        <altera:connection_parameter altera:parameter_name="qsys_mm.enableOutOfOrderSupport" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.insertDefaultSlave" altera:parameter_value="FALSE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectResetSource" altera:parameter_value="DEFAULT"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.interconnectType" altera:parameter_value="STANDARD"></altera:connection_parameter>
@@ -7366,17 +7333,17 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4emif_pipe_0.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="kernel_clk.out_clk" altera:end="ddr4_pipe_to_kernel.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="global_reset.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_kernel_aclccb.master_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_host.master_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="kernel_clk.out_clk" altera:end="ddr4_cross_to_kernel_aclccb.slave_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="ddr4_cross_to_host.slave_clk"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_kernel_aclccb.master_reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_host.master_reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4emif_pipe_0.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_pipe_to_kernel.reset"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="ddr_clk.out_clk" altera:end="ddr4emif_pipe_0.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk.out_clk" altera:end="ddr4_pipe_to_kernel.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="host_clk.out_clk" altera:end="global_reset.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_kernel_aclccb.master_clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_host.master_clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk.out_clk" altera:end="ddr4_cross_to_kernel_aclccb.slave_clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="host_clk.out_clk" altera:end="ddr4_cross_to_host.slave_clk"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_kernel_aclccb.master_reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_host.master_reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset.out_reset" altera:end="ddr4emif_pipe_0.reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset.out_reset" altera:end="ddr4_pipe_to_kernel.reset"></altera:connection>
     </altera:connections>
     <altera:interconnect_requirements></altera:interconnect_requirements>
     <altera:wire_level_connections></altera:wire_level_connections>
@@ -7401,11 +7368,24 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:busInterfaces>
           <ipxact:busInterface>
             <ipxact:name>ddr4emif_pipe_0.s0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
+          </ipxact:busInterface>
+          <ipxact:busInterface>
+            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
+            <ipxact:master>
+              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_host.master">
+                <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
+              </ipxact:addressSpaceRef>
+            </ipxact:master>
+          </ipxact:busInterface>
+          <ipxact:busInterface>
+            <ipxact:name>ddr4emif_pipe_0.s0</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ddr4_cross_to_kernel_aclccb.master</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_kernel_aclccb.master">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
@@ -7414,15 +7394,15 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ddr4_cross_to_kernel_aclccb.slave</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ddr4emif_pipe_0.s0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ddr4_pipe_to_kernel.m0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="ddr4_pipe_to_kernel.m0">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
@@ -7431,24 +7411,21 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ddr4emif_pipe_0.m0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
             <ipxact:master></ipxact:master>
-          </ipxact:busInterface>
-          <ipxact:busInterface>
-            <ipxact:name>ddr4emif_pipe_0.s0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
-          </ipxact:busInterface>
-          <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
-            <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_host.master">
-                <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
-              </ipxact:addressSpaceRef>
-            </ipxact:master>
           </ipxact:busInterface>
         </ipxact:busInterfaces>
         <ipxact:addressSpaces>
+          <ipxact:addressSpace>
+            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
+            <ipxact:segments>
+              <ipxact:segment>
+                <ipxact:name>ddr4emif_pipe_0.s0</ipxact:name>
+                <ipxact:addressOffset>0x0000_0000</ipxact:addressOffset>
+                <ipxact:range>0x1_0000_0000</ipxact:range>
+              </ipxact:segment>
+            </ipxact:segments>
+          </ipxact:addressSpace>
           <ipxact:addressSpace>
             <ipxact:name>ddr4_cross_to_kernel_aclccb.master</ipxact:name>
             <ipxact:segments>
@@ -7469,16 +7446,6 @@ https://fpgasoftware.intel.com/eula.-->
               </ipxact:segment>
               <ipxact:segment>
                 <ipxact:name>ddr4emif_pipe_0.s0 via ddr4_cross_to_kernel_aclccb</ipxact:name>
-                <ipxact:addressOffset>0x0000_0000</ipxact:addressOffset>
-                <ipxact:range>0x1_0000_0000</ipxact:range>
-              </ipxact:segment>
-            </ipxact:segments>
-          </ipxact:addressSpace>
-          <ipxact:addressSpace>
-            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
-            <ipxact:segments>
-              <ipxact:segment>
-                <ipxact:name>ddr4emif_pipe_0.s0</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x1_0000_0000</ipxact:range>
               </ipxact:segment>
