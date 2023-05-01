@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<board version="22.3" name="ofs_d5005_usm">
+<board version="22.4" name="ofs_d5005_usm">
 
-  <compile name="flat" project="d5005" revision="afu_flat" qsys_file="none" generic_kernel="1">
+  <compile name="afu_flat" project="d5005" revision="afu_flat" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
-    <synthesize cmd="quartus_sh -t build/scripts/entry.tcl flat"/>
+    <synthesize cmd="quartus_sh -t build/scripts/entry.tcl afu_flat"/>
     <auto_migrate platform_type="none" >
       <include fixes=""/>
       <exclude fixes=""/>

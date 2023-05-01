@@ -1,7 +1,7 @@
 # OneAPI-ASP 
 
 ## Overview
-This repository contains files necessary to generate ASP for OFS ADP cards.
+This repository contains files necessary to generate ASP for OFS reference platforms.
 The hardware currently relies on platforms that implement the OFS PCIe TLP
 format using AXI-S interfaces, and the software uses OPAE SDK interfaces.
 
