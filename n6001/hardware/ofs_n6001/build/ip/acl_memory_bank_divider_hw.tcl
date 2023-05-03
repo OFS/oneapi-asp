@@ -42,7 +42,7 @@ set_parameter_property DATA_WIDTH DEFAULT_VALUE 256
 set_parameter_property DATA_WIDTH DISPLAY_NAME "Data Width"
 set_parameter_property DATA_WIDTH UNITS "bits" 
 set_parameter_property DATA_WIDTH AFFECTS_ELABORATION true
-#set_parameter_property DATA_WIDTH SYSTEM_INFO {MAX_AGENT_DATA_WIDTH bank1}
+#set_parameter_property DATA_WIDTH SYSTEM_INFO {MAX_SLAVE_DATA_WIDTH bank1}
 
 add_parameter ADDRESS_WIDTH INTEGER 31
 set_parameter_property ADDRESS_WIDTH DEFAULT_VALUE 31
@@ -211,8 +211,8 @@ proc compose {} {
     append burst_split_ip_name burst_splitter
     add_burst_splitter $burst_split_ip_name $width $aggr_awidth $burst_width $pending_reads $async_reset $synchronize_reset
     add_interface s avalon slave
-    set_interface_property s EXPORT_OF $burst_split_ip_name.agent
-    add_connection $burst_split_ip_name.host acl_snoop_adapter.s1
+    set_interface_property s EXPORT_OF $burst_split_ip_name.slave
+    add_connection $burst_split_ip_name.master acl_snoop_adapter.s1
   } else {
     add_interface s avalon slave
     set_interface_property s EXPORT_OF acl_snoop_adapter.s1

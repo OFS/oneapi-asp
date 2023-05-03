@@ -83,7 +83,7 @@ proc compose { } {
     set_instance_parameter_value clock_crosser {CMD_DCFIFO_MIN_DEPTH} {8}
     set_instance_parameter_value clock_crosser {RSP_DCFIFO_MIN_DEPTH} {8}
     set_instance_parameter_value clock_crosser {SLAVE_STALL_LATENCY} {0}
-    set_instance_parameter_value clock_crosser {MASTER_STALL_LATENCY} {1}
+    set_instance_parameter_value clock_crosser {MASTER_STALL_LATENCY} {7}
     set_instance_parameter_value clock_crosser {USE_WRITE_ACK} {0}
 
     add_instance address_span_extender_0 altera_address_span_extender 17.1
@@ -98,7 +98,7 @@ proc compose { } {
 
     add_instance sw_reset sw_reset 10.0
     set_instance_parameter_value sw_reset {WIDTH} {64}
-    set_instance_parameter_value sw_reset {LOG2_RESET_CYCLES} {4}
+    set_instance_parameter_value sw_reset {LOG2_RESET_CYCLES} {10}
 
     add_instance ctrl altera_avalon_mm_bridge 17.1
     set_instance_parameter_value ctrl {DATA_WIDTH} {32}

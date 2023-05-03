@@ -42,7 +42,7 @@
   </host>
 
   <interfaces>
-    <interface name="board" port="kernel_cra" type="master" width="64" misc="0" waitrequest_allowance="5"/>
+    <interface name="board" port="kernel_cra" type="master" width="64" misc="0" waitrequest_allowance="7"/>
     <interface name="board" port="kernel_irq" type="irq" width="1"/>
     <kernel_clk_reset clk="board.kernel_clk" clk2x="board.kernel_clk2x" reset="board.kernel_reset"/>
   </interfaces>

@@ -2299,7 +2299,7 @@
  </component>
  <component
    name="burst_boundary_splitter"
-   file="${INTELFPGAOCLSDKROOT}/ip/platform/burst_boundary_splitter/burst_boundary_splitter_hw.tcl"
+   file="${INTELFPGAOCLSDKROOT}/ip/board/burst_boundary_splitter/burst_boundary_splitter_hw.tcl"
    displayName="ACL Burst Boundary Splitter"
    version="1.0"
    description="Split burst read/writes on burst word boundary"
@@ -2564,7 +2564,7 @@
  </component>
  <component
    name="mem_splitter"
-   file="${INTELFPGAOCLSDKROOT}/ip/platform/mem_splitter/mem_splitter_hw.tcl"
+   file="${INTELFPGAOCLSDKROOT}/ip/board/mem_splitter/mem_splitter_hw.tcl"
    displayName="ACL Bank Splitter w. Reorder"
    version="10.0"
    description="Pipelined clock crossing splitter"
