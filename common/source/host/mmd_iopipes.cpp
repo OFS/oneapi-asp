@@ -34,9 +34,9 @@ using namespace intel_opae_mmd;
 //using namespace intel_opae_mmd;
 
 
-#define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
-#define N6000_PCI_OCL_BSP_AFU_ID "51ED2F4A-FEA2-4261-A595-918500575509"
-#define N6000_SVM_OCL_BSP_AFU_ID "5D9FEF7B-C491-4DCE-95FC-F979F6F061BE"
+//#define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
+//#define N6000_PCI_OCL_BSP_AFU_ID "51ED2F4A-FEA2-4261-A595-918500575509"
+//#define N6000_SVM_OCL_BSP_AFU_ID "5D9FEF7B-C491-4DCE-95FC-F979F6F061BE"
 
 //base address is 0x20800
 //dfh base offset is 0x0
@@ -210,6 +210,15 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing CSR");
     exit(1);
   }
+
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_UDP_PORT_ADDR, local_udp_port)) != FPGA_OK) {
+    printf("Error:writing CSR");
+    exit(1);
+  }
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_HOST_UDP_PORT_ADDR, remote_udp_port)) != FPGA_OK) {
+    printf("Error:writing CSR");
+    exit(1);
+  }
   
   //CSR_PAYLOAD_PER_PACKET_ADDR
   if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_PAYLOAD_PER_PACKET_ADDR, (unsigned long) 32)) != FPGA_OK) {
@@ -226,16 +235,19 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 // just write to CSRs what we got from environment variables or initialize to known values
   unsigned long tmp1 = htonl(inet_addr(local_ip_addr.c_str()));
   unsigned long tmp2 = htonl(inet_addr(local_netmask.c_str()));
-  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
+  unsigned long tmp3 = htonl(inet_addr(remote_ip_addr.c_str()));
+  //if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_IP_ADR_ADDR, tmp1)) != FPGA_OK) { 
     printf("Error:writing CSR");
     exit(1);
   }
-  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_HOST_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
+  //if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_HOST_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_HOST_IP_ADR_ADDR, tmp3)) != FPGA_OK) { 
     printf("Error:writing CSR");
     exit(1);
   }
-  unsigned long tmp3 = htonl(inet_addr(local_netmask.c_str()));
-  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_NETMASK_ADDR, tmp3)) != FPGA_OK) {
+  //unsigned long tmp4 = htonl(inet_addr(local_netmask.c_str()));
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_NETMASK_ADDR, tmp2)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
   }

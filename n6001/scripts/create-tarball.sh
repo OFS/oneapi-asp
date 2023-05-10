@@ -1,23 +1,11 @@
 #!/bin/bash
 
-# Copyright 2020 Intel Corporation.
-#
-# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+## Copyright 2022 Intel Corporation
+## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# Script to generate the tarball used for distributing the OpenCL BSP.  Creates
-# tarball with directory prefix opencl-bsp and includes files for hardward
+# Script to generate the tarball used for distributing the OneAPI ASP.  Creates
+# tarball with directory prefix opencl-bsp and includes files for hardware
 # targets, MMD, and the default aocx in bringup directory.
 ###############################################################################
 
@@ -30,7 +18,15 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 cd "$BSP_ROOT" || exit
 
-bsp_files=("scripts/build-mmd.sh" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml")
+bsp_files=("README.md" "scripts" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install")
+
+if [ -d "$OPAE_PLATFORM_ROOT" ]; then
+    mkdir -p fim_binaries
+    cp "$OPAE_PLATFORM_ROOT/hw/blue_bits"/*.bin fim_binaries/
+    bsp_files+=("fim_binaries")
+else
+    echo "Warning: OPAE_PLATFORM_ROOT is not defined, so the FIM binary programming files will not be included in the tarball."
+fi
 
 search_dir=bringup/aocxs
 for entry in "$search_dir"/*.aocx
@@ -44,5 +40,5 @@ for i in "${!bsp_files[@]}"; do
   fi
 done
 
-tar --transform='s,^,opencl-bsp/,' --create --verbose --gzip \
-    --file="$BSP_ROOT/opencl-bsp.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"
+tar --transform='s,^,oneapi-asp-n6001/,' --create --gzip \
+    --file="$BSP_ROOT/oneapi-asp-n6001.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"

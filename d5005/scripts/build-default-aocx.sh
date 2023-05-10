@@ -1,19 +1,7 @@
 #!/bin/bash
 
-# Copyright 2020 Intel Corporation.
-#
-# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+## Copyright 2022 Intel Corporation
+## SPDX-License-Identifier: MIT
 
 ###############################################################################
 # Compile the boadtest.aocx file and copy it to the default aocx location.
@@ -52,11 +40,11 @@ echo "Generating default aocx for board variant: $BOARD"
 # Select cl file for building default aocx
 case $BOARD in
   ofs_d5005)
-    CL_FILE="bringup/source/boardtest/boardtest.cl"
-    INTERLEAVE_OPTION="-no-interleaving=default"
+    CL_FILE="bringup/source/hello_world/device/hello_world.cl"
+    INTERLEAVE_OPTION=""
     ;;
   ofs_d5005_usm)
-    CL_FILE="bringup/source/mem_bandwidth_svm/device/mem_bandwidth_svm_ddr.cl"
+    CL_FILE="bringup/source/hello_world/device/hello_world.cl"
     INTERLEAVE_OPTION="" 
     ;;
   *)
