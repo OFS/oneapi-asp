@@ -45,18 +45,26 @@ using namespace intel_opae_mmd;
 #define REG_UDPOE_DFH_BASE_ADDR   (REG_UDPOE_BASE_ADDR + (0x0*0x8))
 #define REG_UDPOE_CSR_BASE_ADDR   (REG_UDPOE_BASE_ADDR + (0x10*0x8))
 
-#define CSR_FPGA_MAC_ADR_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8))
-#define CSR_FPGA_IP_ADR_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8))
-#define CSR_FPGA_UDP_PORT_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8))
-#define CSR_FPGA_NETMASK_ADDR (REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8))
-#define CSR_HOST_MAC_ADR_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8))
-#define CSR_HOST_IP_ADR_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8))
-#define CSR_HOST_UDP_PORT_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8))
-#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8))
-#define CSR_CHECKSUM_IP_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8))
-#define CSR_RESET_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
+#define CSR_NUM_CHANNELS_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8))
+
+#define CSR_FPGA_MAC_ADR_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8))
+#define CSR_FPGA_IP_ADR_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8))
+#define CSR_FPGA_UDP_PORT_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8))
+#define CSR_FPGA_NETMASK_ADDR (REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8))
+#define CSR_HOST_MAC_ADR_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8))
+#define CSR_HOST_IP_ADR_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8))
+#define CSR_HOST_UDP_PORT_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8))
+
+#define CSR_RESET_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8))
+#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
+#define CSR_CHECKSUM_IP_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
+
+/* below CSRs per io pipe 
 #define CSR_STATUS_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
 #define CSR_MISC_CTRL_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
+*/
+
+#define CHECKSUM_IP 43369
 
 #define UDP_MAX_BUFSIZE 16*1024
 #define UDP_PORT_NUM    12345
@@ -164,7 +172,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   // TO DO - Will need to update CSR names and write to appropriate CSRs , mayeb add and remove some CSRs
   // Also code to then loop over number of IO Pipes and read from config status CSR or each io pipe if needed or initialize them if needed
   fprintf(stderr, "iopipes.cpp - dump the DFH registers...\n");
-  for (uint64_t this_addr = REG_UDPOE_BASE_ADDR; this_addr<=CSR_STATUS_REG_ADDR;this_addr+=8) {
+  /*for (uint64_t this_addr = REG_UDPOE_BASE_ADDR; this_addr<=CSR_STATUS_REG_ADDR;this_addr+=8) {
       fprintf(stderr, "******* Read/write/read the UDP OE register 0x%lx\n",this_addr);
       res = fpgaReadMMIO64(afc_handle, 0, this_addr, &data);
       fprintf(stderr, "data: 0x%lx\n",data);
@@ -173,7 +181,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
       fprintf(stderr, "reading addr 0x%lx\n",this_addr);
       res = fpgaReadMMIO64(afc_handle, 0, this_addr, &data);
       fprintf(stderr, "data: 0x%lx\n\n\n",data);
-  }
+  }*/
 
   fprintf(stderr, "iopipes.cpp - CSR_RESET_REG_ADDR is 0x%x\n",CSR_RESET_REG_ADDR);
   
@@ -202,6 +210,12 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   //
   // UOE register settings. These registers are not reset even after fpgaClose().
   //
+  // Read MMIO CSR NUM_CHANNELS to determine how many io channels to initialize
+  uint64_t number_of_channels;
+  if((res = fpgaReadMMIO64(afc_handle, 0, CSR_NUM_CHANNELS_ADDR, &number_of_channels)) != FPGA_OK) {
+    printf("Error Reading number of channels CSR\n");
+    exit(-1);
+  } 
   if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_FPGA_MAC_ADR_ADDR, local_mac_addr)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
@@ -225,11 +239,17 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing CSR");
     exit(1);
   }
-  //CSR_MISC_CTRL_REG_ADDR
-  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_MISC_CTRL_REG_ADDR, (unsigned long) 1)) != FPGA_OK) {
+
+  //CSR CHECKSUM IP
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_CHECKSUM_IP_ADDR, (unsigned long)CHECKSUM_IP)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
   }
+  /*//CSR_MISC_CTRL_REG_ADDR
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, CSR_MISC_CTRL_REG_ADDR, (unsigned long) 1)) != FPGA_OK) {
+    printf("Error:writing CSR");
+    exit(1);
+  }*/
   
 // TO do - need to clean code to write to CSRs, we dont need below calculations
 // just write to CSRs what we got from environment variables or initialize to known values
@@ -253,6 +273,20 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
   res = fpgaReadMMIO64(afc_handle, 0, CSR_FPGA_MAC_ADR_ADDR, &data);
   printf("Read CSR: MAC:%08lx\n", data);
+
+// do we need to read or write to below IO Pipes specific CSRs 
+/*#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
+#define CSR_CHECKSUM_IP_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
+#define CSR_STATUS_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
+#define CSR_MISC_CTRL_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x0C*0x8))*/
+  
+/*for(uint64_t loop=0; loop<number_of_channels; loop++) {
+  if ((res = fpgaWriteMMIO64(afc_handle, 0, (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8)), )) != FPGA_OK) {
+    printf("Error:writing CSR");
+    exit(1);
+  }
+}*/
+
 /*
   if ((res = fpgaUnmapMMIO(afc_handle, 0)) != FPGA_OK) {
     printf("Error:unmapping MMIO space");
