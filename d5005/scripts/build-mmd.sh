@@ -36,7 +36,9 @@ if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
-export LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
+if [ -z "$LIBOPAE_C_ROOT" ]; then
+  export LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
+fi
 
 if [ ! -d "$INTELFPGAOCLSDKROOT" ]; then
   echo "Error: must set INTELFPGAOCLSDKROOT using init_opencl.sh before building MMD"
