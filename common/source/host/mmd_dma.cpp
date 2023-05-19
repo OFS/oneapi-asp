@@ -265,7 +265,6 @@ void mmd_dma::read_register(uint64_t offset, const char* name)
  *  it won't affect performance or functionality
  */  
 int mmd_dma::send_descriptors(uint64_t dma_src_addr, uint64_t dma_dst_addr, uint64_t dma_len) {
-
   std::lock_guard<std::mutex> lock(m_dma_op_mutex);
 
 #if 0
