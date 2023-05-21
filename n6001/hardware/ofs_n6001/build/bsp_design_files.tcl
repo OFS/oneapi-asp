@@ -26,6 +26,11 @@ set_global_assignment -name QSYS_FILE "ddr_board.qsys"
 set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/dma/par/dma_controller_filelist.tcl"
 
 #--------------------
+# UDP Engine
+#--------------------
+set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/udp_offload_engine/par/udp_offload_engine_filelist.tcl"
+
+#--------------------
 # MPF VTP files
 #--------------------
 source "mpf_vtp.qsf"
@@ -44,6 +49,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE "rtl/bsp_host_mem_if_mux.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_gen.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_burst_to_word.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_tracker.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "rtl/ofs_fim_eth_afu_avst_to_fim_axis_bridge.sv"
 
 #--------------------
 # Search paths (for headers, etc)

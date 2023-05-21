@@ -13,6 +13,9 @@
     //enable USM-support
     //`define INCLUDE_USM_SUPPORT 1
     
+    //enable UDP offload engine and I/O channels
+    `define INCLUDE_UDP_OFFLOAD_ENGINE 1
+    
     //enable kernel interrupts
     //`define USE_KERNEL_IRQ 1
     

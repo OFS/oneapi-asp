@@ -34,6 +34,10 @@ import dc_bsp_pkg::*;
 
     // Local memory interface.
     ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
+    
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ofs_plat_avalon_mem_if.to_sink uoe_csr_avmm,
+    `endif
 
    // OpenCL kernel signals
     opencl_kernel_control_intf.bsp opencl_kernel_control,
@@ -237,6 +241,19 @@ board board_inst (
     .dma_csr_mmio64_read                    (mmio64_if_dmac.read),
     .dma_csr_mmio64_byteenable              (mmio64_if_dmac.byteenable),
     .dma_csr_mmio64_debugaccess             (),
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        //mmio64 signals for DMA controller
+        .uoe_csr_mmio64_waitrequest             (uoe_csr_avmm.waitrequest),
+        .uoe_csr_mmio64_readdata                (uoe_csr_avmm.readdata),
+        .uoe_csr_mmio64_readdatavalid           (uoe_csr_avmm.readdatavalid),
+        .uoe_csr_mmio64_burstcount              (uoe_csr_avmm.burstcount),
+        .uoe_csr_mmio64_writedata               (uoe_csr_avmm.writedata),
+        .uoe_csr_mmio64_address                 (uoe_csr_avmm.address),
+        .uoe_csr_mmio64_write                   (uoe_csr_avmm.write),
+        .uoe_csr_mmio64_read                    (uoe_csr_avmm.read),
+        .uoe_csr_mmio64_byteenable              (uoe_csr_avmm.byteenable),
+        .uoe_csr_mmio64_debugaccess             (),
+    `endif
     //local-memory DMA reads
     .dma_localmem_rd_waitrequest             (local_mem_rd_avmm_if.waitrequest),
     .dma_localmem_rd_readdata                (local_mem_rd_avmm_if.readdata),

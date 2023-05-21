@@ -113,7 +113,54 @@ module ofs_plat_afu
         end
     endgenerate
 
+   // ====================================================================
+   //
+   //  Map Ethernet channels to Avalon streams
+   //
+   // ====================================================================
 
+   localparam NUM_ETH = plat_ifc.hssi.NUM_CHANNELS;
+
+    //separate AXI-ST interfaces used between the AVST-AXIST bridge
+    //  and PIM-mapper
+    //ofs_fim_hssi_ss_rx_axis_if eth_rx_axis[NUM_ETH-1:0]();
+    //ofs_fim_hssi_ss_tx_axis_if eth_tx_axis[NUM_ETH-1:0]();
+    //ofs_fim_hssi_fc_if eth_fc[NUM_ETH-1:0]();
+    
+    //separate AVT-ST interfaces
+   // Data streams
+   //ofs_fim_eth_tx_avst_if eth_tx_st [NUM_ETH-1:0]();
+   //ofs_fim_eth_rx_avst_if eth_rx_st [NUM_ETH-1:0]();
+   // Sideband streams (control flow)
+   //ofs_fim_eth_sideband_tx_avst_if eth_sb_tx [NUM_ETH-1:0]();
+   //ofs_fim_eth_sideband_rx_avst_if eth_sb_rx [NUM_ETH-1:0]();
+
+   // The PIM provides a mapping from the native stream encoding to
+   // Avalon streams.
+   //generate
+   //   for (genvar c = 0; c < NUM_ETH; c = c + 1) begin : ec
+   //         //ofs_plat_hssi_as_axi_st axist_inst
+   //         //(
+   //         //    .to_fiu(plat_ifc.hssi.channels[c]),
+   //         //    .tx_st(eth_tx_axis[c]),
+   //         //    .rx_st(eth_rx_axis[c]),
+   //         //    .fc(eth_fc[c]),
+   //         //    .afu_clk(),
+   //         //    .afu_reset_n()
+   //         //);
+   //         //always_comb begin
+   //             //eth_rx_axis[c] = plat_ifc.hssi.channels[c].data_rx;
+   //             
+   //             //eth_tx_axis[c].clk    = plat_ifc.hssi.channels[c].data_tx.clk;
+   //             //eth_tx_axis[c].rst_n  = plat_ifc.hssi.channels[c].data_tx.rst_n;
+   //             //eth_tx_axis[c].tready = plat_ifc.hssi.channels[c].data_tx.tready;
+   //             //plat_ifc.hssi.channels[c].data_tx.tx = eth_tx_axis[c].tx;
+   //         //end
+   //   end
+   //endgenerate
+
+   
+   
     // ====================================================================
     //
     //  Tie off unused ports.
@@ -128,7 +175,10 @@ module ofs_plat_afu
         // device. By default, devices are tied off.
         .HOST_CHAN_IN_USE_MASK(1),
         // All banks are used
-        .LOCAL_MEM_IN_USE_MASK(-1)
+        .LOCAL_MEM_IN_USE_MASK(-1),
+        // The argument to each parameter is a bit mask of channels used.
+        // Passing "-1" indicates all available channels are in use.
+        .HSSI_IN_USE_MASK(-1)
         )
         tie_off(plat_ifc);
 
@@ -148,13 +198,18 @@ module ofs_plat_afu
 
     afu
      #(
-        .NUM_LOCAL_MEM_BANKS(local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS)
+        .NUM_LOCAL_MEM_BANKS(local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS),
+        .NUM_ETH(NUM_ETH)
        )
      afu
       (
         .host_mem_if(host_mem_to_afu),
         .mmio64_if(mmio64_to_afu),
         .local_mem(local_mem_to_afu),
+
+        .eth_tx_axis(plat_ifc.hssi.channels[0].data_tx),
+        .eth_rx_axis(plat_ifc.hssi.channels[0].data_rx),
+        .eth_fc(plat_ifc.hssi.channels[0].fc),
        
         .pClk(pclk_bsp),
         .pClk_reset(pclk_bsp_reset),
