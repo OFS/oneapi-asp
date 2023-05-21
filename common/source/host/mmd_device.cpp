@@ -45,6 +45,7 @@
 #define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
 
 #define IOPIPES_GUID "a2aa84f4-48a3-43b9-af77-f9c3123ff955"
+uint64_t iopipes_dfh_offset = 123;
 
 using namespace intel_opae_mmd;
 
@@ -64,6 +65,7 @@ Device::Device(uint64_t obj_id)
       port_handle(NULL), filter(NULL), port_token(NULL),
       mmio_token(NULL), mmio_handle(NULL),
       filter_fme(NULL), fme_token(NULL), guid(), ddr_offset(0), mpf_mmio_offset(0),
+      //dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0), iopipes_dfh_offset(0),
       dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0),
       dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), io_pipes(NULL), mmd_copy_buffer(NULL) {
   // Note that this constructor is not thread-safe because next_mmd_handle
@@ -392,6 +394,7 @@ void Device::initialize_fme_sysfs() {
 bool Device::find_dma_dfh_offsets() {
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
+  DEBUG_LOG("DEBUG LOG : DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset, MSGDMA_BBB_GUID);
   if (find_dfh_by_guid(mmio_handle, MSGDMA_BBB_GUID, &dfh_offset,
                        &next_dfh_offset)) {
     dma_ch0_dfh_offset = dfh_offset;
@@ -405,7 +408,9 @@ bool Device::find_dma_dfh_offsets() {
             "Error initalizing DMA: Cannot find DMA channel 0 DFH offset\n");
     return false;
   }
+  DEBUG_LOG("DEBUG LOG : DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset, MSGDMA_BBB_GUID);
 
+  DEBUG_LOG("DEBUG LOG : DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset, MSGDMA_BBB_GUID);
   dfh_offset += 0;//next_dfh_offset;
   if (find_dfh_by_guid(mmio_handle, MSGDMA_BBB_GUID, &dfh_offset,
                        &next_dfh_offset)) {
@@ -421,6 +426,8 @@ bool Device::find_dma_dfh_offsets() {
     return false;
   }
 
+  DEBUG_LOG("DEBUG LOG : DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset, MSGDMA_BBB_GUID);
+
   assert(dma_ch0_dfh_offset != 0);
   assert(dma_ch1_dfh_offset != 0);
 
@@ -428,6 +435,9 @@ bool Device::find_dma_dfh_offsets() {
 }
 
 bool Device::find_iopipes_dfh_offsets() {
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  iopipes_dfh_offset = 345;
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
   if (find_dfh_by_guid(mmio_handle, IOPIPES_GUID, &dfh_offset,
