@@ -206,7 +206,7 @@ private:
   uint64_t mpf_mmio_offset;
   uint64_t dma_ch0_dfh_offset;
   uint64_t dma_ch1_dfh_offset;
-  //uint64_t iopipes_dfh_offset;
+  uint64_t iopipes_dfh_offset;
   intel_opae_mmd::mmd_dma *dma_host_to_fpga;
   intel_opae_mmd::mmd_dma *dma_fpga_to_host;
   intel_opae_mmd::iopipes *io_pipes;
