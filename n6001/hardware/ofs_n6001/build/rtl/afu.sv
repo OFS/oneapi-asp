@@ -21,7 +21,8 @@
 module afu
 import dc_bsp_pkg::*;
   #(
-    parameter NUM_LOCAL_MEM_BANKS = 0
+    parameter NUM_LOCAL_MEM_BANKS = 0,
+    parameter NUM_ETH = 0
    )
   (
     // Host memory (Avalon)
@@ -33,6 +34,13 @@ import dc_bsp_pkg::*;
     // Local memory interface.
     ofs_plat_avalon_mem_if.to_slave local_mem[NUM_LOCAL_MEM_BANKS],
     
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        // Ethernet
+        ofs_fim_hssi_ss_tx_axis_if.client eth_tx_axis ,
+        ofs_fim_hssi_ss_rx_axis_if.client eth_rx_axis ,
+        ofs_fim_hssi_fc_if.client     eth_fc ,
+    `endif
+
     // clocks and reset
     input logic pClk,                      //Primary interface clock
     input logic pClk_reset,                // ACTIVE HIGH Soft Reset
@@ -88,6 +96,39 @@ kernel_mem_intf kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]();
     );
 `endif
 
+`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+//UDP/HSSI offload engine
+    shim_avst_if udp_avst_from_kernel();
+    shim_avst_if udp_avst_to_kernel();
+    ofs_plat_avalon_mem_if #(
+        `OFS_PLAT_AVALON_MEM_IF_REPLICATE_PARAMS(mmio64_if)
+    ) uoe_csr_avmm();
+    assign uoe_csr_avmm.clk     = clk;
+    assign uoe_csr_avmm.reset_n = ~reset;
+    
+    udp_offload_engine udp_offload_engine
+    (
+        //MAC interfaces
+        .eth_rx_axis,
+        .eth_tx_axis,
+        .eth_fc,
+    
+        // kernel clock and reset
+        .kernel_clk(uClk_usrDiv2),
+        .kernel_resetn(opencl_kernel_control.kernel_reset_n),
+    
+        // from kernel
+        .udp_avst_from_kernel,
+        
+        // to kernel
+        .udp_avst_to_kernel,
+    
+        // CSR
+        .uoe_csr_avmm
+    );
+`endif
+
+//BSP/shim logic
 
 bsp_logic bsp_logic_inst (
     .clk                    ( pClk ),
@@ -101,6 +142,9 @@ bsp_logic bsp_logic_inst (
         .host_mem_if        ( host_mem_if ),
         .mmio64_if          ( mmio64_if ),
     `endif
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        .uoe_csr_avmm,
+    `endif
     .local_mem,
     
     .opencl_kernel_control,
@@ -113,6 +157,13 @@ kernel_wrapper kernel_wrapper_inst (
     .reset_n    (!uClk_usrDiv2_reset),
     .opencl_kernel_control,
     .kernel_mem
+`ifdef INCLUDE_USM_SUPPORT
+    , .kernel_svm           ( host_mem_pa_if_kernel )
+`endif
+`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    ,.udp_avst_from_kernel,
+    .udp_avst_to_kernel
+`endif
 );
 
 endmodule : afu

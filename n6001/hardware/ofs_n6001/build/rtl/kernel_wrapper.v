@@ -32,6 +32,10 @@ module kernel_wrapper (
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ,shim_avst_if.source    udp_avst_from_kernel,
+        shim_avst_if.sink       udp_avst_to_kernel
+    `endif
 );
 
 kernel_mem_intf mem_avmm_bridge [dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
@@ -168,6 +172,10 @@ acl_avalon_mm_bridge_s10 #(
 //=======================================================
 //  kernel_system instantiation
 //=======================================================
+
+logic udp_avst_valid, udp_avst_ready;
+logic [64:0] udp_avst_data;
+
 kernel_system kernel_system_inst (
     .clock_reset_clk              (clk),
     .clock_reset2x_clk            (clk2x),
@@ -244,6 +252,20 @@ kernel_system kernel_system_inst (
         .kernel_mem_write           (kernel_system_svm_write),
         .kernel_mem_read            (kernel_system_svm_read),
         .kernel_mem_byteenable      (svm_avmm_bridge.byteenable)
+    `endif
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ,.udp_out_valid        (udp_avst_from_kernel.valid),
+        .udp_out_data          (udp_avst_from_kernel.data),
+        .udp_out_ready         (udp_avst_from_kernel.ready),
+        .udp_in_valid          (udp_avst_to_kernel.valid),
+        .udp_in_data           (udp_avst_to_kernel.data),
+        .udp_in_ready          (udp_avst_to_kernel.ready)
+        //,.udp_out_valid        (udp_avst_valid),
+        //.udp_out_data          (udp_avst_data),
+        //.udp_out_ready         (udp_avst_ready),
+        //.udp_in_valid          (udp_avst_valid),
+        //.udp_in_data           (udp_avst_data),
+        //.udp_in_ready          (udp_avst_ready)
     `endif
 );
 

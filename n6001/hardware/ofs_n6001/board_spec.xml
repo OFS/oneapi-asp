@@ -46,4 +46,9 @@
     <interface name="board" port="kernel_irq" type="irq" width="1"/>
     <kernel_clk_reset clk="board.kernel_clk" clk2x="board.kernel_clk2x" reset="board.kernel_reset"/>
   </interfaces>
+
+  <channels>
+    <interface name="board" port="udp_out" type="streamsink"   width="64" chan_id="udp_out"/>
+    <interface name="board" port="udp_in"  type="streamsource" width="64" chan_id="udp_in"/>
+  </channels>
 </board>
