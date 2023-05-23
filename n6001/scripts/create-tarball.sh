@@ -18,15 +18,7 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 cd "$BSP_ROOT" || exit
 
-bsp_files=("README.md" "scripts" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install")
-
-if [ -d "$OPAE_PLATFORM_ROOT" ]; then
-    mkdir -p fim_binaries
-    cp "$OPAE_PLATFORM_ROOT/hw/blue_bits"/*.bin fim_binaries/
-    bsp_files+=("fim_binaries")
-else
-    echo "Warning: OPAE_PLATFORM_ROOT is not defined, so the FIM binary programming files will not be included in the tarball."
-fi
+bsp_files=("README.md" "scripts" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install" "pr_build_template/hw/blue_bits")
 
 search_dir=bringup/aocxs
 for entry in "$search_dir"/*.aocx
