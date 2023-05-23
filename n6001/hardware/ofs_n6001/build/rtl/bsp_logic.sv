@@ -97,6 +97,7 @@ endgenerate
 board board_inst (
     .clk_200_clk                        (clk),                          //   clk.clk
     .global_reset_reset                 (reset),                        //   global_reset.reset_n
+    .kernel_clk_clk                     (),                             //   kernel_clk.clk (output from board.qsys)
     .kernel_clk_in_clk                  (kernel_clk),                   //   kernel_clk_in.clk (output from board.qsys)
 
     .kernel_cra_waitrequest             (opencl_kernel_control.kernel_cra_waitrequest),                    //   kernel_cra.waitrequest
@@ -111,7 +112,7 @@ board board_inst (
     .kernel_cra_debugaccess             (opencl_kernel_control.kernel_cra_debugaccess),                    //             .debugaccess
     .kernel_irq_irq                     (opencl_kernel_control.kernel_irq),                                //   kernel_irq.irq
     .kernel_reset_reset_n               (opencl_kernel_control.kernel_reset_n),                            // kernel_reset.reset_n
-
+    
     `ifdef PAC_BSP_ENABLE_DDR4_BANK1
         .emif_ddr4a_clk_clk(local_mem[0].clk),
         .emif_ddr4a_waitrequest     (local_mem[0].waitrequest),
@@ -267,7 +268,7 @@ generate
             avmm_wr_ack_gen avmm_wr_ack_gen_inst (
                 //AVMM from kernel-system to mux/emif
                 .kernel_avmm_clk        (kernel_clk),
-                .kernel_avmm_reset      (!opencl_kernel_control.kernel_reset_n),
+                .kernel_avmm_reset      (kernel_clk_reset),
                 .kernel_avmm_waitreq    (kernel_mem[lm].waitrequest),
                 .kernel_avmm_wr         (kernel_mem[lm].write),
                 .kernel_avmm_burstcnt   (kernel_mem[lm].burstcount),
