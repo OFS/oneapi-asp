@@ -45,7 +45,7 @@ generate
             .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
         ) avmm_pipeline_inst (
             .clk               (clk),
-            .reset             (!reset_n),
+            .reset             (!opencl_kernel_control.kernel_reset_n),
             .s0_waitrequest    (mem_avmm_bridge[m].waitrequest  ),
             .s0_readdata       (mem_avmm_bridge[m].readdata     ),
             .s0_readdatavalid  (mem_avmm_bridge[m].readdatavalid),
@@ -68,7 +68,7 @@ generate
         
         always_ff @(posedge clk) begin
             mem_avmm_bridge[m].writeack <= kernel_mem[m].writeack;
-            if (!reset_n) mem_avmm_bridge[m].writeack <= 'b0;
+            if (!opencl_kernel_control.kernel_reset_n) mem_avmm_bridge[m].writeack <= 'b0;
         end
     end : mem_pipes
 endgenerate
@@ -98,7 +98,7 @@ endgenerate
         .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
     )  kernel_mem_acl_avalon_mm_bridge_s10 (
         .clk                          (clk),
-        .reset                        (!reset_n),
+        .reset                        (!opencl_kernel_control.kernel_reset_n),
         .s0_waitrequest               (svm_avmm_bridge.waitrequest),
         .s0_readdata                  (svm_avmm_bridge.readdata),
         .s0_readdatavalid             (svm_avmm_bridge.readdatavalid),
@@ -131,7 +131,7 @@ acl_avalon_mm_bridge_s10 #(
     .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
 ) kernel_cra_avalon_mm_bridge_s10 (
     .clk               (clk),
-    .reset             (!reset_n),
+    .reset             (!opencl_kernel_control.kernel_reset_n),
     .s0_waitrequest    (opencl_kernel_control.kernel_cra_waitrequest  ),
     .s0_readdata       (opencl_kernel_control.kernel_cra_readdata     ),
     .s0_readdatavalid  (opencl_kernel_control.kernel_cra_readdatavalid),
@@ -159,7 +159,7 @@ acl_avalon_mm_bridge_s10 #(
 kernel_system kernel_system_inst (
     .clock_reset_clk              (clk),
     .clock_reset2x_clk            (clk2x),
-    .clock_reset_reset_reset_n    (reset_n),
+    .clock_reset_reset_reset_n    (opencl_kernel_control.kernel_reset_n),
     
     `ifdef PAC_BSP_ENABLE_DDR4_BANK1
         .kernel_ddr4a_waitrequest     (mem_avmm_bridge[0].waitrequest  ),

@@ -98,7 +98,7 @@ proc compose { } {
 
     add_instance sw_reset sw_reset 10.0
     set_instance_parameter_value sw_reset {WIDTH} {64}
-    set_instance_parameter_value sw_reset {LOG2_RESET_CYCLES} {4}
+    set_instance_parameter_value sw_reset {LOG2_RESET_CYCLES} {10}
 
     add_instance ctrl altera_avalon_mm_bridge 17.1
     set_instance_parameter_value ctrl {DATA_WIDTH} {32}
