@@ -260,7 +260,7 @@ end
 
 genvar lm;
 generate
-    for (lm=0;lm<local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS;lm++) begin : local_mem_stuff
+    for (lm=0;lm<dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS;lm++) begin : local_mem_stuff
         assign local_mem[lm].user = 'b0;
         
         `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
