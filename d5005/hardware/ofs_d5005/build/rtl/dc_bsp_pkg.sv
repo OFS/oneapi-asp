@@ -33,6 +33,9 @@ package dc_bsp_pkg;
     parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 64;
     parameter OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH = 30;
     parameter OPENCL_BSP_KERNEL_CRA_BURSTCOUNT_WIDTH = 5;
+    
+    //width of ASP MMIO AVMM address as seen by board.qsys
+    parameter MMIO64_AVMM_ADDR_WIDTH = 18;
 
     //Some parameters for the kernel-wrapper's AVMM pipeline bridges
     // memory pipelines

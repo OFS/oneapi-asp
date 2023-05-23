@@ -7,7 +7,6 @@
 module bsp_logic
 import dc_bsp_pkg::*;
 (
-    // CCI-P Clocks and Resets
     input           logic             clk,
     input           logic             reset,
     input           logic             kernel_clk,
@@ -31,7 +30,7 @@ logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4a_byte_address_bits;
 logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4b_byte_address_bits;
 logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4c_byte_address_bits;
 logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4d_byte_address_bits;
-logic [17:0] avmm_mmio64_address;
+logic [MMIO64_AVMM_ADDR_WIDTH-1:0] avmm_mmio64_address;
 logic wr_fence_flag,f2h_dma_wr_fence_flag;
 logic [BSP_NUM_INTERRUPT_LINES-1:0] bsp_irq;
 logic dma_irq_fpga2host, dma_irq_host2fpga;
@@ -50,28 +49,28 @@ ofs_plat_avalon_mem_if
 
 ofs_plat_avalon_mem_if 
   #(
-    .ADDR_WIDTH(35),
-    .DATA_WIDTH(512),
-    .BURST_CNT_WIDTH(7)
+    .ADDR_WIDTH(dma_pkg::DEVICE_MEM_ADDR_WIDTH),
+    .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
+    .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
   ) local_mem_rd_avmm_if();
   
 ofs_plat_avalon_mem_if 
   #(
-    .ADDR_WIDTH(35),
-    .DATA_WIDTH(512),
-    .BURST_CNT_WIDTH(7)
+    .ADDR_WIDTH(dma_pkg::DEVICE_MEM_ADDR_WIDTH),
+    .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
+    .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
   ) local_mem_wr_avmm_if();
 ofs_plat_avalon_mem_if 
   #(
-    .ADDR_WIDTH(48),
-    .DATA_WIDTH(512),
-    .BURST_CNT_WIDTH(7)
+    .ADDR_WIDTH(dma_pkg::HOST_MEM_ADDR_WIDTH),
+    .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
+    .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
   ) host_mem_rd_avmm_if();
 ofs_plat_avalon_mem_if 
   #(
-    .ADDR_WIDTH(48),
-    .DATA_WIDTH(512),
-    .BURST_CNT_WIDTH(7)
+    .ADDR_WIDTH(dma_pkg::HOST_MEM_ADDR_WIDTH),
+    .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
+    .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
   ) host_mem_wr_avmm_if();
 
 //for n-banks, need to tie off the unused banks
@@ -113,7 +112,7 @@ board board_inst (
     .kernel_reset_reset_n               (opencl_kernel_control.kernel_reset_n),                            // kernel_reset.reset_n
     
     `ifdef PAC_BSP_ENABLE_DDR4_BANK1
-        .emif_ddr4a_clk_clk(local_mem[0].clk),
+        .emif_ddr4a_clk_clk         (local_mem[0].clk),
         .emif_ddr4a_waitrequest     (local_mem[0].waitrequest),
         .emif_ddr4a_readdata        (local_mem[0].readdata),
         .emif_ddr4a_readdatavalid   (local_mem[0].readdatavalid),
@@ -248,11 +247,11 @@ board board_inst (
     .dma_localmem_wr_debugaccess             ()
 );
 //Create the mmio64-address based on:
-//  [17:3] = mmio64_if.address let-shifted by 3
+//  [17:3] = mmio64_if.address left-shifted by 3
 //  [2]    = (mmio64_if.byteenable == 8'hF0)
 //  [1:0]  = 2'b0
 always_comb begin
-    avmm_mmio64_address [17:3]    = mmio64_if.address;
+    avmm_mmio64_address [MMIO64_AVMM_ADDR_WIDTH-1:3]    = mmio64_if.address;
     avmm_mmio64_address [2]       = (mmio64_if.byteenable == 8'hF0) ? 1'b1 : 1'b0;
     avmm_mmio64_address [1:0]     = 2'b0;
 end
