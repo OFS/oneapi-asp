@@ -19,6 +19,8 @@
 #include <cstring>
 #include <string.h>
 #include <sys/mman.h>
+#include <algorithm>
+#include <sstream>
 
 #include <chrono>
 #include <iostream>
@@ -73,8 +75,35 @@ using namespace intel_opae_mmd;
 
 #define N 50 // data size
 
-iopipes::iopipes(int mmd_handle, std::string local_ip_address, int local_mac_address, std::string local_netmask, int local_udp_port,
-                 std::string remote_ip_address, int remote_mac_address, int remote_udp_port)
+unsigned long ParseMACAddress(std::string mac_str){
+  std::replace(mac_str.begin(), mac_str.end(), ':', ' ');
+  std::array<int, 6> mac_nums;
+  std::stringstream ss(mac_str);
+  int i = 0;
+  int tmp;
+
+  while (ss >> std::hex >> tmp) {
+    mac_nums[i++] = tmp;
+  }
+
+  if (i != 6) {
+    std::cerr << "ERROR: invalid MAC address string\n";
+    return 0;
+  }
+
+  unsigned long ret = 0;
+  for (size_t j = 0; j < 6; j++) {
+    ret += mac_nums[j] & 0xFF;
+    if (j != 5) {
+      ret <<= 8;
+    }
+  }
+
+  return ret;
+}
+
+iopipes::iopipes(int mmd_handle, std::string local_ip_address, std::string local_mac_address, std::string local_netmask, int local_udp_port,
+                 std::string remote_ip_address, std::string remote_mac_address, int remote_udp_port)
                 : m_mmd_handle(mmd_handle), m_local_ip_address(local_ip_address), m_local_mac_address(local_mac_address), m_local_netmask(local_netmask),
                   m_local_udp_port(local_udp_port), m_remote_ip_address(remote_ip_address), m_remote_mac_address(remote_mac_address), m_remote_udp_port(remote_udp_port){ }
 
@@ -88,7 +117,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   std::string local_ip_addr = m_local_ip_address;
   printf("local ip address= %s", local_ip_addr.c_str());
   
-  int local_mac_addr = m_local_mac_address;
+  int local_mac_addr = ParseMACAddress(m_local_mac_address);
   printf("local mac address= %d", local_mac_addr);
 
   std::string local_netmask = m_local_netmask;
@@ -100,7 +129,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   std::string remote_ip_addr = m_remote_ip_address;
   printf("remote ip address= %s", remote_ip_addr.c_str());
   
-  int remote_mac_addr = m_remote_mac_address;
+  int remote_mac_addr = ParseMACAddress(m_remote_mac_address);
   printf("remote mac address= %d", remote_mac_addr);
 
   int remote_udp_port = m_remote_udp_port;

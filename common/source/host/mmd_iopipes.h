@@ -19,8 +19,8 @@ namespace intel_opae_mmd {
 class iopipes final {
 public:
   /** IO Pipes constructor */
-  iopipes(int, std::string, int, std::string, int,
-          std::string, int, int);
+  iopipes(int, std::string, std::string, std::string, int,
+          std::string, std::string, int);
 
   /** deleting copy constructor, copy assignment operator, move constructor, move assignment operator */
   iopipes(const iopipes&) = delete;
@@ -35,11 +35,11 @@ public:
   private:
     int m_mmd_handle;
     std::string m_local_ip_address;
-    int m_local_mac_address;
+    std::string m_local_mac_address;
     std::string m_local_netmask;
     int m_local_udp_port;
     std::string m_remote_ip_address;
-    int m_remote_mac_address;
+    std::string m_remote_mac_address;
     int m_remote_udp_port;
 
 }; 

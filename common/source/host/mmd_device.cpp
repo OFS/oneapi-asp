@@ -559,11 +559,11 @@ bool Device::initialize_bsp() {
   bool iopipes_enabled = find_iopipes_dfh_offsets();
   if(iopipes_enabled) {
     std::string local_ip_address;
-    int local_mac_address=0;
+    std::string local_mac_address;
     std::string local_netmask;
     int local_udp_port=0;
     std::string remote_ip_address;
-    int remote_mac_address=0;
+    std::string remote_mac_address;
     int remote_udp_port=0;
 
     if(std::getenv("LOCAL_IP_ADDRESS")){
@@ -573,11 +573,7 @@ bool Device::initialize_bsp() {
     }
 
     if(std::getenv("LOCAL_MAC_ADDRESS")){
-      if(atoi(std::getenv("LOCAL_MAC_ADDRESS"))){
-        local_mac_address = atoi(std::getenv("LOCAL_MAC_ADDRESS"));
-      }else{
-        fprintf(stderr, "Please set environment variable LOCAL_MAC_ADDRESS to use IO PIPES");    
-      }
+      local_mac_address = std::getenv("LOCAL_MAC_ADDRESS");
     } else{
       fprintf(stderr, "Please set environment variable LOCAL_MAC_ADDRESS to use IO PIPES");   
     }
@@ -601,7 +597,7 @@ bool Device::initialize_bsp() {
     }
 
     if(std::getenv("REMOTE_MAC_ADDRESS")){
-      remote_mac_address = atoi(std::getenv("REMOTE_MAC_ADDRESS"));
+      remote_mac_address = std::getenv("REMOTE_MAC_ADDRESS");
     } else{
       fprintf(stderr, "Please set environment variable REMOTE_MAC_ADDRESS to use IO PIPES");   
     }
