@@ -569,43 +569,50 @@ bool Device::initialize_bsp() {
     if(std::getenv("LOCAL_IP_ADDRESS")){
       local_ip_address = std::getenv("LOCAL_IP_ADDRESS");
     } else{
-      fprintf(stderr, "Please set environment variable LOCAL_IP_ADDRESS to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable LOCAL_IP_ADDRESS to use IO PIPES\n");
+      exit(1);   
     }
 
     if(std::getenv("LOCAL_MAC_ADDRESS")){
       local_mac_address = std::getenv("LOCAL_MAC_ADDRESS");
     } else{
-      fprintf(stderr, "Please set environment variable LOCAL_MAC_ADDRESS to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable LOCAL_MAC_ADDRESS to use IO PIPES\n");
+      exit(1);   
     }
 
     if(std::getenv("LOCAL_NETMASK")){
       local_netmask = std::getenv("LOCAL_NETMASK");
     } else{
-      fprintf(stderr, "Please set environment variable LOCAL_NETMASK to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable LOCAL_NETMASK to use IO PIPES\n");
+      exit(1);   
     }
 
     if(std::getenv("LOCAL_UDP_PORT")){
       local_udp_port = atoi(std::getenv("LOCAL_UDP_PORT"));
     } else{
-      fprintf(stderr, "Please set environment variable LOCAL_UDP_PORT to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable LOCAL_UDP_PORT to use IO PIPES\n");
+      exit(1);   
     }
 
     if(std::getenv("REMOTE_IP_ADDRESS")){
       remote_ip_address = std::getenv("REMOTE_IP_ADDRESS");
     } else{
-      fprintf(stderr, "Please set environment variable REMOTE_IP_ADDRESS to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable REMOTE_IP_ADDRESS to use IO PIPES\n");
+      exit(1);   
     }
 
     if(std::getenv("REMOTE_MAC_ADDRESS")){
       remote_mac_address = std::getenv("REMOTE_MAC_ADDRESS");
     } else{
-      fprintf(stderr, "Please set environment variable REMOTE_MAC_ADDRESS to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable REMOTE_MAC_ADDRESS to use IO PIPES\n");
+      exit(1);   
     }
 
     if(std::getenv("REMOTE_UDP_PORT")){
       remote_udp_port = atoi(std::getenv("REMOTE_UDP_PORT"));
     } else{
-      fprintf(stderr, "Please set environment variable REMOTE_UDP_PORT to use IO PIPES");   
+      fprintf(stderr, "Please set environment variable REMOTE_UDP_PORT to use IO PIPES\n");
+      exit(1);   
     }
 
     io_pipes = new iopipes(mmd_handle, local_ip_address, local_mac_address, local_netmask, local_udp_port, remote_ip_address, remote_mac_address, remote_udp_port);
