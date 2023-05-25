@@ -18,8 +18,8 @@ set THIS_DIR [file dirname [info script]]
 
 set_global_assignment -name SEARCH_PATH "${THIS_DIR}/.."
 
-set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/width_adapter_64_to_32.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/width_adapter_32_to_64.sv"
+#set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/width_adapter_64_to_32.sv"
+#set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/width_adapter_32_to_64.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/user_csr.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/udp_offload_engine.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/simple_tx.sv"
