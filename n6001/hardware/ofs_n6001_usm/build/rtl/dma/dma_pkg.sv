@@ -1,6 +1,5 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
-//
 
 package dma_pkg;
 
@@ -29,7 +28,7 @@ package dma_pkg;
 
     //address widths
     parameter HOST_MEM_ADDR_WIDTH = 48;
-    parameter DEVICE_MEM_ADDR_WIDTH = 35;
+    parameter DEVICE_MEM_ADDR_WIDTH = 34;
     parameter XFER_SIZE_WIDTH   = 40;
 
     //DMA command-queue FIFO usedw width

@@ -1,13 +1,12 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
-//
 
 `include "opencl_bsp.vh"
 
 package dc_bsp_pkg;
 
-    //Each memory bank is 8GB. 512b/(8b/B)*(27'1)=8GB.
-    parameter OPENCL_DDR_ADDR_WIDTH = 27;
+    //Each memory bank is 4GB. 512b/(8b/B)*(26'1)=4GB.
+    parameter OPENCL_DDR_ADDR_WIDTH = 26;
     // SVM
     parameter OPENCL_MEMORY_ADDR_WIDTH = 42;
     //OpenCL can only access on a per-word basis. The data bus
@@ -31,9 +30,12 @@ package dc_bsp_pkg;
     parameter BSP_NUM_LOCAL_MEM_BANKS = 4;
     parameter BSP_MAX_AVAIL_PLATFORM_LOCAL_MEM_BANKS = 4;
 
-    parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 512;
+    parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 64;
     parameter OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH = 30;
     parameter OPENCL_BSP_KERNEL_CRA_BURSTCOUNT_WIDTH = 5;
+    
+    //width of ASP MMIO AVMM address as seen by board.qsys
+    parameter MMIO64_AVMM_ADDR_WIDTH = 18;
 
     //Some parameters for the kernel-wrapper's AVMM pipeline bridges
     // memory pipelines
