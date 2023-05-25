@@ -117,23 +117,23 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   std::string local_ip_addr = m_local_ip_address;
   printf("local ip address= %s", local_ip_addr.c_str());
   
-  int local_mac_addr = ParseMACAddress(m_local_mac_address);
-  printf("local mac address= %d", local_mac_addr);
+  uint64_t local_mac_addr = ParseMACAddress(m_local_mac_address);
+  printf("local mac address= %ld", local_mac_addr);
 
   std::string local_netmask = m_local_netmask;
   printf("local netmask = %s", local_netmask.c_str());
 
-  int local_udp_port = m_local_udp_port;
-  printf("local udp port= %d", local_udp_port);
+  uint64_t local_udp_port = (unsigned long)m_local_udp_port;
+  printf("local udp port= %ld", local_udp_port);
 
   std::string remote_ip_addr = m_remote_ip_address;
   printf("remote ip address= %s", remote_ip_addr.c_str());
   
-  int remote_mac_addr = ParseMACAddress(m_remote_mac_address);
-  printf("remote mac address= %d", remote_mac_addr);
+  uint64_t remote_mac_addr = ParseMACAddress(m_remote_mac_address);
+  printf("remote mac address= %ld", remote_mac_addr);
 
-  int remote_udp_port = m_remote_udp_port;
-  printf("remote udp port= %d", remote_udp_port);
+  uint64_t remote_udp_port = (unsigned long)m_remote_udp_port;
+  printf("remote udp port= %ld", remote_udp_port);
 
   fpga_result res = FPGA_OK;
   
