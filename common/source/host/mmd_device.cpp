@@ -434,8 +434,8 @@ bool Device::find_dma_dfh_offsets() {
 
 bool Device::find_iopipes_dfh_offsets() {
   printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
-  iopipes_dfh_offset = 345;
-  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  //iopipes_dfh_offset = 345;
+  //printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
   if (find_dfh_by_guid(mmio_handle, IOPIPES_GUID, &dfh_offset,
@@ -448,6 +448,7 @@ bool Device::find_iopipes_dfh_offsets() {
                 IOPIPES_GUID);
   } else {
       printf("IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+      DEBUG_LOG("DEBUG LOG : IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
     return false;
   }
   
