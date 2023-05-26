@@ -136,7 +136,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   
   printf("Doug - inside setup-pac function (a)\n");
 
-  uint64_t data = 0;
+  //uint64_t data = 0;
   
   // TO DO - Will need to update CSR names and write to appropriate CSRs , maybe add and remove some CSRs
   // Also code to then loop over number of IO Pipes and read from config status CSR or each io pipe if needed or initialize them if needed
@@ -155,7 +155,6 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   fprintf(stderr, "iopipes.cpp - CSR_RESET_REG_ADDR is 0x%x\n",CSR_RESET_REG_ADDR);
   
   // MAC reset
-  //res = fpgaWriteMMIO64(m_fpga_handle, mmio_num, dma_csr_src, dma_src_addr);
   res = fpgaWriteMMIO64(afc_handle, mmio_num, REG_UDPOE_BASE_ADDR, 0x7);
   if (res != FPGA_OK) {
     printf("error is %d, OK is %d, Exception is %d, Invalid param is %d \n",res, FPGA_OK, FPGA_EXCEPTION, FPGA_INVALID_PARAM);
@@ -222,26 +221,47 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   
 // TO do - need to clean code to write to CSRs, we dont need below calculations
 // just write to CSRs what we got from environment variables or initialize to known values
-  unsigned long tmp1 = htonl(inet_addr(local_ip_addr.c_str()));
-  unsigned long tmp2 = htonl(inet_addr(local_netmask.c_str()));
-  unsigned long tmp3 = htonl(inet_addr(remote_ip_addr.c_str()));
+  unsigned long ul_local_ip_addr = htonl(inet_addr(local_ip_addr.c_str()));
+  unsigned long ul_local_netmask = htonl(inet_addr(local_netmask.c_str()));
+  unsigned long ul_remote_ip_addr = htonl(inet_addr(remote_ip_addr.c_str()));
   //if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
-  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_IP_ADR_ADDR, tmp1)) != FPGA_OK) { 
+  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_IP_ADR_ADDR, ul_local_ip_addr)) != FPGA_OK) { 
     printf("Error:writing CSR");
     exit(1);
   }
   //if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
-  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_IP_ADR_ADDR, tmp3)) != FPGA_OK) { 
+  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_IP_ADR_ADDR, ul_remote_ip_addr)) != FPGA_OK) { 
     printf("Error:writing CSR");
     exit(1);
   }
   //unsigned long tmp4 = htonl(inet_addr(local_netmask.c_str()));
-  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_NETMASK_ADDR, tmp2)) != FPGA_OK) {
+  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_NETMASK_ADDR, ul_local_netmask)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
   }
-  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &data);
-  printf("Read CSR: MAC:%08lx\n", data);
+
+  // Read CSRs
+  uint64_t mmio_read;
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &mmio_read);
+  printf("Read CSR: FPGA_MAC_ADDR:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_IP_ADR_ADDR, &mmio_read);
+  printf("Read CSR: FPGA_IP_ADDR:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_UDP_PORT_ADDR, &mmio_read);
+  printf("Read CSR: FPGA_UDP_PORT:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_NETMASK_ADDR, &mmio_read);
+  printf("Read CSR: FPGA_NETMASK:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_HOST_MAC_ADR_ADDR, &mmio_read);
+  printf("Read CSR: HOST_MAC_ADDR:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_HOST_IP_ADR_ADDR, &mmio_read);
+  printf("Read CSR: HOST_IP_ADDR:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_HOST_UDP_PORT_ADDR, &mmio_read);
+  printf("Read CSR: HOST_UDP_PORT:%ld\n", mmio_read);
 
 // do we need to read or write to below IO Pipes specific CSRs 
 /*#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
