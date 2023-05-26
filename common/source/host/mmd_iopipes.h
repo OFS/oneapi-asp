@@ -41,6 +41,7 @@ public:
     std::string m_remote_ip_address;
     std::string m_remote_mac_address;
     int m_remote_udp_port;
+    int mmio_num;
 
 }; 
 
