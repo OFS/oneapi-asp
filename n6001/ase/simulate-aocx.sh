@@ -1,19 +1,7 @@
 #!/bin/bash
 
-# Copyright 2020 Intel Corporation.
-#
-# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# Copyright 2022 Intel Corporation
+# SPDX-License-Identifier: MIT
 
 if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
   echo "Running ${BASH_SOURCE[0]} with debug logging"
@@ -107,7 +95,9 @@ if [ "$vhd_file_cnt" -gt "0"  ]; then
 else
     echo "no vhd files exist, nothing to copy over"
 fi
-
+echo "before pwd"
+pwd
+echo "after pwd"
 if [ "${board_name}" == "ofs_n6001" ]; then
     cp -prf vlog_files_base_ofs_n6001.list vlog_files.list
 elif [ "${board_name}" == "ofs_n6001_usm" ]; then
@@ -133,7 +123,6 @@ sed -i '/.hex$/d' ./vlog_files.list
 
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./qsys_files/
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./sim_files/
-cp -prf "$ASE_DIR_PATH"/hack_ip_files/test_data ../kernel/
 
 OPAE_BASEDIR="$LIBOPAE_C_ROOT/../opae_src" make
 cp ./*.hex ./work/

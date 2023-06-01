@@ -63,7 +63,7 @@ package udp_oe_pkg;
     parameter DFH_NEXT_AFU_OFFSET_ADDR      = REG_BSP_GEN_BASE_ADDR + 'h03;
     parameter SCRATCHPAD_ADDR               = REG_BSP_GEN_BASE_ADDR + 'h05;
     
-    //UDP Offload Engine registers
+    //UDP Offload Engine registers - common across all channels
     parameter REG_UDPOE_BASE_ADDR          = 'h10;
 
     parameter CSR_FPGA_MAC_ADR_ADDR         = REG_UDPOE_BASE_ADDR + 'h00;
@@ -79,6 +79,9 @@ package udp_oe_pkg;
     parameter CSR_STATUS_REG_ADDR           = REG_UDPOE_BASE_ADDR + 'h0A;
     parameter CSR_MISC_CTRL_REG_ADDR        = REG_UDPOE_BASE_ADDR + 'h0B;
 
+    //UDP Offload Engine registers - per-channel
+    
+    
     //data to return on a read that ends up in the default case
     parameter REG_RD_BADADDR_DATA = 64'h0BAD_0ADD_0BAD_0ADD;
     

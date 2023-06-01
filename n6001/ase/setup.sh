@@ -1,19 +1,7 @@
 #!/bin/bash
 
-# Copyright 2020 Intel Corporation.
-#
-# THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-# COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# Copyright 2022 Intel Corporation
+# SPDX-License-Identifier: MIT
 
 echo "Start of setup.sh"
 
@@ -63,6 +51,10 @@ function set_libopae_c_root() {
   if [ -z "$LIBOPAE_C_ROOT" ]; then
     if /sbin/ldconfig -p | grep libopae-c.so.2 -q && afu_synth=$(command -v afu_synth_setup); then
       LIBOPAE_C_ROOT="$(dirname "$(dirname "$afu_synth")")"
+    elif [ -d "$BSP_ROOT/build/opae/install" ]
+    then
+      echo "libopae-c-root exists : $BSP_ROOT/build/opae/install "
+      LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
     else
         echo "libopae-c-root doesn't exist, running build-opae.sh"
       "$SCRIPT_DIR_PATH/build-opae.sh" || exit
@@ -82,7 +74,6 @@ fi
 
 export OFS_OCL_ENV_ENABLE_ASE=1
 if [ ! -f "$BSP_ROOT/hardware/ofs_n6001/ofs_top.qpf" ]; then
-  unset LIBOPAE_C_ROOT
   echo "The qpf file doesn't exist, so we need to run build-bsp.sh"
   "$BSP_ROOT/scripts/build-bsp.sh"
   set_libopae_c_root
@@ -90,7 +81,7 @@ else
   echo "BSP setup already complete (delete hardware setup files to regenerate)"
   # Build the MMD or use existing MMD if files already exist
   if [ ! -f "$BSP_ROOT/linux64/lib/libintel_opae_mmd.so" ]; then
-    echo "mmd not built yet, fun build-bsp-sw.sh"
+    echo "mmd not built yet, run build-bsp-sw.sh"
     "$SCRIPT_DIR_PATH/build-bsp-sw.sh" || exit
     set_libopae_c_root
   else
@@ -116,6 +107,7 @@ export CL_CONTEXT_COMPILER_MODE_INTELFPGA=3
 echo "CL_CONTEXT_COMPILER_MODE_INTELFPGA is $CL_CONTEXT_COMPILER_MODE_INTELFPGA"
 export PATH="$LIBOPAE_C_ROOT/bin:$LIBOPAE_C_ASE_ROOT/bin:$PATH"
 echo "added libopae-c-root/bin to PATH"
+echo "LIBOPAE_C_ROOT is $LIBOPAE_C_ROOT"
 export OFS_OCL_ENV_ENABLE_ASE=1
 echo "export OFS_OCL_ENV_ENABLE_ASE=1"
 

@@ -22,13 +22,7 @@ package dma_pkg;
     parameter DFH_HDR_VERSION_MINOR     = 4'h0;
     parameter DFH_HDR_RSVD1             = 7'h00;
     parameter DFH_HDR_END_OF_LIST       = 1'b0;
-    //if MPF VTP is used, that is the end-of-list
-    `ifdef USE_MPF_VTP
-        parameter DFH_HDR_NEXT_DFH_OFFSET   = 24'h4000;
-    //else we use the null DFH in board.qsys as end-of-list
-    `else
-        parameter DFH_HDR_NEXT_DFH_OFFSET   = 24'h800;
-    `endif
+    parameter DFH_HDR_NEXT_DFH_OFFSET   = 24'h800;
     parameter DFH_HDR_VERSION_MAJOR     = 4'h0;
     parameter DFH_HDR_FEATURE_ID        = 12'h000;
 
