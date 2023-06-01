@@ -42,22 +42,21 @@ using namespace intel_opae_mmd;
 
 #define CSR_NUM_CHANNELS_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8))
 
-#define CSR_FPGA_MAC_ADR_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8))
-#define CSR_FPGA_IP_ADR_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8))
-#define CSR_FPGA_UDP_PORT_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8))
-#define CSR_FPGA_NETMASK_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8))
-#define CSR_HOST_MAC_ADR_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8))
-#define CSR_HOST_IP_ADR_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8))
-#define CSR_HOST_UDP_PORT_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8))
+#define CSR_FPGA_MAC_ADR_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8))
+#define CSR_FPGA_IP_ADR_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8))
+#define CSR_FPGA_UDP_PORT_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8))
+#define CSR_FPGA_NETMASK_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8))
+#define CSR_HOST_MAC_ADR_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8))
+#define CSR_HOST_IP_ADR_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8))
+#define CSR_HOST_UDP_PORT_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8))
 
-#define CSR_RESET_REG_ADDR            (REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8))
-#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
-#define CSR_CHECKSUM_IP_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
+#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8))
+#define CSR_CHECKSUM_IP_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8))
+#define CSR_RESET_REG_ADDR            (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
 
-/* below CSRs per io pipe 
+//below CSRs per io pipe 
 #define CSR_STATUS_REG_ADDR           (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
 #define CSR_MISC_CTRL_REG_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
-*/
 
 #define CHECKSUM_IP     43369
 #define UDP_MAX_BUFSIZE 16*1024
@@ -112,25 +111,25 @@ iopipes::~iopipes(){}
 void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
   std::string local_ip_addr = m_local_ip_address;
-  printf("local ip address= %s", local_ip_addr.c_str());
+  printf("local ip address= %s\n", local_ip_addr.c_str());
   
   uint64_t local_mac_addr = ParseMACAddress(m_local_mac_address);
-  printf("local mac address= %ld", local_mac_addr);
+  printf("local mac address= %ld\n", local_mac_addr);
 
   std::string local_netmask = m_local_netmask;
-  printf("local netmask = %s", local_netmask.c_str());
+  printf("local netmask = %s\n", local_netmask.c_str());
 
   uint64_t local_udp_port = (unsigned long)m_local_udp_port;
-  printf("local udp port= %ld", local_udp_port);
+  printf("local udp port= %ld\n", local_udp_port);
 
   std::string remote_ip_addr = m_remote_ip_address;
-  printf("remote ip address= %s", remote_ip_addr.c_str());
+  printf("remote ip address= %s\n", remote_ip_addr.c_str());
   
   uint64_t remote_mac_addr = ParseMACAddress(m_remote_mac_address);
-  printf("remote mac address= %ld", remote_mac_addr);
+  printf("remote mac address= %ld\n", remote_mac_addr);
 
   uint64_t remote_udp_port = (unsigned long)m_remote_udp_port;
-  printf("remote udp port= %ld", remote_udp_port);
+  printf("remote udp port= %ld\n", remote_udp_port);
 
   fpga_result res = FPGA_OK;
   
@@ -213,11 +212,13 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing CSR");
     exit(1);
   }
-  /*//CSR_MISC_CTRL_REG_ADDR
-  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_MISC_CTRL_REG_ADDR, (unsigned long) 1)) != FPGA_OK) {
-    printf("Error:writing CSR");
+  
+  //CSR_MISC_CTRL_REG_ADDR
+  printf("Enable tx-rx loopback in UOE module.\n");
+  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_MISC_CTRL_REG_ADDR, 0xFFFFFFFF)) != FPGA_OK) { 
+    printf("Error:writing misc-ctrl CSR");
     exit(1);
-  }*/
+  }
   
 // TO do - need to clean code to write to CSRs, we dont need below calculations
 // just write to CSRs what we got from environment variables or initialize to known values

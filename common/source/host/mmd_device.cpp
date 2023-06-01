@@ -44,7 +44,9 @@
 #define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
 #define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
 
-#define IOPIPES_GUID "a2aa84f4-48a3-43b9-af77-f9c3123ff955"
+//#define IOPIPES_GUID "a2aa84f4-48a3-43b9-af77-f9c3123ff955"
+// using old iopipes guid for now
+#define IOPIPES_GUID "9c8560c5-729f-f873-966d-1f07871d4396"
 
 using namespace intel_opae_mmd;
 
