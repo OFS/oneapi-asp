@@ -54,9 +54,11 @@ using namespace intel_opae_mmd;
 #define CSR_CHECKSUM_IP_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8))
 #define CSR_RESET_REG_ADDR            (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
 
+#define PIPES_CSR_START_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
+ 
 //below CSRs per io pipe 
-#define CSR_STATUS_REG_ADDR           (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
-#define CSR_MISC_CTRL_REG_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
+//#define CSR_STATUS_REG_ADDR           (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
+//#define CSR_MISC_CTRL_REG_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
 
 #define CHECKSUM_IP     43369
 #define UDP_MAX_BUFSIZE 16*1024
@@ -213,11 +215,25 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     exit(1);
   }
   
-  //CSR_MISC_CTRL_REG_ADDR
+  /*//CSR_MISC_CTRL_REG_ADDR
   printf("Enable tx-rx loopback in UOE module.\n");
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_MISC_CTRL_REG_ADDR, 0xFFFFFFFF)) != FPGA_OK) { 
     printf("Error:writing misc-ctrl CSR");
     exit(1);
+  }*/
+
+  //CSR_MISC_CTRL_REG_ADDR
+  printf("Enable tx-rx loopback in UOE module.\n");
+  int i = 0x00;
+  for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0x1)) != FPGA_OK) {
+      printf("Error:writing CSR");
+      exit(1);
+    }
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
+      printf("Error:writing CSR");
+      exit(1);
+    }
   }
   
 // TO do - need to clean code to write to CSRs, we dont need below calculations
@@ -270,8 +286,13 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 #define CSR_STATUS_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
 #define CSR_MISC_CTRL_REG_ADDR     (REG_UDPOE_CSR_BASE_ADDR+(0x0C*0x8))*/
   
-/*for(uint64_t loop=0; loop<number_of_channels; loop++) {
-  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8)), )) != FPGA_OK) {
+/*int i = 0x00;
+for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0x1)) != FPGA_OK) {
+    printf("Error:writing CSR");
+    exit(1);
+  }
+  if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
     printf("Error:writing CSR");
     exit(1);
   }
