@@ -221,20 +221,6 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing misc-ctrl CSR");
     exit(1);
   }*/
-
-  //CSR_MISC_CTRL_REG_ADDR
-  printf("Enable tx-rx loopback in UOE module.\n");
-  int i = 0x00;
-  for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
-    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0x1)) != FPGA_OK) {
-      printf("Error:writing CSR");
-      exit(1);
-    }
-    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
-      printf("Error:writing CSR");
-      exit(1);
-    }
-  }
   
 // TO do - need to clean code to write to CSRs, we dont need below calculations
 // just write to CSRs what we got from environment variables or initialize to known values
@@ -257,6 +243,19 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     exit(1);
   }
 
+  //CSR_MISC_CTRL_REG_ADDR
+  printf("Enable tx-rx loopback in UOE module.\n");
+  int i = 0x00;
+  for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0x1)) != FPGA_OK) {
+      printf("Error:writing CSR");
+      exit(1);
+    }
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
+      printf("Error:writing CSR");
+      exit(1);
+    }
+  }
   // Read CSRs
   uint64_t mmio_read;
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &mmio_read);
