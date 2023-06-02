@@ -114,7 +114,7 @@ iopipes::~iopipes(){}
 // function to setup io pipes CSR space
 void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
-  printf("Inside setup-pac function\n");
+  printf("** Inside setup-pac function **\n");
   uint64_t REG_UDPOE_BASE_ADDR       = iopipes::m_iopipes_dfh_offset;
   //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
   uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
