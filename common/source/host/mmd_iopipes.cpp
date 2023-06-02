@@ -256,6 +256,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
       exit(1);
     }
   }
+
   // Read CSRs
   uint64_t mmio_read;
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &mmio_read);
