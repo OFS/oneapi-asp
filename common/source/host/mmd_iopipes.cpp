@@ -112,6 +112,8 @@ iopipes::~iopipes(){}
 // function to setup io pipes CSR space
 void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
+  printf("Inside setup-pac function\n");
+
   std::string local_ip_addr = m_local_ip_address;
   printf("local ip address= %s\n", local_ip_addr.c_str());
   
@@ -135,26 +137,6 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 
   fpga_result res = FPGA_OK;
   
-  printf("Doug - inside setup-pac function (a)\n");
-
-  //uint64_t data = 0;
-  
-  // TO DO - Will need to update CSR names and write to appropriate CSRs , maybe add and remove some CSRs
-  // Also code to then loop over number of IO Pipes and read from config status CSR or each io pipe if needed or initialize them if needed
-  fprintf(stderr, "iopipes.cpp - dump the DFH registers...\n");
-  /*for (uint64_t this_addr = REG_UDPOE_BASE_ADDR; this_addr<=CSR_STATUS_REG_ADDR;this_addr+=8) {
-      fprintf(stderr, "******* Read/write/read the UDP OE register 0x%lx\n",this_addr);
-      res = fpgaReadMMIO64(afc_handle, 0, this_addr, &data);
-      fprintf(stderr, "data: 0x%lx\n",data);
-      fprintf(stderr, "writing 0x123456789abcdef to addr 0x%lx\n",this_addr);
-      res = fpgaWriteMMIO64(afc_handle, 0, this_addr, 0x123456789abcdef);
-      fprintf(stderr, "reading addr 0x%lx\n",this_addr);
-      res = fpgaReadMMIO64(afc_handle, 0, this_addr, &data);
-      fprintf(stderr, "data: 0x%lx\n\n\n",data);
-  }*/
-
-  fprintf(stderr, "iopipes.cpp - CSR_RESET_REG_ADDR is 0x%x\n",CSR_RESET_REG_ADDR);
-  
   // MAC reset
   res = fpgaWriteMMIO64(afc_handle, mmio_num, REG_UDPOE_BASE_ADDR, 0x7);
   if (res != FPGA_OK) {
@@ -162,56 +144,56 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing RST\n");
     exit(1);
   }
-  printf("Doug - inside setup-pac function (b)\n");
-  usleep(10000);
+  
+  /*usleep(10000);
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_RESET_REG_ADDR, 0x3)) != FPGA_OK) {
     printf("Error:writing RST\n");
     exit(1);
   }
-  printf("Doug - inside setup-pac function (c)\n");
+  
   usleep(10000);
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_RESET_REG_ADDR, 0x0)) != FPGA_OK) {
     printf("Error:writing RST\n");
     exit(1);
   }
-  usleep(5000000); // TODO: need to check if reset/wait is needed
-  printf("Doug - inside setup-pac function (d)\n");
+  usleep(5000000); // TODO: need to check if reset/wait is needed*/
+
   //
   // UOE register settings. These registers are not reset even after fpgaClose().
   //
   // Read MMIO CSR NUM_CHANNELS to determine how many io channels to initialize
   uint64_t number_of_channels;
   if((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_NUM_CHANNELS_ADDR, &number_of_channels)) != FPGA_OK) {
-    printf("Error Reading number of channels CSR\n");
+    printf("Error:Reading number of channels CSR\n");
     exit(-1);
   } 
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, local_mac_addr)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_FPGA_MAC_ADR CSR");
     exit(1);
   }
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_MAC_ADR_ADDR, remote_mac_addr)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_HOST_MAC_ADR CSR");
     exit(1);
   }
 
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_UDP_PORT_ADDR, local_udp_port)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_FPGA_UDP_PORT CSR");
     exit(1);
   }
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_UDP_PORT_ADDR, remote_udp_port)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_HOST_UDP_PORT CSR");
     exit(1);
   }
   
   //CSR_PAYLOAD_PER_PACKET_ADDR
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_PAYLOAD_PER_PACKET_ADDR, (unsigned long) 32)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_PAYLOAD_PER_PACKET CSR");
     exit(1);
   }
 
   //CSR CHECKSUM IP
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_CHECKSUM_IP_ADDR, (unsigned long)CHECKSUM_IP)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_CHECKSUM_IP CSR");
     exit(1);
   }
   
@@ -229,17 +211,17 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   unsigned long ul_remote_ip_addr = htonl(inet_addr(remote_ip_addr.c_str()));
   //if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_IP_ADR_ADDR, ul_local_ip_addr)) != FPGA_OK) { 
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_FPGA_IP_ADR CSR");
     exit(1);
   }
   //if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_IP_ADR_ADDR, tmp1 * 0x100000000 + (tmp2 & 0xffffffff))) != FPGA_OK) {
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_HOST_IP_ADR_ADDR, ul_remote_ip_addr)) != FPGA_OK) { 
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_HOST_IP_ADR CSR");
     exit(1);
   }
   //unsigned long tmp4 = htonl(inet_addr(local_netmask.c_str()));
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_NETMASK_ADDR, ul_local_netmask)) != FPGA_OK) {
-    printf("Error:writing CSR");
+    printf("Error:writing CSR_FPGA_NETMASK CSR");
     exit(1);
   }
 
@@ -248,11 +230,11 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   int i = 0x00;
   for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0x1)) != FPGA_OK) {
-      printf("Error:writing CSR");
+      printf("Error:writing CSR_STATUS_REG CSR");
       exit(1);
     }
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
-      printf("Error:writing CSR");
+      printf("Error:writing CSR_MISC_CTRL_REG CSR");
       exit(1);
     }
   }
