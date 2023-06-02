@@ -455,6 +455,7 @@ bool Device::find_iopipes_dfh_offsets() {
   }
   
   assert(iopipes_dfh_offset != 0);
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
 
   return true;
 }
@@ -618,7 +619,7 @@ bool Device::initialize_bsp() {
       exit(1);   
     }
 
-    io_pipes = new iopipes(mmd_handle, local_ip_address, local_mac_address, local_netmask, local_udp_port, remote_ip_address, remote_mac_address, remote_udp_port);
+    io_pipes = new iopipes(mmd_handle, local_ip_address, local_mac_address, local_netmask, local_udp_port, remote_ip_address, remote_mac_address, remote_udp_port, iopipes_dfh_offset);
     io_pipes->setup_iopipes_asp(mmio_handle);
   }
    

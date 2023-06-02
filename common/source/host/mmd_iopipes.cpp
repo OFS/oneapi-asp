@@ -36,8 +36,8 @@ using namespace intel_opae_mmd;
 //base address is 0x20800
 //dfh base offset is 0x0
 //udp offload engine csrs offset is 0x10
-#define REG_UDPOE_BASE_ADDR           0x20800
-#define REG_UDPOE_DFH_BASE_ADDR       (REG_UDPOE_BASE_ADDR + (0x0*0x8))
+//#define REG_UDPOE_BASE_ADDR           0x20800
+/*#define REG_UDPOE_DFH_BASE_ADDR       (REG_UDPOE_BASE_ADDR + (0x0*0x8))
 #define REG_UDPOE_CSR_BASE_ADDR       (REG_UDPOE_BASE_ADDR + (0x10*0x8))
 
 #define CSR_NUM_CHANNELS_ADDR         (REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8))
@@ -59,6 +59,7 @@ using namespace intel_opae_mmd;
 //below CSRs per io pipe 
 //#define CSR_STATUS_REG_ADDR           (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
 //#define CSR_MISC_CTRL_REG_ADDR        (REG_UDPOE_CSR_BASE_ADDR+(0x0B*0x8))
+*/
 
 #define CHECKSUM_IP     43369
 #define UDP_MAX_BUFSIZE 16*1024
@@ -98,9 +99,10 @@ unsigned long ParseMACAddress(std::string mac_str){
 
 //iopipes constructor with initializer list
 iopipes::iopipes(int mmd_handle, std::string local_ip_address, std::string local_mac_address, std::string local_netmask, int local_udp_port,
-                 std::string remote_ip_address, std::string remote_mac_address, int remote_udp_port)
+                 std::string remote_ip_address, std::string remote_mac_address, int remote_udp_port, uint64_t iopipes_dfh_offset)
                 : m_mmd_handle(mmd_handle), m_local_ip_address(local_ip_address), m_local_mac_address(local_mac_address), m_local_netmask(local_netmask),
-                  m_local_udp_port(local_udp_port), m_remote_ip_address(remote_ip_address), m_remote_mac_address(remote_mac_address), m_remote_udp_port(remote_udp_port), mmio_num(0){ }
+                  m_local_udp_port(local_udp_port), m_remote_ip_address(remote_ip_address), m_remote_mac_address(remote_mac_address),
+                  m_remote_udp_port(remote_udp_port), mmio_num(0), m_iopipes_dfh_offset(iopipes_dfh_offset){ }
 
 //iopipes noop destructor
 iopipes::~iopipes(){}
@@ -113,6 +115,25 @@ iopipes::~iopipes(){}
 void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
   printf("Inside setup-pac function\n");
+  uint64_t REG_UDPOE_BASE_ADDR       = iopipes::m_iopipes_dfh_offset;
+  //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
+  uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
+
+  uint64_t CSR_NUM_CHANNELS_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
+
+  uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
+  uint64_t CSR_FPGA_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
+  uint64_t CSR_FPGA_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
+  uint64_t CSR_FPGA_NETMASK_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8);
+  uint64_t CSR_HOST_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8);
+  uint64_t CSR_HOST_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8);
+  uint64_t CSR_HOST_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8);
+
+  uint64_t CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8);
+  uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8);
+  //uint64_t CSR_RESET_REG_ADDR            = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
+
+  uint64_t PIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
 
   std::string local_ip_addr = m_local_ip_address;
   printf("local ip address= %s\n", local_ip_addr.c_str());
@@ -229,11 +250,11 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   printf("Enable tx-rx loopback in UOE module.\n");
   int i = 0x00;
   for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
-    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0x1)) != FPGA_OK) {
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
       printf("Error:writing CSR_STATUS_REG CSR");
       exit(1);
     }
-    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR+(++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
       printf("Error:writing CSR_MISC_CTRL_REG CSR");
       exit(1);
     }

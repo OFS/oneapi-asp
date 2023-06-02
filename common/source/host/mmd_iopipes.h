@@ -20,7 +20,7 @@ class iopipes final {
 public:
   /** IO Pipes constructor */
   iopipes(int, std::string, std::string, std::string, int,
-          std::string, std::string, int);
+          std::string, std::string, int, uint64_t);
 
   /** deleting copy constructor, copy assignment operator, move constructor, move assignment operator */
   iopipes(const iopipes&) = delete;
@@ -42,6 +42,8 @@ public:
     std::string m_remote_mac_address;
     int m_remote_udp_port;
     int mmio_num;
+    uint64_t m_iopipes_dfh_offset;
+
 
 }; 
 
