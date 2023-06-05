@@ -178,7 +178,7 @@ module ofs_plat_afu
         .LOCAL_MEM_IN_USE_MASK(-1),
         // The argument to each parameter is a bit mask of channels used.
         // Passing "-1" indicates all available channels are in use.
-        .HSSI_IN_USE_MASK(-1)
+        .HSSI_IN_USE_MASK(1)
         )
         tie_off(plat_ifc);
 

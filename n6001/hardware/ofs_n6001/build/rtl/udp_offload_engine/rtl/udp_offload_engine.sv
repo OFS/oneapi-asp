@@ -63,7 +63,7 @@ user_csr user_csr
 //do tx-rx loopback or pass-through to hssi-ss
 always_comb begin 
     //if connecting the kernel's tx-to-rx (loopback)
-    if (udp_oe_ctrl.misc_ctrl.intrabsp_txrx_loopback & ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK) begin
+    if (ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK) begin
         eth_tx_axis_int.tready = 'b1;
         eth_tx_axis_int.clk    = kernel_clk;
         eth_tx_axis_int.rst_n  = kernel_resetn;
