@@ -60,8 +60,8 @@ elif [ -d "$DESIGN_SRC" ]; then
     if [ ${BOARD} == "ofs_n6001_usm" ]; then
         export USM_TAIL="_usm"
     fi
-    export BOARD_TYPE=de10_agilex${USM_TAIL}
-    cmake "$DESIGN_SRC" -DFPGA_BOARD=${BOARD_TYPE}
+    export BOARD_TYPE=pac_a10${USM_TAIL}
+    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${BOARD_TYPE}
     echo "after cmake"
     sed -i "s/$BOARD_TYPE/$BOARD/g" src/CMakeFiles/*/link.txt
     make fpga

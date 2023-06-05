@@ -61,7 +61,7 @@ elif [ -d "$DESIGN_SRC" ]; then
         export USM_TAIL="_usm"
     fi
     export BOARD_TYPE=pac_s10${USM_TAIL}
-    cmake "$DESIGN_SRC" -DFPGA_BOARD=${BOARD_TYPE}
+    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${BOARD_TYPE}
     echo "after cmake"
     sed -i "s/$BOARD_TYPE/$BOARD/g" src/CMakeFiles/*/link.txt
     make fpga
