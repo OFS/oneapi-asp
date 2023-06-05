@@ -95,9 +95,7 @@ if [ "$vhd_file_cnt" -gt "0"  ]; then
 else
     echo "no vhd files exist, nothing to copy over"
 fi
-echo "before pwd"
-pwd
-echo "after pwd"
+
 if [ "${board_name}" == "ofs_n6001" ]; then
     cp -prf vlog_files_base_ofs_n6001.list vlog_files.list
 elif [ "${board_name}" == "ofs_n6001_usm" ]; then
