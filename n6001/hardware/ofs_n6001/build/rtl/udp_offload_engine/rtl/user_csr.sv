@@ -72,24 +72,24 @@ module user_csr
                         // 15:8 this channel ID
                         // 7:0  offset to start of next channel CSRs (in words)
                     //Channel-0
-                    CSR_CHAN_INFO_REG_ADDR:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h0,8'h10};
-                    CSR_RESET_REG_ADDR    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
+                    CSR_CHAN_INFO_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h0,8'h10};
+                    CSR_RESET_REG_ADDR_CH0    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
                                                                                      udp_oe_ctrl.rx_rst, 
                                                                                      udp_oe_ctrl.csr_rst};
-                    CSR_STATUS_REG_ADDR   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
-                    CSR_MISC_CTRL_REG_ADDR:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
-                    CSR_TX_STATUS_REG_ADDR:         uoe_csr_avmm.readdata <= 'b0;
-                    CSR_RX_STATUS_REG_ADDR:         uoe_csr_avmm.readdata <= 'b0;
+                    CSR_STATUS_REG_ADDR_CH0   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                    CSR_MISC_CTRL_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                    CSR_TX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
+                    CSR_RX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
                     
                     //Channel-1
-                    (8'h10+CSR_CHAN_INFO_REG_ADDR):         uoe_csr_avmm.readdata <= {47'h0,1'b1,8'h1,8'h10};
-                    (8'h10+CSR_RESET_REG_ADDR)    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
-                                                                                     udp_oe_ctrl.rx_rst, 
-                                                                                     udp_oe_ctrl.csr_rst};
-                    (8'h10+CSR_STATUS_REG_ADDR)   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
-                    (8'h10+CSR_MISC_CTRL_REG_ADDR):         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
-                    (8'h10+CSR_TX_STATUS_REG_ADDR):         uoe_csr_avmm.readdata <= 'b0;
-                    (8'h10+CSR_RX_STATUS_REG_ADDR):         uoe_csr_avmm.readdata <= 'b0;
+                    CSR_CHAN_INFO_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= {47'h0,1'b1,8'h1,8'h10};
+                    CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
+                                                                              udp_oe_ctrl.rx_rst, 
+                                                                              udp_oe_ctrl.csr_rst};
+                    CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                    CSR_MISC_CTRL_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                    CSR_TX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                    CSR_RX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
                     //somehow need to wrap this up nicely in a for loop or something
                     //case (this_address - UDPOE_CHAN_BASE_ADDR)
                     //endcase

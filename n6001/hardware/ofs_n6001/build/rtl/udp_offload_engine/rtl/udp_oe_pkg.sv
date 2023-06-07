@@ -70,8 +70,8 @@ package udp_oe_pkg;
     //misc/DFH regs
     parameter DFHv1_GEN_BASE_ADDR           = 'h00;
     parameter DFH_HEADER_ADDR               = DFHv1_GEN_BASE_ADDR + 'h00;//ro
-    parameter DFH_GUID_LO_ADDR              = DFHv1_GEN_BASE_ADDR + 'h01;//ro
-    parameter DFH_GUID_HI_ADDR              = DFHv1_GEN_BASE_ADDR + 'h02;//ro
+    parameter DFH_ID_LO_ADDR                = DFHv1_GEN_BASE_ADDR + 'h01;//ro
+    parameter DFH_ID_HI_ADDR                = DFHv1_GEN_BASE_ADDR + 'h02;//ro
     parameter DFH_REG_ADDR_OFFSET_ADDR      = DFHv1_GEN_BASE_ADDR + 'h03;//ro
     parameter DFH_REGSZ_PARAMS_GR_INST_ADDR = DFHv1_GEN_BASE_ADDR + 'h04;//ro
     
@@ -90,13 +90,21 @@ package udp_oe_pkg;
     parameter CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_BASE_ADDR + 'h0A;//rw
     
     //UDP Offload Engine registers - per-channel
-    parameter UDPOE_CHAN_BASE_ADDR          = 'h20;
-    parameter CSR_CHAN_INFO_REG_ADDR        = UDPOE_CHAN_BASE_ADDR + 'h00;//ro
-    parameter CSR_RESET_REG_ADDR            = UDPOE_CHAN_BASE_ADDR + 'h01;//rw
-    parameter CSR_STATUS_REG_ADDR           = UDPOE_CHAN_BASE_ADDR + 'h02;//ro
-    parameter CSR_MISC_CTRL_REG_ADDR        = UDPOE_CHAN_BASE_ADDR + 'h03;//rw
-    parameter CSR_TX_STATUS_REG_ADDR        = UDPOE_CHAN_BASE_ADDR + 'h04;//ro
-    parameter CSR_RX_STATUS_REG_ADDR        = UDPOE_CHAN_BASE_ADDR + 'h05;//ro
+    parameter UDPOE_CHAN0_BASE_ADDR          = 'h20;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH0            = UDPOE_CHAN0_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH0           = UDPOE_CHAN0_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN1_BASE_ADDR         = UDPOE_CHAN0_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH1            = UDPOE_CHAN1_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH1           = UDPOE_CHAN1_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h05;//ro
     
     //data to return on a read that ends up in the default case
     parameter REG_RD_BADADDR_DATA = 64'h0BAD_0ADD_0BAD_0ADD;
