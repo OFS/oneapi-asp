@@ -118,7 +118,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   uint64_t REG_UDPOE_BASE_ADDR       = iopipes::m_iopipes_dfh_offset;
   //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
   uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
-  uint64_t CSR_SCRATCHPAD_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
+  //uint64_t CSR_SCRATCHPAD_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
   uint64_t CSR_NUM_CHANNELS_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
 
   uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
@@ -188,6 +188,8 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:Reading number of channels CSR\n");
     exit(-1);
   } 
+  
+  printf("DOUG0 %ld\n",number_of_channels);
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, local_mac_addr)) != FPGA_OK) {
     printf("Error:writing CSR_FPGA_MAC_ADR CSR");
     exit(1);
@@ -225,6 +227,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     exit(1);
   }*/
   
+  printf("DOUG1\n");
 // TO do - need to clean code to write to CSRs, we dont need below calculations
 // just write to CSRs what we got from environment variables or initialize to known values
   unsigned long ul_local_ip_addr = htonl(inet_addr(local_ip_addr.c_str()));
@@ -247,9 +250,10 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
 
   //CSR_MISC_CTRL_REG_ADDR
-  printf("Enable tx-rx loopback in UOE module.\n");
   int i = 0x00;
-  for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
+  
+  printf("DOUG1 before num-channels loop\n");
+  for(uint64_t loop=0; loop<number_of_channels; loop++) { 
     printf("Looping on each channel.\n");
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
       printf("Error:writing CSR_STATUS_REG CSR");

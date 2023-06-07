@@ -76,7 +76,7 @@ package udp_oe_pkg;
     parameter DFH_REGSZ_PARAMS_GR_INST_ADDR = DFHv1_GEN_BASE_ADDR + 'h04;//ro
     
     //UDP Offload Engine registers - common across all channels
-    parameter REG_UDPOE_BASE_ADDR           = 'h10;//DFHv1_GEN_BASE_ADDR + 'h10;
+    parameter REG_UDPOE_BASE_ADDR           = DFHv1_GEN_BASE_ADDR + 'h10;
     parameter SCRATCHPAD_ADDR               = REG_UDPOE_BASE_ADDR + 'h00;//rw
     parameter UDPOE_NUM_CHANNELS_ADDR       = REG_UDPOE_BASE_ADDR + 'h01;//ro
     parameter CSR_FPGA_MAC_ADR_ADDR         = REG_UDPOE_BASE_ADDR + 'h02;//rw
@@ -90,7 +90,7 @@ package udp_oe_pkg;
     parameter CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_BASE_ADDR + 'h0A;//rw
     
     //UDP Offload Engine registers - per-channel
-    parameter UDPOE_CHAN_BASE_ADDR          = 'h20;//REG_UDPOE_BASE_ADDR + 'h10;
+    parameter UDPOE_CHAN_BASE_ADDR          = REG_UDPOE_BASE_ADDR + 'h10;
     parameter UDPOE_CHAN0_BASE_ADDR          = UDPOE_CHAN_BASE_ADDR;
     parameter CSR_CHAN_INFO_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h00;//ro
     parameter CSR_RESET_REG_ADDR_CH0            = UDPOE_CHAN0_BASE_ADDR + 'h01;//rw
@@ -99,7 +99,7 @@ package udp_oe_pkg;
     parameter CSR_TX_STATUS_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h04;//ro
     parameter CSR_RX_STATUS_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h05;//ro
     
-    parameter UDPOE_CHAN1_BASE_ADDR         = 'h30;//UDPOE_CHAN0_BASE_ADDR + 'h10;
+    parameter UDPOE_CHAN1_BASE_ADDR         = UDPOE_CHAN0_BASE_ADDR + 'h10;
     parameter CSR_CHAN_INFO_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h00;//ro
     parameter CSR_RESET_REG_ADDR_CH1            = UDPOE_CHAN1_BASE_ADDR + 'h01;//rw
     parameter CSR_STATUS_REG_ADDR_CH1           = UDPOE_CHAN1_BASE_ADDR + 'h02;//ro
