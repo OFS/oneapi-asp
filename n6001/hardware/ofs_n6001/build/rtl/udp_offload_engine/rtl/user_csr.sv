@@ -101,8 +101,7 @@ module user_csr
     //writes
     always_ff @(posedge uoe_csr_avmm.clk)
     begin
-        if (uoe_csr_avmm.write)
-        begin
+        if (uoe_csr_avmm.write) begin
             case (this_address)
                 SCRATCHPAD_ADDR:                scratchpad_reg              <= uoe_csr_avmm.writedata;
                 // UDP Offload Engine registers
@@ -127,10 +126,10 @@ module user_csr
                 CSR_CHECKSUM_IP_ADDR:           udp_oe_ctrl.checksum_ip[15:0]         <= uoe_csr_avmm.writedata[15:0];
                 //per-channel registers
                 //need to clean this up with a for-loop and/or an array
-                CSR_RESET_REG_ADDR:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
-                CSR_MISC_CTRL_REG_ADDR:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
-                (8'h10+CSR_RESET_REG_ADDR):             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
-                (8'h10+CSR_MISC_CTRL_REG_ADDR):   udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                CSR_RESET_REG_ADDR_CH0:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
+                CSR_MISC_CTRL_REG_ADDR_CH0:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                CSR_RESET_REG_ADDR_CH1:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
+                CSR_MISC_CTRL_REG_ADDR_CH1:   udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
             endcase
         end
     
@@ -151,7 +150,6 @@ module user_csr
             udp_oe_ctrl.tx_rst                <= 'h0;
             udp_oe_ctrl.rx_rst                <= 'h0;
             udp_oe_ctrl.misc_ctrl             <= 'h0;
-            udp_oe_ctrl.num_channels      <= 
         end
     end
   
@@ -164,13 +162,13 @@ module user_csr
                                 DFH_HDL_EOL     ,
                                 DFH_HDR_NEXT_DFH,
                                 DFH_HDR_FEATURE_REV,
-                                DFH_HDR_FEATURE_ID }
+                                DFH_HDR_FEATURE_ID };
         dfh_reg_0x18 = {DFH_REG_ADDR_OFFSET, 
                         DFH_REL};
         dfh_reg_0x20 = {DFH_REG_SZ,
                         DFH_PARAMS,
                         DFH_GROUP,
-                        DGH_INSTANCE};
+                        DFH_INSTANCE};
     end
     
 endmodule : user_csr
