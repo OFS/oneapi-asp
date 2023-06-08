@@ -264,7 +264,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   uint64_t mmio_read;
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_NUM_CHANNELS_ADDR, &mmio_read);
   printf("Read CSR: Number of Channels/Pipes:%ld\n", mmio_read);
-  
+
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &mmio_read);
   printf("Read CSR: FPGA_MAC_ADDR:%ld\n", mmio_read);
 
@@ -285,6 +285,26 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_HOST_UDP_PORT_ADDR, &mmio_read);
   printf("Read CSR: HOST_UDP_PORT:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_PAYLOAD_PER_PACKET_ADDR, &mmio_read);
+  printf("Read CSR: HOST_UDP_PORT:%ld\n", mmio_read);
+
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_CHECKSUM_IP_ADDR , &mmio_read);
+  printf("Read CSR: HOST_UDP_PORT:%ld\n", mmio_read);
+
+  for(uint64_t loop=0; loop<number_of_channels; loop++) { 
+    printf("Looping on channel %ld, Reading CSRs for channel %ld\n", loop, loop); 
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), &mmio_read)) != FPGA_OK) {
+      printf("Error:reading CSR_STATUS_REG CSR");
+      exit(1);
+    }
+    printf("Read CSR: 1 :%ld\n", mmio_read);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), &mmio_read)) != FPGA_OK) {
+      printf("Error:reading CSR_MISC_CTRL_REG CSR");
+      exit(1);
+    }
+    printf("Read CSR: 2 :%ld\n", mmio_read);
+  }
 
 // do we need to read or write to below IO Pipes specific CSRs 
 /*#define CSR_PAYLOAD_PER_PACKET_ADDR   (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
