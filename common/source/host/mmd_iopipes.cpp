@@ -118,22 +118,22 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   uint64_t REG_UDPOE_BASE_ADDR       = iopipes::m_iopipes_dfh_offset;
   //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
   uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
+  //uint64_t CSR_SCRATCHPAD_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
+  uint64_t CSR_NUM_CHANNELS_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
 
-  uint64_t CSR_NUM_CHANNELS_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
+  uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
+  uint64_t CSR_FPGA_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8);
+  uint64_t CSR_FPGA_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8);
+  uint64_t CSR_FPGA_NETMASK_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8);
+  uint64_t CSR_HOST_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8);
+  uint64_t CSR_HOST_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8);
+  uint64_t CSR_HOST_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8);
 
-  uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
-  uint64_t CSR_FPGA_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
-  uint64_t CSR_FPGA_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
-  uint64_t CSR_FPGA_NETMASK_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8);
-  uint64_t CSR_HOST_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8);
-  uint64_t CSR_HOST_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8);
-  uint64_t CSR_HOST_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8);
-
-  uint64_t CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8);
-  uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8);
+  uint64_t CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
+  uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x0a*0x8);
   //uint64_t CSR_RESET_REG_ADDR            = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
 
-  uint64_t PIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
+  uint64_t PIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
 
   std::string local_ip_addr = m_local_ip_address;
   printf("local ip address= %s\n", local_ip_addr.c_str());
@@ -247,9 +247,9 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
 
   //CSR_MISC_CTRL_REG_ADDR
-  printf("Enable tx-rx loopback in UOE module.\n");
   int i = 0x00;
   for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
+    printf("Looping on channel %ld, Writing CSRs for channel %ld\n", loop, loop); 
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
       printf("Error:writing CSR_STATUS_REG CSR");
       exit(1);
