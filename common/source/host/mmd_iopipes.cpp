@@ -248,7 +248,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 
   //CSR_MISC_CTRL_REG_ADDR
   int i = 0x00;
-  for(uint64_t loop=0; loop<=number_of_channels; loop++) { 
+  for(uint64_t loop=0; loop<number_of_channels; loop++) { 
     printf("Looping on channel %ld, Writing CSRs for channel %ld\n", loop, loop); 
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
       printf("Error:writing CSR_STATUS_REG CSR");
@@ -262,6 +262,9 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 
   // Read CSRs
   uint64_t mmio_read;
+  res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_NUM_CHANNELS_ADDR, &mmio_read);
+  printf("Read CSR: Number of Channels/Pipes:%ld\n", mmio_read);
+  
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &mmio_read);
   printf("Read CSR: FPGA_MAC_ADDR:%ld\n", mmio_read);
 
