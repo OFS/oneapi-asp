@@ -9,6 +9,7 @@ module user_csr
     
     logic [63:0] dfh_header_data_reg;
     logic [63:0] scratchpad_reg;
+    logic [63:0] dfh_reg_0x18, dfh_reg_0x20;
     
     //pipeline and duplicate the csr_rst signal
     parameter RESET_PIPE_DEPTH = 2;
@@ -39,14 +40,16 @@ module user_csr
             if (uoe_csr_avmm.read) begin
                 uoe_csr_avmm.readdatavalid <= 1'b1;
                 case (this_address)
-                    // DFH/general registers
+                    // DFH registers
                     DFH_HEADER_ADDR:                uoe_csr_avmm.readdata <= dfh_header_data_reg;
-                    ID_LO_ADDR:                     uoe_csr_avmm.readdata <= DFH_ID_LO;
-                    ID_HI_ADDR:                     uoe_csr_avmm.readdata <= DFH_ID_HI;
-                    DFH_NEXT_AFU_OFFSET_ADDR:       uoe_csr_avmm.readdata <= DFH_NEXT_AFU_OFFSET;
-                    SCRATCHPAD_ADDR:                uoe_csr_avmm.readdata <= scratchpad_reg;
-                    
-                    // UDP Offload Engine registers
+                    DFH_ID_LO_ADDR:                 uoe_csr_avmm.readdata <= DFH_ID_LO;
+                    DFH_ID_HI_ADDR:                 uoe_csr_avmm.readdata <= DFH_ID_HI;
+                    DFH_REG_ADDR_OFFSET_ADDR:       uoe_csr_avmm.readdata <= dfh_reg_0x18;
+                    DFH_REGSZ_PARAMS_GR_INST_ADDR:  uoe_csr_avmm.readdata <= dfh_reg_0x20;
+
+                    // Common registers
+                    SCRATCHPAD_ADDR:                 uoe_csr_avmm.readdata <= scratchpad_reg;
+                    UDPOE_NUM_CHANNELS_ADDR:         uoe_csr_avmm.readdata <= IO_PIPES_NUM_CHAN;
                     CSR_FPGA_MAC_ADR_ADDR:           uoe_csr_avmm.readdata <= {16'b0, udp_oe_ctrl.fpga_mac_adr};
                     CSR_FPGA_IP_ADR_ADDR:            uoe_csr_avmm.readdata <= {32'b0, udp_oe_ctrl.fpga_ip_adr}; 
                     CSR_FPGA_UDP_PORT_ADDR:          uoe_csr_avmm.readdata <= {48'b0, udp_oe_ctrl.fpga_udp_port};
@@ -56,27 +59,71 @@ module user_csr
                     CSR_HOST_UDP_PORT_ADDR:          uoe_csr_avmm.readdata <= {48'b0, udp_oe_ctrl.host_udp_port};
                     CSR_PAYLOAD_PER_PACKET_ADDR:     uoe_csr_avmm.readdata <= {48'b0, udp_oe_ctrl.payload_per_packet};
                     CSR_CHECKSUM_IP_ADDR:            uoe_csr_avmm.readdata <= {32'b0, udp_oe_ctrl.checksum_ip};
-                    CSR_RESET_REG_ADDR:              uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
-                                                                                      udp_oe_ctrl.rx_rst, 
-                                                                                      udp_oe_ctrl.csr_rst};
-                    CSR_STATUS_REG_ADDR:             uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,
-                                                                                udp_oe_ctrl.rx_status};
-                    CSR_MISC_CTRL_REG_ADDR:          uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
-
+                    
+                    //per-channel registers are handled outside this case statement
+                    //
+                    CSR_CHAN_INFO_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h0,8'h10};
+                    CSR_RESET_REG_ADDR_CH0    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
+                                                                                     udp_oe_ctrl.rx_rst, 
+                                                                                     udp_oe_ctrl.csr_rst};
+                    CSR_STATUS_REG_ADDR_CH0   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                    CSR_MISC_CTRL_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                    CSR_TX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
+                    CSR_RX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
+                    
+                    //Channel-1
+                    CSR_CHAN_INFO_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= {47'h0,1'b1,8'h1,8'h10};
+                    CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
+                                                                              udp_oe_ctrl.rx_rst, 
+                                                                              udp_oe_ctrl.csr_rst};
+                    CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                    CSR_MISC_CTRL_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                    CSR_TX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                    CSR_RX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                    
                     default:                         uoe_csr_avmm.readdata <= REG_RD_BADADDR_DATA;
                 endcase
+                //if (this_address >= UDPOE_CHAN_BASE_ADDR) begin
+                //    //chan-info register is: 
+                //        //63:17 rsvd
+                //        //  16  end of channel list
+                //        // 15:8 this channel ID
+                //        // 7:0  offset to start of next channel CSRs (in words)
+                //    //Channel-0
+                //    CSR_CHAN_INFO_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h0,8'h10};
+                //    CSR_RESET_REG_ADDR_CH0    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
+                //                                                                     udp_oe_ctrl.rx_rst, 
+                //                                                                     udp_oe_ctrl.csr_rst};
+                //    CSR_STATUS_REG_ADDR_CH0   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                //    CSR_MISC_CTRL_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                //    CSR_TX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
+                //    CSR_RX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
+                //    
+                //    //Channel-1
+                //    CSR_CHAN_INFO_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= {47'h0,1'b1,8'h1,8'h10};
+                //    CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
+                //                                                              udp_oe_ctrl.rx_rst, 
+                //                                                              udp_oe_ctrl.csr_rst};
+                //    CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                //    CSR_MISC_CTRL_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                //    CSR_TX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                //    CSR_RX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                //    //somehow need to wrap this up nicely in a for loop or something
+                //    //case (this_address - UDPOE_CHAN_BASE_ADDR)
+                //    //endcase
+                //end
             end
         end
-    end      
+    end
    
     //writes
     always_ff @(posedge uoe_csr_avmm.clk)
     begin
-        if (uoe_csr_avmm.write)
-        begin
+        if (uoe_csr_avmm.write) begin
             case (this_address)
                 SCRATCHPAD_ADDR:                scratchpad_reg              <= uoe_csr_avmm.writedata;
                 // UDP Offload Engine registers
+                //common/shared between all channels
                 // FPGA MAC address
                 CSR_FPGA_MAC_ADR_ADDR:          udp_oe_ctrl.fpga_mac_adr[47:0]        <= uoe_csr_avmm.writedata[47:0];
                 // FPGA IP address
@@ -95,14 +142,17 @@ module user_csr
                 CSR_PAYLOAD_PER_PACKET_ADDR:    udp_oe_ctrl.payload_per_packet[15:0]  <= uoe_csr_avmm.writedata[15:0];
                 // IP checksum
                 CSR_CHECKSUM_IP_ADDR:           udp_oe_ctrl.checksum_ip[15:0]         <= uoe_csr_avmm.writedata[15:0];
-                // CSR control over resets 
-                CSR_RESET_REG_ADDR:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
-                CSR_MISC_CTRL_REG_ADDR:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                //per-channel registers
+                //need to clean this up with a for-loop and/or an array
+                CSR_RESET_REG_ADDR_CH0:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
+                CSR_MISC_CTRL_REG_ADDR_CH0:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                CSR_RESET_REG_ADDR_CH1:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
+                CSR_MISC_CTRL_REG_ADDR_CH1:   udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
             endcase
         end
     
         if (rst_local) begin
-            scratchpad_reg          <= 'h0;
+            scratchpad_reg                    <= 'h0;
             udp_oe_ctrl.fpga_mac_adr          <= 'h0;
             udp_oe_ctrl.fpga_ip_adr           <= 'h0;
             udp_oe_ctrl.fpga_mac_adr          <= 'h0;
@@ -121,17 +171,22 @@ module user_csr
         end
     end
   
-    //verbose assignment of the DFH-header information (keep the register-logic clean by making
+    //verbose assignment of the DFHv1-header information (keep the register-logic clean by making
     //  assignments here; parameters defined in the package file.)
     always_comb begin
-        dfh_header_data_reg = { DFH_HDR_FTYPE          ,
-                                DFH_HDR_RSVD0          ,
-                                DFH_HDR_VERSION_MINOR  ,
-                                DFH_HDR_RSVD1          ,
-                                DFH_HDR_END_OF_LIST    ,
-                                DFH_HDR_NEXT_DFH_OFFSET,
-                                DFH_HDR_VERSION_MAJOR  ,
+        dfh_header_data_reg = { DFH_HDR_FTYPE   ,
+                                DFH_HDR_VER     ,
+                                DFH_HDR_RSVD0   ,
+                                DFH_HDL_EOL     ,
+                                DFH_HDR_NEXT_DFH,
+                                DFH_HDR_FEATURE_REV,
                                 DFH_HDR_FEATURE_ID };
+        dfh_reg_0x18 = {DFH_REG_ADDR_OFFSET, 
+                        DFH_REL};
+        dfh_reg_0x20 = {DFH_REG_SZ,
+                        DFH_PARAMS,
+                        DFH_GROUP,
+                        DFH_INSTANCE};
     end
     
 endmodule : user_csr

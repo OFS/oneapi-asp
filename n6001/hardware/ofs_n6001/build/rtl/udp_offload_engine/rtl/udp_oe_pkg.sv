@@ -16,19 +16,31 @@
 
 package udp_oe_pkg;
 
-    //Static register values for the UDP OE DFH Information
+    //number of IO Pipes enabled in the ASP.
+    parameter IO_PIPES_NUM_CHAN = 5'h02;
+
+    //Static register values for the UDP OE DFHv1 Information
     parameter DFH_HDR_FTYPE             = 4'h2;
-    parameter DFH_HDR_RSVD0             = 8'h00;
-    parameter DFH_HDR_VERSION_MINOR     = 4'h0;
-    parameter DFH_HDR_RSVD1             = 7'h00;
-    parameter DFH_HDR_END_OF_LIST       = 1'b0;
-    parameter DFH_HDR_NEXT_DFH_OFFSET   = 24'h3800;
-    parameter DFH_HDR_VERSION_MAJOR     = 4'h0;
-    parameter DFH_HDR_FEATURE_ID        = 12'h000;
+    parameter DFH_HDR_VER               = 8'h01;
+    parameter DFH_HDR_RSVD0             = 11'h0;
+    parameter DFH_HDL_EOL               = 1'b0;
+    parameter DFH_HDR_NEXT_DFH          = 24'h3800;
+    parameter DFH_HDR_FEATURE_REV       = 4'h0;
+    parameter DFH_HDR_FEATURE_ID        = 12'h0;
+
     parameter DFH_ID_LO = 64'h966d_1f07_871d_4396;
     parameter DFH_ID_HI = 64'h9c85_60c5_729f_f873;
+    
     parameter DFH_NEXT_AFU_OFFSET = 24'h01_0000;
 
+    parameter DFH_REG_ADDR_OFFSET = 63'b0;
+    parameter DFH_REL             = 1'b0;
+    
+    parameter DFH_REG_SZ   = 32'd512;
+    parameter DFH_PARAMS   = 1'b0;
+    parameter DFH_GROUP    = 15'h0;
+    parameter DFH_INSTANCE = 16'h0;
+    
     // MMIO64 widths
     parameter MMIO64_ADDR_WIDTH = 8;
     parameter MMIO64_DATA_WIDTH = 64;
@@ -56,31 +68,44 @@ package udp_oe_pkg;
     //
     // Dispatcher register addresses
     //misc/DFH regs
-    parameter REG_BSP_GEN_BASE_ADDR         = 'h00;
-    parameter DFH_HEADER_ADDR               = REG_BSP_GEN_BASE_ADDR + 'h00;
-    parameter ID_LO_ADDR                    = REG_BSP_GEN_BASE_ADDR + 'h01;
-    parameter ID_HI_ADDR                    = REG_BSP_GEN_BASE_ADDR + 'h02;
-    parameter DFH_NEXT_AFU_OFFSET_ADDR      = REG_BSP_GEN_BASE_ADDR + 'h03;
-    parameter SCRATCHPAD_ADDR               = REG_BSP_GEN_BASE_ADDR + 'h05;
+    parameter DFHv1_GEN_BASE_ADDR           = 'h00;
+    parameter DFH_HEADER_ADDR               = DFHv1_GEN_BASE_ADDR + 'h00;//ro
+    parameter DFH_ID_LO_ADDR                = DFHv1_GEN_BASE_ADDR + 'h01;//ro
+    parameter DFH_ID_HI_ADDR                = DFHv1_GEN_BASE_ADDR + 'h02;//ro
+    parameter DFH_REG_ADDR_OFFSET_ADDR      = DFHv1_GEN_BASE_ADDR + 'h03;//ro
+    parameter DFH_REGSZ_PARAMS_GR_INST_ADDR = DFHv1_GEN_BASE_ADDR + 'h04;//ro
     
     //UDP Offload Engine registers - common across all channels
-    parameter REG_UDPOE_BASE_ADDR          = 'h10;
-
-    parameter CSR_FPGA_MAC_ADR_ADDR         = REG_UDPOE_BASE_ADDR + 'h00;
-    parameter CSR_FPGA_IP_ADR_ADDR          = REG_UDPOE_BASE_ADDR + 'h01;
-    parameter CSR_FPGA_UDP_PORT_ADDR        = REG_UDPOE_BASE_ADDR + 'h02;
-    parameter CSR_FPGA_NETMASK_ADDR         = REG_UDPOE_BASE_ADDR + 'h03;
-    parameter CSR_HOST_MAC_ADR_ADDR         = REG_UDPOE_BASE_ADDR + 'h04;
-    parameter CSR_HOST_IP_ADR_ADDR          = REG_UDPOE_BASE_ADDR + 'h05;
-    parameter CSR_HOST_UDP_PORT_ADDR        = REG_UDPOE_BASE_ADDR + 'h06;
-    parameter CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_BASE_ADDR + 'h07;
-    parameter CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_BASE_ADDR + 'h08;
-    parameter CSR_RESET_REG_ADDR            = REG_UDPOE_BASE_ADDR + 'h09;
-    parameter CSR_STATUS_REG_ADDR           = REG_UDPOE_BASE_ADDR + 'h0A;
-    parameter CSR_MISC_CTRL_REG_ADDR        = REG_UDPOE_BASE_ADDR + 'h0B;
-
-    //UDP Offload Engine registers - per-channel
+    parameter REG_UDPOE_BASE_ADDR           = DFHv1_GEN_BASE_ADDR + 'h10;
+    parameter SCRATCHPAD_ADDR               = REG_UDPOE_BASE_ADDR + 'h00;//rw
+    parameter UDPOE_NUM_CHANNELS_ADDR       = REG_UDPOE_BASE_ADDR + 'h01;//ro
+    parameter CSR_FPGA_MAC_ADR_ADDR         = REG_UDPOE_BASE_ADDR + 'h02;//rw
+    parameter CSR_FPGA_IP_ADR_ADDR          = REG_UDPOE_BASE_ADDR + 'h03;//rw
+    parameter CSR_FPGA_UDP_PORT_ADDR        = REG_UDPOE_BASE_ADDR + 'h04;//rw
+    parameter CSR_FPGA_NETMASK_ADDR         = REG_UDPOE_BASE_ADDR + 'h05;//rw
+    parameter CSR_HOST_MAC_ADR_ADDR         = REG_UDPOE_BASE_ADDR + 'h06;//rw
+    parameter CSR_HOST_IP_ADR_ADDR          = REG_UDPOE_BASE_ADDR + 'h07;//rw
+    parameter CSR_HOST_UDP_PORT_ADDR        = REG_UDPOE_BASE_ADDR + 'h08;//rw
+    parameter CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_BASE_ADDR + 'h09;//rw
+    parameter CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_BASE_ADDR + 'h0A;//rw
     
+    //UDP Offload Engine registers - per-channel
+    parameter UDPOE_CHAN_BASE_ADDR          = REG_UDPOE_BASE_ADDR + 'h10;
+    parameter UDPOE_CHAN0_BASE_ADDR          = UDPOE_CHAN_BASE_ADDR;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH0            = UDPOE_CHAN0_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH0           = UDPOE_CHAN0_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH0        = UDPOE_CHAN0_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN1_BASE_ADDR         = UDPOE_CHAN0_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH1            = UDPOE_CHAN1_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH1           = UDPOE_CHAN1_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH1        = UDPOE_CHAN1_BASE_ADDR + 'h05;//ro
     
     //data to return on a read that ends up in the default case
     parameter REG_RD_BADADDR_DATA = 64'h0BAD_0ADD_0BAD_0ADD;
