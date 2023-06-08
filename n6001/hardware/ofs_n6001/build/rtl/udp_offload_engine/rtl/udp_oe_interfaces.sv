@@ -28,6 +28,8 @@ interface udp_oe_ctrl_if;
     logic [15:0]     payload_per_packet;
     logic [15:0]     checksum_ip;
 
+    //logic [MAX_NUM_CHANNELS-1:0] num_channels;
+    
     logic            tx_rst;
     logic            rx_rst;
     logic            csr_rst;
@@ -86,3 +88,8 @@ interface udp_oe_ctrl_if;
     );
 
 endinterface : udp_oe_ctrl_if
+
+//interface udpoe_channel_if;
+    
+
+//endinterface : udpoe_channel_if
