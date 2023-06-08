@@ -292,6 +292,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_CHECKSUM_IP_ADDR , &mmio_read);
   printf("Read CSR: HOST_UDP_PORT:%ld\n", mmio_read);
 
+  i = 0x00;
   for(uint64_t loop=0; loop<number_of_channels; loop++) { 
     printf("Looping on channel %ld, Reading CSRs for channel %ld\n", loop, loop); 
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), &mmio_read)) != FPGA_OK) {
