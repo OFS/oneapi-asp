@@ -54,7 +54,7 @@ using namespace intel_opae_mmd;
 #define CSR_CHECKSUM_IP_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8))
 #define CSR_RESET_REG_ADDR            (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
 
-#define PIPES_CSR_START_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
+#define IOPIPES_CSR_START_ADDR          (REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8))
  
 //below CSRs per io pipe 
 //#define CSR_STATUS_REG_ADDR           (REG_UDPOE_CSR_BASE_ADDR+(0x0A*0x8))
@@ -120,7 +120,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
   //uint64_t CSR_SCRATCHPAD_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
   uint64_t CSR_SCRATCHPAD_ADDR           = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
-  uint64_t CSR_UDPOE_NUM_PIPES_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
+  uint64_t CSR_UDPOE_NUM_IOPIPES_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
 
   uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
   uint64_t CSR_FPGA_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8);
@@ -134,7 +134,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x0a*0x8);
   //uint64_t CSR_RESET_REG_ADDR            = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
 
-  uint64_t PIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
+  uint64_t IOPIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
 
   std::string local_ip_addr = m_local_ip_address;
   printf("local ip address= %s\n", local_ip_addr.c_str());
@@ -191,7 +191,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
 
   uint64_t number_of_channels;
-  if((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_UDPOE_NUM_PIPES_ADDR, &number_of_channels)) != FPGA_OK) {
+  if((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_UDPOE_NUM_IOPIPES_ADDR, &number_of_channels)) != FPGA_OK) {
     printf("Error:Reading number of channels CSR\n");
     exit(-1);
   } 
@@ -257,14 +257,14 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   int i = 0x00;
   for(uint64_t loop=0; loop<number_of_channels; loop++) { 
     printf("Looping on channel %ld, Writing CSRs for channel %ld\n", loop, loop); 
-    printf("Writing CSR_RESET_REG_ADDR for Pipe %ld\n", loop);
-    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
-      printf("Error:writing CSR_STATUS_REG CSR");
+    printf("Writing CSR_RESET_REG_ADDR for IO Pipe %ld\n", loop);
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
+      printf("Error:writing CSR_RESET_REG CSR");
       exit(1);
     }
     i = i+2;
-    printf("Writing CSR_STATUS_REG_ADDR for Pipe %ld\n", loop);
-    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
+    printf("Writing CSR_MISC_CTRL_REG for IO Pipe %ld\n", loop);
+    if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
       printf("Error:writing CSR_MISC_CTRL_REG CSR");
       exit(1);
     }
@@ -279,11 +279,11 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
   printf("Read CSR: Scratchpad:%ld\n", mmio_read);
 
-  if ((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_UDPOE_NUM_PIPES_ADDR, &mmio_read)) != FPGA_OK) {
-    printf("Error reading CSR_UDPOE_NUM_PIPES_ADDR\n");
+  if ((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_UDPOE_NUM_IOPIPES_ADDR, &mmio_read)) != FPGA_OK) {
+    printf("Error reading CSR_UDPOE_NUM_IOPIPES_ADDR\n");
     exit(1);
   }
-  printf("Read CSR: Number of Channels/Pipes:%ld\n", mmio_read);
+  printf("Read CSR: Number of IO Channels/Pipes:%ld\n", mmio_read);
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, &mmio_read)) != FPGA_OK) {
     printf("Error reading CSR_FPGA_MAC_ADR_ADDR\n");
@@ -342,43 +342,43 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   i = 0x00;
   for(uint64_t loop=0; loop<number_of_channels; loop++) { 
     printf("Looping on channel %ld, Reading CSRs for channel %ld\n", loop, loop); 
-    printf("Reading CSR_PIPE_INFO_REG_ADDR for pipe %ld\n", loop);
-    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
-      printf("Error:reading CSR_PIPE_INFO_REG_ADDR");
+    printf("Reading CSR_IOPIPE_INFO_REG_ADDR for IO pipe %ld\n", loop);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
+      printf("Error:reading CSR_IOPIPE_INFO_REG_ADDR");
       exit(1);
     }
-    printf("Read CSR_PIPE_INFO_REG_ADDR:%ld\n", mmio_read);
+    printf("Read CSR_IOPIPE_INFO_REG_ADDR:%ld\n", mmio_read);
 
-    printf("Reading CSR_RESET_REG_ADDR for pipe %ld\n", loop);
-    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
+    printf("Reading CSR_RESET_REG_ADDR for IO pipe %ld\n", loop);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
       printf("Error:reading CSR_RESET_REG_ADDR");
       exit(1);
     }
     printf("Read CSR_RESET_REG_ADDR:%ld\n", mmio_read);
 
-    printf("Reading CSR_STATUS_REG_ADDR for pipe %ld\n", loop);
-    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
+    printf("Reading CSR_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
       printf("Error:reading CSR_STATUS_REG_ADDR");
       exit(1);
     }
     printf("Read CSR_STATUS_REG_ADDR:%ld\n", mmio_read);
 
-    printf("Reading CSR_MISC_CTRL_REG_ADDR for pipe %ld\n", loop);
-    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
+    printf("Reading CSR_MISC_CTRL_REG_ADDR for IO Pipe %ld\n", loop);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
       printf("Error:reading CSR_MISC_CTRL_REG_ADDR");
       exit(1);
     }
     printf("Read CSR_MISC_CTRL_REG_ADDR:%ld\n", mmio_read);
 
-    printf("Reading CSR_TX_STATUS_REG_ADDR for pipe %ld\n", loop);
-    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
+    printf("Reading CSR_TX_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
       printf("Error:reading CSR_TX_STATUS_REG_ADDR");
       exit(1);
     }
     printf("Read CSR_TX_STATUS_REG_ADDR:%ld\n", mmio_read);
 
-    printf("Reading CSR_RX_STATUS_REG_ADDR for pipe %ld\n", loop);
-    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (PIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
+    printf("Reading CSR_RX_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    if ((res = fpgaReadMMIO64(afc_handle, mmio_num, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &mmio_read)) != FPGA_OK) {
       printf("Error:reading CSR_RX_STATUS_REG_ADDR");
       exit(1);
     }
