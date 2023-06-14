@@ -1,17 +1,5 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 //
 
 `include "platform_if.vh"
@@ -33,8 +21,8 @@ module kernel_wrapper (
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,shim_avst_if.source    udp_avst_from_kernel,
-        shim_avst_if.sink       udp_avst_to_kernel
+        ,shim_avst_if[IO_PIPES_NUM_CHAN-1:0].source    udp_avst_from_kernel,
+        shim_avst_if[IO_PIPES_NUM_CHAN-1:0].sink       udp_avst_to_kernel
     `endif
 );
 
@@ -172,10 +160,6 @@ acl_avalon_mm_bridge_s10 #(
 //=======================================================
 //  kernel_system instantiation
 //=======================================================
-
-logic udp_avst_valid, udp_avst_ready;
-logic [64:0] udp_avst_data;
-
 kernel_system kernel_system_inst (
     .clock_reset_clk              (clk),
     .clock_reset2x_clk            (clk2x),
@@ -254,18 +238,18 @@ kernel_system kernel_system_inst (
         .kernel_mem_byteenable      (svm_avmm_bridge.byteenable)
     `endif
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,.udp_out_valid        (udp_avst_from_kernel.valid),
-        .udp_out_data          (udp_avst_from_kernel.data),
-        .udp_out_ready         (udp_avst_from_kernel.ready),
-        .udp_in_valid          (udp_avst_to_kernel.valid),
-        .udp_in_data           (udp_avst_to_kernel.data),
-        .udp_in_ready          (udp_avst_to_kernel.ready)
-        //,.udp_out_valid        (udp_avst_valid),
-        //.udp_out_data          (udp_avst_data),
-        //.udp_out_ready         (udp_avst_ready),
-        //.udp_in_valid          (udp_avst_valid),
-        //.udp_in_data           (udp_avst_data),
-        //.udp_in_ready          (udp_avst_ready)
+        ,.udp_out_valid        (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
+        .udp_out_data          (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].data),
+        .udp_out_ready         (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].ready),
+        .udp_in_valid          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
+        .udp_in_data           (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].data),
+        .udp_in_ready          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].ready)
+        //,.udp_out_valid        (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
+        //.udp_out_data          (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].data),
+        //.udp_out_ready         (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].ready),
+        //.udp_in_valid          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
+        //.udp_in_data           (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].data),
+        //.udp_in_ready          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].ready)
     `endif
 );
 

@@ -1,17 +1,5 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 //
 
 `include "ofs_plat_if.vh"
@@ -20,11 +8,7 @@
 
 module afu
 import dc_bsp_pkg::*;
-  #(
-    parameter NUM_LOCAL_MEM_BANKS = 0,
-    parameter NUM_ETH = 0
-   )
-  (
+(
     // Host memory (Avalon)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
 
@@ -32,13 +16,13 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[NUM_LOCAL_MEM_BANKS],
+    ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
     
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
         // Ethernet
-        ofs_fim_hssi_ss_tx_axis_if.client eth_tx_axis ,
-        ofs_fim_hssi_ss_rx_axis_if.client eth_rx_axis ,
-        ofs_fim_hssi_fc_if.client     eth_fc ,
+        ofs_fim_hssi_ss_tx_axis_if[IO_PIPES_NUM_CHAN-1:0].client eth_tx_axis ,
+        ofs_fim_hssi_ss_rx_axis_if[IO_PIPES_NUM_CHAN-1:0].client eth_rx_axis ,
+        ofs_fim_hssi_fc_if[IO_PIPES_NUM_CHAN-1:0].client     eth_fc ,
     `endif
 
     // clocks and reset

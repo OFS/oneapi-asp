@@ -1,3 +1,7 @@
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
+//
+
 module simple_rx
 (
   input logic         kernel_clk,
@@ -312,4 +316,4 @@ module simple_rx
     udp_oe_ctrl.rx_status.sm_state  = state;
   end
   
-endmodule // simple_rx
+endmodule : simple_rx

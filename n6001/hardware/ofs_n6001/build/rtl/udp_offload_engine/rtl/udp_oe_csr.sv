@@ -1,4 +1,8 @@
-module user_csr
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
+//
+
+module udp_oe_csr
 (
   ofs_plat_avalon_mem_if.to_source uoe_csr_avmm,
   
@@ -189,4 +193,4 @@ module user_csr
                         DFH_INSTANCE};
     end
     
-endmodule : user_csr
+endmodule : udp_oe_csr

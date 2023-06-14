@@ -1,17 +1,5 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 //
 
 `include "ofs_plat_if.vh"
@@ -24,7 +12,7 @@ module ofs_plat_afu
     );
     
     import cci_mpf_shim_pkg::t_cci_mpf_shim_mdata_value;
-
+    
     // ====================================================================
     //
     //  Get an Avalon host channel collection from the platform.
@@ -112,61 +100,13 @@ module ofs_plat_afu
                 );
         end
     endgenerate
-
-   // ====================================================================
-   //
-   //  Map Ethernet channels to Avalon streams
-   //
-   // ====================================================================
-
-   localparam NUM_ETH = plat_ifc.hssi.NUM_CHANNELS;
-
-    //separate AXI-ST interfaces used between the AVST-AXIST bridge
-    //  and PIM-mapper
-    //ofs_fim_hssi_ss_rx_axis_if eth_rx_axis[NUM_ETH-1:0]();
-    //ofs_fim_hssi_ss_tx_axis_if eth_tx_axis[NUM_ETH-1:0]();
-    //ofs_fim_hssi_fc_if eth_fc[NUM_ETH-1:0]();
     
-    //separate AVT-ST interfaces
-   // Data streams
-   //ofs_fim_eth_tx_avst_if eth_tx_st [NUM_ETH-1:0]();
-   //ofs_fim_eth_rx_avst_if eth_rx_st [NUM_ETH-1:0]();
-   // Sideband streams (control flow)
-   //ofs_fim_eth_sideband_tx_avst_if eth_sb_tx [NUM_ETH-1:0]();
-   //ofs_fim_eth_sideband_rx_avst_if eth_sb_rx [NUM_ETH-1:0]();
-
-   // The PIM provides a mapping from the native stream encoding to
-   // Avalon streams.
-   //generate
-   //   for (genvar c = 0; c < NUM_ETH; c = c + 1) begin : ec
-   //         //ofs_plat_hssi_as_axi_st axist_inst
-   //         //(
-   //         //    .to_fiu(plat_ifc.hssi.channels[c]),
-   //         //    .tx_st(eth_tx_axis[c]),
-   //         //    .rx_st(eth_rx_axis[c]),
-   //         //    .fc(eth_fc[c]),
-   //         //    .afu_clk(),
-   //         //    .afu_reset_n()
-   //         //);
-   //         //always_comb begin
-   //             //eth_rx_axis[c] = plat_ifc.hssi.channels[c].data_rx;
-   //             
-   //             //eth_tx_axis[c].clk    = plat_ifc.hssi.channels[c].data_tx.clk;
-   //             //eth_tx_axis[c].rst_n  = plat_ifc.hssi.channels[c].data_tx.rst_n;
-   //             //eth_tx_axis[c].tready = plat_ifc.hssi.channels[c].data_tx.tready;
-   //             //plat_ifc.hssi.channels[c].data_tx.tx = eth_tx_axis[c].tx;
-   //         //end
-   //   end
-   //endgenerate
-
-   
-   
+    
     // ====================================================================
     //
     //  Tie off unused ports.
     //
     // ====================================================================
-
     ofs_plat_if_tie_off_unused
       #(
         // Masks are bit masks, with bit 0 corresponding to port/bank zero.
@@ -178,10 +118,16 @@ module ofs_plat_afu
         .LOCAL_MEM_IN_USE_MASK(-1),
         // The argument to each parameter is a bit mask of channels used.
         // Passing "-1" indicates all available channels are in use.
-        .HSSI_IN_USE_MASK(1)
+        .HSSI_IN_USE_MASK({dc_bsp_pkg::IO_PIPES_NUM_CHAN{1'b1}})
         )
         tie_off(plat_ifc);
 
+    //ensure the ASP supports/expects no more IO Pipes than the FIM provides; fatal at compile-time
+    generate
+        if (dc_bsp_pkg::IO_PIPES_NUM_CHAN > plat_ifc.hssi.NUM_CHANNELS) begin : Illegal_IO_Pipes_Num_Chan
+            $fatal("Error: The IO_PIPES_NUM_CHAN parameter defined in the ASP, %d, is larger than NUM_CHANNELS supported by the FIM, %d.",dc_bsp_pkg::IO_PIPES_NUM_CHAN, plat_ifc.hssi.NUM_CHANNELS);
+        end
+    endgenerate
 
     // ====================================================================
     //
@@ -196,20 +142,15 @@ module ofs_plat_afu
     assign pclk_bsp_reset = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
                                                                ~plat_ifc.clocks.pClk.reset_n;
 
-    afu
-     #(
-        .NUM_LOCAL_MEM_BANKS(local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS),
-        .NUM_ETH(NUM_ETH)
-       )
-     afu
+    afu afu
       (
         .host_mem_if(host_mem_to_afu),
         .mmio64_if(mmio64_to_afu),
         .local_mem(local_mem_to_afu),
 
-        .eth_tx_axis(plat_ifc.hssi.channels[0].data_tx),
-        .eth_rx_axis(plat_ifc.hssi.channels[0].data_rx),
-        .eth_fc(plat_ifc.hssi.channels[0].fc),
+        .eth_tx_axis(plat_ifc.hssi.channels[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0].data_tx),
+        .eth_rx_axis(plat_ifc.hssi.channels[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0].data_rx),
+        .eth_fc(plat_ifc.hssi.channels[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0].fc),
        
         .pClk(pclk_bsp),
         .pClk_reset(pclk_bsp_reset),
