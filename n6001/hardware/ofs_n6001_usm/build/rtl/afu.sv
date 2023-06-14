@@ -99,9 +99,9 @@ assign kernel_svm.clk = host_mem_if.clk;
 assign kernel_svm.reset_n = host_mem_if.reset_n;
 
 ofs_plat_avalon_mem_if_async_shim #(
-    //change waitreq to be more like 'almost-full' rather than 'full'
-    .COMMAND_ALMFULL_THRESHOLD (8),
-    .RESPONSE_FIFO_DEPTH (USM_CCB_RESPONSE_FIFO_DEPTH)
+    .RESPONSE_FIFO_DEPTH       (USM_CCB_RESPONSE_FIFO_DEPTH),
+    .COMMAND_FIFO_DEPTH        (USM_CCB_COMMAND_FIFO_DEPTH),
+    .COMMAND_ALMFULL_THRESHOLD (USM_CCB_COMMAND_ALMFULL_THRESHOLD)
 ) kernel_svm_avmm_ccb_inst (
     .mem_sink   (kernel_svm),
     .mem_source (kernel_svm_kclk)
