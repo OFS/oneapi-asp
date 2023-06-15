@@ -7,19 +7,19 @@
 module udp_offload_engine
 import dc_bsp_pkg::*;
 (
-    ofs_fim_hssi_ss_tx_axis_if[IO_PIPES_NUM_CHAN-1:0].client   eth_tx_axis,
-    ofs_fim_hssi_ss_rx_axis_if[IO_PIPES_NUM_CHAN-1:0].client   eth_rx_axis,
-    ofs_fim_hssi_fc_if[IO_PIPES_NUM_CHAN-1:0].client           eth_fc,
+    ofs_fim_hssi_ss_tx_axis_if.client   eth_tx_axis[IO_PIPES_NUM_CHAN-1:0],
+    ofs_fim_hssi_ss_rx_axis_if.client   eth_rx_axis[IO_PIPES_NUM_CHAN-1:0],
+    ofs_fim_hssi_fc_if.client           eth_fc[IO_PIPES_NUM_CHAN-1:0],
     
     // kernel clock and reset 
     input logic         kernel_clk,
     input logic         kernel_resetn,
     
     // Avalon-ST interface from kernel
-    shim_avst_if[IO_PIPES_NUM_CHAN-1:0].sink   udp_avst_from_kernel,
+    shim_avst_if.sink   udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
     
     // Avalon-ST interface to kernel
-    shim_avst_if[IO_PIPES_NUM_CHAN-1:0].source udp_avst_to_kernel,
+    shim_avst_if.source udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0],
     
     // UDP offload engine CSR
     ofs_plat_avalon_mem_if.to_source uoe_csr_avmm

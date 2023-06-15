@@ -21,8 +21,8 @@ module kernel_wrapper (
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,shim_avst_if[IO_PIPES_NUM_CHAN-1:0].source    udp_avst_from_kernel,
-        shim_avst_if[IO_PIPES_NUM_CHAN-1:0].sink       udp_avst_to_kernel
+        ,shim_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
+        shim_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
     `endif
 );
 
@@ -238,12 +238,12 @@ kernel_system kernel_system_inst (
         .kernel_mem_byteenable      (svm_avmm_bridge.byteenable)
     `endif
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,.udp_out_valid        (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
-        .udp_out_data          (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].data),
-        .udp_out_ready         (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].ready),
-        .udp_in_valid          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
-        .udp_in_data           (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].data),
-        .udp_in_ready          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].ready)
+        ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
+        .udp_out_data          (udp_avst_from_kernel[0].data),
+        .udp_out_ready         (udp_avst_from_kernel[0].ready),
+        .udp_in_valid          (udp_avst_to_kernel[0].valid),
+        .udp_in_data           (udp_avst_to_kernel[0].data),
+        .udp_in_ready          (udp_avst_to_kernel[0].ready)
         //,.udp_out_valid        (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
         //.udp_out_data          (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].data),
         //.udp_out_ready         (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].ready),
