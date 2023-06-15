@@ -380,6 +380,13 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
       exit(1);
     }
     printf("Read CSR_RX_STATUS_REG_ADDR:%ld\n", debug_rx_status_csr);
+
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : \n CSR_IOPIPE_INFO_REG_ADDR:%ld\n CSR_RESET_REG_ADDR:%ld\n"
+              "CSR_STATUS_REG_ADDR:%ld\n CSR_MISC_CTRL_REG_ADDR:%ld\n CSR_TX_STATUS_REG_ADDR:%ld\n"
+              "CSR_RX_STATUS_REG_ADDR:%ld\n", debug_iopipe_info_csr, debug_reset_csr, debug_status_csr,
+              debug_misc_ctrl_csr, debug_tx_status_csr, debug_rx_status_csr);
+    }
   }
 
 }
