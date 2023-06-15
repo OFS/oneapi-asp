@@ -114,7 +114,10 @@ iopipes::~iopipes(){}
 // function to setup io pipes CSR space
 void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
-  printf("** Inside setup-pac function **\n");
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : IO-PIPES : Inside setup-iopipes_asp function");
+  }
+  printf("** Inside setup-iopipes_asp function **\n");
   uint64_t REG_UDPOE_BASE_ADDR       = iopipes::m_iopipes_dfh_offset;
   //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
   uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
@@ -137,29 +140,53 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   uint64_t IOPIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
 
   std::string local_ip_addr = m_local_ip_address;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : local ip address= %s\n", local_ip_addr.c_str());
+  }
   printf("local ip address= %s\n", local_ip_addr.c_str());
   
   uint64_t local_mac_addr = ParseMACAddress(m_local_mac_address);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : local mac address= %ld\n", local_mac_addr);
+  }
   printf("local mac address= %ld\n", local_mac_addr);
 
   std::string local_netmask = m_local_netmask;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : local netmask = %s\n", local_netmask.c_str());
+  }
   printf("local netmask = %s\n", local_netmask.c_str());
 
   uint64_t local_udp_port = (unsigned long)m_local_udp_port;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : local udp port= %ld\n", local_udp_port);
+  }
   printf("local udp port= %ld\n", local_udp_port);
 
   std::string remote_ip_addr = m_remote_ip_address;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : remote ip address= %s\n", remote_ip_addr.c_str());
+  }
   printf("remote ip address= %s\n", remote_ip_addr.c_str());
   
   uint64_t remote_mac_addr = ParseMACAddress(m_remote_mac_address);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : remote mac address= %ld\n", remote_mac_addr);
+  }
   printf("remote mac address= %ld\n", remote_mac_addr);
 
   uint64_t remote_udp_port = (unsigned long)m_remote_udp_port;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : remote udp port= %ld\n", remote_udp_port);
+  }
   printf("remote udp port= %ld\n", remote_udp_port);
 
   fpga_result res = FPGA_OK;
   
   // MAC reset
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : MAC reset\n");
+  }
   res = fpgaWriteMMIO64(afc_handle, mmio_num, REG_UDPOE_BASE_ADDR, 0x7);
   if (res != FPGA_OK) {
     printf("error is %d, OK is %d, Exception is %d, Invalid param is %d \n",res, FPGA_OK, FPGA_EXCEPTION, FPGA_INVALID_PARAM);
@@ -195,6 +222,11 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:Reading number of channels CSR\n");
     exit(-1);
   } 
+
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : Setting common CSRs for all IO Pipes\n");
+  }
+
   if ((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_FPGA_MAC_ADR_ADDR, local_mac_addr)) != FPGA_OK) {
     printf("Error:writing CSR_FPGA_MAC_ADR CSR");
     exit(1);
@@ -253,7 +285,10 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     exit(1);
   }
 
-  //CSR_MISC_CTRL_REG_ADDR
+///
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : Setting CSRs specific for each IO Pipe\n");
+  }
   int i = 0x00;
   for(uint64_t loop=0; loop<number_of_channels; loop++) { 
     printf("Looping on channel %ld, Writing CSRs for channel %ld\n", loop, loop); 
@@ -276,6 +311,9 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_SCRATCHPAD_ADDR, &mmio_read)) != FPGA_OK) {
     printf("Error reading CSR_SCRATCHPAD_ADDR\n");
     exit(1);
+  }
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : Read CSR: Scratchpad:%ld\n", mmio_read);
   }
   printf("Read CSR: Scratchpad:%ld\n", mmio_read);
 
