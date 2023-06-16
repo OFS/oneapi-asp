@@ -155,17 +155,13 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("Error:writing RST\n");
     exit(1);
   }
-
-  //
-  // UOE register settings. These registers are not reset even after fpgaClose().
-  //
-  // Read MMIO CSR NUM_CHANNELS to determine how many io channels to initialize
   
   if((res = fpgaWriteMMIO64(afc_handle, mmio_num, CSR_SCRATCHPAD_ADDR, 0xf)) != FPGA_OK) {
     printf("Error:Reading number of channels CSR\n");
     exit(-1);
   }
 
+// Read MMIO CSR NUM_CHANNELS to determine how many io channels to initialize
   uint64_t number_of_channels;
   if((res = fpgaReadMMIO64(afc_handle, mmio_num, CSR_UDPOE_NUM_IOPIPES_ADDR, &number_of_channels)) != FPGA_OK) {
     printf("Error:Reading number of channels CSR\n");
@@ -175,6 +171,8 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     DEBUG_LOG("DEBUG LOG : IO-PIPES : Reading number of channels CSR : Number of Channels : %ld\n", number_of_channels);
   }
 
+// Setting CSRs needed for UDP offload Engine
+// Setting CSRs which will be common on all pipes, if we have instantiated multiple pipes
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : IO-PIPES : Setting common CSRs for all IO Pipes\n");
   }
@@ -231,7 +229,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     exit(1);
   }
 
-///
+// Setting CSRs for each IO Pipe instantiated 
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : IO-PIPES : Setting CSRs specific for each IO Pipe\n");
   }
@@ -252,7 +250,8 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     i = i + 13;
   }
 
-  // Read CSRs
+  // Read CSRs to help in debug
+  // Reading CSRs common to all pipes
   uint64_t debug_scratchpad_csr, debug_num_iopipes_csr, debug_fpga_mac_addr_csr, debug_fpga_ip_addr_csr,
            debug_fpga_udp_port_csr, debug_fpga_netmask_csr, debug_host_mac_addr_csr, debug_host_ip_addr_csr, 
            debug_host_udp_port_csr, debug_payload_per_packet_csr, debug_checksum_ip_csr;
@@ -333,6 +332,7 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
               debug_payload_per_packet_csr, debug_checksum_ip_csr);
   }
 
+//Reading CSRs for each pipe instantiated
   uint64_t debug_iopipe_info_csr, debug_reset_csr, 
            debug_status_csr, debug_misc_ctrl_csr,
            debug_tx_status_csr, debug_rx_status_csr;
