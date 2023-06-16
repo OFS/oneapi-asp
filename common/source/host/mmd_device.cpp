@@ -436,6 +436,7 @@ bool Device::find_dma_dfh_offsets() {
 
 bool Device::find_iopipes_dfh_offsets() {
   printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  DEBUG_LOG("DEBUG LOG : Inside find_iopipes_dfh_offset()\n");
   //iopipes_dfh_offset = 345;
   //printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
   uint64_t dfh_offset = 0;
@@ -562,6 +563,7 @@ bool Device::initialize_bsp() {
    */
   bool iopipes_enabled = find_iopipes_dfh_offsets();
   if(iopipes_enabled) {
+    DEBUG_LOG("DEBUG LOG : IO Pipes are enabled\n");
     std::string local_ip_address;
     std::string local_mac_address;
     std::string local_netmask;
@@ -619,6 +621,7 @@ bool Device::initialize_bsp() {
       exit(1);   
     }
 
+    DEBUG_LOG("DEBUG LOG : Creating iopipes object and setting up iopipes\n");
     io_pipes = new iopipes(mmd_handle, local_ip_address, local_mac_address, local_netmask, local_udp_port, remote_ip_address, remote_mac_address, remote_udp_port, iopipes_dfh_offset);
     io_pipes->setup_iopipes_asp(mmio_handle);
   }
