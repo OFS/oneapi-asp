@@ -71,9 +71,12 @@ To package generated ASP into tarball run: `scripts/create-tarball.sh`
   This will execute a new place-and-route of the entire PR region - the
   ASP's synthesis/placement/routing is not locked-down when using this flow.
   Timing violations in the fixed-clock domains (DDR, ASP/PCIe) are possible
-  when using this flow.  Example compilation command:
-  $OFS_OCL_SHIM_ROOT/$ aoc -v -board=ofs_d5005
-  <path to example designs>/example_designs/hello_world/device/hello_world.cl
+  when using this flow.
+
+  Example compilation command: <br>
+  `$OFS_OCL_SHIM_ROOT/$ aoc -v -board=ofs_d5005
+  <path to example designs>/example_designs/hello_world/device/hello_world.cl`
+  
   If timing violations in static clock domains (not the kernel clock) are persistent
   across multiple seeds, users can try enabling the 
   USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION define in opencl_bsp.vh - it will move all clock 
