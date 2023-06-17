@@ -18,15 +18,7 @@ interface udp_oe_ctrl_if;
 
     //logic [MAX_NUM_CHANNELS-1:0] num_channels;
     
-    logic            tx_rst;
-    logic            rx_rst;
     logic            csr_rst;
-    
-    typedef struct packed {
-        logic [15:0] pkt_count;
-        logic [15:0] sm_state;
-    } t_status;
-    t_status tx_status, rx_status;
     
     typedef struct packed {
         logic   intrabsp_txrx_loopback;
@@ -35,7 +27,6 @@ interface udp_oe_ctrl_if;
 
     //CSR module (source)
     modport csr (
-        input   tx_status, rx_status,
         output  fpga_mac_adr,
                 fpga_ip_adr,
                 fpga_udp_port,
@@ -45,15 +36,12 @@ interface udp_oe_ctrl_if;
                 host_udp_port,
                 payload_per_packet,
                 checksum_ip,
-                tx_rst,
-                rx_rst,
                 csr_rst,
                 misc_ctrl
     );
     
     //TX path
     modport tx (
-        output  tx_status, 
         input   fpga_mac_adr,
                 fpga_ip_adr,
                 fpga_udp_port,
@@ -62,22 +50,39 @@ interface udp_oe_ctrl_if;
                 host_ip_adr,
                 host_udp_port,
                 payload_per_packet,
-                checksum_ip,
-                tx_rst
+                checksum_ip
     );
     
     //RX path
     modport rx (
-        output  rx_status, 
         input   fpga_ip_adr,
                 host_ip_adr,
-                host_mac_adr,
-                rx_rst
+                host_mac_adr
     );
 
 endinterface : udp_oe_ctrl_if
 
-//interface udpoe_channel_if;
+interface udp_oe_channel_if;
+    logic tx_rst;
+    logic rx_rst;
+    typedef struct packed {
+        logic [15:0] pkt_count;
+        logic [15:0] sm_state;
+    } t_status;
+    t_status tx_status, rx_status;
     
-
-//endinterface : udpoe_channel_if
+    modport csr (
+        output tx_rst, rx_rst,
+        input  tx_status, rx_status
+    );
+    
+    modport tx (
+        input tx_rst,
+        output tx_status
+    );
+    
+    modport rx (
+        input rx_rst,
+        output rx_status
+    );
+endinterface : udp_oe_channel_if

@@ -54,7 +54,7 @@ package dc_bsp_pkg;
     //this wait-req needs to be reflected in both the board_spc.xml and ccb (cross-to-kernel) settings
     parameter KERNELWRAPPER_SVM_PIPELINE_DISABLEWAITREQBUFFERING = 1;
 
-    //Avalon Streaming data width - I/O Channel connection to kernel-system
+    //Avalon Streaming data width - I/O Pipe connection to kernel-system
     parameter SHIM_AVST_DATA_WIDTH = 64;
     
     //Interrupt parameters
@@ -96,6 +96,6 @@ package dc_bsp_pkg;
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
     
     //number of IO Channels/Pipes enabled in the ASP.
-    parameter IO_PIPES_NUM_CHAN = 5'h01;
+    parameter IO_PIPES_NUM_CHAN = 5'h02;
     
 endpackage : dc_bsp_pkg

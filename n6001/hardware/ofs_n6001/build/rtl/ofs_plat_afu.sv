@@ -12,6 +12,7 @@ module ofs_plat_afu
     );
     
     import cci_mpf_shim_pkg::t_cci_mpf_shim_mdata_value;
+    import dc_bsp_pkg::*;
     
     // ====================================================================
     //
@@ -52,7 +53,7 @@ module ofs_plat_afu
 
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
       #(
-        .ADD_CLOCK_CROSSING(dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN),
+        .ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
         .ADD_TIMING_REG_STAGES(1)
         )
       primary_avalon
@@ -86,7 +87,7 @@ module ofs_plat_afu
             ofs_plat_local_mem_as_avalon_mem
               #(
                 // EMIF closs crossings occur in the BSP Qsys-system
-                .ADD_CLOCK_CROSSING(dc_bsp_pkg::USE_PIM_CDC_LOCALMEM),
+                .ADD_CLOCK_CROSSING(USE_PIM_CDC_LOCALMEM),
                 .ADD_TIMING_REG_STAGES(3)
                 )
               shim
@@ -118,14 +119,14 @@ module ofs_plat_afu
         .LOCAL_MEM_IN_USE_MASK(-1),
         // The argument to each parameter is a bit mask of channels used.
         // Passing "-1" indicates all available channels are in use.
-        .HSSI_IN_USE_MASK({dc_bsp_pkg::IO_PIPES_NUM_CHAN{1'b1}})
+        .HSSI_IN_USE_MASK({IO_PIPES_NUM_CHAN{1'b1}})
         )
         tie_off(plat_ifc);
 
     //ensure the ASP supports/expects no more IO Pipes than the FIM provides; fatal at compile-time
     generate
-        if (dc_bsp_pkg::IO_PIPES_NUM_CHAN > plat_ifc.hssi.NUM_CHANNELS) begin : Illegal_IO_Pipes_Num_Chan
-            $fatal("Error: The IO_PIPES_NUM_CHAN parameter defined in the ASP, %d, is larger than NUM_CHANNELS supported by the FIM, %d.",dc_bsp_pkg::IO_PIPES_NUM_CHAN, plat_ifc.hssi.NUM_CHANNELS);
+        if (IO_PIPES_NUM_CHAN > plat_ifc.hssi.NUM_CHANNELS) begin : Illegal_IO_Pipes_Num_Chan
+            $fatal("Error: The IO_PIPES_NUM_CHAN parameter defined in the ASP, %d, is larger than NUM_CHANNELS supported by the FIM, %d.",IO_PIPES_NUM_CHAN, plat_ifc.hssi.NUM_CHANNELS);
         end
     endgenerate
 
@@ -137,9 +138,9 @@ module ofs_plat_afu
 
     //set pClk depending on if we are using PIM for PCIe/host-channel CDC
     logic pclk_bsp,pclk_bsp_reset;
-    assign pclk_bsp = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
+    assign pclk_bsp = USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
                                                          plat_ifc.clocks.pClk.clk;
-    assign pclk_bsp_reset = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
+    assign pclk_bsp_reset = USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
                                                                ~plat_ifc.clocks.pClk.reset_n;
 
     afu afu
@@ -148,9 +149,7 @@ module ofs_plat_afu
         .mmio64_if(mmio64_to_afu),
         .local_mem(local_mem_to_afu),
 
-        .eth_tx_axis(plat_ifc.hssi.channels[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0].data_tx),
-        .eth_rx_axis(plat_ifc.hssi.channels[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0].data_rx),
-        .eth_fc(plat_ifc.hssi.channels[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0].fc),
+        .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),
        
         .pClk(pclk_bsp),
         .pClk_reset(pclk_bsp_reset),

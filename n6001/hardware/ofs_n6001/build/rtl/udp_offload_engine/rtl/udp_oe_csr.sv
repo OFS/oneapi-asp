@@ -6,7 +6,9 @@ module udp_oe_csr
 (
   ofs_plat_avalon_mem_if.to_source uoe_csr_avmm,
   
-  udp_oe_ctrl_if.csr    udp_oe_ctrl
+  udp_oe_ctrl_if.csr    udp_oe_ctrl,
+  
+  udp_oe_channel_if.csr udp_oe_pipe_ctrl_sts[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0]
 );
 
     import udp_oe_pkg::*;
@@ -14,6 +16,7 @@ module udp_oe_csr
     logic [63:0] dfh_header_data_reg;
     logic [63:0] scratchpad_reg;
     logic [63:0] dfh_reg_0x18, dfh_reg_0x20;
+    integer i;
     
     //pipeline and duplicate the csr_rst signal
     parameter RESET_PIPE_DEPTH = 2;
@@ -53,7 +56,7 @@ module udp_oe_csr
 
                     // Common registers
                     SCRATCHPAD_ADDR:                 uoe_csr_avmm.readdata <= scratchpad_reg;
-                    UDPOE_NUM_CHANNELS_ADDR:         uoe_csr_avmm.readdata <= IO_PIPES_NUM_CHAN;
+                    UDPOE_NUM_CHANNELS_ADDR:         uoe_csr_avmm.readdata <= dc_bsp_pkg::IO_PIPES_NUM_CHAN;
                     CSR_FPGA_MAC_ADR_ADDR:           uoe_csr_avmm.readdata <= {16'b0, udp_oe_ctrl.fpga_mac_adr};
                     CSR_FPGA_IP_ADR_ADDR:            uoe_csr_avmm.readdata <= {32'b0, udp_oe_ctrl.fpga_ip_adr}; 
                     CSR_FPGA_UDP_PORT_ADDR:          uoe_csr_avmm.readdata <= {48'b0, udp_oe_ctrl.fpga_udp_port};
@@ -67,20 +70,16 @@ module udp_oe_csr
                     //per-channel registers are handled outside this case statement
                     //
                     CSR_CHAN_INFO_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h0,8'h10};
-                    CSR_RESET_REG_ADDR_CH0    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
-                                                                                     udp_oe_ctrl.rx_rst, 
-                                                                                     udp_oe_ctrl.csr_rst};
-                    CSR_STATUS_REG_ADDR_CH0   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                    CSR_RESET_REG_ADDR_CH0    :         uoe_csr_avmm.readdata <= {62'b0, udp_oe_pipe_ctrl_sts[0].tx_rst,udp_oe_pipe_ctrl_sts[0].rx_rst};
+                    CSR_STATUS_REG_ADDR_CH0   :         uoe_csr_avmm.readdata <= {udp_oe_pipe_ctrl_sts[0].tx_status,udp_oe_pipe_ctrl_sts[0].rx_status};
                     CSR_MISC_CTRL_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
                     CSR_TX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
                     CSR_RX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
                     
                     //Channel-1
                     CSR_CHAN_INFO_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= {47'h0,1'b1,8'h1,8'h10};
-                    CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {61'b0, udp_oe_ctrl.tx_rst, 
-                                                                              udp_oe_ctrl.rx_rst, 
-                                                                              udp_oe_ctrl.csr_rst};
-                    CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= { udp_oe_ctrl.tx_status,udp_oe_ctrl.rx_status};
+                    CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {62'b0, udp_oe_pipe_ctrl_sts[1].tx_rst,udp_oe_pipe_ctrl_sts[1].rx_rst};
+                    CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= {udp_oe_pipe_ctrl_sts[1].tx_status,udp_oe_pipe_ctrl_sts[1].rx_status};
                     CSR_MISC_CTRL_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
                     CSR_TX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
                     CSR_RX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
@@ -148,10 +147,10 @@ module udp_oe_csr
                 CSR_CHECKSUM_IP_ADDR:           udp_oe_ctrl.checksum_ip[15:0]         <= uoe_csr_avmm.writedata[15:0];
                 //per-channel registers
                 //need to clean this up with a for-loop and/or an array
-                CSR_RESET_REG_ADDR_CH0:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
+                CSR_RESET_REG_ADDR_CH0:             {udp_oe_pipe_ctrl_sts[0].tx_rst, udp_oe_pipe_ctrl_sts[0].rx_rst} <= uoe_csr_avmm.writedata[1:0];
                 CSR_MISC_CTRL_REG_ADDR_CH0:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
-                CSR_RESET_REG_ADDR_CH1:             {udp_oe_ctrl.csr_rst, udp_oe_ctrl.tx_rst, udp_oe_ctrl.rx_rst} <= uoe_csr_avmm.writedata[2:0];
-                CSR_MISC_CTRL_REG_ADDR_CH1:   udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                CSR_RESET_REG_ADDR_CH1:             {udp_oe_pipe_ctrl_sts[1].tx_rst, udp_oe_pipe_ctrl_sts[1].rx_rst} <= uoe_csr_avmm.writedata[1:0];
+                CSR_MISC_CTRL_REG_ADDR_CH1:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
             endcase
         end
     
@@ -169,9 +168,16 @@ module udp_oe_csr
             udp_oe_ctrl.payload_per_packet    <= 'h0;
             udp_oe_ctrl.checksum_ip           <= 'h0;
             udp_oe_ctrl.csr_rst               <= 'h0;
-            udp_oe_ctrl.tx_rst                <= 'h0;
-            udp_oe_ctrl.rx_rst                <= 'h0;
             udp_oe_ctrl.misc_ctrl             <= 'h0;
+            
+            //for (i = 0; i < dc_bsp_pkg::IO_PIPES_NUM_CHAN; i++) begin
+                udp_oe_pipe_ctrl_sts[0].tx_rst    <= 'b0;
+                udp_oe_pipe_ctrl_sts[0].rx_rst    <= 'b0;
+                udp_oe_pipe_ctrl_sts[1].tx_rst    <= 'b0;
+                udp_oe_pipe_ctrl_sts[1].rx_rst    <= 'b0;
+            //end
+            //udp_oe_pipe_ctrl_sts[1].tx_rst    <= 'b0;
+            //udp_oe_pipe_ctrl_sts[1].rx_rst    <= 'b0;
         end
     end
   
