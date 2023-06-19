@@ -89,7 +89,7 @@ EOF
 # Configure 2M huge pages
 #
 # Hugepages are used to improve performance of the DMA operations between host
-# and FPGA.  The OFS BSP requires a minimum of 4 2M hugepages per FPGA.
+# and FPGA.  The OFS oneAPI-ASP requires a minimum of 4 2M hugepages per FPGA.
 # However, there is additional optimization that allows user to pre-pin memory
 # using hugepages.  The default setting in this script configures 2048 2M
 # hugepages.  This means 4G of host memory is allocated for hugepages.

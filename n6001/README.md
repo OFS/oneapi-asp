@@ -29,13 +29,13 @@ running tests
 
 ## ASP variants
 
-The `hardware` folder contains subdirectories with the 2 different Shim/BSP variants:
+The `hardware` folder contains subdirectories with the 2 different oneAPI-ASP variants:
 
-* `ofs_n6001_usm`: Shim/BSP that supports shared virtual memory between host and device. This 
+* `ofs_n6001_usm`: oneAPI-ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM variant with the addition of the USM path between 
 the kernel-system and the host.
 
-* `ofs_n6001`:  DMA-based Shim/BSP that supports local memory and host memory interfaces for the 
+* `ofs_n6001`:  DMA-based oneAPI-ASP that supports local memory and host memory interfaces for the 
 kernel system.
 
 ## Generating ASP
@@ -50,13 +50,13 @@ and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to ofs-dev/work_ofs_ac_base_adp-A1/pr_build_template in FIM build area.
 
-Need to set **OFS_OCL_SHIM_ROOT** to point to opencl-bsp/n6001.
+Need to set **OFS_OCL_SHIM_ROOT** to point to opencl-asp/n6001.
 
-To generate Shim/BSP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
+To generate oneAPI-ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
 To generate MMD software only run: `scripts/build_mmd.sh`
 
-To package generated Shim/BSP into tarball run: `scripts/create-tarball.sh`
+To package generated oneAPI-ASP into tarball run: `scripts/create-tarball.sh`
 
 ## Kernel Compilation Options
 
