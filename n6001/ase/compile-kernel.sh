@@ -48,7 +48,7 @@ echo "Running ASE for board variant: $BOARD"
 if [ -f "$DESIGN_SRC" ]; then
     echo "Running ASE with design: $DESIGN_SRC"
     echo "aoc command is next"
-    aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
+    aoc -v -no-env-check  -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
 elif [ -d "$DESIGN_SRC" ]; then
     echo "Running ASE with oneAPI design: $DESIGN_SRC"
     echo "pwd is  $PWD"
