@@ -1,3 +1,19 @@
+// Copyright 2020 Intel Corporation.
+//
+// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
+// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+
 #include <string.h> 
 #include <cstring> 
 
@@ -33,16 +49,16 @@ public:
   void setup_iopipes_asp(fpga_handle);
 
   private:
-    int m_mmd_handle;
-    std::string m_local_ip_address;
-    std::string m_local_mac_address;
-    std::string m_local_netmask;
-    int m_local_udp_port;
-    std::string m_remote_ip_address;
-    std::string m_remote_mac_address;
-    int m_remote_udp_port;
-    int mmio_num;
-    uint64_t m_iopipes_dfh_offset;
+    int mmd_handle_;
+    std::string local_ip_address_;
+    std::string local_mac_address_;
+    std::string local_netmask_;
+    int local_udp_port_;
+    std::string remote_ip_address_;
+    std::string remote_mac_address_;
+    int remote_udp_port_;
+    int mmio_num_;
+    uint64_t iopipes_dfh_offset_;
 
 
 }; 
