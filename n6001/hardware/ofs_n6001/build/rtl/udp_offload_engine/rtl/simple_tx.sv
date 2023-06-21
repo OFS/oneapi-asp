@@ -1,9 +1,14 @@
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
+//
+
 module simple_tx
 (
   input logic         kernel_clk,
   input logic         kernel_resetn,
   
   udp_oe_ctrl_if.tx   udp_oe_ctrl,
+  udp_oe_channel_if.tx udp_oe_pipe_ctrl_sts,
 
   // to Ethernet MAC
   ofs_fim_hssi_ss_tx_axis_if.client   eth_tx_axis,
@@ -314,8 +319,8 @@ module simple_tx
         tx_word_counter <= tx_word_counter + eth_mac_valid;
   
   always_comb begin
-    udp_oe_ctrl.tx_status.pkt_count = tx_word_counter;
-    udp_oe_ctrl.tx_status.sm_state  = state;
+    udp_oe_pipe_ctrl_sts.tx_status.pkt_count = tx_word_counter;
+    udp_oe_pipe_ctrl_sts.tx_status.sm_state  = state;
   end
   
-endmodule // simple_tx
+endmodule : simple_tx
