@@ -100,6 +100,6 @@ package udp_oe_pkg;
     parameter TX_DCFIFO_ALMOST_EMPTY_CUTOFF = 2;//orig = 511 ToDo: raise this back to a higher number
     
     //allow intra-BSP loopback?
-    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 1;
+    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 0;
     
 endpackage : udp_oe_pkg
