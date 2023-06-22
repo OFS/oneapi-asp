@@ -1,25 +1,12 @@
-// Copyright 2020 Intel Corporation.
-//
-// THIS SOFTWARE MAY CONTAIN PREPRODUCTION CODE AND IS PROVIDED BY THE
-// COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-// OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 
 `include "opencl_bsp.vh"
 
 package dc_bsp_pkg;
 
-    //Each memory bank is 8GB. 512b/(8b/B)*(27'1)=8GB.
-    parameter OPENCL_DDR_ADDR_WIDTH = 27;
+    //Each memory bank is 4GB. 512b/(8b/B)*(26'1)=4GB.
+    parameter OPENCL_DDR_ADDR_WIDTH = 26;
     // SVM
     parameter OPENCL_MEMORY_ADDR_WIDTH = 42;
     //OpenCL can only access on a per-word basis. The data bus
@@ -43,9 +30,12 @@ package dc_bsp_pkg;
     parameter BSP_NUM_LOCAL_MEM_BANKS = 4;
     parameter BSP_MAX_AVAIL_PLATFORM_LOCAL_MEM_BANKS = 4;
 
-    parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 512;
+    parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 64;
     parameter OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH = 30;
     parameter OPENCL_BSP_KERNEL_CRA_BURSTCOUNT_WIDTH = 5;
+    
+    //width of ASP MMIO AVMM address as seen by board.qsys
+    parameter MMIO64_AVMM_ADDR_WIDTH = 18;
 
     //Some parameters for the kernel-wrapper's AVMM pipeline bridges
     // memory pipelines
@@ -64,7 +54,7 @@ package dc_bsp_pkg;
     //this wait-req needs to be reflected in both the board_spc.xml and ccb (cross-to-kernel) settings
     parameter KERNELWRAPPER_SVM_PIPELINE_DISABLEWAITREQBUFFERING = 1;
 
-    //Avalon Streaming data width - I/O Channel connection to kernel-system
+    //Avalon Streaming data width - I/O Pipe connection to kernel-system
     parameter SHIM_AVST_DATA_WIDTH = 64;
     
     //Interrupt parameters
@@ -104,5 +94,8 @@ package dc_bsp_pkg;
     parameter VTP_SVC_MMIO_BASE_ADDR = 'h2_4000;
     // DFH end-of-list flag - '0' means this is the end of the DFH list
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
+    
+    //number of IO Channels/Pipes enabled in the ASP.
+    parameter IO_PIPES_NUM_CHAN = 5'h01;
     
 endpackage : dc_bsp_pkg
