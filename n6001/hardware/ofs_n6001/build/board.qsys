@@ -5540,7 +5540,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;64&lt;/value&gt;
+                            &lt;value&gt;1&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -16482,7 +16482,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                        &lt;value&gt;pipe_stage_dma_csr_0.m0&lt;/value&gt;
+                        &lt;value&gt;pipe_stage_dma_csr_1.m0&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -16861,35 +16861,35 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:name>generationInfoDefinition</ipxact:name>
               <ipxact:displayName>Generation Behavior</ipxact:displayName>
               <ipxact:value>&lt;generationInfoDefinition&gt;
-    &lt;hdlLibraryName&gt;pipe_stage_dma_csr_0&lt;/hdlLibraryName&gt;
+    &lt;hdlLibraryName&gt;pipe_stage_dma_csr_1&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;pipe_stage_dma_csr_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;pipe_stage_dma_csr_1&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_1&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;pipe_stage_dma_csr_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;pipe_stage_dma_csr_1&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_1&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;pipe_stage_dma_csr_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;pipe_stage_dma_csr_1&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_1&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;pipe_stage_dma_csr_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;pipe_stage_dma_csr_1&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_1&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;pipe_stage_dma_csr_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;pipe_stage_dma_csr_1&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;pipe_stage_dma_csr_1&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
@@ -16972,7 +16972,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
-              <ipxact:value>ip/board/pipe_stage_dma_csr_0.ip</ipxact:value>
+              <ipxact:value>ip/board/pipe_stage_dma_csr_1.ip</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="moduleAssignmentDefinition" type="string">
               <ipxact:name>moduleAssignmentDefinition</ipxact:name>
