@@ -17,7 +17,6 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
-#include <string.h>
 #include <sys/mman.h>
 #include <algorithm>
 #include <sstream>
@@ -94,26 +93,26 @@ void iopipes::setup_iopipes_asp(fpga_handle afc_handle)
       DEBUG_LOG("DEBUG LOG : IO-PIPES : Inside setup-iopipes_asp function");
   }
   printf("** Inside setup-iopipes_asp function **\n");
-  uint64_t REG_UDPOE_BASE_ADDR       = iopipes::iopipes_dfh_offset_;
+  const uint64_t REG_UDPOE_BASE_ADDR       = iopipes::iopipes_dfh_offset_;
   //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
-  uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
+  const uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
   //uint64_t CSR_SCRATCHPAD_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
-  uint64_t CSR_SCRATCHPAD_ADDR           = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
-  uint64_t CSR_UDPOE_NUM_IOPIPES_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
+  const uint64_t CSR_SCRATCHPAD_ADDR           = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
+  const uint64_t CSR_UDPOE_NUM_IOPIPES_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
 
-  uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
-  uint64_t CSR_FPGA_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8);
-  uint64_t CSR_FPGA_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8);
-  uint64_t CSR_FPGA_NETMASK_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8);
-  uint64_t CSR_HOST_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8);
-  uint64_t CSR_HOST_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8);
-  uint64_t CSR_HOST_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8);
+  const uint64_t CSR_FPGA_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x02*0x8);
+  const uint64_t CSR_FPGA_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x03*0x8);
+  const uint64_t CSR_FPGA_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x04*0x8);
+  const uint64_t CSR_FPGA_NETMASK_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x05*0x8);
+  const uint64_t CSR_HOST_MAC_ADR_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x06*0x8);
+  const uint64_t CSR_HOST_IP_ADR_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x07*0x8);
+  const uint64_t CSR_HOST_UDP_PORT_ADDR    = REG_UDPOE_CSR_BASE_ADDR+(0x08*0x8);
 
-  uint64_t CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
-  uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x0a*0x8);
+  const uint64_t CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
+  const uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x0a*0x8);
   //uint64_t CSR_RESET_REG_ADDR            = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
 
-  uint64_t IOPIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
+  const uint64_t IOPIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
 
   std::string local_ip_addr = local_ip_address_;
   printf("local ip address= %s\n", local_ip_addr.c_str());
