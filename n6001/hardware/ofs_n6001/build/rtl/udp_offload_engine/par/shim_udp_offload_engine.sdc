@@ -11,21 +11,19 @@ set_false_path -to *|udp_offload_engine|*csr|udp_oe_ctrl.* -from *|udp_offload_e
 #set_false_path -from *alt_sld_fab_0*
 #set_false_path -to *alt_sld_fab_0*
 
-set_false_path -from [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|rd_resetn_async_pipe[*]}] \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resetn_async_pipe[*]}]
-set_false_path -from [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|rd_resetn_async_pipe[*]}] \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resync_resetn_body[*]}]
-set_false_path -from [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|rd_resetn_async_pipe[*]}] \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resync_resetn_head}]
+set_false_path -from [get_keepers {*|udp_offload_engine|*|rd_resetn_async_pipe[*]}] \
+               -to   [get_keepers {*|udp_offload_engine|*|wr_resetn_async_pipe[*]}]
+set_false_path -from [get_keepers {*|udp_offload_engine|*|rd_resetn_async_pipe[*]}] \
+               -to   [get_keepers {*|udp_offload_engine|*|wr_resync_resetn_body[*]}]
+set_false_path -from [get_keepers {*|udp_offload_engine|*|rd_resetn_async_pipe[*]}] \
+               -to   [get_keepers {*|udp_offload_engine|*|wr_resync_resetn_head}]
                
-set_false_path -from [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resetn_body[1]}] \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|rd_resetn_async_pipe[*]}]
-set_false_path -from [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resetn_body[1]}] \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|rd_resetn_head}]
-set_false_path -from [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resetn_body[*]}] \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|rd_resetn_body[*]}] \
+set_false_path -from [get_keepers {*|udp_offload_engine|*|wr_resetn_body[1]}] \
+               -to   [get_keepers {*|udp_offload_engine|*|rd_resetn_async_pipe[*]}]
+set_false_path -from [get_keepers {*|udp_offload_engine|*|wr_resetn_body[1]}] \
+               -to   [get_keepers {*|udp_offload_engine|*|rd_resetn_head}]
+set_false_path -from [get_keepers {*|udp_offload_engine|*|wr_resetn_body[*]}] \
+               -to   [get_keepers {*|udp_offload_engine|*|rd_resetn_body[*]}] \
 
-set_false_path -from *|hssi_tx_rst_n \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resetn_head}]
-set_false_path -from *|hssi_tx_rst_n \
-               -to   [get_keepers {*|udp_offload_engine|simple_*|*_dcfifo|acl_dcfifo_reset_synchronizer_inst|wr_resetn_body*}]
+set_false_path -from [get_keepers {*|hssi_tx_rst_n}] -to [get_keepers {*|udp_offload_engine|*|wr_resetn_head}]
+set_false_path -from [get_keepers {*|hssi_tx_rst_n}] -to [get_keepers {*|udp_offload_engine|*|wr_resetn_body*}]
