@@ -33,7 +33,7 @@ if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
     BSP_FLOW="afu_flat"
 fi
 
-PYTHONPATH="$OFS_OCL_SHIM_ROOT/build/opae/install/lib/python3.7/site-packages"
+PYTHONPATH="$OFS_ASP_ROOT/build/opae/install/lib/python3.7/site-packages"
 
 cd "$SCRIPT_DIR_PATH/.." || exit
 

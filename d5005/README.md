@@ -48,9 +48,9 @@ copies of the OFS FIM pr-release-template files to work with a specific platform
 The setup_bsp.py script copies the required files from the FIM pr-release-template
 and updates the project qsf files appropriately.
 
-Need to set **OPAE_PLATFORM_ROOT** to point to ofs-dev/work_ofs_ac_base_adp-A1/pr_build_template in FIM build area.
+Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
-Need to set **OFS_OCL_SHIM_ROOT** to point to opencl-bsp/d5005.
+Need to set **OFS_ASP_ROOT** to point to oneapi-asp/d5005.
 
 To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
@@ -62,8 +62,8 @@ To package generated ASP into tarball run: `scripts/create-tarball.sh`
 
 * Default Kernels - hello_world.cl (for non-USM) , hello_world.cl (for USM).
   Use script - scripts/build-default-aocx.sh.
-  Generated aocx will be in $OFS_OCL_SHIM_ROOT/build/bringup folder.
-  Host code will be in $OFS_OCL_SHIM_ROOT/bringup/source folder
+  Generated aocx will be in $OFS_ASP_ROOT/build/bringup folder.
+  Host code will be in $OFS_ASP_ROOT/bringup/source folder
 
 * Flat: This flow compiles both the ASP and the kernel - the entire
   partial reconfiguration (PR) region - without any additional floorplan
@@ -74,7 +74,7 @@ To package generated ASP into tarball run: `scripts/create-tarball.sh`
   when using this flow.
 
   Example compilation command: <br>
-  `$OFS_OCL_SHIM_ROOT/$ aoc -v -board=ofs_d5005
+  `$OFS_ASP_ROOT/$ aoc -v -board=ofs_d5005
   <path to example designs>/example_designs/hello_world/device/hello_world.cl`
   
   If timing violations in static clock domains (not the kernel clock) are persistent
