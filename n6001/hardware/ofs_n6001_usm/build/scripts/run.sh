@@ -3,7 +3,7 @@
 # Copyright 2022 Intel Corporation
 # SPDX-License-Identifier: MIT
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
@@ -33,11 +33,11 @@ if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
     BSP_FLOW="afu_flat"
 fi
 
-PYTHONPATH="$OFS_OCL_SHIM_ROOT/build/opae/install/lib/python3.7/site-packages"
+PYTHONPATH="$OFS_ASP_ROOT/build/opae/install/lib/python3.7/site-packages"
 
 cd "$SCRIPT_DIR_PATH/.." || exit
 
-if [[ -n "$OFS_OCL_ENV_USE_BSP_PACKAGER" || -n "$ARC_SITE" ]]; then
+if [[ -n "$OFS_ASP_ENV_USE_BSP_PACKAGER" || -n "$ARC_SITE" ]]; then
   if [ -f ./tools/packager ]; then
     chmod +x ./tools/packager
     PACKAGER_BIN=$(readlink -f ./tools/packager)
@@ -69,7 +69,7 @@ cp ../quartus.ini .
 quartus_sh -t scripts/import_opencl_kernel.tcl
 
 #check for bypass/alternative flows
-if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
+if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "Calling ASE simulation flow compile"
     sh ./scripts/ase-sim-compile.sh
     exit $?

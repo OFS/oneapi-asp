@@ -29,13 +29,13 @@ running tests
 
 ## ASP variants
 
-The `hardware` folder contains subdirectories with the 2 different Shim/BSP variants:
+The `hardware` folder contains subdirectories with the 2 different ASP variants:
 
-* `ofs_n6001_usm`: Shim/BSP that supports shared virtual memory between host and device. This 
+* `ofs_n6001_usm`: ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM variant with the addition of the USM path between 
 the kernel-system and the host.
 
-* `ofs_n6001`:  DMA-based Shim/BSP that supports local memory and host memory interfaces for the 
+* `ofs_n6001`:  DMA-based ASP that supports local memory and host memory interfaces for the 
 kernel system.
 
 ## Generating ASP
@@ -48,22 +48,22 @@ copies of the OFS FIM pr-release-template files to work with a specific platform
 The setup_bsp.py script copies the required files from the FIM pr-release-template
 and updates the project qsf files appropriately.
 
-Need to set **OPAE_PLATFORM_ROOT** to point to ofs-dev/work_ofs_ac_base_adp-A1/pr_build_template in FIM build area.
+Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
-Need to set **OFS_OCL_SHIM_ROOT** to point to opencl-bsp/n6001.
+Need to set **OFS_ASP_ROOT** to point to oneapi-asp/n6001.
 
-To generate Shim/BSP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
+To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
 To generate MMD software only run: `scripts/build_mmd.sh`
 
-To package generated Shim/BSP into tarball run: `scripts/create-tarball.sh`
+To package generated ASP into tarball run: `scripts/create-tarball.sh`
 
 ## Kernel Compilation Options
 
 * Default Kernels - hello_world.cl (for non-USM) , hello_world.cl (for USM).
   Use script - scripts/build-default-aocx.sh.
-  Generated aocx will be in $OFS_OCL_SHIM_ROOT/build/bringup folder.
-  Host code will be in $OFS_OCL_SHIM_ROOT/bringup/source folder
+  Generated aocx will be in $OFS_ASP_ROOT/build/bringup folder.
+  Host code will be in $OFS_ASP_ROOT/bringup/source folder
 
 * Flat: This flow compiles both the ASP and the kernel - the entire
   partial reconfiguration (PR) region - without any additional floorplan
@@ -74,7 +74,7 @@ To package generated Shim/BSP into tarball run: `scripts/create-tarball.sh`
   when using this flow.
   
 Example compilation command: <br>
-  `$OFS_OCL_SHIM_ROOT/$ aoc -v -board=ofs_n6001
+  `$OFS_ASP_ROOT/$ aoc -v -board=ofs_n6001
   <path to example designs>/example_designs/hello_world/device/hello_world.cl`
   
   If timing violations in static clock domains (not the kernel clock) are persistent
