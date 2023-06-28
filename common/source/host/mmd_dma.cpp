@@ -393,6 +393,8 @@ int mmd_dma::send_descriptors(uint64_t dma_src_addr, uint64_t dma_dst_addr, uint
  *  it determines appropriate dma src, dst, len and calles send_descriptors() function  
  */
 int mmd_dma::do_dma(dma_work_item &item) {
+// adding the following mutex will disable double buffering  
+// const std::lock_guard<std::mutex> lock(pinning_mutex);
 #if 0 
   printf("do_dma\t");
   if (m_mode == dma_mode::f2h) {
