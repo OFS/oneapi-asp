@@ -142,7 +142,7 @@ Device::Device(uint64_t obj_id)
   }
 
   if (num_matches < 1) {
-    fpgaDestroyProperties(&filter); 
+    //fpgaDestroyProperties(&filter); 
     LOG_ERR("Error creating properties object: %s\n", fpgaErrStr(res));
     if(std::getenv("MMD_ENABLE_DEBUG")){
       DEBUG_LOG("DEBUG LOG : Error creating properties object: %s\n", fpgaErrStr(res));
@@ -220,8 +220,8 @@ Device::Device(uint64_t obj_id)
             std::string(fpgaErrStr(res)));
     }
 
-    fpgaPropertiesSetBus(props, bus);
-    fpgaPropertiesSetDevice(props, device);
+    //fpgaPropertiesSetBus(props, bus);
+    //fpgaPropertiesSetDevice(props, device);
     fpgaPropertiesSetInterface(props, filter_vfio_list[count]);
 
     num_matches = 0;
@@ -243,12 +243,12 @@ Device::Device(uint64_t obj_id)
     DEBUG_LOG("DEBUG LOG : num_matches = %d\n", num_matches);
   }
   if (num_matches < 1) {
-    fpgaDestroyProperties(&filter); 
+    //fpgaDestroyProperties(&filter); 
     LOG_ERR("Error creating properties object: %s\n", fpgaErrStr(res));
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : DFL device not found\n");
+      DEBUG_LOG("DEBUG LOG : VFIO device not found\n");
     }
-    throw std::runtime_error("DFL device not found");
+    throw std::runtime_error("VFIO device not found");
   }
 
   if (mmio_token) {
