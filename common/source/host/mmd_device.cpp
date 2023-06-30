@@ -56,6 +56,7 @@ Device::Device(uint64_t obj_id)
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Constructing Device object\n");
   }
+  printf("UPDATED CODE\n");
   mmd_handle = next_mmd_handle;
   if (next_mmd_handle == std::numeric_limits<int>::max())
     next_mmd_handle = 1;
@@ -165,6 +166,12 @@ Device::Device(uint64_t obj_id)
                              std::string(fpgaErrStr(res)));
   }
 
+  LOG_ERR("DFL num_matches = %d\n", num_matches); 
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : DFL num_matches = %d\n", num_matches);
+  }
+
+
   if (num_matches < 1) {
     fpgaDestroyProperties(&filter);
     free(tokens);
@@ -187,6 +194,9 @@ Device::Device(uint64_t obj_id)
 
     if (oid == obj_id) {
       // We've found our Port..
+      if(std::getenv("MMD_ENABLE_DEBUG")){
+        DEBUG_LOG("DEBUG LOG : object id match - We've found our Port\n");
+      }
       port_token = tokens[i];
 
       res = fpgaOpen(port_token, &port_handle, 0);
@@ -238,9 +248,9 @@ Device::Device(uint64_t obj_id)
     fpgaDestroyProperties(&props);
   }
 
-  LOG_ERR("num_matches = %d\n", num_matches); 
+  LOG_ERR("VFIO num_matches = %d\n", num_matches); 
   if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : num_matches = %d\n", num_matches);
+    DEBUG_LOG("DEBUG LOG : VFIO num_matches = %d\n", num_matches);
   }
   if (num_matches < 1) {
     //fpgaDestroyProperties(&filter); 
