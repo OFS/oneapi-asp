@@ -18,11 +18,10 @@
 #include "afu_bbb_util.h"
 
 #define MMD_COPY_BUFFER_SIZE (2 * 1024 * 1024)
-#define MSGDMA_BBB_GUID   "BC24AD4F-8738-F840-575F-BAB5B61A8DAE"
-#define MSGDMA_BBB_SIZE 256
+#define DMA_BBB_GUID   "BC24AD4F-8738-F840-575F-BAB5B61A8DAE"
+#define DMA_BBB_SIZE 256
 
 #define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
-#define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
 
 using namespace intel_opae_mmd;
 
@@ -85,40 +84,43 @@ Device::Device(uint64_t obj_id)
   /** We use two seperate BSPs for PCIe and USM (Unified Shared Memory) Support
    *  We use two GUIDs to distinguish and determine which BSP we are using 
    */
-  if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     }
   }
 
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     }
   }
 
-  if (uuid_parse(N6001_PCI_OCL_BSP_AFU_ID, n6001_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(N6001_PCI_ASP_AFU_ID, n6001_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     }
   }
 
-  if (uuid_parse(D5005_PCI_OCL_BSP_AFU_ID, d5005_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(D5005_PCI_ASP_AFU_ID, d5005_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     }
   }
 
   if (uuid_compare(pci_guid, n6001_guid) == 0) {
     //fprintf(stderr,"n6001 pci guid detected; setting board_type to 1 \n");
     board_type = 1;
-  } else {
+  } else if(uuid_compare(pci_guid, d5005_guid) == 0) {
     //fprintf(stderr,"d5005 pci guid detected; setting board_type to 0 \n");
     board_type = 0;
+  } else {
+    throw std::runtime_error("n6001 or d5005 board not detected\n");
+  
   }
 
   /** Below is fpga enumeration flow
@@ -283,10 +285,10 @@ Device::Device(uint64_t obj_id)
 
   // TODO: Better encapsulation of how BSP variant is related to the DDR offset
   // value.
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     }
   }
 
@@ -395,14 +397,14 @@ void Device::initialize_fme_sysfs() {
 bool Device::find_dma_dfh_offsets() {
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
-  if (find_dfh_by_guid(mmio_handle, MSGDMA_BBB_GUID, &dfh_offset,
+  if (find_dfh_by_guid(mmio_handle, DMA_BBB_GUID, &dfh_offset,
                        &next_dfh_offset)) {
     dma_ch0_dfh_offset = dfh_offset;
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset, MSGDMA_BBB_GUID);
+      DEBUG_LOG("DEBUG LOG : DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset, DMA_BBB_GUID);
     }
     DEBUG_PRINT("DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset,
-                MSGDMA_BBB_GUID);
+                DMA_BBB_GUID);
   } else {
     fprintf(stderr,
             "Error initalizing DMA: Cannot find DMA channel 0 DFH offset\n");
@@ -410,13 +412,13 @@ bool Device::find_dma_dfh_offsets() {
   }
 
   dfh_offset += 0;//next_dfh_offset;
-  if (find_dfh_by_guid(mmio_handle, MSGDMA_BBB_GUID, &dfh_offset,
+  if (find_dfh_by_guid(mmio_handle, DMA_BBB_GUID, &dfh_offset,
                        &next_dfh_offset)) {
     dma_ch1_dfh_offset = dfh_offset;
     DEBUG_PRINT("DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset,
-                MSGDMA_BBB_GUID);
+                DMA_BBB_GUID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset, MSGDMA_BBB_GUID);
+      DEBUG_LOG("DEBUG LOG : DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset, DMA_BBB_GUID);
     }
   } else {
     fprintf(stderr,
@@ -689,17 +691,17 @@ int Device::program_bitstream(uint8_t *data, size_t data_size) {
 
   fpga_guid svm_guid, pci_guid;
 
-  if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG :  Error parsing guid '%s' \n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG :  Error parsing guid '%s' \n", PCI_ASP_AFU_ID);
     }
   }
 
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n",SVM_OCL_BSP_AFU_ID );
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n",SVM_ASP_AFU_ID );
     }
   }
 
@@ -824,17 +826,17 @@ bool Device::bsp_loaded() {
   fpga_properties prop;
   fpga_result res;
 
-  if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", PCI_ASP_AFU_ID);
     }
     return false;
   }
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", SVM_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", SVM_ASP_AFU_ID);
     }
     return false;
   }
