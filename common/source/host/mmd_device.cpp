@@ -328,6 +328,10 @@ bool Device::parse_board_name(const char *board_name_str,
   }
   std::string prefix(BSP_NAME);
   std::string board_name(board_name_str);
+  printf("BOARD NAME - %s\n", board_name_str);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("BOARD NAME - '%s'\n", board_name_str);
+  }
 
   obj_id = 0;
   if (board_name.length() <= prefix.length() &&
@@ -341,6 +345,11 @@ bool Device::parse_board_name(const char *board_name_str,
 
   std::string device_num_str = board_name.substr(prefix.length());
   obj_id = std::stol(device_num_str, 0, 16);
+  printf("OBJ ID - %ld\n", obj_id);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("OBJ ID - '%ld'\n", obj_id);
+  }
+
 
   // Assume that OPAE does not use 0 as a valid object ID. This is true for now
   // but relies somewhat on an implementaion dependent feature.
