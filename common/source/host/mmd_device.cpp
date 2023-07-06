@@ -18,10 +18,6 @@
 #include "afu_bbb_util.h"
 
 #define MMD_COPY_BUFFER_SIZE (2 * 1024 * 1024)
-#define DMA_BBB_GUID   "BC24AD4F-8738-F840-575F-BAB5B61A8DAE"
-#define DMA_BBB_SIZE 256
-
-#define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
 
 using namespace intel_opae_mmd;
 
@@ -77,50 +73,12 @@ Device::Device(uint64_t obj_id)
   uint32_t num_matches;
   uint32_t i;
   fpga_token *tokens = nullptr;
-  fpga_guid svm_guid, pci_guid;
-  fpga_guid d5005_guid, n6001_guid;
+  fpga_guid svm_guid;
   fpga_properties props = nullptr;
 
-  /** We use two seperate BSPs for PCIe and USM (Unified Shared Memory) Support
-   *  We use two GUIDs to distinguish and determine which BSP we are using 
-   */
-  if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
-    }
-  }
-
-  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
-    }
-  }
-
-  if (uuid_parse(N6001_PCI_ASP_AFU_ID, n6001_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
-    }
-  }
-
-  if (uuid_parse(D5005_PCI_ASP_AFU_ID, d5005_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
-    }
-  }
-
-  if (uuid_compare(pci_guid, n6001_guid) == 0) {
-    //fprintf(stderr,"n6001 pci guid detected; setting board_type to 1 \n");
-    board_type = 1;
-  } else if(uuid_compare(pci_guid, d5005_guid) == 0) {
-    //fprintf(stderr,"d5005 pci guid detected; setting board_type to 0 \n");
-    board_type = 0;
-  } else {
-    throw std::runtime_error("n6001 or d5005 board not detected\n");
-  
+  board_type=BOARD_TYPE;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("DEBUG LOG : board_type = %d , n6001 board\n", board_type);
   }
 
   /** Below is fpga enumeration flow
