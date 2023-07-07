@@ -37,7 +37,7 @@ cd "$SCRIPT_DIR_PATH/.." || exit
 
 if [ -n "$PACKAGER_BIN" ]; then
   echo "Selected explicitly configured PACKAGER_BIN=\"$PACKAGER_BIN\""
-elif [ -z "$OFS_OCL_ENV_USE_BSP_PACKAGER" ] && PACKAGER_BIN="$(command -v packager)"; then
+elif [ -z "$OFS_ASP_ENV_USE_BSP_PACKAGER" ] && PACKAGER_BIN="$(command -v packager)"; then
   echo "Detected PACKAGER_BIN=\"$PACKAGER_BIN\" from \$PATH search"
 else
   echo "Attempting fallback to BSP copy of packager"
