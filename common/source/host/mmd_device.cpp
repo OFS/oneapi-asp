@@ -233,14 +233,6 @@ Device::Device(uint64_t obj_id)
 
   fpgaDestroyProperties(&props);
 
-  if (uuid_compare(svm_guid, guid) == 0) {
-    //fprintf(stderr,"svm_guid detected; setting mem_capability_support to 1 \n");
-    mem_capability_support = 1;
-  } else {
-    //fprintf(stderr,"svm_guid not detected; setting mem_capability_support to 0 \n");
-    mem_capability_support = 0;
-  }
-
   // TODO: Better encapsulation of how BSP variant is related to the DDR offset
   // value.
   if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
@@ -248,6 +240,14 @@ Device::Device(uint64_t obj_id)
     if(std::getenv("MMD_ENABLE_DEBUG")){
       DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     }
+  }
+
+  if (uuid_compare(svm_guid, guid) == 0) {
+    //fprintf(stderr,"svm_guid detected; setting mem_capability_support to 1 \n");
+    mem_capability_support = 1;
+  } else {
+    //fprintf(stderr,"svm_guid not detected; setting mem_capability_support to 0 \n");
+    mem_capability_support = 0;
   }
 
   if (uuid_compare(guid, svm_guid) == 0) {
