@@ -12,7 +12,8 @@
 // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 // OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+// Copyright 2022 Intel Corporation
+// SPDX-License-Identifier: MIT
 
 #include <string.h> 
 #include <cstring> 
@@ -46,7 +47,7 @@ public:
 
   ~iopipes();
 
-  void setup_iopipes_asp(fpga_handle);
+  bool setup_iopipes_asp(fpga_handle);
 
   private:
     int mmd_handle_;
