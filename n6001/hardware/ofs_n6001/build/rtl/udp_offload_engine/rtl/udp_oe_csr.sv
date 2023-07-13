@@ -77,12 +77,34 @@ module udp_oe_csr
                     CSR_RX_STATUS_REG_ADDR_CH0:         uoe_csr_avmm.readdata <= 'b0;
                     
                     //Channel-1
-                    CSR_CHAN_INFO_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= {47'h0,1'b1,8'h1,8'h10};
-                    //CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {62'b0, udp_oe_pipe_ctrl_sts[1].tx_rst,udp_oe_pipe_ctrl_sts[1].rx_rst};
-                    //CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= {udp_oe_pipe_ctrl_sts[1].tx_status,udp_oe_pipe_ctrl_sts[1].rx_status};
-                    //CSR_MISC_CTRL_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
-                    //CSR_TX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
-                    //CSR_RX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                    `ifdef ASP_ENABLE_IOPIPE1
+                        CSR_CHAN_INFO_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h1,8'h10};
+                        CSR_RESET_REG_ADDR_CH1    :         uoe_csr_avmm.readdata <= {62'b0, udp_oe_pipe_ctrl_sts[1].tx_rst,udp_oe_pipe_ctrl_sts[1].rx_rst};
+                        CSR_STATUS_REG_ADDR_CH1   :         uoe_csr_avmm.readdata <= {udp_oe_pipe_ctrl_sts[1].tx_status,udp_oe_pipe_ctrl_sts[1].rx_status};
+                        CSR_MISC_CTRL_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                        CSR_TX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                        CSR_RX_STATUS_REG_ADDR_CH1:         uoe_csr_avmm.readdata <= 'b0;
+                    `endif //ASP_ENABLE_IOPIPE1
+                    
+                    //Channel-2
+                    `ifdef ASP_ENABLE_IOPIPE2
+                        CSR_CHAN_INFO_REG_ADDR_CH2:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h2,8'h10};
+                        CSR_RESET_REG_ADDR_CH2    :         uoe_csr_avmm.readdata <= {62'b0, udp_oe_pipe_ctrl_sts[2].tx_rst,udp_oe_pipe_ctrl_sts[2].rx_rst};
+                        CSR_STATUS_REG_ADDR_CH2   :         uoe_csr_avmm.readdata <= {udp_oe_pipe_ctrl_sts[2].tx_status,udp_oe_pipe_ctrl_sts[2].rx_status};
+                        CSR_MISC_CTRL_REG_ADDR_CH2:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                        CSR_TX_STATUS_REG_ADDR_CH2:         uoe_csr_avmm.readdata <= 'b0;
+                        CSR_RX_STATUS_REG_ADDR_CH2:         uoe_csr_avmm.readdata <= 'b0;
+                    `endif //ASP_ENABLE_IOPIPE2
+                    
+                    //Channel-3
+                    `ifdef ASP_ENABLE_IOPIPE3
+                        CSR_CHAN_INFO_REG_ADDR_CH3:         uoe_csr_avmm.readdata <= {47'h0,1'b0,8'h3,8'h10};
+                        CSR_RESET_REG_ADDR_CH3    :         uoe_csr_avmm.readdata <= {62'b0, udp_oe_pipe_ctrl_sts[3].tx_rst,udp_oe_pipe_ctrl_sts[3].rx_rst};
+                        CSR_STATUS_REG_ADDR_CH3   :         uoe_csr_avmm.readdata <= {udp_oe_pipe_ctrl_sts[3].tx_status,udp_oe_pipe_ctrl_sts[3].rx_status};
+                        CSR_MISC_CTRL_REG_ADDR_CH3:         uoe_csr_avmm.readdata <= udp_oe_ctrl.misc_ctrl;
+                        CSR_TX_STATUS_REG_ADDR_CH3:         uoe_csr_avmm.readdata <= 'b0;
+                        CSR_RX_STATUS_REG_ADDR_CH3:         uoe_csr_avmm.readdata <= 'b0;
+                    `endif //ASP_ENABLE_IOPIPE3
                     
                     default:                         uoe_csr_avmm.readdata <= REG_RD_BADADDR_DATA;
                 endcase
@@ -149,8 +171,21 @@ module udp_oe_csr
                 //need to clean this up with a for-loop and/or an array
                 CSR_RESET_REG_ADDR_CH0:             {udp_oe_pipe_ctrl_sts[0].tx_rst, udp_oe_pipe_ctrl_sts[0].rx_rst} <= uoe_csr_avmm.writedata[1:0];
                 CSR_MISC_CTRL_REG_ADDR_CH0:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
-                //CSR_RESET_REG_ADDR_CH1:             {udp_oe_pipe_ctrl_sts[1].tx_rst, udp_oe_pipe_ctrl_sts[1].rx_rst} <= uoe_csr_avmm.writedata[1:0];
-                //CSR_MISC_CTRL_REG_ADDR_CH1:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                //Channel-1
+                `ifdef ASP_ENABLE_IOPIPE1
+                    CSR_RESET_REG_ADDR_CH1:             {udp_oe_pipe_ctrl_sts[1].tx_rst, udp_oe_pipe_ctrl_sts[1].rx_rst} <= uoe_csr_avmm.writedata[1:0];
+                    CSR_MISC_CTRL_REG_ADDR_CH1:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                `endif //ASP_ENABLE_IOPIPE1
+                //Channel-2
+                `ifdef ASP_ENABLE_IOPIPE2
+                    CSR_RESET_REG_ADDR_CH2:             {udp_oe_pipe_ctrl_sts[2].tx_rst, udp_oe_pipe_ctrl_sts[2].rx_rst} <= uoe_csr_avmm.writedata[1:0];
+                    CSR_MISC_CTRL_REG_ADDR_CH2:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                `endif //ASP_ENABLE_IOPIPE2
+                //Channel-3
+                `ifdef ASP_ENABLE_IOPIPE3
+                    CSR_RESET_REG_ADDR_CH3:             {udp_oe_pipe_ctrl_sts[3].tx_rst, udp_oe_pipe_ctrl_sts[3].rx_rst} <= uoe_csr_avmm.writedata[1:0];
+                    CSR_MISC_CTRL_REG_ADDR_CH3:         udp_oe_ctrl.misc_ctrl                 <= uoe_csr_avmm.writedata;
+                `endif //ASP_ENABLE_IOPIPE3
             endcase
         end
     
@@ -170,14 +205,23 @@ module udp_oe_csr
             udp_oe_ctrl.csr_rst               <= 'h0;
             udp_oe_ctrl.misc_ctrl             <= 'h0;
             
-            //for (i = 0; i < dc_bsp_pkg::IO_PIPES_NUM_CHAN; i++) begin
-                udp_oe_pipe_ctrl_sts[0].tx_rst    <= 'b0;
-                udp_oe_pipe_ctrl_sts[0].rx_rst    <= 'b0;
-                //udp_oe_pipe_ctrl_sts[1].tx_rst    <= 'b0;
-                //udp_oe_pipe_ctrl_sts[1].rx_rst    <= 'b0;
-            //end
-            //udp_oe_pipe_ctrl_sts[1].tx_rst    <= 'b0;
-            //udp_oe_pipe_ctrl_sts[1].rx_rst    <= 'b0;
+            udp_oe_pipe_ctrl_sts[0].tx_rst    <= 'b0;
+            udp_oe_pipe_ctrl_sts[0].rx_rst    <= 'b0;
+            //Channel-1
+            `ifdef ASP_ENABLE_IOPIPE1
+                udp_oe_pipe_ctrl_sts[1].tx_rst    <= 'b0;
+                udp_oe_pipe_ctrl_sts[1].rx_rst    <= 'b0;
+            `endif //ASP_ENABLE_IOPIPE1
+            //Channel-2
+            `ifdef ASP_ENABLE_IOPIPE2
+                udp_oe_pipe_ctrl_sts[2].tx_rst    <= 'b0;
+                udp_oe_pipe_ctrl_sts[2].rx_rst    <= 'b0;
+            `endif //ASP_ENABLE_IOPIPE2
+            //Channel-3
+            `ifdef ASP_ENABLE_IOPIPE3
+                udp_oe_pipe_ctrl_sts[3].tx_rst    <= 'b0;
+                udp_oe_pipe_ctrl_sts[3].rx_rst    <= 'b0;
+            `endif //ASP_ENABLE_IOPIPE3
         end
     end
   

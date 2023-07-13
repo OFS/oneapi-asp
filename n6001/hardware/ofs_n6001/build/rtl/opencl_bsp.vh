@@ -19,6 +19,9 @@
     
     //enable UDP offload engine and I/O channels
     `define INCLUDE_UDP_OFFLOAD_ENGINE 1
+    //`define ASP_ENABLE_IOPIPE1 1
+    //`define ASP_ENABLE_IOPIPE2 1
+    //`define ASP_ENABLE_IOPIPE3 1
     
     //enable kernel interrupts
     //`define USE_KERNEL_IRQ 1

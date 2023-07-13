@@ -246,12 +246,30 @@ kernel_system kernel_system_inst (
         .udp_in_valid          (udp_avst_to_kernel[0].valid),
         .udp_in_data           (udp_avst_to_kernel[0].data),
         .udp_in_ready          (udp_avst_to_kernel[0].ready)
-        //,.udp_out_valid        (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
-        //.udp_out_data          (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].data),
-        //.udp_out_ready         (udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0].ready),
-        //.udp_in_valid          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].valid),
-        //.udp_in_data           (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].data),
-        //.udp_in_ready          (udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0].ready)
+        `ifdef ASP_ENABLE_IOPIPE1
+            ,.udp_out_1_valid        (udp_avst_from_kernel[1].valid),
+            .udp_out_1_data          (udp_avst_from_kernel[1].data),
+            .udp_out_1_ready         (udp_avst_from_kernel[1].ready),
+            .udp_in_1_valid          (udp_avst_to_kernel[1].valid),
+            .udp_in_1_data           (udp_avst_to_kernel[1].data),
+            .udp_in_1_ready          (udp_avst_to_kernel[1].ready)
+        `endif //ASP_ENABLE_IOPIPE1
+        `ifdef ASP_ENABLE_IOPIPE2
+            ,.udp_out_2_valid        (udp_avst_from_kernel[2].valid),
+            .udp_out_2_data          (udp_avst_from_kernel[2].data),
+            .udp_out_2_ready         (udp_avst_from_kernel[2].ready),
+            .udp_in_2_valid          (udp_avst_to_kernel[2].valid),
+            .udp_in_2_data           (udp_avst_to_kernel[2].data),
+            .udp_in_2_ready          (udp_avst_to_kernel[2].ready)
+        `endif //ASP_ENABLE_IOPIPE2
+        `ifdef ASP_ENABLE_IOPIPE3
+            ,.udp_out_3_valid        (udp_avst_from_kernel[3].valid),
+            .udp_out_3_data          (udp_avst_from_kernel[3].data),
+            .udp_out_3_ready         (udp_avst_from_kernel[3].ready),
+            .udp_in_3_valid          (udp_avst_to_kernel[3].valid),
+            .udp_in_3_data           (udp_avst_to_kernel[3].data),
+            .udp_in_3_ready          (udp_avst_to_kernel[3].ready)
+        `endif //ASP_ENABLE_IOPIPE3
     `endif
 );
 
