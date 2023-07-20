@@ -41,6 +41,7 @@
 #undef _GNU_SOURCE
 
 #include "aocl_mmd.h"
+#include "mmd.h"
 
 #define ACL_BOARD_PKG_NAME "ofs"
 #define ACL_VENDOR_NAME "Intel(R) Corporation"
@@ -55,6 +56,8 @@
 #define DEFAULT_MINNUMBYTES (512ULL * INT_KB)
 
 #define DIAGNOSE_FAILED -1
+
+bool diagnose = 1;
 
 bool mmd_dma_setup_check();
 bool mmd_check_fme_driver_for_pr();

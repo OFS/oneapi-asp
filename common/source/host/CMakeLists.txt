@@ -20,6 +20,7 @@ set(MMD_SRC
    kernel_interrupt.cpp
    mmd_dma.cpp
    zlib_inflate.c
+   mmd_iopipes.cpp
 )
 
 add_library(intel_opae_mmd SHARED ${MMD_SRC})

@@ -21,6 +21,7 @@
 #include "kernel_interrupt.h"
 #include "mmd_dma.h"
 #include "pkg_editor.h"
+#include "mmd_iopipes.h"
 
 // Tune delay for simulation or HW. Eventually delay
 // should be removed for HW, may still be needed for ASE simulation
@@ -59,6 +60,7 @@
 
 // Below is GUID for DMA
 #define DMA_BBB_GUID   "BC24AD4F-8738-F840-575F-BAB5B61A8DAE"
+#define IOPIPES_GUID "9c8560c5-729f-f873-966d-1f07871d4396"
 
 #define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
 
@@ -168,6 +170,7 @@ private:
   void initialize_local_cpus_sysfs();
 
   bool find_dma_dfh_offsets();
+  bool find_iopipes_dfh_offsets();
 
   uint8_t bus;
   uint8_t device;
@@ -194,8 +197,10 @@ private:
   uint64_t mpf_mmio_offset;
   uint64_t dma_ch0_dfh_offset;
   uint64_t dma_ch1_dfh_offset;
+  uint64_t iopipes_dfh_offset;
   intel_opae_mmd::mmd_dma *dma_host_to_fpga;
   intel_opae_mmd::mmd_dma *dma_fpga_to_host;
+  intel_opae_mmd::iopipes *io_pipes;
 
   char *mmd_copy_buffer;
 
