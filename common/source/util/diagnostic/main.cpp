@@ -169,7 +169,7 @@ int scan_devices(const char *device_name) {
 
     // Temperature reported in celsius
     // anything below -273 is below absolute zero
-    // we return -999 is no BMC found or some other error and so no temperature returned by OPAE API calls
+    // we return -999 if no BMC found or some other error and so no temperature returned by OPAE API calls
     if (temperature > -273.15) {
       o_list_stream << std::left << std::setw(38) << " "
                     << "FPGA temperature = " << temperature << " degrees C.\n";
