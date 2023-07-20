@@ -173,7 +173,7 @@ int scan_devices(const char *device_name) {
     if (temperature > -273.15) {
       o_list_stream << std::left << std::setw(38) << " "
                     << "FPGA temperature = " << temperature << " degrees C.\n";
-    } else if (temperature == -999.000000){
+    } else {
       o_list_stream << std::left << std::setw(38) << " "
                     << "FPGA temperature = " << " NA \n";
     }
