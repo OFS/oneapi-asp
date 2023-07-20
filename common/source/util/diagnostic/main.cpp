@@ -167,11 +167,15 @@ int scan_devices(const char *device_name) {
       return -1;
     }
 
-    // There is a bug with Darby Creek where temperature is reported as 0.
-    // If this happens skip printing temperature
-    if (temperature > 0) {
+    // Temperature reported in celsius
+    // anything below -273 is below absolute zero
+    // we return -999 if no BMC found or some other error and so no temperature returned by OPAE API calls
+    if (temperature > -273.15) {
       o_list_stream << std::left << std::setw(38) << " "
                     << "FPGA temperature = " << temperature << " degrees C.\n";
+    } else {
+      o_list_stream << std::left << std::setw(38) << " "
+                    << "FPGA temperature = " << " NA \n";
     }
   }
 

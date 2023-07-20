@@ -909,9 +909,13 @@ float Device::get_temperature() {
   fpga_result res;
   res = fpgaTokenGetObject(fme_token, name, &obj, FPGA_OBJECT_GLOB);
   if (res != FPGA_OK) {
-    throw std::runtime_error(
-        std::string("Error reading temperature monitor from BMC : ") +
-        std::string(fpgaErrStr(res)));
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Error reading temperature monitor from BMC :");
+      DEBUG_LOG(" %s \n",fpgaErrStr(res));
+    }
+    fpgaDestroyObject(&obj);
+    temp = -999;
+    return temp;
   }
 
   uint64_t value = 0;
