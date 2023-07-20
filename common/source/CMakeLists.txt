@@ -6,13 +6,15 @@ project(a10_dcp)
 include(ExternalProject)
 include(CMakePrintHelpers)
 
-if(${OCL_BSP_AFU_ID} STREQUAL "N6001")
+if(${ASP_AFU_ID} STREQUAL "N6001")
   cmake_print_variables(CMAKE_BUILD_TYPE)
-  add_definitions(-DPCI_OCL_BSP_AFU_ID="51ED2F4A-FEA2-4261-A595-918500575509")
-  add_definitions(-DSVM_OCL_BSP_AFU_ID="5D9FEF7B-C491-4DCE-95FC-F979F6F061BE")
+  add_definitions(-DPCI_ASP_AFU_ID="51ED2F4A-FEA2-4261-A595-918500575509") # PCI ID for N6001
+  add_definitions(-DSVM_ASP_AFU_ID="5D9FEF7B-C491-4DCE-95FC-F979F6F061BE") # SVM/USM ID for N6001
+  add_definitions(-DBOARD_TYPE=1)                                          # we use board type as 1 for N6001
 else ()
-  add_definitions(-DPCI_OCL_BSP_AFU_ID="3BF773B0-4D46-44D5-9067-C884DEEF8C33")	
-  add_definitions(-DSVM_OCL_BSP_AFU_ID="BB664B90-4F03-46E6-BC04-DB601B45B75D")
+  add_definitions(-DPCI_ASP_AFU_ID="3BF773B0-4D46-44D5-9067-C884DEEF8C33") # PCI ID for D5005	
+  add_definitions(-DSVM_ASP_AFU_ID="BB664B90-4F03-46E6-BC04-DB601B45B75D") # SVM/USM ID for D5005
+  add_definitions(-DBOARD_TYPE=0)                                          # we use board type as 0 for D5005 
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
