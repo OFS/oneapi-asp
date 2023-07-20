@@ -78,7 +78,11 @@ Device::Device(uint64_t obj_id)
 
   board_type=BOARD_TYPE;
   if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : board_type = %d , n6001 board\n", board_type);
+    if(board_type == 1){
+      DEBUG_LOG("DEBUG LOG : board_type = %d , n6001 board\n", board_type);
+    }else{
+      DEBUG_LOG("DEBUG LOG : board_type = %d , d5005 board\n", board_type);
+    }
   }
 
   /** Below is fpga enumeration flow
