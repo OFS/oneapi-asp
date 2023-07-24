@@ -13,6 +13,8 @@
 #include <string.h>
 #include "mmd_device.h"
 #include "fpgaconf.h"
+#include "mmd_iopipes.h"
+#include "mmd.h"
 
 // TODO: better encapsulation of afu_bbb_util functions
 #include "afu_bbb_util.h"
@@ -44,8 +46,8 @@ Device::Device(uint64_t obj_id)
       port_handle(NULL), filter(NULL), port_token(NULL),
       mmio_token(NULL), mmio_handle(NULL),
       filter_fme(NULL), fme_token(NULL), guid(), ddr_offset(0), mpf_mmio_offset(0),
-      dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0),
-      dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), mmd_copy_buffer(NULL) {
+      dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0), iopipes_dfh_offset(0),
+      dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), io_pipes(NULL), mmd_copy_buffer(NULL) {
   // Note that this constructor is not thread-safe because next_mmd_handle
   // is shared between all class instances
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -394,6 +396,33 @@ bool Device::find_dma_dfh_offsets() {
   return true;
 }
 
+bool Device::find_iopipes_dfh_offsets() {
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  DEBUG_LOG("DEBUG LOG : Inside find_iopipes_dfh_offset()\n");
+  //iopipes_dfh_offset = 345;
+  //printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  uint64_t dfh_offset = 0;
+  uint64_t next_dfh_offset = 0;
+  if (find_dfh_by_guid(mmio_handle, IOPIPES_GUID, &dfh_offset,
+                       &next_dfh_offset)) {
+    iopipes_dfh_offset = dfh_offset;
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset, IOPIPES_GUID);
+    }
+    DEBUG_PRINT("IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset,
+                IOPIPES_GUID);
+  } else {
+      printf("IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+      DEBUG_LOG("DEBUG LOG : IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+    return false;
+  }
+  
+  assert(iopipes_dfh_offset != 0);
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+
+  return true;
+}
+
 /** initialize_bsp() function is used in aocl_mmd_open() API
  *  It resets AFC and reinitializes DMA, Kernel Interrupts if in use 
  */ 
@@ -491,6 +520,77 @@ bool Device::initialize_bsp() {
       DEBUG_LOG("DEBUG LOG : Error initializing FPGA -> HOST DMA channel \n");
     }
     return false;
+  }
+
+  /** IO Pipes initialization
+   ** Read from NUM_IOPIPES CSR and pass it to iopipes constructor call
+   ** so setup_oneapi_asp() call can use it to initialize the config, status CSRs for all the pipes.
+   */
+  bool iopipes_enabled = find_iopipes_dfh_offsets();
+  if(!diagnose && iopipes_enabled) {
+    DEBUG_LOG("DEBUG LOG : IO Pipes are enabled\n");
+    std::string local_ip_address;
+    std::string local_mac_address;
+    std::string local_netmask;
+    int local_udp_port=0;
+    std::string remote_ip_address;
+    std::string remote_mac_address;
+    int remote_udp_port=0;
+
+    if(std::getenv("LOCAL_IP_ADDRESS")){
+      local_ip_address = std::getenv("LOCAL_IP_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_IP_ADDRESS to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("LOCAL_MAC_ADDRESS")){
+      local_mac_address = std::getenv("LOCAL_MAC_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_MAC_ADDRESS to use IO PIPES\n");
+      return false;  
+    }
+
+    if(std::getenv("LOCAL_NETMASK")){
+      local_netmask = std::getenv("LOCAL_NETMASK");
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_NETMASK to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("LOCAL_UDP_PORT")){
+      local_udp_port = atoi(std::getenv("LOCAL_UDP_PORT"));
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_UDP_PORT to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("REMOTE_IP_ADDRESS")){
+      remote_ip_address = std::getenv("REMOTE_IP_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable REMOTE_IP_ADDRESS to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("REMOTE_MAC_ADDRESS")){
+      remote_mac_address = std::getenv("REMOTE_MAC_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable REMOTE_MAC_ADDRESS to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("REMOTE_UDP_PORT")){
+      remote_udp_port = atoi(std::getenv("REMOTE_UDP_PORT"));
+    } else{
+      fprintf(stderr, "Please set environment variable REMOTE_UDP_PORT to use IO PIPES\n");
+      return false;   
+    }
+
+    DEBUG_LOG("DEBUG LOG : Creating iopipes object and setting up iopipes\n");
+    io_pipes = new iopipes(mmd_handle, local_ip_address, local_mac_address, local_netmask, local_udp_port, remote_ip_address, remote_mac_address, remote_udp_port, iopipes_dfh_offset);
+    if(!(io_pipes->setup_iopipes_asp(mmio_handle))){
+      return false;
+    }
   }
   
   //set the magic-number memory location on the host

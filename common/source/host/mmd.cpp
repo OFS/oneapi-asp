@@ -39,6 +39,8 @@
 #include "fpgaconf.h"
 #include "zlib_inflate.h"
 
+bool diagnose = 0;
+
 using namespace intel_opae_mmd;
 
 #define ACL_DCP_ERROR_IF(COND, NEXT, ...)                                      \
