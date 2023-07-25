@@ -76,7 +76,6 @@ fi
 
 # Default branch to 'master' if the branch variable is not set
 if [ -z "${OPAE_SDK_REPO_BRANCH}" ]; then
-    #OPAE_SDK_REPO_BRANCH="release/2.5.0"
     OPAE_SDK_REPO_BRANCH="master"
 fi
 
