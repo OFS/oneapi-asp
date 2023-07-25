@@ -124,6 +124,6 @@ package udp_oe_pkg;
     parameter RX_DCFIFO_DEPTH = 2048;
     
     //allow intra-BSP loopback?
-    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 1;
+    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 0;
     
 endpackage : udp_oe_pkg
