@@ -50,7 +50,7 @@ and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to ofs-dev/work_ofs_ac_base_adp-A1/pr_build_template in FIM build area.
 
-Need to set **OFS_OCL_SHIM_ROOT** to point to opencl-asp/n6001.
+Need to set **OFS_OCL_SHIM_ROOT** to point to oneapi-asp/n6001.
 
 To generate oneAPI-ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
