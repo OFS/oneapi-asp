@@ -29,7 +29,6 @@ running tests
 
 ## ASP variants
 
-
 The `hardware` folder contains subdirectories with the 2 different oneAPI-ASP variants:
 
 * `ofs_n6001_usm`: ASP that supports shared virtual memory between host and device. This 
@@ -50,7 +49,6 @@ The setup_bsp.py script copies the required files from the FIM pr-release-templa
 and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
-
 
 Need to set **OFS_ASP_ROOT** to point to oneapi-asp/n6001.
 
