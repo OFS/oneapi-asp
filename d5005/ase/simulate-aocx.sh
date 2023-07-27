@@ -3,7 +3,7 @@
 # Copyright 2022 Intel Corporation
 # SPDX-License-Identifier: MIT
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   echo "Running ${BASH_SOURCE[0]} with debug logging"
   set -x
 fi

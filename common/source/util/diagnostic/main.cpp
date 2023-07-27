@@ -41,6 +41,7 @@
 #undef _GNU_SOURCE
 
 #include "aocl_mmd.h"
+#include "mmd.h"
 
 #define ACL_BOARD_PKG_NAME "ofs"
 #define ACL_VENDOR_NAME "Intel(R) Corporation"
@@ -55,6 +56,8 @@
 #define DEFAULT_MINNUMBYTES (512ULL * INT_KB)
 
 #define DIAGNOSE_FAILED -1
+
+bool diagnose = 1;
 
 bool mmd_dma_setup_check();
 bool mmd_check_fme_driver_for_pr();
@@ -167,11 +170,15 @@ int scan_devices(const char *device_name) {
       return -1;
     }
 
-    // There is a bug with Darby Creek where temperature is reported as 0.
-    // If this happens skip printing temperature
-    if (temperature > 0) {
+    // Temperature reported in celsius
+    // anything below -273 is below absolute zero
+    // we return -999 if no BMC found or some other error and so no temperature returned by OPAE API calls
+    if (temperature > -273.15) {
       o_list_stream << std::left << std::setw(38) << " "
                     << "FPGA temperature = " << temperature << " degrees C.\n";
+    } else {
+      o_list_stream << std::left << std::setw(38) << " "
+                    << "FPGA temperature = " << " NA \n";
     }
   }
 

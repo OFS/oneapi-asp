@@ -5,7 +5,7 @@
 
 echo "Start of setup.sh"
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   echo "Running ${BASH_SOURCE[0]} with debug logging"
   set -x
 fi
@@ -72,7 +72,7 @@ if ! command -v vcs; then
   return 1
 fi
 
-export OFS_OCL_ENV_ENABLE_ASE=1
+export OFS_ASP_ENV_ENABLE_ASE=1
 if [ ! -f "$BSP_ROOT/hardware/ofs_n6001/ofs_top.qpf" ]; then
   echo "The qpf file doesn't exist, so we need to run build-bsp.sh"
   "$BSP_ROOT/scripts/build-bsp.sh"
@@ -108,8 +108,8 @@ echo "CL_CONTEXT_COMPILER_MODE_INTELFPGA is $CL_CONTEXT_COMPILER_MODE_INTELFPGA"
 export PATH="$LIBOPAE_C_ROOT/bin:$LIBOPAE_C_ASE_ROOT/bin:$PATH"
 echo "added libopae-c-root/bin to PATH"
 echo "LIBOPAE_C_ROOT is $LIBOPAE_C_ROOT"
-export OFS_OCL_ENV_ENABLE_ASE=1
-echo "export OFS_OCL_ENV_ENABLE_ASE=1"
+export OFS_ASP_ENV_ENABLE_ASE=1
+echo "export OFS_ASP_ENV_ENABLE_ASE=1"
 
 # shellcheck source=/dev/null
 echo "About to run init_opencl.sh"

@@ -39,6 +39,8 @@
 #include "fpgaconf.h"
 #include "zlib_inflate.h"
 
+bool diagnose = 0;
+
 using namespace intel_opae_mmd;
 
 #define ACL_DCP_ERROR_IF(COND, NEXT, ...)                                      \
@@ -521,14 +523,14 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
   }
 
   if (bsp_only) {
-    if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
+    if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
       if(std::getenv("MMD_ENABLE_DEBUG")){ 
         DEBUG_LOG("Error parsing pci guid '%s'\n", pci_guid);
       }
       return false;
     }
 
-    if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
+    if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
       if(std::getenv("MMD_ENABLE_DEBUG")){ 
         DEBUG_LOG("Error parsing svm guid '%s'\n", svm_guid);
       }
@@ -944,11 +946,11 @@ int aocl_mmd_get_offline_info(aocl_mmd_offline_info_t requested_info_id,
 
   if (!initialized) {
     mem_type_info = (int)AOCL_MMD_PHYSICAL_MEMORY;
-    if (get_offline_num_acl_boards(SVM_OCL_BSP_AFU_ID) > 0) {
+    if (get_offline_num_acl_boards(SVM_ASP_AFU_ID) > 0) {
       mem_type_info |= (int)AOCL_MMD_SVM_COARSE_GRAIN_BUFFER;
     }
-    num_acl_boards = get_offline_num_acl_boards(SVM_OCL_BSP_AFU_ID) +
-                     get_offline_num_acl_boards(PCI_OCL_BSP_AFU_ID);
+    num_acl_boards = get_offline_num_acl_boards(SVM_ASP_AFU_ID) +
+                     get_offline_num_acl_boards(PCI_ASP_AFU_ID);
     success = get_offline_board_names(boards, true);
     initialized = true;
   }

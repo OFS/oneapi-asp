@@ -14,6 +14,6 @@
 */
 int mmd_device_reprogram(const char *device_name, void *data,
                               size_t data_size);
-
+extern bool diagnose;
 #define DEBUG_LOG(...) fprintf(stderr, __VA_ARGS__)
 #endif // MMD_H

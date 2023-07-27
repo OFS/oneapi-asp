@@ -6,11 +6,11 @@
 ASE_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
 BSP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
-if [ -z "$OFS_OCL_ENV_ENABLE_ASE" ]; then
+if [ -z "$OFS_ASP_ENV_ENABLE_ASE" ]; then
   echo "Error: must setup ASE environment before compiling kernel"
   exit 1
 fi 

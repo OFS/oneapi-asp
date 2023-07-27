@@ -12,7 +12,6 @@
 #
 #   OFS_PLATFORM_AFU_BBB: root of OFS platform used for BSP
 #   LIBOPAE_C_ROOT: path to location where OPAE is installed
-#   ARC_SITE: only set for Intel PSG compute farm
 #   OPENCL_ASE_SIM: used as input for setup-bsp.py to determine if ASE is used
 #   OPAE_PLATFORM_ROOT: point to location where platform files are located
 #

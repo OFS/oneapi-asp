@@ -13,16 +13,13 @@
 #include <string.h>
 #include "mmd_device.h"
 #include "fpgaconf.h"
+#include "mmd_iopipes.h"
+#include "mmd.h"
 
 // TODO: better encapsulation of afu_bbb_util functions
 #include "afu_bbb_util.h"
 
 #define MMD_COPY_BUFFER_SIZE (2 * 1024 * 1024)
-#define MSGDMA_BBB_GUID   "BC24AD4F-8738-F840-575F-BAB5B61A8DAE"
-#define MSGDMA_BBB_SIZE 256
-
-#define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
-#define BSP_AFU_GUID "96ef4230-dafa-cb5f-18b7-9ffa2ee54aa0"
 
 using namespace intel_opae_mmd;
 
@@ -49,8 +46,8 @@ Device::Device(uint64_t obj_id)
       port_handle(NULL), filter(NULL), port_token(NULL),
       mmio_token(NULL), mmio_handle(NULL),
       filter_fme(NULL), fme_token(NULL), guid(), ddr_offset(0), mpf_mmio_offset(0),
-      dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0),
-      dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), mmd_copy_buffer(NULL) {
+      dma_ch0_dfh_offset(0), dma_ch1_dfh_offset(0), iopipes_dfh_offset(0),
+      dma_host_to_fpga(NULL), dma_fpga_to_host(NULL), io_pipes(NULL), mmd_copy_buffer(NULL) {
   // Note that this constructor is not thread-safe because next_mmd_handle
   // is shared between all class instances
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -78,47 +75,16 @@ Device::Device(uint64_t obj_id)
   uint32_t num_matches;
   uint32_t i;
   fpga_token *tokens = nullptr;
-  fpga_guid svm_guid, pci_guid;
-  fpga_guid d5005_guid, n6001_guid;
+  fpga_guid svm_guid;
   fpga_properties props = nullptr;
 
-  /** We use two seperate BSPs for PCIe and USM (Unified Shared Memory) Support
-   *  We use two GUIDs to distinguish and determine which BSP we are using 
-   */
-  if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  board_type=BOARD_TYPE;
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    if(board_type == 1){
+      DEBUG_LOG("DEBUG LOG : board_type = %d , n6001 board\n", board_type);
+    }else{
+      DEBUG_LOG("DEBUG LOG : board_type = %d , d5005 board\n", board_type);
     }
-  }
-
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
-    }
-  }
-
-  if (uuid_parse(N6001_PCI_OCL_BSP_AFU_ID, n6001_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
-    }
-  }
-
-  if (uuid_parse(D5005_PCI_OCL_BSP_AFU_ID, d5005_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
-    }
-  }
-
-  if (uuid_compare(pci_guid, n6001_guid) == 0) {
-    //fprintf(stderr,"n6001 pci guid detected; setting board_type to 1 \n");
-    board_type = 1;
-  } else {
-    //fprintf(stderr,"d5005 pci guid detected; setting board_type to 0 \n");
-    board_type = 0;
   }
 
   /** Below is fpga enumeration flow
@@ -273,21 +239,21 @@ Device::Device(uint64_t obj_id)
 
   fpgaDestroyProperties(&props);
 
+  // TODO: Better encapsulation of how BSP variant is related to the DDR offset
+  // value.
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
+    }
+  }
+
   if (uuid_compare(svm_guid, guid) == 0) {
     //fprintf(stderr,"svm_guid detected; setting mem_capability_support to 1 \n");
     mem_capability_support = 1;
   } else {
     //fprintf(stderr,"svm_guid not detected; setting mem_capability_support to 0 \n");
     mem_capability_support = 0;
-  }
-
-  // TODO: Better encapsulation of how BSP variant is related to the DDR offset
-  // value.
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
-    }
   }
 
   if (uuid_compare(guid, svm_guid) == 0) {
@@ -395,14 +361,14 @@ void Device::initialize_fme_sysfs() {
 bool Device::find_dma_dfh_offsets() {
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
-  if (find_dfh_by_guid(mmio_handle, MSGDMA_BBB_GUID, &dfh_offset,
+  if (find_dfh_by_guid(mmio_handle, DMA_BBB_GUID, &dfh_offset,
                        &next_dfh_offset)) {
     dma_ch0_dfh_offset = dfh_offset;
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset, MSGDMA_BBB_GUID);
+      DEBUG_LOG("DEBUG LOG : DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset, DMA_BBB_GUID);
     }
     DEBUG_PRINT("DMA CH1 offset: 0x%lX\t GUID: %s\n", dma_ch0_dfh_offset,
-                MSGDMA_BBB_GUID);
+                DMA_BBB_GUID);
   } else {
     fprintf(stderr,
             "Error initalizing DMA: Cannot find DMA channel 0 DFH offset\n");
@@ -410,13 +376,13 @@ bool Device::find_dma_dfh_offsets() {
   }
 
   dfh_offset += 0;//next_dfh_offset;
-  if (find_dfh_by_guid(mmio_handle, MSGDMA_BBB_GUID, &dfh_offset,
+  if (find_dfh_by_guid(mmio_handle, DMA_BBB_GUID, &dfh_offset,
                        &next_dfh_offset)) {
     dma_ch1_dfh_offset = dfh_offset;
     DEBUG_PRINT("DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset,
-                MSGDMA_BBB_GUID);
+                DMA_BBB_GUID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset, MSGDMA_BBB_GUID);
+      DEBUG_LOG("DEBUG LOG : DMA CH2 offset: 0x%lX\t GUID: %s\n", dma_ch1_dfh_offset, DMA_BBB_GUID);
     }
   } else {
     fprintf(stderr,
@@ -426,6 +392,33 @@ bool Device::find_dma_dfh_offsets() {
 
   assert(dma_ch0_dfh_offset != 0);
   assert(dma_ch1_dfh_offset != 0);
+
+  return true;
+}
+
+bool Device::find_iopipes_dfh_offsets() {
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  DEBUG_LOG("DEBUG LOG : Inside find_iopipes_dfh_offset()\n");
+  //iopipes_dfh_offset = 345;
+  //printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
+  uint64_t dfh_offset = 0;
+  uint64_t next_dfh_offset = 0;
+  if (find_dfh_by_guid(mmio_handle, IOPIPES_GUID, &dfh_offset,
+                       &next_dfh_offset)) {
+    iopipes_dfh_offset = dfh_offset;
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset, IOPIPES_GUID);
+    }
+    DEBUG_PRINT("IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset,
+                IOPIPES_GUID);
+  } else {
+      printf("IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+      DEBUG_LOG("DEBUG LOG : IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+    return false;
+  }
+  
+  assert(iopipes_dfh_offset != 0);
+  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
 
   return true;
 }
@@ -527,6 +520,77 @@ bool Device::initialize_bsp() {
       DEBUG_LOG("DEBUG LOG : Error initializing FPGA -> HOST DMA channel \n");
     }
     return false;
+  }
+
+  /** IO Pipes initialization
+   ** Read from NUM_IOPIPES CSR and pass it to iopipes constructor call
+   ** so setup_oneapi_asp() call can use it to initialize the config, status CSRs for all the pipes.
+   */
+  bool iopipes_enabled = find_iopipes_dfh_offsets();
+  if(!diagnose && iopipes_enabled) {
+    DEBUG_LOG("DEBUG LOG : IO Pipes are enabled\n");
+    std::string local_ip_address;
+    std::string local_mac_address;
+    std::string local_netmask;
+    int local_udp_port=0;
+    std::string remote_ip_address;
+    std::string remote_mac_address;
+    int remote_udp_port=0;
+
+    if(std::getenv("LOCAL_IP_ADDRESS")){
+      local_ip_address = std::getenv("LOCAL_IP_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_IP_ADDRESS to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("LOCAL_MAC_ADDRESS")){
+      local_mac_address = std::getenv("LOCAL_MAC_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_MAC_ADDRESS to use IO PIPES\n");
+      return false;  
+    }
+
+    if(std::getenv("LOCAL_NETMASK")){
+      local_netmask = std::getenv("LOCAL_NETMASK");
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_NETMASK to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("LOCAL_UDP_PORT")){
+      local_udp_port = atoi(std::getenv("LOCAL_UDP_PORT"));
+    } else{
+      fprintf(stderr, "Please set environment variable LOCAL_UDP_PORT to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("REMOTE_IP_ADDRESS")){
+      remote_ip_address = std::getenv("REMOTE_IP_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable REMOTE_IP_ADDRESS to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("REMOTE_MAC_ADDRESS")){
+      remote_mac_address = std::getenv("REMOTE_MAC_ADDRESS");
+    } else{
+      fprintf(stderr, "Please set environment variable REMOTE_MAC_ADDRESS to use IO PIPES\n");
+      return false;   
+    }
+
+    if(std::getenv("REMOTE_UDP_PORT")){
+      remote_udp_port = atoi(std::getenv("REMOTE_UDP_PORT"));
+    } else{
+      fprintf(stderr, "Please set environment variable REMOTE_UDP_PORT to use IO PIPES\n");
+      return false;   
+    }
+
+    DEBUG_LOG("DEBUG LOG : Creating iopipes object and setting up iopipes\n");
+    io_pipes = new iopipes(mmd_handle, local_ip_address, local_mac_address, local_netmask, local_udp_port, remote_ip_address, remote_mac_address, remote_udp_port, iopipes_dfh_offset);
+    if(!(io_pipes->setup_iopipes_asp(mmio_handle))){
+      return false;
+    }
   }
   
   //set the magic-number memory location on the host
@@ -689,17 +753,17 @@ int Device::program_bitstream(uint8_t *data, size_t data_size) {
 
   fpga_guid svm_guid, pci_guid;
 
-  if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG :  Error parsing guid '%s' \n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG :  Error parsing guid '%s' \n", PCI_ASP_AFU_ID);
     }
   }
 
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n",SVM_OCL_BSP_AFU_ID );
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n",SVM_ASP_AFU_ID );
     }
   }
 
@@ -824,17 +888,17 @@ bool Device::bsp_loaded() {
   fpga_properties prop;
   fpga_result res;
 
-  if (uuid_parse(PCI_OCL_BSP_AFU_ID, pci_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", PCI_OCL_BSP_AFU_ID);
+  if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", PCI_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", PCI_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", PCI_ASP_AFU_ID);
     }
     return false;
   }
-  if (uuid_parse(SVM_OCL_BSP_AFU_ID, svm_guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", SVM_OCL_BSP_AFU_ID);
+  if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", SVM_OCL_BSP_AFU_ID);
+      DEBUG_LOG("DEBUG LOG : Error parsing guid '%s' \n", SVM_ASP_AFU_ID);
     }
     return false;
   }
@@ -909,9 +973,13 @@ float Device::get_temperature() {
   fpga_result res;
   res = fpgaTokenGetObject(fme_token, name, &obj, FPGA_OBJECT_GLOB);
   if (res != FPGA_OK) {
-    throw std::runtime_error(
-        std::string("Error reading temperature monitor from BMC : ") +
-        std::string(fpgaErrStr(res)));
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Error reading temperature monitor from BMC :");
+      DEBUG_LOG(" %s \n",fpgaErrStr(res));
+    }
+    fpgaDestroyObject(&obj);
+    temp = -999;
+    return temp;
   }
 
   uint64_t value = 0;
