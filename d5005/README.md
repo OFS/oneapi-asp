@@ -50,9 +50,7 @@ and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
-
 Need to set **OFS_ASP_ROOT** to point to oneapi-asp/d5005.
-
 
 To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
