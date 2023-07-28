@@ -210,23 +210,6 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     copy_glob(src_syn_top_files,dst_build_path)
     #print("done copying the contents of syn_top into build/")
     shutil.rmtree(src_syn_top_path, ignore_errors=True)
-    
-    lib_src_path = (os.path.join(bsp_qsf_dir, 'src'))
-    lib_ipss_path = (os.path.join(bsp_qsf_dir, 'ipss'))
-    lib_ip_lib_path = (os.path.join(bsp_qsf_dir, 'ip_lib'))
-    shutil.rmtree(lib_ip_lib_path, ignore_errors=True)
-    os.mkdir(lib_ip_lib_path)
-    copy_glob(lib_src_path,lib_ip_lib_path)
-    copy_glob(lib_ipss_path,lib_ip_lib_path)
-    #copy the ip_lib/ folder from work directory into build/../
-    ip_lib_dir_name="ip_lib"
-    src_ip_lib_path=get_dir_path(ip_lib_dir_name,bsp_qsf_dir)
-    dst_ip_lib_path=(os.path.join(dst_build_path, '../'))
-    #print("src_ip_lib_path is %s; dst_ip_lib_path is %s" % (src_ip_lib_path,dst_ip_lib_path) )
-    copy_glob(src_ip_lib_path,dst_ip_lib_path)
-    #print("done copying the contents of ip_lib into build/../")
-    #shutil.rmtree(src_ip_lib_path, ignore_errors=True)
-    
     # create quartus project revision for opencl kernel qsf
     kernel_qsf_path = os.path.join(bsp_dir, 'afu_opencl_kernel.qsf')
     #print ("kernel_qsf_path is %s\n" % kernel_qsf_path)
@@ -257,11 +240,6 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     afu_flat_qsf_path=os.path.join(bsp_qsf_dir, 'afu_flat.qsf')
     shutil.move(iofs_pr_afu_qsf_file,afu_flat_qsf_path)
     
-    #write some stuff into afu_flat.qsf - this is to replace some lines in iofs_pr_afu_sources.tcl where the paths aren't correct
-    with open(afu_flat_qsf_path, 'a') as f:
-        f.write('set_global_assignment -name SEARCH_PATH "./platform"\n')
-        f.write('set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "./platform/ofs_plat_if/par/ofs_plat_if_addenda.qsf"\n')
-
     #remove the hw folder; it isn't needed
     rel_template_hw_folder_path=os.path.join(bsp_qsf_dir, '../hw')
     shutil.rmtree(rel_template_hw_folder_path, ignore_errors=True)
@@ -269,11 +247,10 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #remove the paths and files listed in the iofs_pr_afu_sources.tcl file
     iofs_pr_afu_source_tcl_file=os.path.join(bsp_qsf_dir, 'iofs_pr_afu_sources.tcl')
     #this still needs to be done in order to eliminate Quartus warnings
-    replace_lines_in_file(iofs_pr_afu_source_tcl_file, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "../../', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "../../')
+    #replace_lines_in_file(iofs_pr_afu_source_tcl_file, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "../../', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "../../')
+    replace_text_in_file(iofs_pr_afu_source_tcl_file, '../../', '$::env(BUILD_ROOT_REL)/')
     #replace_lines_in_file(afu_flat_qsf_path, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl')
     replace_lines_in_file(iofs_pr_afu_source_tcl_file, 'set FIM_SCRIPT_DIR "../setup"', 'set FIM_SCRIPT_DIR "./syn/setup"')
-    #hierarchy is different
-    replace_lines_in_file(iofs_pr_afu_source_tcl_file, '"../../..', '".')
 
     # set up paths correctly to find afu_main.tcl
     replace_lines_in_file(iofs_pr_afu_source_tcl_file, "#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE \"../.././ofs-common/src/fpga_family/stratix10/afu_main.tcl\"", "set_global_assignment -name SOURCE_TCL_SCRIPT_FILE $::env(BUILD_ROOT_REL)/ofs-common/src/fpga_family/stratix10/afu_main.tcl")
@@ -325,7 +302,7 @@ def remove_lines_in_file(file_name, search_text):
             f.write(line)
 
 
-# replace search_text with replace_text in file
+# replace a line containing search_text with replace_text in file
 def replace_lines_in_file(file_name, search_text, replace_text):
     lines = []
     with open(file_name) as f:
@@ -339,6 +316,15 @@ def replace_lines_in_file(file_name, search_text, replace_text):
         for line in lines:
             f.write(line)
 
+
+# replace search_text with replace_text in file
+def replace_text_in_file(file_name, search_text, replace_text):
+    with open(file_name, 'r') as f:
+        data = f.read()
+        data = data.replace(search_text, replace_text)
+    with open(file_name, 'w') as f:
+        f.write(data)
+        
 
 # python equivalent of "chmod +w"
 def chmod_plus_w(file_path):
