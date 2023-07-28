@@ -211,15 +211,6 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #print("done copying the contents of syn_top into build/")
     shutil.rmtree(src_syn_top_path, ignore_errors=True)
     
-    #copy the ip_lib/ folder from work directory into build/../
-    ip_lib_dir_name="ip_lib"
-    src_ip_lib_path=get_dir_path(ip_lib_dir_name,bsp_qsf_dir)
-    dst_ip_lib_path=(os.path.join(dst_build_path, '../'))
-    #print("src_ip_lib_path is %s; dst_ip_lib_path is %s" % (src_ip_lib_path,dst_ip_lib_path) )
-    copy_glob(src_ip_lib_path,dst_ip_lib_path)
-    #print("done copying the contents of ip_lib into build/../")
-    shutil.rmtree(src_ip_lib_path, ignore_errors=True)
-    
     # create quartus project revision for opencl kernel qsf
     kernel_qsf_path = os.path.join(bsp_dir, 'afu_opencl_kernel.qsf')
     #print ("kernel_qsf_path is %s\n" % kernel_qsf_path)
