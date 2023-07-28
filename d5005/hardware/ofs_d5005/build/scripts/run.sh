@@ -34,15 +34,21 @@ if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
 fi
 
 cd "$SCRIPT_DIR_PATH/.." || exit
-#export PYTHONPATH="$OFS_ASP_ROOT"/build/opae/install/lib/python3*/site-packages
 
 if [ -n "$PACKAGER_BIN" ]; then
   echo "Selected explicitly configured PACKAGER_BIN=\"$PACKAGER_BIN\""
 elif [ -z "$OFS_ASP_ENV_USE_BSP_PACKAGER" ] && PACKAGER_BIN="$(command -v packager)"; then
   echo "Detected PACKAGER_BIN=\"$PACKAGER_BIN\" from \$PATH search"
 else
-  echo "Attempting fallback to ASP copy of packager"
-  PYTHONPATH="$OFS_ASP_ROOT"/build/opae/install/lib/python3*/site-packages
+  echo "Attempting fallback to BSP copy of packager"
+  if [ -f ./tools/packager ]; then
+    chmod +x ./tools/packager
+    PACKAGER_BIN=$(readlink -f ./tools/packager)
+    PYTHONPATH="$OFS_ASP_ROOT/build/opae/install/lib/python3.8/site-packages"
+  else
+    echo "Error cannot find BSP copy of packager"
+    exit 1
+  fi
 fi
 
 if ! PACKAGER_OUTPUT=$($PACKAGER_BIN); then
