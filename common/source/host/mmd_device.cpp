@@ -397,10 +397,6 @@ bool Device::find_dma_dfh_offsets() {
 }
 
 bool Device::find_iopipes_dfh_offsets() {
-  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
-  DEBUG_LOG("DEBUG LOG : Inside find_iopipes_dfh_offset()\n");
-  //iopipes_dfh_offset = 345;
-  //printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
   uint64_t dfh_offset = 0;
   uint64_t next_dfh_offset = 0;
   if (find_dfh_by_guid(mmio_handle, IOPIPES_GUID, &dfh_offset,
@@ -409,16 +405,14 @@ bool Device::find_iopipes_dfh_offsets() {
     if(std::getenv("MMD_ENABLE_DEBUG")){
       DEBUG_LOG("DEBUG LOG : IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset, IOPIPES_GUID);
     }
-    DEBUG_PRINT("IOPIPES offset: 0x%lX\t GUID: %s\n", iopipes_dfh_offset,
-                IOPIPES_GUID);
   } else {
-      printf("IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+    if(std::getenv("MMD_ENABLE_DEBUG")){  
       DEBUG_LOG("DEBUG LOG : IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+    }
     return false;
   }
   
   assert(iopipes_dfh_offset != 0);
-  printf("iopipes_dfh_offset = %ld\n", iopipes_dfh_offset);
 
   return true;
 }
