@@ -29,7 +29,7 @@ running tests
 
 ## ASP variants
 
-The `hardware` folder contains subdirectories with the 2 different ASP variants:
+The `hardware` folder contains subdirectories with the 2 different oneAPI-ASP variants:
 
 * `ofs_n6001_usm`: ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM variant with the addition of the USM path between 

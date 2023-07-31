@@ -4,8 +4,8 @@
 ## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# Scripts initialized OFS card with default aocx that ships with BSP. This
-# allows other OpenCL programs to access BSP functionality before loading
+# Scripts initialized OFS card with default aocx that ships with oneAPI-ASP. This
+# allows other OpenCL programs to access oneAPI-ASP functionality before loading
 # application specific aocx.
 ###############################################################################
 

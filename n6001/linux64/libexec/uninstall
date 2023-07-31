@@ -22,11 +22,11 @@ delete_config() {
 }
 
 
-echo -n "Do you want to remove OpenCL BSP configuration settings [Y/n] "
+echo -n "Do you want to remove oneAPI-ASP configuration settings [Y/n] "
 read answer
 if [ "$answer" != "n" ]; then
   echo "Deleting OPAE config files"
   delete_config
 fi
 
-echo "OFS OpenCL BSP uninstall complete"
+echo "OFS oneAPI-ASP uninstall complete"

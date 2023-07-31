@@ -51,5 +51,5 @@ if [ -z "$OFS_BSP_ENV_NO_PERMISSIONS_INSTALL" ]; then
   configure_permission
 fi
 
-echo "Intel OFS OpenCL BSP install complete."
+echo "Intel OFS oneAPI ASP install complete."
 echo "Run 'aocl diagnose' to list devices or 'aocl initialize <dev_name> to load default aocx"

@@ -8,7 +8,7 @@
 #
 # Global variables
 #  SCRIPT_DIR_PATH: path to location of script
-#  BSP_ROOT: path to root of BSP repo
+#  BSP_ROOT: path to root of ASP repo
 #  BUILD_TYPE: type of build (i.e. release or debug)
 #  BUILD_DIR: directory used for building MMD
 #
