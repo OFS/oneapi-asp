@@ -44,7 +44,7 @@ else
   if [ -f ./tools/packager ]; then
     chmod +x ./tools/packager
     PACKAGER_BIN=$(readlink -f ./tools/packager)
-    PYTHONPATH="$OFS_ASP_ROOT"/build/opae/install/lib/python3*/site-packages
+    PYTHONPATH="$OFS_ASP_ROOT/build/opae/install/lib/python3.8/site-packages"
   else
     echo "Error cannot find BSP copy of packager"
     exit 1
