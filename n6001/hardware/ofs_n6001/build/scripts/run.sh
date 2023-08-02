@@ -144,8 +144,6 @@ qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board.qsy
 quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
 FLOW_SUCCESS=$?
 
-echo "we've made it pretty far, look around"
-exit 1
 
 # Report Timing
 # =============
@@ -230,8 +228,8 @@ if [ ! -f fpga.bin ]; then
 fi
 
 #copy fpga.bin to parent directory so aoc flow can find it
-cp fpga.bin ../
-cp acl_quartus_report.txt ../
+cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
+cp acl_quartus_report.txt $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
 
 echo ""
 echo "==========================================================================="
