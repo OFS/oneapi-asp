@@ -152,8 +152,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     print("bsp_qsf_dir is %s\n" % bsp_qsf_dir)
     
     #preserve the pr-build-template folder
-    delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
-    copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
+    delete_and_mkdir(os.path.join(bsp_dir, 'pr_build_template'))
+    copy_glob(deliverable_dir, os.path.join(bsp_dir, 'pr_build_template'),verbose)
 
     # copy the FIM FME information text files
     copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), bsp_qsf_dir, verbose)
@@ -179,7 +179,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     cmd_afu_synth_setup_filelist = ("--sources " + filelist_path)
     cmd_afu_synth_setup_lib_arb = ("--lib " + deliverable_hwlib_dir)
     cmd_afu_synth_setup_force_arg = "--force"
-    cmd_afu_synth_setup_platform_dst = os.path.join(bsp_dir,'pim')
+    cmd_afu_synth_setup_platform_dst = os.path.join(bsp_dir,'fim_platform')
     full_afu_synth_setup_cmd = (cmd_afu_synth_setup_opae_PATH_update + " " +
                                 cmd_afu_synth_setup_opae_platform_db_path + " " +
                                 cmd_afu_synth_setup_script + " " +
@@ -190,17 +190,22 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     print ("full afu_synth_setup cmd is %s" % full_afu_synth_setup_cmd)
     run_cmd(full_afu_synth_setup_cmd)
 
-    #copy/move the pim folder into build/ to keep it common
-    src_platform_dir = os.path.join(bsp_dir, 'pim')
-    src = os.path.join(src_platform_dir,'*')
-    dst = os.path.join(bsp_dir)
-    #print("Ran the afu-synth-setup cmd; now use copy_glob to move/copy it to the proper place")
-    #print ("src is %s" % src)
-    #print ("dst is %s" % dst)
-
-    copy_glob(src, dst, verbose)
-    shutil.rmtree(src_platform_dir, ignore_errors=True)
-
+    #find the Quartus-build folder expected by the FIM
+    #use syn_top for now, but it might change depending on FIM board/variant/etc
+    QUARTUS_SYN_DIR=get_dir_path("syn_top",bsp_dir)
+    #symlink the contents of bsp_dir/build into syn_top
+    os.symlink(bsp_qsf_dir,QUARTUS_SYN_DIR)
+    #symlink the ofs_top.qpf and ofs_pr_afu.qsf file to bsp_dir
+    os.symlink(QUARTUS_SYN_DIR/ofs_pr_afu.qsf,bsp_dir/ofs_pr_afu.qsf)
+    os.symlink(QUARTUS_SYN_DIR/ofs_pr_afu.qsf,bsp_dir/ofs_top.qpf)
+    
+    
+    
+    print("in setup-bsp.py, just finished afu-synth-setup")
+    sys.exit(-1)
+    
+    
+    
     #move the release directory's syn_top files to hardware/<target>/build/
     dst_build_path=bsp_qsf_dir
     syn_top_dir_name="syn_top"

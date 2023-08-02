@@ -15,6 +15,7 @@ switch $tcl_platform(platform) {
       set revision_name import
     }
     post_message "Compiling revision $revision_name"
-    qexec "bash build/scripts/run.sh $revision_name"
+    #qexec "bash build/scripts/run.sh $revision_name"
+    qexec "bash fim_platform/build/syn/board/n6001/syn_top/scripts/run.sh $revision_name"
   }
 }
