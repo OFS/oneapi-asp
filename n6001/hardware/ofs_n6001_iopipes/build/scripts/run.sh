@@ -7,7 +7,13 @@ if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
-echo "This is the OFS HLD shim BSP run.sh script."
+echo "This is the OFS OneAPI ASP run.sh script."
+
+KERNEL_BUILD_PWD=`pwd`
+echo "run.sh KERNEL_BUILD_PWD is $KERNEL_BUILD_PWD"
+
+BSP_BUILD_PWD="$KERNEL_BUILD_PWD/../"
+echo "run.sh BSP_BUILD_PWD is $BSP_BUILD_PWD"
 
 # set BSP flow
 if [ $# -eq 0 ]
@@ -20,9 +26,7 @@ echo "Compiling '$BSP_FLOW' bsp-flow"
 
 SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
 echo "OFS BSP run.sh script path: $SCRIPT_PATH"
-
 SCRIPT_DIR_PATH="$(dirname "$SCRIPT_PATH")"
-echo "OFS BSP build dir: $SCRIPT_DIR_PATH"
 
 #if flow-type is 'flat_kclk' uncomment USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION in opencl_bsp.vh
 if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
@@ -34,6 +38,8 @@ if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
 fi
 
 cd "$SCRIPT_DIR_PATH/.." || exit
+AFU_BUILD_PWD=`pwd`
+echo "run.sh AFU_BUILD_PWD is $AFU_BUILD_PWD"
 
 if [ -n "$PACKAGER_BIN" ]; then
   echo "Selected explicitly configured PACKAGER_BIN=\"$PACKAGER_BIN\""
@@ -62,11 +68,6 @@ then
     echo "ERROR: BSP is not setup"
 fi
 
-cp ../quartus.ini .
-
-#import opencl kernel files
-quartus_sh -t scripts/import_opencl_kernel.tcl
-
 #check for bypass/alternative flows
 if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "Calling ASE simulation flow compile"
@@ -74,37 +75,30 @@ if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     exit $?
 fi
 
-#add BBBs to quartus pr project
-quartus_sh -t scripts/add_bbb_to_pr_project.tcl "$BSP_FLOW"
+RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
+RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
+#create new 'afu_flat' revision based on the one used to compile the kernel
+cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/ofs_pr_afu.qsf ./afu_flat.qsf
+#add ASP/afu_flat-specific stuff to the qsf file
+echo "source afu_ip.qsf" >> ./afu_flat.qsf
 
-cp ../afu_opencl_kernel.qsf .
+#symlink the compiled kernel files to here from their origin (except the )
+MYLIST=`ls --ignore=fim_platform --ignore=build $RELATIVE_KERNEL_BUILD_PATH_TO_HERE`
+for f in ${MYLIST}
+do
+    #merge the ASP's 'ip' folder with the kernel-system's 'ip' folder
+    if [ "$f" == "ip" ]; then
+        cd ip
+        ln -s ../${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/ip/* .
+        cd  ..
+    else
+        ln -s ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/${f} .
+    fi
+done
 
-#get a list of gsys files that are mentioned in qsf files; then generate each of them
-eval "$(grep "QSYS_FILE" afu_flat.qsf | grep -v "^#" > qsys_filelist.txt)"
-eval "$(grep "IP_FILE" afu_flat.qsf | grep -v "^#" >> qsys_filelist.txt)"
-
-while read -r line; do
-    f=$(echo "$line" | awk '{print $4}')
-    echo "running qsys-generate on $f"
-    qsys-generate -syn --quartus-project=ofs_top --rev=afu_opencl_kernel "$f"
-    # adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-    qsys-archive --quartus-project=ofs_top --rev=afu_opencl_kernel --add-to-project "$f"
-done < qsys_filelist.txt
-
-rm -rf qsys_filelist.txt
-
-qsys-generate -syn --quartus-project=ofs_top --rev=afu_opencl_kernel board.qsys
-# adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=ofs_top --rev=afu_opencl_kernel --add-to-project board.qsys
-
-#append kernel_system qsys/ip assignments to all revisions
-rm -f kernel_system_qsf_append.txt
-{ echo
-  grep -A10000 OPENCL_KERNEL_ASSIGNMENTS_START_HERE afu_opencl_kernel.qsf
-  echo
-} >> kernel_system_qsf_append.txt
-
-cat kernel_system_qsf_append.txt >> afu_flat.qsf
+qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board.qsys
+## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
+qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board.qsys
 
 # compile project
 # =====================
@@ -194,11 +188,11 @@ if [ ! -f fpga.bin ]; then
 fi
 
 #copy fpga.bin to parent directory so aoc flow can find it
-cp fpga.bin ../
-cp acl_quartus_report.txt ../
+cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
+cp acl_quartus_report.txt $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
 
 echo ""
 echo "==========================================================================="
-echo "OpenCL AFU compilation complete"
+echo "OneAPI ASP AFU compilation complete"
 echo "==========================================================================="
 echo ""

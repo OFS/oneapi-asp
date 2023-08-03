@@ -149,12 +149,12 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     bsp_dir = os.path.join(bsp_root,"hardware",bsp)
     bsp_qsf_dir = os.path.join(bsp_dir, 'build')
 
-    print("bsp_qsf_dir is %s\n" % bsp_qsf_dir)
+    print("bsp_dir is %s\n" % bsp_dir)
     
     #preserve the pr-build-template folder
     delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
     copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
-
+    
     # copy the FIM FME information text files
     copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), bsp_qsf_dir, verbose)
     
@@ -179,7 +179,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     cmd_afu_synth_setup_filelist = ("--sources " + filelist_path)
     cmd_afu_synth_setup_lib_arb = ("--lib " + deliverable_hwlib_dir)
     cmd_afu_synth_setup_force_arg = "--force"
-    cmd_afu_synth_setup_platform_dst = os.path.join(bsp_dir,'pim')
+    cmd_afu_synth_setup_platform_dst = os.path.join(bsp_dir,'fim_platform')
     full_afu_synth_setup_cmd = (cmd_afu_synth_setup_opae_PATH_update + " " +
                                 cmd_afu_synth_setup_opae_platform_db_path + " " +
                                 cmd_afu_synth_setup_script + " " +
@@ -190,91 +190,40 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     print ("full afu_synth_setup cmd is %s" % full_afu_synth_setup_cmd)
     run_cmd(full_afu_synth_setup_cmd)
 
-    #copy/move the pim folder into build/ to keep it common
-    src_platform_dir = os.path.join(bsp_dir, 'pim')
-    src = os.path.join(src_platform_dir,'*')
-    dst = os.path.join(bsp_dir)
-    #print("Ran the afu-synth-setup cmd; now use copy_glob to move/copy it to the proper place")
-    #print ("src is %s" % src)
-    #print ("dst is %s" % dst)
+    #find the Quartus-build folder expected by the FIM
+    #use syn_top for now, but it might change depending on FIM board/variant/etc
+    QUARTUS_SYN_DIR=get_dir_path("syn_top",bsp_dir)
+    ASP_BASE_DIR_ABS=bsp_dir
+    
+    QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_qsf_dir)
+    if verbose:
+        print("QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR) )
+    
+    QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_dir)
+    if verbose:
+        print("QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR) )
+    
+    ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(bsp_qsf_dir,QUARTUS_SYN_DIR)
+    if verbose:
+        print("ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
+    
+    KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(bsp_dir,QUARTUS_SYN_DIR)
+    if verbose:
+        print("KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
+    
+    #symlink the contents of bsp_dir/build into syn_top
+    BSP_BUILD_DIR_FILES=os.path.join(bsp_qsf_dir, '*')
+    ASP_BUILD_DIR_SYMLINK_CMD="cd " + QUARTUS_SYN_DIR + " && ln -s " + ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR + "/* ."
+    run_cmd(ASP_BUILD_DIR_SYMLINK_CMD)
+    
+    #symlink the ofs_top.qpf and ofs_pr_afu.qsf file to bsp_dir
+    rm_glob(os.path.join(bsp_dir, 'ofs_pr_afu.qsf'))
+    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/ofs_pr_afu.qsf ."
+    run_cmd(OFS_PR_AFU_QSF_SYMLINK_CMD)
 
-    copy_glob(src, dst, verbose)
-    shutil.rmtree(src_platform_dir, ignore_errors=True)
-
-    #move the release directory's syn_top files to hardware/<target>/build/
-    dst_build_path=bsp_qsf_dir
-    syn_top_dir_name="syn_top"
-    src_syn_top_path=get_dir_path(syn_top_dir_name,bsp_qsf_dir)
-    src_syn_top_files=os.path.join(src_syn_top_path, '*')
-    #print("Moving the contents of syn_top from %s to %s " % (src_syn_top_files, dst_build_path) )
-    copy_glob(src_syn_top_files,dst_build_path)
-    #print("done copying the contents of syn_top into build/")
-    shutil.rmtree(src_syn_top_path, ignore_errors=True)
-    
-    # create quartus project revision for opencl kernel qsf
-    kernel_qsf_path = os.path.join(bsp_dir, 'afu_opencl_kernel.qsf')
-    #print ("kernel_qsf_path is %s\n" % kernel_qsf_path)
-
-    ofs_pr_afu_qsf_file=os.path.join(bsp_qsf_dir, 'ofs_pr_afu.qsf')
-    #print ("copy %s ofs_pr_afu_qsf_file to %s\n" % (bsp_qsf_dir, kernel_qsf_path))
-    shutil.copy2(ofs_pr_afu_qsf_file, kernel_qsf_path)
-
-    update_qsf_settings_for_opencl_kernel_qsf(kernel_qsf_path)
-    #print ("update qsf setting for opencl-kernel-qsf")
-
-    orig_qpf_file=os.path.join(bsp_qsf_dir, 'ofs_top.qpf')
-    ocl_qpf_file=os.path.join(bsp_dir, 'ofs_top.qpf')
-    #print ("copy %s  to %s" % (orig_qpf_file, ocl_qpf_file))
-    shutil.copy2(orig_qpf_file, ocl_qpf_file)
-    #print ("update qpf project for opencl flow of %s \n" % ocl_qpf_file)
-    update_qpf_project_for_opencl_flow(ocl_qpf_file)
-
-    # update quartus project files for opencl
-    quartus_qpf_file=orig_qpf_file
-    #print ("update qpf project for afu %s\n" % quartus_qpf_file)
-    update_qpf_project_for_afu(quartus_qpf_file)
-    
-    #print ("update qsf settings for opencl afu %s \n" % ofs_pr_afu_qsf_file)
-    update_qsf_settings_for_opencl_afu(ofs_pr_afu_qsf_file)
-
-    #rename the ofs_pr_afu_qsf_file file to afu_flat.qsf. Up to this point we were using the ofs_pr_afu_qsf_file file from the platform build, now we need to move forward with appropriate OpenCL/HPR-naming
-    afu_flat_qsf_path=os.path.join(bsp_qsf_dir, 'afu_flat.qsf')
-    shutil.move(ofs_pr_afu_qsf_file,afu_flat_qsf_path)
-    
-    #write some stuff into afu_flat.qsf - this is to replace some lines in ofs_pr_afu_sources.tcl where the paths aren't correct
-    #with open(afu_flat_qsf_path, 'a') as f:
-    #    f.write('set_global_assignment -name SEARCH_PATH "./platform"\n')
-    #    f.write('set_global_assignment -name SOURCE_TCL_SCRIPT_FILE "./platform/ofs_plat_if/par/ofs_plat_if_addenda.qsf"\n')
-    #    # Map FIM interfaces to the PIM
-    #    f.write('set_global_assignment -name SYSTEMVERILOG_FILE "./src/port_gasket/agilex/afu_main_pim/afu_main.sv"\n')
-        
-    #remove the hw folder; it isn't needed
-    rel_template_hw_folder_path=os.path.join(bsp_qsf_dir, '../hw')
-    shutil.rmtree(rel_template_hw_folder_path, ignore_errors=True)
-    
-    #remove the paths and files listed in the ofs_pr_afu_sources.tcl file
-    ofs_pr_afu_source_tcl_file=os.path.join(bsp_qsf_dir, 'ofs_pr_afu_sources.tcl')
-    #this still needs to be done in order to eliminate Quartus warnings
-    replace_text_in_file(ofs_pr_afu_source_tcl_file, '../../', '$::env(BUILD_ROOT_REL)/')
-    replace_lines_in_file(afu_flat_qsf_path, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl')
-    
-    #update the build_env_db.txt file with the appropriate BUILD_ROOT_REL path
-    build_env_db_path=os.path.join(bsp_qsf_dir, 'build_env_db.txt')
-    remove_lines_in_file(build_env_db_path, 'BUILD_ROOT_REL=')
-    with open(build_env_db_path, 'a') as f:
-        f.write('BUILD_ROOT_REL=../build')
-    #move the syn/*/setup/ folder
-    config_env_file_path=get_file_path("config_env.tcl", bsp_qsf_dir)
-    copy_glob(config_env_file_path,bsp_qsf_dir)
-    
-    replace_lines_in_file(afu_flat_qsf_path, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/config_env.tcl', 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ./config_env.tcl')
-    
-    #remove user/kernel-clock constraints from ofs_top.out.sdc - use the constraints from user_clk.sdc
-    FIM_sdc_file=os.path.join(bsp_qsf_dir, 'ofs_top.out.sdc')
-    remove_lines_in_file(FIM_sdc_file,"create_generated_clock -name {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0")
-    
-    # create manifest
-    create_manifest(bsp_dir)
+    rm_glob(os.path.join(bsp_dir, 'ofs_top.qpf'))
+    OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/ofs_top.qpf ."
+    run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
 
 
 # create a file manifest for use in later copy-steps
