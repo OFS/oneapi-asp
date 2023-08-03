@@ -149,7 +149,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     bsp_dir = os.path.join(bsp_root,"hardware",bsp)
     bsp_qsf_dir = os.path.join(bsp_dir, 'build')
 
-    print("asp_dir is %s\n" % asp_dir)
+    print("bsp_dir is %s\n" % bsp_dir)
     
     # copy the FIM FME information text files
     copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), bsp_qsf_dir, verbose)
