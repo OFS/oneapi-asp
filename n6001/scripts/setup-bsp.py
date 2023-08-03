@@ -135,7 +135,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
 
     libopae_c_root_dir = env_vars["LIBOPAE_C_ROOT"]
     packager_bin = get_packager_bin(libopae_c_root_dir)
-    deliverable_dir = env_vars["OPAE_PLATFORM_ROOT"]
+    deliverable_dir = env_vars["OPAE_PLATFORM_ROOT"].rstrip("/")
     deliverable_hw_dir = os.path.join(deliverable_dir, 'hw')
     deliverable_hwlib_dir = os.path.join(deliverable_hw_dir, 'lib')
     intel_fpga_bbb_dir = env_vars["INTEL_FPGA_BBB"]
