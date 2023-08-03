@@ -196,16 +196,20 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     ASP_BASE_DIR_ABS=bsp_dir
     
     QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_qsf_dir)
-    #print("QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR) )
+    if verbose:
+        print("QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR) )
     
     QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_dir)
-    #print("QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR) )
+    if verbose:
+        print("QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR) )
     
     ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(bsp_qsf_dir,QUARTUS_SYN_DIR)
-    #print("ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
+    if verbose:
+        print("ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
     
     KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(bsp_dir,QUARTUS_SYN_DIR)
-    #print("KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
+    if verbose:
+        print("KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
     
     #symlink the contents of bsp_dir/build into syn_top
     BSP_BUILD_DIR_FILES=os.path.join(bsp_qsf_dir, '*')
@@ -222,7 +226,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     rm_glob(os.path.join(bsp_dir, 'ofs_top.qpf'))
     OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/ofs_top.qpf ."
     run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
-    
+
 
 # create a file manifest for use in later copy-steps
 def create_manifest(dst_dir):
