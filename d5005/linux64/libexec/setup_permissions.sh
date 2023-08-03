@@ -108,11 +108,6 @@ EOF
   sudo sh -c "echo $NUM_HUGE_PAGES > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages"
 }
 
-
-set_memlock_limits
-set_dev_permission
-set_hugepages
-
 ################################################################################
 # Set aocl initialize permissions
 #
@@ -123,5 +118,12 @@ set_devuio_permissions()
   echo "Setting access permisions of /dev/uio to 666"
   sudo chmod 666 /dev/uio*
 }
+
+
+set_memlock_limits
+set_dev_permission
+set_hugepages
+set_devuio_permissions
+
 
 echo "Finished setup_permissions.sh script. All configuration settings are persistent."
