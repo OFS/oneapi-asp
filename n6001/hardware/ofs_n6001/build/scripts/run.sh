@@ -84,13 +84,10 @@ echo "source afu_ip.qsf" >> ./afu_flat.qsf
 
 #symlink the compiled kernel files to here from their origin (except the )
 MYLIST=`ls --ignore=fim_platform --ignore=build $RELATIVE_KERNEL_BUILD_PATH_TO_HERE`
-echo "MYLIST is $MYLIST"
 for f in ${MYLIST}
 do
-    echo "f is $f"
     #merge the ASP's 'ip' folder with the kernel-system's 'ip' folder
     if [ "$f" == "ip" ]; then
-        echo "simlinking all of the ip files"
         cd ip
         ln -s ../${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/ip/* .
         cd  ..
