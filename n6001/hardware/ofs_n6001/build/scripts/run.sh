@@ -7,7 +7,7 @@ if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
-echo "This is the OFS HLD shim BSP run.sh script."
+echo "This is the OFS OneAPI ASP run.sh script."
 
 KERNEL_BUILD_PWD=`pwd`
 echo "run.sh KERNEL_BUILD_PWD is $KERNEL_BUILD_PWD"
@@ -68,11 +68,6 @@ then
     echo "ERROR: BSP is not setup"
 fi
 
-#cp ../quartus.ini .
-
-#import opencl kernel files
-#quartus_sh -t scripts/import_opencl_kernel.tcl
-
 #check for bypass/alternative flows
 if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "Calling ASE simulation flow compile"
@@ -80,21 +75,12 @@ if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     exit $?
 fi
 
-#add BBBs to quartus pr project
-#quartus_sh -t scripts/add_bbb_to_pr_project.tcl "$BSP_FLOW"
-
-#cp ../afu_opencl_kernel.qsf .
-
 RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
 RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
 #create new 'afu_flat' revision based on the one used to compile the kernel
 cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/ofs_pr_afu.qsf ./afu_flat.qsf
 #add ASP/afu_flat-specific stuff to the qsf file
 echo "source afu_ip.qsf" >> ./afu_flat.qsf
-
-#add SEARCH_PATH up to where the kernel was compiled
-#echo "set_global_assignment -name SEARCH_PATH \"${RELATIVE_BSP_BUILD_PATH_TO_HERE}\"" >> ./afu_flat.qsf
-#echo "set_global_assignment -name SEARCH_PATH \"${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}\"" >> ./afu_flat.qsf
 
 #symlink the compiled kernel files to here from their origin (except the )
 MYLIST=`ls --ignore=fim_platform --ignore=build $RELATIVE_KERNEL_BUILD_PATH_TO_HERE`
@@ -112,38 +98,15 @@ do
         ln -s ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/${f} .
     fi
 done
-#ln -s ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/* .
-
-#get a list of gsys files that are mentioned in qsf files; then generate each of them
-#eval "$(grep "QSYS_FILE" afu_flat.qsf | grep -v "^#" > qsys_filelist.txt)"
-#
-#while read -r line; do
-#    f=$(echo "$line" | awk '{print $4}')
-#    qsys-generate -syn --quartus-project=ofs_top --rev=afu_opencl_kernel "$f"
-#    # adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-#    qsys-archive --quartus-project=ofs_top --rev=afu_opencl_kernel --add-to-project "$f"
-#done < qsys_filelist.txt
-#
-#rm -rf qsys_filelist.txt
 
 qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board.qsys
 ## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
 qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board.qsys
 
-#append kernel_system qsys/ip assignments to all revisions
-#rm -f kernel_system_qsf_append.txt
-#{ echo
-#  grep -A10000 OPENCL_KERNEL_ASSIGNMENTS_START_HERE afu_opencl_kernel.qsf
-#  echo
-#} >> kernel_system_qsf_append.txt
-#
-#cat kernel_system_qsf_append.txt >> afu_flat.qsf
-
 # compile project
 # =====================
 quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
 FLOW_SUCCESS=$?
-
 
 # Report Timing
 # =============

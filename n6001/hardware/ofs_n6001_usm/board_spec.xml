@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <board version="22.4" name="ofs_n6001_usm">
 
-  <compile name="afu_flat" project="ofs_top" revision="afu_flat" qsys_file="none" generic_kernel="1">
+  <compile name="afu_flat" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
     <synthesize cmd="quartus_sh -t build/scripts/entry.tcl afu_flat"/>
     <auto_migrate platform_type="none" >
@@ -10,7 +10,7 @@
     </auto_migrate>
   </compile>
   
-  <compile name="afu_flat_kclk" project="ofs_top" revision="afu_flat" qsys_file="none" generic_kernel="1">
+  <compile name="afu_flat_kclk" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
     <synthesize cmd="quartus_sh -t build/scripts/entry.tcl afu_flat_kclk"/>
     <auto_migrate platform_type="none" >
