@@ -7,8 +7,8 @@
 
     `define PAC_BSP_ENABLE_DDR4_BANK1 1
     `define PAC_BSP_ENABLE_DDR4_BANK2 1
-    `define PAC_BSP_ENABLE_DDR4_BANK3 1
-    `define PAC_BSP_ENABLE_DDR4_BANK4 1
+    //`define PAC_BSP_ENABLE_DDR4_BANK3 1
+    //`define PAC_BSP_ENABLE_DDR4_BANK4 1
 
     //Use the MPF-VTP functionality in the host-memory DMA datapath.
     `define USE_MPF_VTP 1

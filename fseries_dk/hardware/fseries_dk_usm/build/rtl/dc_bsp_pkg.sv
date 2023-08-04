@@ -5,8 +5,8 @@
 
 package dc_bsp_pkg;
 
-    //Each memory bank is 4GB. 512b/(8b/B)*(26'1)=4GB.
-    parameter OPENCL_DDR_ADDR_WIDTH = 26;
+    //Each memory bank is 8GB. 512b/(8b/B)*(27'1)=8GB.
+    parameter OPENCL_DDR_ADDR_WIDTH = 27;
     // SVM
     parameter OPENCL_MEMORY_ADDR_WIDTH = 42;
     //OpenCL can only access on a per-word basis. The data bus
@@ -28,8 +28,8 @@ package dc_bsp_pkg;
     parameter OPENCL_BSP_KERNEL_DATA_WIDTH = 512;
     parameter OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH = 5;
     parameter OPENCL_BSP_KERNEL_BYTEENABLE_WIDTH = 64;
-    parameter BSP_NUM_LOCAL_MEM_BANKS = 4;
-    parameter BSP_MAX_AVAIL_PLATFORM_LOCAL_MEM_BANKS = 4;
+    parameter BSP_NUM_LOCAL_MEM_BANKS = 2;
+    parameter BSP_MAX_AVAIL_PLATFORM_LOCAL_MEM_BANKS = 2;
 
     parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 64;
     parameter OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH = 30;
