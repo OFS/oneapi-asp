@@ -971,7 +971,6 @@ float Device::get_temperature() {
       DEBUG_LOG("DEBUG LOG : Error reading temperature monitor from BMC :");
       DEBUG_LOG(" %s \n",fpgaErrStr(res));
     }
-    fpgaDestroyObject(&obj);
     temp = -999;
     return temp;
   }
