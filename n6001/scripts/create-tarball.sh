@@ -32,5 +32,15 @@ for i in "${!bsp_files[@]}"; do
   fi
 done
 
-tar --transform='s,^,oneapi-asp-n6001/,' --create --gzip \
-    --file="$BSP_ROOT/oneapi-asp-n6001.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"
+if [ -d "$BSP_ROOT/oneapi-asp-n6001" ]; then
+    echo "$BSP_ROOT/oneapi-asp-n6001 exists; Removing it first"
+    rm -rf $BSP_ROOT/oneapi-asp-n6001
+fi
+
+mkdir $BSP_ROOT/oneapi-asp-n6001
+
+cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-n6001/
+
+tar czf oneapi-asp-n6001.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-n6001
+
+rm -rf "$BSP_ROOT/oneapi-asp-n6001"
