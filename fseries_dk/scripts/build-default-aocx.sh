@@ -30,7 +30,7 @@ while getopts ":b:f:h" arg; do
 done
 
 # Check that board variant is configured
-BOARD=${BOARD:-ofs_n6001}
+BOARD=${BOARD:-fseries_dk}
 if [ ! -f "$BSP_ROOT/hardware/$BOARD/build/ofs_top.qdb" ]; then
   echo "Error: cannot find required OFS TOP QDB file for board '$BOARD'"
   exit 1
@@ -39,11 +39,11 @@ echo "Generating default aocx for board variant: $BOARD"
 
 # Select cl file for building default aocx
 case $BOARD in
-  ofs_n6001)
+  fseries_dk)
     CL_FILE="bringup/source/hello_world/device/hello_world.cl"
     INTERLEAVE_OPTION=""
     ;;
-  ofs_n6001_usm)
+  fseries_dk_usm)
     CL_FILE="bringup/source/hello_world/device/hello_world.cl"
     INTERLEAVE_OPTION="" 
     ;;
