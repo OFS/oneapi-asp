@@ -100,11 +100,11 @@ if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "Calling ASE simulation flow compile"
     sh ./scripts/ase-sim-compile.sh
     exit $?
-else
-    echo "Calling compile_script"
-    quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
-    FLOW_SUCCESS=$?
 fi
+
+echo "Calling compile_script"
+quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
+FLOW_SUCCESS=$?
 
 # Report Timing
 # =============
