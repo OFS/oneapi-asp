@@ -68,13 +68,6 @@ then
     echo "ERROR: BSP is not setup"
 fi
 
-#check for bypass/alternative flows
-if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
-    echo "Calling ASE simulation flow compile"
-    sh ./scripts/ase-sim-compile.sh
-    exit $?
-fi
-
 RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
 RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
 #create new 'afu_flat' revision based on the one used to compile the kernel
@@ -102,8 +95,16 @@ qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board.qsy
 
 # compile project
 # =====================
-quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
-FLOW_SUCCESS=$?
+#check for bypass/alternative flows
+if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
+    echo "Calling ASE simulation flow compile"
+    sh ./scripts/ase-sim-compile.sh
+    exit $?
+else
+    echo "Calling compile_script"
+    quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
+    FLOW_SUCCESS=$?
+fi
 
 # Report Timing
 # =============
