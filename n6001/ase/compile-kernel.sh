@@ -51,11 +51,11 @@ elif [ -d "$DESIGN_SRC" ]; then
     echo "pwd is $PWD"
     cd n6001
     echo "pwd is $PWD, cmake is next"
-    export USM_TAIL=""
-    if [ ${BOARD} == "ofs_n6001_usm" ]; then
-        export USM_TAIL="_usm"
+    export USM_ASP=""
+    if [[ "$BOARD" == *"_usm"* ]]; then
+        export USM_ASP="_usm"
     fi
-    export BOARD_TYPE=pac_a10${USM_TAIL}
+    export BOARD_TYPE=pac_a10${USM_ASP}
     cmake "$DESIGN_SRC" -DFPGA_DEVICE=${BOARD_TYPE}
     echo "after cmake"
     sed -i "s/$BOARD_TYPE/$BOARD -Xsno-env-check /g" src/CMakeFiles/*/link.txt
