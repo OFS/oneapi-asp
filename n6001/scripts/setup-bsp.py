@@ -175,12 +175,13 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     else:
         cmd_afu_synth_setup_opae_platform_db_path = ""
     cmd_afu_synth_setup_script = "${LIBOPAE_C_ROOT}/bin/afu_synth_setup"
-    filelist_path = os.path.join(bsp_qsf_dir, "filelist.txt")
+    filelist_path = "filelist.txt"
     cmd_afu_synth_setup_filelist = ("--sources " + filelist_path)
     cmd_afu_synth_setup_lib_arb = ("--lib " + deliverable_hwlib_dir)
     cmd_afu_synth_setup_force_arg = "--force"
     cmd_afu_synth_setup_platform_dst = os.path.join(bsp_dir,'fim_platform')
-    full_afu_synth_setup_cmd = (cmd_afu_synth_setup_opae_PATH_update + " " +
+    full_afu_synth_setup_cmd = ("cd " + bsp_qsf_dir + " && " +  
+                                cmd_afu_synth_setup_opae_PATH_update + " " +
                                 cmd_afu_synth_setup_opae_platform_db_path + " " +
                                 cmd_afu_synth_setup_script + " " +
                                 cmd_afu_synth_setup_filelist + " " +
