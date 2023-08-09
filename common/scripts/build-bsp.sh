@@ -64,6 +64,15 @@ for board in "${BOARD_VARIANTS[@]}"; do
   fi
 done
 
+failed_bsps=""
+# Copy files from common board directory 
+for board in "${BOARD_VARIANTS[@]}"; do
+  if ! sh "$SCRIPT_DIR_PATH/copy-common-files.sh" "$1" "$board"; then
+    failed_bsps="${failed_bsps:+$failed_bsps }$board"
+    continue
+  fi
+done 
+
 # Use existing OFS_PLATFORM_AFU_BBB or clone ofs-platform-afu-bbb
 BUILD_DIR="$BSP_ROOT/build"
 if [ -d $BUILD_DIR ] ; then
@@ -83,6 +92,8 @@ if [ ! -d "$OFS_PLATFORM_AFU_BBB" ]; then
   echo "Error cannot find ofs-platform-afu-bbb at $OFS_PLATFORM_AFU_BBB"
   exit 1
 fi
+
+echo "OFS_PLATFORM_AFU_BBB Setup" #TOREMOVE
 
 # If LIBOPAE_C_ROOT is not set then try to detect if OPAE is already installed
 # on the system and use that location. Otherwise build OPAE from source.
@@ -105,6 +116,8 @@ if [ ! -f "$LIBOPAE_C_ROOT/include/opae/fpga.h" ]; then
 fi
 export LIBOPAE_C_ROOT
 
+echo "OPAE Setup" #TOREMOVE
+
 ##################
 
 # Build the MMD or use existing MMD if files already exist
@@ -126,17 +139,22 @@ else
   fi
 fi
 
+echo "MMD Exists" #TOREMOVE
+
 # Check that MMD was built
 if [ ! -f "$BSP_ROOT/linux64/lib/libintel_opae_mmd.so" ]; then
   echo "Error: MMD was not built correctly"
   exit 1
 fi
 
+echo "MMD Setup" #TOREMOVE
+
 if [ -z "$OPAE_PLATFORM_ROOT" ]; then
   echo "Error: Must set OPAE_PLATFORM_ROOT environment variable"
   exit 1
 fi
 
+echo "OPAE_PLATFORM_ROOT Setup" #TOREMOVE
 
 # Use existing INTEL_FPGA_BBB or source/extra/intel-fpga-bbb
 if [ -z "$INTEL_FPGA_BBB" ]; then
@@ -150,6 +168,8 @@ if [ ! -d "$INTEL_FPGA_BBB" ]; then
   exit 1
 fi
 
+echo "INTEL_FPGA_BBB Setup" #TOREMOVE
+
 # Generate BSP
 echo "---------------------------------------------------------------"
 echo "Generating BSP using setup-bsp.py using environment variables:"
@@ -161,7 +181,6 @@ echo "OFS_PLATFORM_AFU_BBB=\"$OFS_PLATFORM_AFU_BBB\""
 echo "INTEL_FPGA_BBB=\"$INTEL_FPGA_BBB\""
 echo "---------------------------------------------------------------"
 
-failed_bsps=""
 for board in "${BOARD_VARIANTS[@]}"; do
   echo "---------------------------------------------------------------"
   echo -e "Setup BSP for board variant: $board\n"

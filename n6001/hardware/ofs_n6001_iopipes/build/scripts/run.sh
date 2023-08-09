@@ -81,11 +81,9 @@ cp ../afu_opencl_kernel.qsf .
 
 #get a list of gsys files that are mentioned in qsf files; then generate each of them
 eval "$(grep "QSYS_FILE" afu_flat.qsf | grep -v "^#" > qsys_filelist.txt)"
-eval "$(grep "IP_FILE" afu_flat.qsf | grep -v "^#" >> qsys_filelist.txt)"
 
 while read -r line; do
     f=$(echo "$line" | awk '{print $4}')
-    echo "running qsys-generate on $f"
     qsys-generate -syn --quartus-project=ofs_top --rev=afu_opencl_kernel "$f"
     # adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
     qsys-archive --quartus-project=ofs_top --rev=afu_opencl_kernel --add-to-project "$f"

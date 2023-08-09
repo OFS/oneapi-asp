@@ -32,10 +32,12 @@ SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
 BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 if [ -z "$LIBOPAE_C_ROOT" ]; then
+    echo "build-bsp-sw.sh: Entering build-opae.sh..."
     sh $SCRIPT_DIR_PATH/build-opae.sh "$1"
     export LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BSP_ROOT/build/json-c/install/lib64
 fi
 
+echo "build-bsp-sw.sh: Entering build-mmd.sh..."
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BSP_ROOT/build/json-c/install/lib64
 sh $SCRIPT_DIR_PATH/build-mmd.sh "$1"

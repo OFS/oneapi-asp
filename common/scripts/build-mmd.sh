@@ -63,6 +63,7 @@ else
   BUILD_DIR="$BUILD_PREFIX/$BUILD_TYPE"
 fi
 
+echo "build-mmd.sh: Making build dir..."
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR" || exit
 
@@ -73,6 +74,8 @@ else
 fi
 
 CMAKE_OCL_BSP_AFU_ID_ARG="-DOCL_BSP_AFU_ID=${1^^}"
+
+echo "build-mmd.sh: Starting cmake..."
 
 export CC=${CC:-$(which gcc)}
 export CXX=${CXX:-$(which g++)}

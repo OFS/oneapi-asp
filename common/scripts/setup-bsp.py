@@ -131,13 +131,12 @@ def create_text_file(dst, lines):
 
 # set naming convention for files; add new boards here
 # return: top_level_name, ofs_prefix
-# TODO: replace with external file that reads these
 def get_device_information(device_family):
     if('n6001' == device_family):
         return 'ofs_top', 'ofs_'
     if('d5005' == device_family):
         return 'd5005', 'iofs_'
-    pritn("Argument passed to setup-bsp is not accounted for. Check get_device_information() in setup-bsp and ensure 'device_family' is enumerated.")
+    print("Argument passed to setup-bsp is not accounted for. Check get_device_information() in setup-bsp and ensure 'device_family' is enumerated.")
     sys.exit()
 
 # main work function for setting up bsp
@@ -165,20 +164,20 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose, device_family):
     
     #preserve the pr-build-template folder
     delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
-    copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose) # TOREMOVE copies pr_build template to bsp_root
+    copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
 
     # copy the FIM FME information text files
-    copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), bsp_qsf_dir, verbose) # TOREMOVE copies to board build dir
+    copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), bsp_qsf_dir, verbose)
     
     # copy the required IP files from the intel-fpga-bbb repo (for use in VTP/MPF)
     bsp_ip_dir = os.path.join(bsp_qsf_dir, 'ip')
-    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_mpf_vtp"), bsp_ip_dir, verbose) # TOREMOVE copies to board build/ip dir
-    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_cci_mpf"), bsp_ip_dir, verbose) # TOREMOVE copies to board build/ip dir
+    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_mpf_vtp"), bsp_ip_dir, verbose)
+    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_cci_mpf"), bsp_ip_dir, verbose)
 
     # add packager to opencl bsp to make bsp easier to use
     bsp_tools_dir = os.path.join(bsp_qsf_dir, 'tools')
     delete_and_mkdir(bsp_tools_dir)
-    shutil.copy2(packager_bin, bsp_tools_dir) # TOREMOVE copies some utility to BOARD/build/tools 
+    shutil.copy2(packager_bin, bsp_tools_dir)
 
     # run the opae script 'afu-synth-setup' to create the PIM
     cmd_afu_synth_setup_opae_PATH_update = ("PATH=" + env_vars["LIBOPAE_C_ROOT"] + "/bin:${PATH}")
@@ -200,10 +199,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose, device_family):
                                 cmd_afu_synth_setup_force_arg + " " +
                                 cmd_afu_synth_setup_platform_dst)
     print ("full afu_synth_setup cmd is %s" % full_afu_synth_setup_cmd)
-
-
     run_cmd(full_afu_synth_setup_cmd)
-    
+
     #copy/move the pim folder into build/ to keep it common
     src_platform_dir = os.path.join(bsp_dir, 'pim')
     src = os.path.join(src_platform_dir,'*')
@@ -286,7 +283,6 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose, device_family):
     shutil.move(ofs_pr_afu_qsf_file,afu_flat_qsf_path)
     
     #write some stuff into afu_flat.qsf - this is to replace some lines in ofs_pr_afu_sources.tcl where the paths aren't correct
-    # TODO: Move this into a seperate python file in d5005
     if(device_family == 'd5005'):    
         with open(afu_flat_qsf_path, 'a') as f:
             f.write('set_global_assignment -name SEARCH_PATH "./platform"\n')
@@ -300,9 +296,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose, device_family):
     
     #remove the paths and files listed in the ofs_pr_afu_sources.tcl file
     ofs_pr_afu_source_tcl_file=os.path.join(bsp_qsf_dir, '{}pr_afu_sources.tcl'.format(ofs_prefix))
-
     #this still needs to be done in order to eliminate Quartus warnings
-    # TODO: Put these in a build specific .py file that gets called
     if(device_family == 'n6001'):
         replace_text_in_file(ofs_pr_afu_source_tcl_file, '../../', '$::env(BUILD_ROOT_REL)/')
         replace_lines_in_file(afu_flat_qsf_path, 'set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl', '#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE ../setup/suppress_warning.tcl')

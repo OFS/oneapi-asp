@@ -12,5 +12,4 @@ qexec "quartus_syn --read_settings_files=on --write_settings_files=off ofs_top -
 qexec "quartus_fit --read_settings_files=on --write_settings_files=off ofs_top -c $flow"
 qexec "quartus_asm --read_settings_files=on --write_settings_files=off ofs_top -c $flow"
 
-
 qexec "quartus_sta ofs_top -c $flow --force_dat"
