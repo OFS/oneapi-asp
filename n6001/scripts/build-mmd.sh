@@ -17,7 +17,7 @@
 #
 # Optional environment varialbes
 #  LIBOPAE_C_ROOT: path to OPAE installation
-#  OFS_OCL_ENV_DEBUG_SCRIPTS: print script debugging information if set
+#  OFS_ASP_ENV_DEBUG_SCRIPTS: print script debugging information if set
 ###############################################################################
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
@@ -32,7 +32,7 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 #  done
 #cp -r -n $BSP_ROOT../common/source/* source/.
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
@@ -50,9 +50,9 @@ if [ -e "$BSP_ROOT/../.gitmodules" ]; then
 fi
 
 BUILD_PREFIX="$BSP_ROOT/build"
-BUILD_TYPE=${OFS_OCL_ENV_MMD_BUILD_TYPE:-"release"}
+BUILD_TYPE=${OFS_ASP_ENV_MMD_BUILD_TYPE:-"release"}
 SET_ASE="OFF"
-if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
+if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
   SET_ASE="ON"
   BUILD_DIR="$BUILD_PREFIX/ase-${BUILD_TYPE}"
 else
