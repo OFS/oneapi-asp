@@ -73,7 +73,7 @@ ls -1 dummy_sources/* > dummy_sources.txt
 #MTI_HOME must be set to modelsim_ae or Questa location
 ################################################################################
 
-# VCS is only simulator tested for Intel OFS EA release
+# VCS is only simulator tested for Intel OFS release
 TOOL_ARG=(-t VCS)
 
 # Generate a build tree. This will also generate the rules for building
@@ -96,14 +96,7 @@ else
     echo "no vhd files exist, nothing to copy over"
 fi
 
-if [ "${board_name}" == "ofs_n6001" ]; then
-    cp -prf vlog_files_base_ofs_n6001.list vlog_files.list
-elif [ "${board_name}" == "ofs_n6001_usm" ]; then
-    cp -prf vlog_files_base_ofs_n6001_usm.list vlog_files.list
-else
-    echo "Invalid board_name value of $board_name -- you MUST set it to a correct value"
-    exit 1
-fi
+cp -prf vlog_files_base_ofs_n6001.list vlog_files.list
 
 # Put package files first
 {
