@@ -38,17 +38,12 @@ DESIGN_SRC="$1"
 
 # Check that board variant is valid
 BOARD=${BOARD:-ofs_n6001}
-if [ ! -f "$BSP_ROOT/hardware/$BOARD/build/ofs_top.qdb" ]; then
-  echo "Error: cannot find required OFS FIM QDB file for board '$BOARD'"
-  echo "Error: $BSP_ROOT/hardware/$BOARD/build/ofs_top.qdb does not exist. You must build the BSP first."
-  exit 1
-fi
 echo "Running ASE for board variant: $BOARD"
 
 if [ -f "$DESIGN_SRC" ]; then
     echo "Running ASE with design: $DESIGN_SRC"
     echo "aoc command is next"
-    aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
+    aoc -v  -no-env-check -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
 elif [ -d "$DESIGN_SRC" ]; then
     echo "Running ASE with oneAPI design: $DESIGN_SRC"
     echo "pwd is  $PWD"
@@ -56,14 +51,14 @@ elif [ -d "$DESIGN_SRC" ]; then
     echo "pwd is $PWD"
     cd n6001
     echo "pwd is $PWD, cmake is next"
-    export USM_TAIL=""
-    if [ ${BOARD} == "ofs_n6001_usm" ]; then
-        export USM_TAIL="_usm"
+    export USM_ASP=""
+    if [[ "$BOARD" == *"_usm"* ]]; then
+        export USM_ASP="_usm"
     fi
-    export BOARD_TYPE=pac_a10${USM_TAIL}
+    export BOARD_TYPE=pac_a10${USM_ASP}
     cmake "$DESIGN_SRC" -DFPGA_DEVICE=${BOARD_TYPE}
     echo "after cmake"
-    sed -i "s/$BOARD_TYPE/$BOARD/g" src/CMakeFiles/*/link.txt
+    sed -i "s/$BOARD_TYPE/$BOARD -Xsno-env-check /g" src/CMakeFiles/*/link.txt
     make fpga
     echo "make fpga is done; break out the aocx file"
     FPGAFILE=`ls *.fpga`

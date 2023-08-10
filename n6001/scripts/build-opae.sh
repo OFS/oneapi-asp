@@ -9,14 +9,14 @@
 #
 # Environment variables used in script:
 #
-# OFS_OCL_ENV_FIND_ROOT: used to specify alternate root location to look
+# OFS_ASP_ENV_FIND_ROOT: used to specify alternate root location to look
 #  for dependencies.
 ###############################################################################
 
 ###############################################################################
 
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
@@ -57,11 +57,11 @@ mkdir -p "$JSONC_INSTALL_DIR" || exit
 cd "$JSONC_BUILD_DIR" || exit
 cmake -D CMAKE_INSTALL_PREFIX="$JSONC_INSTALL_DIR" ../json-c
 make install
-export OFS_OCL_ENV_FIND_ROOT=$OFS_OCL_ENV_FIND_ROOT:$JSONC_INSTALL_DIR
-export PKG_CONFIG_PATH=$OFS_OCL_ENV_FIND_ROOT/lib64/pkgconfig:$PKG_CONFIG_PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OFS_OCL_ENV_FIND_ROOT/lib64
-export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$OFS_OCL_ENV_FIND_ROOT/include
-export C_INCLUDE_PATH=$C_INCLUDE_PATH:$OFS_OCL_ENV_FIND_ROOT/include
+export OFS_ASP_ENV_FIND_ROOT=$OFS_ASP_ENV_FIND_ROOT:$JSONC_INSTALL_DIR
+export PKG_CONFIG_PATH=$OFS_ASP_ENV_FIND_ROOT/lib64/pkgconfig:$PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OFS_ASP_ENV_FIND_ROOT/lib64
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$OFS_ASP_ENV_FIND_ROOT/include
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:$OFS_ASP_ENV_FIND_ROOT/include
 
 #done with json-c; now build OPAE
 
@@ -100,16 +100,16 @@ mkdir -p "$OPAESDK_INSTALL_DIR" || exit
 
 cd "$OPAESDK_BUILD_DIR" || exit
 
-if [ -n "$OFS_OCL_ENV_FIND_ROOT" ]; then
-  CMAKE_FIND_ROOT_ARG="-DCMAKE_FIND_ROOT_PATH=$OFS_OCL_ENV_FIND_ROOT"
-  echo "Using CMAKE_FIND_ROOT_PATH: $OFS_OCL_ENV_FIND_ROOT"
+if [ -n "$OFS_ASP_ENV_FIND_ROOT" ]; then
+  CMAKE_FIND_ROOT_ARG="-DCMAKE_FIND_ROOT_PATH=$OFS_ASP_ENV_FIND_ROOT"
+  echo "Using CMAKE_FIND_ROOT_PATH: $OFS_ASP_ENV_FIND_ROOT"
   echo "Using PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
 fi
 
 CMAKE_PREFIX_PATH="$JSONC_INSTALL_DIR" cmake "$CMAKE_FIND_ROOT_ARG" -DOPAE_WITH_TBB=OFF -DCMAKE_INSTALL_PREFIX="$OPAESDK_INSTALL_DIR" -DCMAKE_C_COMPILER=gcc -DOPAE_BUILD_SAMPLES=no "$OPAESDK_BUILD_PREFIX/opae-sdk" || exit
 make install
 
-if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
+if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "ASE is enabled - clone and build opae-sim"
     #clone and build opae-sim
     OPAESIM_BUILD_PREFIX="$BSP_ROOT/build/opae-sim"
@@ -145,11 +145,11 @@ if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
     cd "$OPAESIM_BUILD_DIR" || exit
     CMAKE_PREFIX_PATH="$OPAESDK_INSTALL_DIR" cmake -DLIBJSON-C_ROOT="$JSONC_INSTALL_DIR" -DCMAKE_INSTALL_PREFIX="$OPAESIM_INSTALL_DIR" ../opae-sim
     make install
-    export OFS_OCL_ENV_FIND_ROOT=$OFS_OCL_ENV_FIND_ROOT:$OPAESIM_INSTALL_DIR
-    export PKG_CONFIG_PATH=$OFS_OCL_ENV_FIND_ROOT/lib64/pkgconfig:$PKG_CONFIG_PATH
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OFS_OCL_ENV_FIND_ROOT/lib64
-    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$OFS_OCL_ENV_FIND_ROOT/include
-    export C_INCLUDE_PATH=$C_INCLUDE_PATH:$OFS_OCL_ENV_FIND_ROOT/include
+    export OFS_ASP_ENV_FIND_ROOT=$OFS_ASP_ENV_FIND_ROOT:$OPAESIM_INSTALL_DIR
+    export PKG_CONFIG_PATH=$OFS_ASP_ENV_FIND_ROOT/lib64/pkgconfig:$PKG_CONFIG_PATH
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OFS_ASP_ENV_FIND_ROOT/lib64
+    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$OFS_ASP_ENV_FIND_ROOT/include
+    export C_INCLUDE_PATH=$C_INCLUDE_PATH:$OFS_ASP_ENV_FIND_ROOT/include
     
 fi
     
