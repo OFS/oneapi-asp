@@ -89,9 +89,9 @@ do
     fi
 done
 
-qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board.qsys
+qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board_hw.tcl
 ## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board.qsys
+qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board_hw.tcl
 
 # compile project
 # =====================

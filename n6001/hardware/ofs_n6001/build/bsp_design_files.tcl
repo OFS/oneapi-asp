@@ -4,7 +4,6 @@
 #--------------------
 # IPs
 #--------------------
-set_global_assignment -name QSYS_FILE "board.qsys"
 
 #--------------------
 # DMA controller
