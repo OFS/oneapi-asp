@@ -326,8 +326,8 @@ while { $timing_clean == 0 && $timing_loop_cnt <= $max_num_loops} {
     
     post_message "Generating acl_quartus_report.txt"
     set outfile   [open "acl_quartus_report.txt" w]
-    set aluts_l   [regsub "," [get_fitter_resource_usage -alut] "" ]
-    if {[catch {set aluts_m [regsub "," [get_fitter_resource_usage -resource "Memory ALUT usage"] "" ]} result]} {
+    set aluts_l   [regsub -all "," [get_fitter_resource_usage -alut] "" ]
+    if {[catch {set aluts_m [regsub -all "," [get_fitter_resource_usage -resource "Memory ALUT usage"] "" ]} result]} {
         set aluts_m 0
     }
     if { [string length $aluts_m] < 1 || ! [string is integer $aluts_m] } {
