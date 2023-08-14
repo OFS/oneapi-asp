@@ -47,4 +47,4 @@ mkdir -p $BSP_ROOT/oneapi-asp-fseriesdk/build/json-c && cp -rf build/json-c/inst
 
 tar czf oneapi-asp-fseriesdk.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-fseriesdk
 
-rm -rf "$BSP_ROOT/oneapi-asp-n6001"
+rm -rf "$BSP_ROOT/oneapi-asp-fseriesdk"
