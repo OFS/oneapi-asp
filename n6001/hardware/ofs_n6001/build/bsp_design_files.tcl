@@ -4,6 +4,7 @@
 #--------------------
 # IPs
 #--------------------
+set_global_assignment -name IP_FILE "board.ip"
 
 #--------------------
 # DMA controller
