@@ -5,7 +5,7 @@
 
 ###############################################################################
 # Script to generate the tarball used for distributing the OneAPI ASP.  Creates
-# tarball with directory prefix opencl-bsp and includes files for hardware
+# tarball with directory prefix oneapi-asp-n6001 and includes files for hardware
 # targets, MMD, and the default aocx in bringup directory.
 ###############################################################################
 
