@@ -9,9 +9,9 @@ package require ::quartus::flow
 
 # Definitions
 #normal/slow clock
-set k_clk_name "afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk1"
+set k_clk_name "afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk1"
 #double/fast clock
-set k_clk2x_name "afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk0"
+set k_clk2x_name "afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk0"
 set k_fmax -1
 set jitter_compensation 0.01
 set unused_clock_freq 10000
