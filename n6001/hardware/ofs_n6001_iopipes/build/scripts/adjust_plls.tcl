@@ -433,8 +433,8 @@ while { $timing_clean == 0 && $timing_loop_cnt <= $max_num_loops} {
     set sdcfile   [open "user_clock.sdc" w]
     puts $sdcfile "#updated user-clock.sdc assignments based on fmax from previous fit attempt."
     puts $sdcfile "puts \"Updated user-clock constraints based on fmax from previous fit attempt.\" "
-    puts $sdcfile "create_clock -name {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk0} -period $period2 \[get_pins {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[1]}]"
-    puts $sdcfile "create_clock -name {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk1} -period $period \[get_pins {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[2]}] "
+    puts $sdcfile "create_clock -name {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk0} -period $period2 \[get_pins {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[1]}]"
+    puts $sdcfile "create_clock -name {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk1} -period $period \[get_pins {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[2]}] "
     puts $sdcfile "$disable_mpw_sdccmd"
     close $sdcfile
     

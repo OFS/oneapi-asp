@@ -16,7 +16,7 @@ remove_clock afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iop
 remove_clock afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[2]
 
 #kernel clk 1x / uClk_usrDiv2
-create_clock -name {afu_top|pg_afuport_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk0} -period 1.5 [get_pins {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[1]}] 
+create_clock -name {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk0} -period 1.5 [get_pins {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[1]}] 
 
 #kernel clk 2x / uClk_usr
-create_clock -name {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk1} -period 1.5 [get_pins {afu_top|port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[2]}] 
+create_clock -name {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0_outclk1} -period 1.5 [get_pins {afu_top|pg_afu.port_gasket|user_clock|qph_user_clk|qph_user_clk_iopll|iopll_0|tennm_pll|outclk[2]}] 
