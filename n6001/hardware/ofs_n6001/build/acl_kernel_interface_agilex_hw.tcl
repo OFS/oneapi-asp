@@ -64,7 +64,7 @@ proc compose { } {
 
     # Instances and instance parameters
     # (disabled instances are intentionally culled)
-    add_instance kernel_cra acl_avalon_mm_bridge_s10 17.1
+    add_instance kernel_cra acl_avalon_mm_bridge_s10 16.930
     set_instance_parameter_value kernel_cra {DATA_WIDTH} {64}
     set_instance_parameter_value kernel_cra {SYMBOL_WIDTH} {8}
     set_instance_parameter_value kernel_cra {ADDRESS_WIDTH} {30}
@@ -116,16 +116,16 @@ proc compose { } {
       set_instance_parameter_value mem_org_mode$i {WIDTH} {32}
     }
 
-    add_instance clk_reset clock_source 17.1
+    add_instance clk_reset clock_source 23.2
     set_instance_parameter_value clk_reset {clockFrequency} {100000000.0}
     set_instance_parameter_value clk_reset {clockFrequencyKnown} {1}
     set_instance_parameter_value clk_reset {resetSynchronousEdges} {DEASSERT}
 
-    add_instance irq_bridge_0 altera_irq_bridge 17.1
+    add_instance irq_bridge_0 altera_irq_bridge 20.0.0
     set_instance_parameter_value irq_bridge_0 {IRQ_WIDTH} {1}
     set_instance_parameter_value irq_bridge_0 {IRQ_N} {0}
 
-    add_instance sw_reset_in altera_reset_bridge 17.1
+    add_instance sw_reset_in altera_reset_bridge 19.2.0
     set_instance_parameter_value sw_reset_in {ACTIVE_LOW_RESET} {0}
     set_instance_parameter_value sw_reset_in {SYNCHRONOUS_EDGES} {deassert}
     set_instance_parameter_value sw_reset_in {NUM_RESET_OUTPUTS} {1}
@@ -166,16 +166,16 @@ proc compose { } {
     set_instance_parameter_value reset_controller_sw {USE_RESET_REQUEST_IN15} {0}
     set_instance_parameter_value reset_controller_sw {USE_RESET_REQUEST_INPUT} {0}
 
-    add_instance kernel_clk altera_clock_bridge 17.1
+    add_instance kernel_clk altera_clock_bridge 19.2.0
     set_instance_parameter_value kernel_clk {EXPLICIT_CLOCK_RATE} {0.0}
     set_instance_parameter_value kernel_clk {NUM_CLOCK_OUTPUTS} {1}
 
-    add_instance reset_bridge_0 altera_reset_bridge 17.1
+    add_instance reset_bridge_0 altera_reset_bridge 19.2.0
     set_instance_parameter_value reset_bridge_0 {ACTIVE_LOW_RESET} {1}
     set_instance_parameter_value reset_bridge_0 {SYNCHRONOUS_EDGES} {deassert}
     set_instance_parameter_value reset_bridge_0 {NUM_RESET_OUTPUTS} {1}
 
-    add_instance reset_bridge_1 altera_reset_bridge 17.1 
+    add_instance reset_bridge_1 altera_reset_bridge 19.2.0 
     set_instance_parameter_value reset_bridge_1 {ACTIVE_LOW_RESET} {1}
     set_instance_parameter_value reset_bridge_1 {SYNCHRONOUS_EDGES} {deassert}
     set_instance_parameter_value reset_bridge_1 {NUM_RESET_OUTPUTS} {1}
