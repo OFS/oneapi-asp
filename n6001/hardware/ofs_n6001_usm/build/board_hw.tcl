@@ -103,7 +103,7 @@ proc compose { } {
 
   add_instance board_afu_id_avmm_slave afu_id_avmm_slave 1.0
   set_instance_parameter_value board_afu_id_avmm_slave {AFU_ID_H} {0x5d9fef7bc4914dce}
-  set_instance_parameter_value board_afu_id_avmm_slave {AFU_ID_L} {0x95fc979f6f061be}
+  set_instance_parameter_value board_afu_id_avmm_slave {AFU_ID_L} {0x95fcf979f6f061be}
   set_instance_parameter_value board_afu_id_avmm_slave {DFH_FEATURE_TYPE} {1}
   set_instance_parameter_value board_afu_id_avmm_slave {DFH_AFU_MINOR_REV} {0x0}
   set_instance_parameter_value board_afu_id_avmm_slave {DFH_AFU_MAJOR_REV} {0x0}
