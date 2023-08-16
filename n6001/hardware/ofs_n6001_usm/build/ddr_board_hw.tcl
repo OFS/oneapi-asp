@@ -110,7 +110,7 @@ proc compose { } {
 
   add_instance null_dfh_inst afu_id_avmm_slave 1.0
   set_instance_parameter_value null_dfh_inst {AFU_ID_H} {0xda1182b1b3444e23}
-  set_instance_parameter_value null_dfh_inst {AFU_ID_L} {0x90fe6aab120132f}
+  set_instance_parameter_value null_dfh_inst {AFU_ID_L} {0x90fe6aab12a0132f}
   set_instance_parameter_value null_dfh_inst {DFH_FEATURE_TYPE} {2}
   set_instance_parameter_value null_dfh_inst {DFH_AFU_MINOR_REV} {0x0}
   set_instance_parameter_value null_dfh_inst {DFH_AFU_MAJOR_REV} {0x0}

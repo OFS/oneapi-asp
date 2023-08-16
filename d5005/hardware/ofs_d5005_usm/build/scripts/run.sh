@@ -79,21 +79,13 @@ quartus_sh -t scripts/add_bbb_to_pr_project.tcl "$BSP_FLOW"
 
 cp ../afu_opencl_kernel.qsf .
 
-#get a list of gsys files that are mentioned in qsf files; then generate each of them
-eval "$(grep "QSYS_FILE" afu_flat.qsf | grep -v "^#" > qsys_filelist.txt)"
+# use ip-deploy to create board.ip file from toplevel Platform Designer
+# project board_hw.tcl
+ip-deploy --component-name=board 
 
-while read -r line; do
-    f=$(echo "$line" | awk '{print $4}')
-    qsys-generate -syn --quartus-project=d5005 --rev=afu_opencl_kernel "$f"
-    # adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-    qsys-archive --quartus-project=d5005 --rev=afu_opencl_kernel --add-to-project "$f"
-done < qsys_filelist.txt
-
-rm -rf qsys_filelist.txt
-
-qsys-generate -syn --quartus-project=d5005 --rev=afu_opencl_kernel board.qsys
-# adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=d5005 --rev=afu_opencl_kernel --add-to-project board.qsys
+# use qsys-generate to create RTL from toplevel Platform Designer
+# board.ip file
+qsys-generate -syn --quartus-project=d5005 --rev=afu_flat board.ip
 
 #append kernel_system qsys/ip assignments to all revisions
 rm -f kernel_system_qsf_append.txt
