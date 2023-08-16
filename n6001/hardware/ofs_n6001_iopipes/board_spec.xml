@@ -51,7 +51,7 @@
     <!-- Pipe 0 -->
     <interface name="board" port="udp_out" type="streamsink"   width="64" chan_id="udp_out"/>
     <interface name="board" port="udp_in"  type="streamsource" width="64" chan_id="udp_in"/>
-    <!-- Pipes 1-16
+    <!-- Pipes 1-16 -->
     <interface name="board" port="udp_out_1" type="streamsink"   width="64" chan_id="udp_out_1"/>
     <interface name="board" port="udp_in_1"  type="streamsource" width="64" chan_id="udp_in_1"/>
     <interface name="board" port="udp_out_2" type="streamsink"   width="64" chan_id="udp_out_2"/>
@@ -82,6 +82,6 @@
     <interface name="board" port="udp_in_14"  type="streamsource" width="64" chan_id="udp_in_14"/>
     <interface name="board" port="udp_out_15" type="streamsink"   width="64" chan_id="udp_out_15"/>
     <interface name="board" port="udp_in_15"  type="streamsource" width="64" chan_id="udp_in_15"/>
-    -->
+    <!-- -->
   </channels>
 </board>

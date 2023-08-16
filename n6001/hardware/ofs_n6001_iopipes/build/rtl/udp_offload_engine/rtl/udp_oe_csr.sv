@@ -3,12 +3,13 @@
 //
 
 module udp_oe_csr
+import dc_bsp_pkg::*;
 (
   ofs_plat_avalon_mem_if.to_source uoe_csr_avmm,
   
   udp_oe_ctrl_if.csr    udp_oe_ctrl,
   
-  udp_oe_channel_if.csr udp_oe_pipe_ctrl_sts[dc_bsp_pkg::IO_PIPES_NUM_CHAN-1:0]
+  udp_oe_channel_if.csr udp_oe_pipe_ctrl_sts[IO_PIPES_NUM_CHAN-1:0]
 );
 
     import udp_oe_pkg::*;
@@ -36,10 +37,10 @@ module udp_oe_csr
     
     //create an array of registers to handle CSR stuff for a programmable number of channels
     //without adding a lot of duplicative case() entries.
-    logic [IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL-1:0] csr [63:0];
+    logic [63:0] csr [IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL-1:0];
     logic [7:0] ch_csr_addr;
     localparam START_OF_CH_CSR_ADDR = UDPOE_CHAN_BASE_ADDR;
-    localparam END_OF_CH_CSR_ADDR   = UDPOE_CHAN_BASE_ADDR + (IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL);
+    localparam END_OF_CH_CSR_ADDR   = UDPOE_CHAN_BASE_ADDR + (IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL) - 1;
     genvar c;
     generate
         for (c = 0; c < IO_PIPES_NUM_CHAN; c++) begin: ch_csrs
@@ -79,7 +80,7 @@ module udp_oe_csr
 
                     // Common registers
                     SCRATCHPAD_ADDR:                 uoe_csr_avmm.readdata <= scratchpad_reg;
-                    UDPOE_NUM_CHANNELS_ADDR:         uoe_csr_avmm.readdata <= dc_bsp_pkg::IO_PIPES_NUM_CHAN;
+                    UDPOE_NUM_CHANNELS_ADDR:         uoe_csr_avmm.readdata <= IO_PIPES_NUM_CHAN;
                     CSR_FPGA_MAC_ADR_ADDR:           uoe_csr_avmm.readdata <= {16'b0, udp_oe_ctrl.fpga_mac_adr};
                     CSR_FPGA_IP_ADR_ADDR:            uoe_csr_avmm.readdata <= {32'b0, udp_oe_ctrl.fpga_ip_adr}; 
                     CSR_FPGA_UDP_PORT_ADDR:          uoe_csr_avmm.readdata <= {48'b0, udp_oe_ctrl.fpga_udp_port};
@@ -91,7 +92,7 @@ module udp_oe_csr
                     CSR_CHECKSUM_IP_ADDR:            uoe_csr_avmm.readdata <= {32'b0, udp_oe_ctrl.checksum_ip};
 
                     default:                        begin
-                                                        if (this_address >= START_OF_CH_CSR_ADDR && this_address < END_OF_CH_CSR_ADDR) begin
+                                                        if (this_address >= START_OF_CH_CSR_ADDR && this_address <= END_OF_CH_CSR_ADDR) begin
                                                             uoe_csr_avmm.readdata <= csr[ch_csr_addr];
                                                         end else begin
                                                             uoe_csr_avmm.readdata <= REG_RD_BADADDR_DATA;
