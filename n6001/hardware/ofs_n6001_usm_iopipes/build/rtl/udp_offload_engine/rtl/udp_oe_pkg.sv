@@ -52,6 +52,21 @@ package udp_oe_pkg;
     parameter ARP_PLEN       = 8'h04;
     parameter ARP_OPER       = 16'h0002;
 
+    //data to return on a read that ends up in the default case
+    parameter REG_RD_BADADDR_DATA = 64'h0BAD_0ADD_0BAD_0ADD;
+    
+    // TX DCFIFO parameters
+    parameter TX_DCFIFO_DEPTH = 2048;
+    parameter TX_DCFIFO_ALMOST_EMPTY_CUTOFF = 2;//orig = 511 ToDo: raise this back to a higher number
+    parameter TX_DCFIFO_ALMOST_FULL_CUTOFF = TX_DCFIFO_DEPTH - 16;
+    parameter DEFAULT_PAYLOAD_PER_PACKET = 2 * BYTES_PER_WORD;
+    
+    // RX DCFIFO parameters
+    parameter RX_DCFIFO_DEPTH = 2048;
+    
+    //allow intra-BSP loopback?
+    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 1;
+    
     //
     // Dispatcher register addresses
     //misc/DFH regs
@@ -78,6 +93,16 @@ package udp_oe_pkg;
     
     //UDP Offload Engine registers - per-channel
     parameter UDPOE_CHAN_BASE_ADDR          = REG_UDPOE_BASE_ADDR + 'h10;
+    
+    //generic offsets
+    parameter CSR_ADDR_PER_CHANNEL      = 16;
+    parameter CSR_CHAN_INFO_REG_ADDR    = 'h00;//ro
+    parameter CSR_RESET_REG_ADDR        = 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR       = 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR    = 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR    = 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR    = 'h05;//ro
+    
     
     parameter UDPOE_CHAN0_BASE_ADDR         = UDPOE_CHAN_BASE_ADDR;
     parameter CSR_CHAN_INFO_REG_ADDR_CH0    = UDPOE_CHAN0_BASE_ADDR + 'h00;//ro
@@ -111,19 +136,101 @@ package udp_oe_pkg;
     parameter CSR_TX_STATUS_REG_ADDR_CH3    = UDPOE_CHAN3_BASE_ADDR + 'h04;//ro
     parameter CSR_RX_STATUS_REG_ADDR_CH3    = UDPOE_CHAN3_BASE_ADDR + 'h05;//ro
     
-    //data to return on a read that ends up in the default case
-    parameter REG_RD_BADADDR_DATA = 64'h0BAD_0ADD_0BAD_0ADD;
+    parameter UDPOE_CHAN4_BASE_ADDR         = UDPOE_CHAN3_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH4    = UDPOE_CHAN4_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH4        = UDPOE_CHAN4_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH4       = UDPOE_CHAN4_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH4    = UDPOE_CHAN4_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH4    = UDPOE_CHAN4_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH4    = UDPOE_CHAN4_BASE_ADDR + 'h05;//ro
     
-    // TX DCFIFO parameters
-    parameter TX_DCFIFO_DEPTH = 2048;
-    parameter TX_DCFIFO_ALMOST_EMPTY_CUTOFF = 2;//orig = 511 ToDo: raise this back to a higher number
-    parameter TX_DCFIFO_ALMOST_FULL_CUTOFF = TX_DCFIFO_DEPTH - 16;
-    parameter DEFAULT_PAYLOAD_PER_PACKET = 2 * BYTES_PER_WORD;
+    parameter UDPOE_CHAN5_BASE_ADDR         = UDPOE_CHAN4_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH5    = UDPOE_CHAN5_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH5        = UDPOE_CHAN5_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH5       = UDPOE_CHAN5_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH5    = UDPOE_CHAN5_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH5    = UDPOE_CHAN5_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH5    = UDPOE_CHAN5_BASE_ADDR + 'h05;//ro
     
-    // RX DCFIFO parameters
-    parameter RX_DCFIFO_DEPTH = 2048;
+    parameter UDPOE_CHAN6_BASE_ADDR         = UDPOE_CHAN5_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH6    = UDPOE_CHAN6_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH6        = UDPOE_CHAN6_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH6       = UDPOE_CHAN6_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH6    = UDPOE_CHAN6_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH6    = UDPOE_CHAN6_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH6    = UDPOE_CHAN6_BASE_ADDR + 'h05;//ro
     
-    //allow intra-BSP loopback?
-    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 0;
+    parameter UDPOE_CHAN7_BASE_ADDR         = UDPOE_CHAN6_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH7    = UDPOE_CHAN7_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH7        = UDPOE_CHAN7_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH7       = UDPOE_CHAN7_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH7    = UDPOE_CHAN7_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH7    = UDPOE_CHAN7_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH7    = UDPOE_CHAN7_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN8_BASE_ADDR         = UDPOE_CHAN7_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH8    = UDPOE_CHAN8_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH8        = UDPOE_CHAN8_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH8       = UDPOE_CHAN8_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH8    = UDPOE_CHAN8_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH8    = UDPOE_CHAN8_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH8    = UDPOE_CHAN8_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN9_BASE_ADDR         = UDPOE_CHAN8_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH9    = UDPOE_CHAN9_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH9        = UDPOE_CHAN9_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH9       = UDPOE_CHAN9_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH9    = UDPOE_CHAN9_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH9    = UDPOE_CHAN9_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH9    = UDPOE_CHAN9_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN10_BASE_ADDR         = UDPOE_CHAN9_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH10    = UDPOE_CHAN10_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH10        = UDPOE_CHAN10_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH10       = UDPOE_CHAN10_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH10    = UDPOE_CHAN10_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH10    = UDPOE_CHAN10_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH10    = UDPOE_CHAN10_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN11_BASE_ADDR         = UDPOE_CHAN10_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH11    = UDPOE_CHAN11_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH11        = UDPOE_CHAN11_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH11       = UDPOE_CHAN11_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH11    = UDPOE_CHAN11_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH11    = UDPOE_CHAN11_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH11    = UDPOE_CHAN11_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN12_BASE_ADDR         = UDPOE_CHAN11_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH12    = UDPOE_CHAN12_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH12        = UDPOE_CHAN12_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH12       = UDPOE_CHAN12_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH12    = UDPOE_CHAN12_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH12    = UDPOE_CHAN12_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH12    = UDPOE_CHAN12_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN13_BASE_ADDR         = UDPOE_CHAN12_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH13    = UDPOE_CHAN13_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH13        = UDPOE_CHAN13_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH13       = UDPOE_CHAN13_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH13    = UDPOE_CHAN13_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH13    = UDPOE_CHAN13_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH13    = UDPOE_CHAN13_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN14_BASE_ADDR         = UDPOE_CHAN13_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH14    = UDPOE_CHAN14_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH14        = UDPOE_CHAN14_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH14       = UDPOE_CHAN14_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH14    = UDPOE_CHAN14_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH14    = UDPOE_CHAN14_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH14    = UDPOE_CHAN14_BASE_ADDR + 'h05;//ro
+    
+    parameter UDPOE_CHAN15_BASE_ADDR         = UDPOE_CHAN14_BASE_ADDR + 'h10;
+    parameter CSR_CHAN_INFO_REG_ADDR_CH15    = UDPOE_CHAN15_BASE_ADDR + 'h00;//ro
+    parameter CSR_RESET_REG_ADDR_CH15        = UDPOE_CHAN15_BASE_ADDR + 'h01;//rw
+    parameter CSR_STATUS_REG_ADDR_CH15       = UDPOE_CHAN15_BASE_ADDR + 'h02;//ro
+    parameter CSR_MISC_CTRL_REG_ADDR_CH15    = UDPOE_CHAN15_BASE_ADDR + 'h03;//rw
+    parameter CSR_TX_STATUS_REG_ADDR_CH15    = UDPOE_CHAN15_BASE_ADDR + 'h04;//ro
+    parameter CSR_RX_STATUS_REG_ADDR_CH15    = UDPOE_CHAN15_BASE_ADDR + 'h05;//ro
+    
     
 endpackage : udp_oe_pkg
