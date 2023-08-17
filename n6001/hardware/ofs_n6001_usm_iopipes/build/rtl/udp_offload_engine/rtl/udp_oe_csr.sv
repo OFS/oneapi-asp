@@ -14,9 +14,9 @@ import dc_bsp_pkg::*;
 
     import udp_oe_pkg::*;
     
-    logic [63:0] dfh_header_data_reg;
-    logic [63:0] scratchpad_reg;
-    logic [63:0] dfh_reg_0x18, dfh_reg_0x20;
+    logic [MMIO64_DATA_WIDTH-1:0] dfh_header_data_reg;
+    logic [MMIO64_DATA_WIDTH-1:0] scratchpad_reg;
+    logic [MMIO64_DATA_WIDTH-1:0] dfh_reg_0x18, dfh_reg_0x20;
     integer i;
     
     //pipeline and duplicate the csr_rst signal
@@ -37,7 +37,7 @@ import dc_bsp_pkg::*;
     
     //create an array of registers to handle CSR stuff for a programmable number of channels
     //without adding a lot of duplicative case() entries.
-    logic [63:0] csr [IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL-1:0];
+    logic [MMIO64_DATA_WIDTH-1:0] csr [IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL-1:0];
     logic [7:0] ch_csr_addr;
     localparam START_OF_CH_CSR_ADDR = UDPOE_CHAN_BASE_ADDR;
     localparam END_OF_CH_CSR_ADDR   = UDPOE_CHAN_BASE_ADDR + (IO_PIPES_NUM_CHAN*CSR_ADDR_PER_CHANNEL) - 1;

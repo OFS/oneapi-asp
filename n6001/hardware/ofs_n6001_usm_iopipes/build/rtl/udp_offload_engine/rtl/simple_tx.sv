@@ -175,21 +175,6 @@ module simple_tx
                 state <= STATE_IDLE;
             end
           end
-          //// new kernel data to be transmitted is available in FIFO
-          //if (~rd_almost_empty) begin
-          //  // proceed to UDP packet transmission when Ethernet MAC is ready
-          //  if (mac_eth_ready) begin
-          //    state                 <= STATE_MAC_IP0;
-          //    // Header word 1
-          //    //DA[47:0], SA[47:32]
-          //    eth_mac_data          <= {udp_oe_ctrl.host_mac_adr[47:0],udp_oe_ctrl.fpga_mac_adr[47:32]};
-          //  end
-          //end else begin
-          //  state                 <= STATE_IDLE;
-          //  eth_mac_valid         <= 1'b0;
-          //  // Data
-          //  eth_mac_data          <= 'b0;
-          //end
           // ARP requested, need to respond
           if (arp_trigger) begin
             state <= STATE_ARP_RESPONSE0;
