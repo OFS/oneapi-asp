@@ -15,4 +15,6 @@ set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/simple_rx.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/udp_oe_pkg.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "${THIS_DIR}/../rtl/udp_oe_interfaces.sv"
 set_global_assignment -name IP_FILE "${THIS_DIR}/../ip/asp_dcfifo.ip"
+
+
 set_global_assignment -name SDC_FILE "${THIS_DIR}/shim_udp_offload_engine.sdc"
