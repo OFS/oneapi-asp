@@ -52,23 +52,22 @@
   </interfaces>
 
   <channels>
-    <!-- Pipe 0 -->
     <interface name="board" port="udp_out" type="streamsink"   width="64" chan_id="udp_out"/>
     <interface name="board" port="udp_in"  type="streamsource" width="64" chan_id="udp_in"/>
-    <interface name="board" port="udp_out_1" type="streamsink"   width="64" chan_id="udp_out_1"/>
-    <interface name="board" port="udp_in_1"  type="streamsource" width="64" chan_id="udp_in_1"/>
-    <interface name="board" port="udp_out_2" type="streamsink"   width="64" chan_id="udp_out_2"/>
-    <interface name="board" port="udp_in_2"  type="streamsource" width="64" chan_id="udp_in_2"/>
-    <interface name="board" port="udp_out_3" type="streamsink"   width="64" chan_id="udp_out_3"/>
-    <interface name="board" port="udp_in_3"  type="streamsource" width="64" chan_id="udp_in_3"/>
-    <interface name="board" port="udp_out_4" type="streamsink"   width="64" chan_id="udp_out_4"/>
-    <interface name="board" port="udp_in_4"  type="streamsource" width="64" chan_id="udp_in_4"/>
-    <interface name="board" port="udp_out_5" type="streamsink"   width="64" chan_id="udp_out_5"/>
-    <interface name="board" port="udp_in_5"  type="streamsource" width="64" chan_id="udp_in_5"/>
-    <interface name="board" port="udp_out_6" type="streamsink"   width="64" chan_id="udp_out_6"/>
-    <interface name="board" port="udp_in_6"  type="streamsource" width="64" chan_id="udp_in_6"/>
-    <interface name="board" port="udp_out_7" type="streamsink"   width="64" chan_id="udp_out_7"/>
-    <interface name="board" port="udp_in_7"  type="streamsource" width="64" chan_id="udp_in_7"/>
+    <!-- <interface name="board" port="udp_out_1" type="streamsink"   width="64" chan_id="udp_out_1"/>   -->
+    <!-- <interface name="board" port="udp_in_1"  type="streamsource" width="64" chan_id="udp_in_1"/>    -->
+    <!-- <interface name="board" port="udp_out_2" type="streamsink"   width="64" chan_id="udp_out_2"/>   -->
+    <!-- <interface name="board" port="udp_in_2"  type="streamsource" width="64" chan_id="udp_in_2"/>    -->
+    <!-- <interface name="board" port="udp_out_3" type="streamsink"   width="64" chan_id="udp_out_3"/>   -->
+    <!-- <interface name="board" port="udp_in_3"  type="streamsource" width="64" chan_id="udp_in_3"/>    -->
+    <!-- <interface name="board" port="udp_out_4" type="streamsink"   width="64" chan_id="udp_out_4"/>   -->
+    <!-- <interface name="board" port="udp_in_4"  type="streamsource" width="64" chan_id="udp_in_4"/>    -->
+    <!-- <interface name="board" port="udp_out_5" type="streamsink"   width="64" chan_id="udp_out_5"/>   -->
+    <!-- <interface name="board" port="udp_in_5"  type="streamsource" width="64" chan_id="udp_in_5"/>    -->
+    <!-- <interface name="board" port="udp_out_6" type="streamsink"   width="64" chan_id="udp_out_6"/>   -->
+    <!-- <interface name="board" port="udp_in_6"  type="streamsource" width="64" chan_id="udp_in_6"/>    -->
+    <!-- <interface name="board" port="udp_out_7" type="streamsink"   width="64" chan_id="udp_out_7"/>   -->
+    <!-- <interface name="board" port="udp_in_7"  type="streamsource" width="64" chan_id="udp_in_7"/>    -->
     <!-- <interface name="board" port="udp_out_8" type="streamsink"   width="64" chan_id="udp_out_8"/>   -->
     <!-- <interface name="board" port="udp_in_8"  type="streamsource" width="64" chan_id="udp_in_8"/>    -->
     <!-- <interface name="board" port="udp_out_9" type="streamsink"   width="64" chan_id="udp_out_9"/>   -->
@@ -85,6 +84,5 @@
     <!-- <interface name="board" port="udp_in_14"  type="streamsource" width="64" chan_id="udp_in_14"/>  -->
     <!-- <interface name="board" port="udp_out_15" type="streamsink"   width="64" chan_id="udp_out_15"/> -->
     <!-- <interface name="board" port="udp_in_15"  type="streamsource" width="64" chan_id="udp_in_15"/>  -->
-    <!-- -->
   </channels>
 </board>
