@@ -20,12 +20,6 @@ cd "$BSP_ROOT" || exit
 
 bsp_files=("README.md" "scripts" "source" "hardware" "linux64" "board_env.xml" "pr_build_template")
 
-search_dir=bringup/aocxs
-for entry in "$search_dir"/*.aocx
-do
-  bsp_files+=($entry)
-done
-
 for i in "${!bsp_files[@]}"; do
   if [ ! -e "${bsp_files[i]}" ]; then
     unset 'bsp_files[i]'
@@ -42,8 +36,15 @@ mkdir $BSP_ROOT/oneapi-asp-d5005
 cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-d5005/
 
 #"build/opae/install" "build/json-c/install" 
-mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-d5005/build/opae/
-mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-d5005/build/json-c/
+if [ -d "build/opae/install" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-d5005/build/opae/
+fi
+if [ -d "build/json-c/install" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-d5005/build/json-c/
+fi
+if [ -e bringup/aocxs/*.aocx ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-d5005/bringup/aocxs && cp -f bringup/aocxs/*.aocx $BSP_ROOT/oneapi-asp-d5005/bringup/aocxs/
+fi
 
 tar czf oneapi-asp-d5005.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-d5005
 
