@@ -35,14 +35,13 @@ mkdir $BSP_ROOT/oneapi-asp-d5005
 
 cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-d5005/
 
-#"build/opae/install" "build/json-c/install" 
 if [ -d "build/opae/install" ]; then
     mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-d5005/build/opae/
 fi
 if [ -d "build/json-c/install" ]; then
     mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-d5005/build/json-c/
 fi
-if [ -e bringup/aocxs/*.aocx ]; then
+if [ -n "$(find ./bringup/ -name *.aocx)" ]; then
     mkdir -p $BSP_ROOT/oneapi-asp-d5005/bringup/aocxs && cp -f bringup/aocxs/*.aocx $BSP_ROOT/oneapi-asp-d5005/bringup/aocxs/
 fi
 
