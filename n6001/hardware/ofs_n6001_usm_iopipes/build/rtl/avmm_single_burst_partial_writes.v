@@ -21,6 +21,25 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_sink to_avmm_sink
 );
 
+localparam USM_AVMM_BUFFER_WIDTH =  OPENCL_SVM_QSYS_ADDR_WIDTH +
+                                    OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
+                                    OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
+                                    1 + //write req
+                                    1 + //read req
+                                    (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
+localparam USM_AVMM_BUFFER_DEPTH = 1024;
+localparam USM_AVMM_BUFFER_SKID_SPACE = 64;
+localparam USM_AVMM_BUFFER_ALMFULL_VALUE = USM_AVMM_BUFFER_DEPTH - USM_AVMM_BUFFER_SKID_SPACE;
+
+typedef struct packed {
+    logic read, write;
+    logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] address;
+    logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
+    logic [(OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8)-1:0] byteenable;
+    logic [OPENCL_BSP_KERNEL_SVM_DATA_WIDTH-1:0] writedata;
+} usm_avmm_cmd_t;
+usm_avmm_cmd_t usm_avmm_cmd_from_kernelsystem, usm_avmm_cmd_buf_out;
+        
 typedef struct packed {
     logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
     logic valid;
@@ -112,8 +131,14 @@ usm_avmm_buffer
 assign to_avmm_source.waitrequest = usm_avmm_buffer_almfull;
 
 always_comb begin
-    kernel_system_svm_write = usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.write;
-    kernel_system_svm_read  = usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.read;
+    to_avmm_sink.write = usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.write;
+    to_avmm_sink.read  = usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.read;
+    //higher-level interfaces don't like 'X' during simulation. Drive 0's when not driven
+    // by the kernel-system.
+    // synthesis translate off
+        to_avmm_sink.write = (usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.write) === 'X ? 'b0 : kernel_system_svm_write;
+        to_avmm_sink.read  = (usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.read)  === 'X ? 'b0 : kernel_system_svm_read;
+    // synthesis translate on
     
     to_avmm_sink.address    = usm_avmm_cmd_buf_out.address;
     to_avmm_sink.writedata  = usm_avmm_cmd_buf_out.writedata;

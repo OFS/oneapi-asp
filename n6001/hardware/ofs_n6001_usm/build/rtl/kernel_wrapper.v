@@ -30,27 +30,6 @@ import dc_bsp_pkg::*;
 
 kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
 opencl_kernel_control_intf kernel_cra_avmm_bridge ();
-logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] svm_avmm_bridge_burstcount;
-logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] svm_avmm_bridge_address;
-
-localparam USM_AVMM_BUFFER_WIDTH =  OPENCL_SVM_QSYS_ADDR_WIDTH +
-                                    OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
-                                    OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
-                                    1 + //write req
-                                    1 + //read req
-                                    (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
-localparam USM_AVMM_BUFFER_DEPTH = 1024;
-localparam USM_AVMM_BUFFER_SKID_SPACE = 64;
-localparam USM_AVMM_BUFFER_ALMFULL_VALUE = USM_AVMM_BUFFER_DEPTH - USM_AVMM_BUFFER_SKID_SPACE;
-
-typedef struct packed {
-    logic read, write;
-    logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] address;
-    logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
-    logic [(OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8)-1:0] byteenable;
-    logic [OPENCL_BSP_KERNEL_SVM_DATA_WIDTH-1:0] writedata;
-} usm_avmm_cmd_t;
-usm_avmm_cmd_t usm_avmm_cmd_from_kernelsystem, usm_avmm_cmd_buf_out;
         
 always_comb begin
     opencl_kernel_control.kernel_irq                = kernel_cra_avmm_bridge.kernel_irq;
@@ -304,12 +283,12 @@ kernel_system kernel_system_inst (
 `ifdef INCLUDE_USM_SUPPORT
     `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
         avmm_single_burst_partial_writes avmm_single_burst_partial_writes_inst
-        {
+        (
             .clk      ,
             .reset_n  ,
             .avmm_to_source (svm_avmm_kernelsystem),
             .avmm_to_sink   (svm_avmm_bridge)
-        };
+        );
     `else
         //if not requiring partial-writes splitting, just pass the signals through
         always_comb begin
@@ -320,24 +299,18 @@ kernel_system kernel_system_inst (
             svm_avmm_bridge.burstcount     = svm_avmm_kernelsystem.burstcount;
             svm_avmm_bridge.writedata      = svm_avmm_kernelsystem.writedata ;
             svm_avmm_bridge.address        = svm_avmm_kernelsystem.address   ;
+            svm_avmm_bridge.byteenable     = svm_avmm_kernelsystem.byteenable;
             svm_avmm_bridge.write          = svm_avmm_kernelsystem.write     ;
             svm_avmm_bridge.read           = svm_avmm_kernelsystem.read      ;
-            svm_avmm_bridge.byteenable     = svm_avmm_kernelsystem.byteenable;
+            // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
+            // driven by the kernel-system.
+            //drive with the modified version during simulation
+            // synthesis translate off
+                svm_avmm_bridge.write = svm_avmm_kernelsystem.write === 'X ? 'b0 : svm_avmm_kernelsystem.write;
+                svm_avmm_bridge.read  = svm_avmm_kernelsystem.read  === 'X ? 'b0 : svm_avmm_kernelsystem.read;
+            // synthesis translate on
         end
     `endif
-    
-    // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
-    // driven by the kernel-system.
-    always_comb begin
-        //drive with the value from the kernel-system by default
-        svm_avmm_bridge.write = kernel_system_svm_write;
-        svm_avmm_bridge.read  = kernel_system_svm_read;
-        //drive with the modified version during simulation
-    // synthesis translate off
-        svm_avmm_bridge.write = kernel_system_svm_write === 'X ? 'b0 : kernel_system_svm_write;
-        svm_avmm_bridge.read  = kernel_system_svm_read  === 'X ? 'b0 : kernel_system_svm_read;
-    // synthesis translate on
-    end
 `endif
 
 endmodule : kernel_wrapper
