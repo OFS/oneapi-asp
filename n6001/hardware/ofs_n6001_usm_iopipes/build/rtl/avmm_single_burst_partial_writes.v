@@ -21,15 +21,15 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_sink to_avmm_sink
 );
 
-localparam USM_AVMM_BUFFER_WIDTH =  OPENCL_SVM_QSYS_ADDR_WIDTH +
-                                    OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
-                                    OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
-                                    1 + //write req
-                                    1 + //read req
-                                    (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
-localparam USM_AVMM_BUFFER_DEPTH = 1024;
-localparam USM_AVMM_BUFFER_SKID_SPACE = 64;
-localparam USM_AVMM_BUFFER_ALMFULL_VALUE = USM_AVMM_BUFFER_DEPTH - USM_AVMM_BUFFER_SKID_SPACE;
+localparam AVMM_BUFFER_WIDTH =  OPENCL_SVM_QSYS_ADDR_WIDTH +
+                                OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
+                                OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
+                                1 + //write req
+                                1 + //read req
+                                (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
+localparam AVMM_BUFFER_DEPTH = 1024;
+localparam AVMM_BUFFER_SKID_SPACE = 64;
+localparam AVMM_BUFFER_ALMFULL_VALUE = AVMM_BUFFER_DEPTH - AVMM_BUFFER_SKID_SPACE;
 
 typedef struct packed {
     logic read, write;
@@ -37,23 +37,23 @@ typedef struct packed {
     logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
     logic [(OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8)-1:0] byteenable;
     logic [OPENCL_BSP_KERNEL_SVM_DATA_WIDTH-1:0] writedata;
-} usm_avmm_cmd_t;
-usm_avmm_cmd_t usm_avmm_cmd_buf_in, usm_avmm_cmd_buf_out;
+} avmm_cmd_t;
+avmm_cmd_t avmm_cmd_buf_in, avmm_cmd_buf_out;
 
 typedef struct packed {
     logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
     logic valid;
     logic read;
     logic write;
-} usm_avmm_burstcnt_t;
+} avmm_burstcnt_t;
 localparam USM_BCNT_DWIDTH = OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH + 1 + 1 + 1;
-usm_avmm_burstcnt_t [1:0] usm_burstcnt;
-usm_avmm_burstcnt_t usm_burstcnt_dout;
+avmm_burstcnt_t [1:0] burstcnt_data;
+avmm_burstcnt_t usm_burstcnt_dout;
 logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] current_bcnt;
 logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] prev_address_plus1;
-localparam USM_BCNT_WDOG_WIDTH = 10;
-logic [USM_BCNT_WDOG_WIDTH-1:0] usm_burstcnt_wdog;
-logic usm_burstcnt_buffer_full, usm_burstcnt_buffer_almfull, usm_burstcnt_buffer_empty;
+localparam BCNT_WDOG_WIDTH = 10;
+logic [BCNT_WDOG_WIDTH-1:0] burstcnt_wdog;
+logic burstcnt_buffer_full, burstcnt_buffer_almfull, burstcnt_buffer_empty;
 logic [9:0] usm_burstcnt_buffer_usedw;
 typedef enum {  ST_SET_BCNT,
                 ST_DO_WR_BURST,
@@ -71,12 +71,12 @@ always_comb begin
 end
 
 always_comb begin
-    usm_avmm_cmd_buf_in.address    = to_avmm_source.write ? to_avmm_source.address + svm_addr_cnt : to_avmm_source.address;
-    usm_avmm_cmd_buf_in.burstcount = to_avmm_source.write ? 'h1 : to_avmm_source.burstcount;
-    usm_avmm_cmd_buf_in.write      = to_avmm_source.write;
-    usm_avmm_cmd_buf_in.writedata  = to_avmm_source.writedata;
-    usm_avmm_cmd_buf_in.read       = to_avmm_source.read;
-    usm_avmm_cmd_buf_in.byteenable = to_avmm_source.byteenable;
+    avmm_cmd_buf_in.address    = to_avmm_source.write ? to_avmm_source.address + svm_addr_cnt : to_avmm_source.address;
+    avmm_cmd_buf_in.burstcount = to_avmm_source.write ? 'h1 : to_avmm_source.burstcount;
+    avmm_cmd_buf_in.write      = to_avmm_source.write;
+    avmm_cmd_buf_in.writedata  = to_avmm_source.writedata;
+    avmm_cmd_buf_in.read       = to_avmm_source.read;
+    avmm_cmd_buf_in.byteenable = to_avmm_source.byteenable;
 end
 
 always_ff @(posedge clk or negedge reset_n) begin
@@ -84,28 +84,28 @@ always_ff @(posedge clk or negedge reset_n) begin
         svm_addr_cnt <= 'h0;
     end else begin
         if (svm_addr_cnt == (to_avmm_source.burstcount-'b1) ) begin
-            if (usm_avmm_cmd_buf_in.write) begin
+            if (avmm_cmd_buf_in.write) begin
                 svm_addr_cnt <= 'b0;
             end else begin
                 svm_addr_cnt <= svm_addr_cnt;
             end
         end else begin
-            svm_addr_cnt <= svm_addr_cnt + usm_avmm_cmd_buf_in.write;
+            svm_addr_cnt <= svm_addr_cnt + avmm_cmd_buf_in.write;
         end
     end
 end
 
 //due to WRA I need to add a buffer here, using almost-full to generate waitrequest to kernel.
-logic usm_avmm_buffer_full, usm_avmm_buffer_empty;
+logic avmm_buffer_full, avmm_buffer_empty;
 logic [9:0] usm_avmm_buffer_usedw;
 scfifo
 #(
-    .lpm_numwords(USM_AVMM_BUFFER_DEPTH),
+    .lpm_numwords(AVMM_BUFFER_DEPTH),
     .lpm_showahead("ON"),
     .lpm_type("scfifo"),
-    .lpm_width(USM_AVMM_BUFFER_WIDTH),
-    .lpm_widthu($clog2(USM_AVMM_BUFFER_DEPTH)),
-    .almost_full_value(USM_AVMM_BUFFER_ALMFULL_VALUE),
+    .lpm_width(AVMM_BUFFER_WIDTH),
+    .lpm_widthu($clog2(AVMM_BUFFER_DEPTH)),
+    .almost_full_value(AVMM_BUFFER_ALMFULL_VALUE),
     .overflow_checking("OFF"),
     .underflow_checking("OFF"),
     .use_eab("ON"),
@@ -116,14 +116,14 @@ usm_avmm_buffer
     .clock(clk),
     .sclr(!reset_n),
 
-    .data(usm_avmm_cmd_buf_in),
-    .wrreq(usm_avmm_cmd_buf_in.write | usm_avmm_cmd_buf_in.read),
-    .full(usm_avmm_buffer_full),
+    .data(avmm_cmd_buf_in),
+    .wrreq(avmm_cmd_buf_in.write | avmm_cmd_buf_in.read),
+    .full(avmm_buffer_full),
     .almost_full(to_avmm_source.waitrequest),
 
     .rdreq(usm_avmm_fifo_rd),
-    .q(usm_avmm_cmd_buf_out),
-    .empty(usm_avmm_buffer_empty),
+    .q(avmm_cmd_buf_out),
+    .empty(avmm_buffer_empty),
     .almost_empty(),
 
     .aclr(),
@@ -132,19 +132,19 @@ usm_avmm_buffer
 );
 
 always_comb begin
-    to_avmm_sink.write = usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.write;
-    to_avmm_sink.read  = usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.read;
+    to_avmm_sink.write = usm_avmm_fifo_rd & avmm_cmd_buf_out.write;
+    to_avmm_sink.read  = usm_avmm_fifo_rd & avmm_cmd_buf_out.read;
     //higher-level interfaces don't like 'X' during simulation. Drive 0's when not driven
     // by the kernel-system.
     // synthesis translate off
-        to_avmm_sink.write = (usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.write) === 'X ? 'b0 : kernel_system_svm_write;
-        to_avmm_sink.read  = (usm_avmm_fifo_rd & usm_avmm_cmd_buf_out.read)  === 'X ? 'b0 : kernel_system_svm_read;
+        to_avmm_sink.write = (usm_avmm_fifo_rd & avmm_cmd_buf_out.write) === 'X ? 'b0 : (usm_avmm_fifo_rd & avmm_cmd_buf_out.write);
+        to_avmm_sink.read  = (usm_avmm_fifo_rd & avmm_cmd_buf_out.read)  === 'X ? 'b0 : (usm_avmm_fifo_rd & avmm_cmd_buf_out.read);
     // synthesis translate on
     
-    to_avmm_sink.address    = usm_avmm_cmd_buf_out.address;
-    to_avmm_sink.writedata  = usm_avmm_cmd_buf_out.writedata;
-    to_avmm_sink.burstcount = usm_avmm_cmd_buf_out.write ? usm_avmm_fifo_rd_remaining : usm_avmm_cmd_buf_out.burstcount;
-    to_avmm_sink.byteenable = usm_avmm_cmd_buf_out.byteenable;
+    to_avmm_sink.address    = avmm_cmd_buf_out.address;
+    to_avmm_sink.writedata  = avmm_cmd_buf_out.writedata;
+    to_avmm_sink.burstcount = avmm_cmd_buf_out.write ? usm_avmm_fifo_rd_remaining : avmm_cmd_buf_out.burstcount;
+    to_avmm_sink.byteenable = avmm_cmd_buf_out.byteenable;
 end
 
 //re-create the burst-count data based on byteenable, address, and original burst-count
@@ -155,117 +155,117 @@ end
 
 always_ff @(posedge clk) begin
     if (!reset_n) begin
-        usm_burstcnt <= 'h0;
+        burstcnt_data <= 'h0;
         current_bcnt <= 'h1;
         prev_address_plus1 <= 'b0;
-        usm_burstcnt_wdog <= 'b0;
+        burstcnt_wdog <= 'b0;
     end else begin
         //when tracking a write-burst, we might need to flush it out because we don't know when the
         //write from the kernel-system is actually complete.
-        usm_burstcnt_wdog <= current_bcnt > 'h1 ? {usm_burstcnt_wdog[0 +: (USM_BCNT_WDOG_WIDTH-1)], 1'b1} : '0;
+        burstcnt_wdog <= current_bcnt > 'h1 ? {burstcnt_wdog[0 +: (BCNT_WDOG_WIDTH-1)], 1'b1} : '0;
         //push in a 0 to create a pulse for a follow-up partial write burstcount of 1
         //it will be over-written later in the block if/when necessary.
-        usm_burstcnt[1] <= usm_burstcnt[0];
-        usm_burstcnt[0].valid <= 1'b0;
+        burstcnt_data[1] <= burstcnt_data[0];
+        burstcnt_data[0].valid <= 1'b0;
         //if it is a read req from the kernel-system, just use that burstcount value
-        if (usm_avmm_cmd_buf_in.read) begin
-            usm_burstcnt_wdog <= 'h0;
+        if (avmm_cmd_buf_in.read) begin
+            burstcnt_wdog <= 'h0;
             //if we were tracking a write-burst and a read comes in, send both the write and read in order
             if (current_bcnt > 'h1) begin
-                usm_burstcnt[1].burstcount <= current_bcnt - 'b1;
-                usm_burstcnt[1].valid <= 1'b1;
-                usm_burstcnt[1].write <= 1'b1;
-                usm_burstcnt[1].read <= 1'b0;
+                burstcnt_data[1].burstcount <= current_bcnt - 'b1;
+                burstcnt_data[1].valid <= 1'b1;
+                burstcnt_data[1].write <= 1'b1;
+                burstcnt_data[1].read <= 1'b0;
             end
-            usm_burstcnt[0].burstcount <= to_avmm_source.burstcount;
-            usm_burstcnt[0].valid <= 1'b1;
-            usm_burstcnt[0].write <= 1'b0;
-            usm_burstcnt[0].read <= 1'b1;
+            burstcnt_data[0].burstcount <= to_avmm_source.burstcount;
+            burstcnt_data[0].valid <= 1'b1;
+            burstcnt_data[0].write <= 1'b0;
+            burstcnt_data[0].read <= 1'b1;
             current_bcnt <= 'h1;
         //if it is a write req from kernel-system, need to figure out the maximal burst
-        end else if (usm_avmm_cmd_buf_in.write) begin
-            usm_burstcnt_wdog <= 'h0;
+        end else if (avmm_cmd_buf_in.write) begin
+            burstcnt_wdog <= 'h0;
             //if original burst-cnt is 1, leave it as 1
             if (to_avmm_source.burstcount == 'h1) begin
                 //if need to send the previous burst, too.
                 if (current_bcnt > 'h1) begin
-                    usm_burstcnt[1].burstcount <= current_bcnt - 'b1;
-                    usm_burstcnt[1].valid <= 1'b1;
-                    usm_burstcnt[1].write <= 1'b1;
-                    usm_burstcnt[1].read <= 1'b0;
+                    burstcnt_data[1].burstcount <= current_bcnt - 'b1;
+                    burstcnt_data[1].valid <= 1'b1;
+                    burstcnt_data[1].write <= 1'b1;
+                    burstcnt_data[1].read <= 1'b0;
                 end
-                usm_burstcnt[0].burstcount <= 'h1;
-                usm_burstcnt[0].valid <= 1'b1;
-                usm_burstcnt[0].write <= 1'b1;
-                usm_burstcnt[0].read  <= 1'b0;
+                burstcnt_data[0].burstcount <= 'h1;
+                burstcnt_data[0].valid <= 1'b1;
+                burstcnt_data[0].write <= 1'b1;
+                burstcnt_data[0].read  <= 1'b0;
                 current_bcnt <= 'h1;
             //original burst-cnt is not 1; this is the first word of the burst
             end else if (current_bcnt == 'h1) begin
-                if ( !(&usm_avmm_cmd_buf_in.byteenable) ) begin
-                    usm_burstcnt[0].burstcount <= 'h1;
-                    usm_burstcnt[0].valid <= 1'b1;
-                    usm_burstcnt[0].write <= 1'b1;
-                    usm_burstcnt[0].read <= 1'b0;
+                if ( !(&avmm_cmd_buf_in.byteenable) ) begin
+                    burstcnt_data[0].burstcount <= 'h1;
+                    burstcnt_data[0].valid <= 1'b1;
+                    burstcnt_data[0].write <= 1'b1;
+                    burstcnt_data[0].read <= 1'b0;
                 end else begin
-                    prev_address_plus1 <= usm_avmm_cmd_buf_in.address + 'h1;
+                    prev_address_plus1 <= avmm_cmd_buf_in.address + 'h1;
                     current_bcnt <= 'h2;
                 end
             //if continuous address
-            end else if (prev_address_plus1 == usm_avmm_cmd_buf_in.address) begin
+            end else if (prev_address_plus1 == avmm_cmd_buf_in.address) begin
                 //if partial write, send burst and singleton
-                if ( !(&usm_avmm_cmd_buf_in.byteenable) ) begin
-                    usm_burstcnt[1].burstcount <= current_bcnt - 'b1;
-                    usm_burstcnt[1].valid <= 1'b1;
-                    usm_burstcnt[1].write <= 1'b1;
-                    usm_burstcnt[1].read <= 1'b0;
-                    usm_burstcnt[0].burstcount <= 'h1;
-                    usm_burstcnt[0].valid <= 1'b1;
-                    usm_burstcnt[0].write <= 1'b1;
-                    usm_burstcnt[0].read <= 1'b0;
+                if ( !(&avmm_cmd_buf_in.byteenable) ) begin
+                    burstcnt_data[1].burstcount <= current_bcnt - 'b1;
+                    burstcnt_data[1].valid <= 1'b1;
+                    burstcnt_data[1].write <= 1'b1;
+                    burstcnt_data[1].read <= 1'b0;
+                    burstcnt_data[0].burstcount <= 'h1;
+                    burstcnt_data[0].valid <= 1'b1;
+                    burstcnt_data[0].write <= 1'b1;
+                    burstcnt_data[0].read <= 1'b0;
                     current_bcnt <= 'h1;
                 //not a partial write and not a full burst, so keep adding to burstcount
                 end else if (current_bcnt < OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX) begin
                     current_bcnt <= current_bcnt + 'h1;
                 //full burst, so send burst and start again
                 end else begin
-                    usm_burstcnt[0].burstcount <= current_bcnt;
-                    usm_burstcnt[0].valid <= 1'b1;
-                    usm_burstcnt[0].write <= 1'b1;
-                    usm_burstcnt[0].read <= 1'b0;
+                    burstcnt_data[0].burstcount <= current_bcnt;
+                    burstcnt_data[0].valid <= 1'b1;
+                    burstcnt_data[0].write <= 1'b1;
+                    burstcnt_data[0].read <= 1'b0;
                     current_bcnt <= 'h1;
                 end
-                prev_address_plus1 <= usm_avmm_cmd_buf_in.address + 'h1;
+                prev_address_plus1 <= avmm_cmd_buf_in.address + 'h1;
             //not a continuous address, send the previous burst and start tracking the new one
             end else begin
                 //if partial write, send burst and singleton
-                if ( !(&usm_avmm_cmd_buf_in.byteenable) ) begin
-                    usm_burstcnt[1].burstcount <= current_bcnt - 'b1;
-                    usm_burstcnt[1].valid <= 1'b1;
-                    usm_burstcnt[1].write <= 1'b1;
-                    usm_burstcnt[1].read <= 1'b0;
-                    usm_burstcnt[0].burstcount <= 'h1;
-                    usm_burstcnt[0].valid <= 1'b1;
-                    usm_burstcnt[0].write <= 1'b1;
-                    usm_burstcnt[0].read <= 1'b0;
+                if ( !(&avmm_cmd_buf_in.byteenable) ) begin
+                    burstcnt_data[1].burstcount <= current_bcnt - 'b1;
+                    burstcnt_data[1].valid <= 1'b1;
+                    burstcnt_data[1].write <= 1'b1;
+                    burstcnt_data[1].read <= 1'b0;
+                    burstcnt_data[0].burstcount <= 'h1;
+                    burstcnt_data[0].valid <= 1'b1;
+                    burstcnt_data[0].write <= 1'b1;
+                    burstcnt_data[0].read <= 1'b0;
                     current_bcnt <= 'h1;
                 //not partial burst, so send previous burst and continue tracking the new one
                 end else begin
-                    usm_burstcnt[0].burstcount <= current_bcnt - 'b1;
-                    usm_burstcnt[0].valid <= 1'b1;
-                    usm_burstcnt[0].write <= 1'b1;
-                    usm_burstcnt[0].read <= 1'b0;
+                    burstcnt_data[0].burstcount <= current_bcnt - 'b1;
+                    burstcnt_data[0].valid <= 1'b1;
+                    burstcnt_data[0].write <= 1'b1;
+                    burstcnt_data[0].read <= 1'b0;
                     current_bcnt <= 'h1;
-                    prev_address_plus1 <= usm_avmm_cmd_buf_in.address + 'h1;
+                    prev_address_plus1 <= avmm_cmd_buf_in.address + 'h1;
                 end
             end
         //watchdog to flush out any final write request. 
-        end else if (&usm_burstcnt_wdog) begin
-            usm_burstcnt[0].burstcount <= current_bcnt - 'b1;
-            usm_burstcnt[0].valid <= 1'b1;
-            usm_burstcnt[0].write <= 1'b1;
-            usm_burstcnt[0].read <= 1'b0;
+        end else if (&burstcnt_wdog) begin
+            burstcnt_data[0].burstcount <= current_bcnt - 'b1;
+            burstcnt_data[0].valid <= 1'b1;
+            burstcnt_data[0].write <= 1'b1;
+            burstcnt_data[0].read <= 1'b0;
             current_bcnt <= 'h1;
-            usm_burstcnt_wdog <= 'b0;
+            burstcnt_wdog <= 'b0;
         end
     end
 end
@@ -273,30 +273,30 @@ end
 //push the burst-count info into a scFIFO
 scfifo
 #(
-    .lpm_numwords(USM_AVMM_BUFFER_DEPTH),
+    .lpm_numwords(AVMM_BUFFER_DEPTH),
     .lpm_showahead("ON"),
     .lpm_type("scfifo"),
     .lpm_width(USM_BCNT_DWIDTH),
-    .lpm_widthu($clog2(USM_AVMM_BUFFER_DEPTH)),
-    .almost_full_value(USM_AVMM_BUFFER_ALMFULL_VALUE),
+    .lpm_widthu($clog2(AVMM_BUFFER_DEPTH)),
+    .almost_full_value(AVMM_BUFFER_ALMFULL_VALUE),
     .overflow_checking("OFF"),
     .underflow_checking("OFF"),
     .use_eab("ON"),
     .add_ram_output_register("ON")
     )
-usm_burstcnt_buffer
+burstcnt_buffer
 (
     .clock(clk),
     .sclr(!reset_n),
 
-    .data(usm_burstcnt[1]),
-    .wrreq(usm_burstcnt[1].valid),
-    .full(usm_burstcnt_buffer_full),
-    .almost_full(usm_burstcnt_buffer_almfull),
+    .data(burstcnt_data[1]),
+    .wrreq(burstcnt_data[1].valid),
+    .full(burstcnt_buffer_full),
+    .almost_full(burstcnt_buffer_almfull),
 
     .rdreq(usm_bcnt_fifo_rd),
     .q(usm_burstcnt_dout),
-    .empty(usm_burstcnt_buffer_empty),
+    .empty(burstcnt_buffer_empty),
     .almost_empty(),
 
     .aclr(),
@@ -319,7 +319,7 @@ always_ff @(posedge clk)
 always_comb begin
     usm_bcnt_ns = XXX;
     case (usm_bcnt_cs)
-        ST_SET_BCNT:    if (!usm_burstcnt_buffer_empty && !to_avmm_sink.waitrequest) begin
+        ST_SET_BCNT:    if (!burstcnt_buffer_empty && !to_avmm_sink.waitrequest) begin
                             //if read or (bcnt == 1) stay here so we're ready 
                             // for the next one on the next cycle
                             if (usm_burstcnt_dout.read == 'b1 || 
@@ -334,7 +334,7 @@ always_comb begin
                         //if final word of this burst and not waitreq
         ST_DO_WR_BURST: if (usm_avmm_fifo_rd_remaining == 'h1 && !to_avmm_sink.waitrequest) begin
                             //if there is another burst waiting to go, stay here and start new burst
-                            if (!usm_burstcnt_buffer_empty && usm_burstcnt_dout.write == 'b1 && usm_burstcnt_dout.burstcount != 'h1) begin
+                            if (!burstcnt_buffer_empty && usm_burstcnt_dout.write == 'b1 && usm_burstcnt_dout.burstcount != 'h1) begin
                                 usm_bcnt_ns = ST_DO_WR_BURST;
                             end else begin
                                 usm_bcnt_ns = ST_SET_BCNT;
@@ -354,7 +354,7 @@ always_ff @(posedge clk)
         usm_avmm_fifo_rd_remaining <= 'b0;
     else begin
         //if burstcount fifo isn't empty and !waitreq
-        if (!usm_burstcnt_buffer_empty && !to_avmm_sink.waitrequest && (usm_bcnt_st_is_setbcnt || 
+        if (!burstcnt_buffer_empty && !to_avmm_sink.waitrequest && (usm_bcnt_st_is_setbcnt || 
            (usm_bcnt_st_is_do_wr_burst && usm_avmm_fifo_rd_remaining == 'h1) ) ) begin
             usm_avmm_fifo_rd_remaining <= usm_burstcnt_dout.read ? 'h1 : usm_burstcnt_dout.burstcount;
         //pop from usm_avmm FIFO as long as the counter is non-zero and !waitreq
@@ -369,7 +369,7 @@ always_ff @(posedge clk)
 assign usm_avmm_fifo_rd = usm_avmm_fifo_rd_remaining && !to_avmm_sink.waitrequest;
 //pop the next usm_bcnt value when? When it is first popped, so that the next value is already 
 // waiting on the FIFO output when we are done with the current burst.
-assign usm_bcnt_fifo_rd =   !usm_burstcnt_buffer_empty && !to_avmm_sink.waitrequest && (usm_bcnt_st_is_setbcnt || 
+assign usm_bcnt_fifo_rd =   !burstcnt_buffer_empty && !to_avmm_sink.waitrequest && (usm_bcnt_st_is_setbcnt || 
                             (usm_bcnt_st_is_do_wr_burst && usm_avmm_fifo_rd_remaining == 'h1) );
 
 endmodule : avmm_single_burst_partial_writes

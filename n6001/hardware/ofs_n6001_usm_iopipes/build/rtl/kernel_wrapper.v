@@ -81,7 +81,6 @@ endgenerate
 
 `ifdef INCLUDE_USM_SUPPORT
     logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
-    logic kernel_system_svm_read, kernel_system_svm_write;
     
     ofs_plat_avalon_mem_if
     # (
