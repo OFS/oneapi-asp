@@ -31,8 +31,9 @@ done
 
 # Check that board variant is configured
 BOARD=${BOARD:-ofs_n6001}
-if [ ! -f "$BSP_ROOT/hardware/$BOARD/build/ofs_top.qdb" ]; then
-  echo "Error: cannot find required OFS TOP QDB file for board '$BOARD'"
+QDB_FILES="$(find $BSP_ROOT/hardware -name ofs_top.qdb)"
+if [ -z "$QDB_FILES" ]; then
+  echo "Error: cannot find required OFS TOP QDB files. Please set up the ASP first."
   exit 1
 fi
 echo "Generating default aocx for board variant: $BOARD"
@@ -68,8 +69,8 @@ echo "Starting aocx compile at: $(date)"
 echo -e "Using OpenCL version:\n$(aoc -version)\n"
 echo -e "Using Quartus version:\n$(quartus_sh --version)"
 echo "---------------------------------------------------------------"
-echo -e "aoc -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE""
-aoc -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE"
+echo -e "aoc -board-package="$BSP_ROOT" -no-env-check -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE""
+aoc -board-package="$BSP_ROOT" -no-env-check -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE"
 echo "Finished aocx compile at: $(date)"
 
 if [ -f "$BUILD_DIR/${BOARD}.aocx" ]; then
