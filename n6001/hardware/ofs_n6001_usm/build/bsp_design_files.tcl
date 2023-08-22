@@ -30,6 +30,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE "rtl/bsp_host_mem_if_mux.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_gen.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_burst_to_word.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_tracker.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_single_burst_partial_writes.sv"
 
 #--------------------
 # Search paths (for headers, etc)
