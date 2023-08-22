@@ -5,13 +5,12 @@
 `include "ofs_plat_if.vh"
 `include "opencl_bsp.vh"
 
-
 module afu
 import dc_bsp_pkg::*;
-#(
+  #(
     parameter NUM_LOCAL_MEM_BANKS = 0
-)
-(
+   )
+  (
     // Host memory (Avalon)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
 
@@ -134,10 +133,12 @@ bsp_logic bsp_logic_inst (
     .kernel_mem
 );
 
+// wrapper for the kernel-region
 kernel_wrapper kernel_wrapper_inst (
     .clk        (uClk_usrDiv2),
     .clk2x      (uClk_usr),
     .reset_n    (!uClk_usrDiv2_reset),
+    
     .opencl_kernel_control,
     .kernel_mem
 `ifdef INCLUDE_USM_SUPPORT

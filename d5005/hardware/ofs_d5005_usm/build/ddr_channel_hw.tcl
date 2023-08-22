@@ -12,11 +12,17 @@ set_module_property COMPOSITION_CALLBACK compose
 # +-----------------------------------
 # | parameters
 # | 
-
+add_parameter MEMORY_BANK_ADDRESS_WIDTH INTEGER 32
+set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE 32
+set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
+set_parameter_property MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
 # | 
 # +-----------------------------------
 
 proc compose { } {
+  # Get parameters
+  set memory_bank_address_width [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
+
   # Instances and instance parameters
   add_instance host_clk altera_clock_bridge 19.2.0
   set_instance_parameter_value host_clk {EXPLICIT_CLOCK_RATE} {0.0}
@@ -38,7 +44,7 @@ proc compose { } {
   add_instance ddr4_emif_pipe acl_avalon_mm_bridge_s10 16.930
   set_instance_parameter_value ddr4_emif_pipe {DATA_WIDTH} {512}
   set_instance_parameter_value ddr4_emif_pipe {SYMBOL_WIDTH} {8}
-  set_instance_parameter_value ddr4_emif_pipe {ADDRESS_WIDTH} {33}
+  set_instance_parameter_value ddr4_emif_pipe {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_emif_pipe {ADDRESS_UNITS} {SYMBOLS}
   set_instance_parameter_value ddr4_emif_pipe {MAX_BURST_SIZE} {16}
   set_instance_parameter_value ddr4_emif_pipe {MAX_PENDING_RESPONSES} {64}
@@ -49,7 +55,7 @@ proc compose { } {
   set_instance_parameter_value ddr4_emif_pipe {CMD_PIPE_DEPTH} {1}
 
   add_instance ddr4_cross_to_kernel acl_clock_crossing_bridge 1.0
-  set_instance_parameter_value ddr4_cross_to_kernel {ADDRESS_WIDTH} {33}
+  set_instance_parameter_value ddr4_cross_to_kernel {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_cross_to_kernel {DATA_WIDTH} {512}
   set_instance_parameter_value ddr4_cross_to_kernel {BURSTCOUNT_WIDTH} {5}
   set_instance_parameter_value ddr4_cross_to_kernel {BYTEENABLE_WIDTH} {64}
@@ -62,7 +68,7 @@ proc compose { } {
   add_instance ddr4_pipe_to_kernel acl_avalon_mm_bridge_s10 16.930
   set_instance_parameter_value ddr4_pipe_to_kernel {DATA_WIDTH} {512}
   set_instance_parameter_value ddr4_pipe_to_kernel {SYMBOL_WIDTH} {8}
-  set_instance_parameter_value ddr4_pipe_to_kernel {ADDRESS_WIDTH} {33}
+  set_instance_parameter_value ddr4_pipe_to_kernel {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_pipe_to_kernel {ADDRESS_UNITS} {SYMBOLS}
   set_instance_parameter_value ddr4_pipe_to_kernel {MAX_BURST_SIZE} {16}
   set_instance_parameter_value ddr4_pipe_to_kernel {MAX_PENDING_RESPONSES} {256}
@@ -73,7 +79,7 @@ proc compose { } {
   set_instance_parameter_value ddr4_pipe_to_kernel {CMD_PIPE_DEPTH} {1}
 
   add_instance ddr4_cross_to_host acl_clock_crossing_bridge 1.0
-  set_instance_parameter_value ddr4_cross_to_host {ADDRESS_WIDTH} {33}
+  set_instance_parameter_value ddr4_cross_to_host {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_cross_to_host {DATA_WIDTH} {512}
   set_instance_parameter_value ddr4_cross_to_host {BURSTCOUNT_WIDTH} {5}
   set_instance_parameter_value ddr4_cross_to_host {BYTEENABLE_WIDTH} {64}

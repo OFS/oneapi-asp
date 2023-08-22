@@ -10,41 +10,39 @@
 // Using kernel wrapper instead of kernel_system, since kernel_system is auto generated.
 // kernel_system introduces boundary ports that are not used, and in PR they get preserved
 
-module kernel_wrapper  
-import dc_bsp_pkg::*;
-(
+module kernel_wrapper (
     input       clk,
     input       clk2x,
     input       reset_n,
     
     opencl_kernel_control_intf.kw opencl_kernel_control,
-    kernel_mem_intf.ker kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
+    kernel_mem_intf.ker kernel_mem[dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS]
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
 );
 
-kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
+kernel_mem_intf mem_avmm_bridge [dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
 opencl_kernel_control_intf kernel_cra_avmm_bridge ();
-logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] svm_avmm_bridge_burstcount;
-logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] svm_avmm_bridge_address;
+logic [dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] svm_avmm_bridge_burstcount;
+logic [dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] svm_avmm_bridge_address;
 
-localparam USM_AVMM_BUFFER_WIDTH =  OPENCL_SVM_QSYS_ADDR_WIDTH +
-                                    OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
-                                    OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
+localparam USM_AVMM_BUFFER_WIDTH =  dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH +
+                                    dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
+                                    dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
                                     1 + //write req
                                     1 + //read req
-                                    (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
+                                    (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
 localparam USM_AVMM_BUFFER_DEPTH = 1024;
 localparam USM_AVMM_BUFFER_SKID_SPACE = 64;
 localparam USM_AVMM_BUFFER_ALMFULL_VALUE = USM_AVMM_BUFFER_DEPTH - USM_AVMM_BUFFER_SKID_SPACE;
 
 typedef struct packed {
     logic read, write;
-    logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] address;
-    logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
-    logic [(OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8)-1:0] byteenable;
-    logic [OPENCL_BSP_KERNEL_SVM_DATA_WIDTH-1:0] writedata;
+    logic [dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] address;
+    logic [dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
+    logic [(dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8)-1:0] byteenable;
+    logic [dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH-1:0] writedata;
 } usm_avmm_cmd_t;
 usm_avmm_cmd_t usm_avmm_cmd_from_kernelsystem, usm_avmm_cmd_buf_out;
         
@@ -55,17 +53,17 @@ end
 //add pipeline stages to the memory interfaces
 genvar m;
 generate 
-    for (m = 0; m<BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
+    for (m = 0; m<dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
     
         //pipeline bridge from the kernel to board.qsys
         acl_avalon_mm_bridge_s10 #(
-            .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_DATA_WIDTH ),
+            .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_DATA_WIDTH ),
             .SYMBOL_WIDTH                   ( 8   ),
-            .HDL_ADDR_WIDTH                 ( OPENCL_QSYS_ADDR_WIDTH ),
-            .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
+            .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_QSYS_ADDR_WIDTH ),
+            .BURSTCOUNT_WIDTH               ( dc_bsp_pkg::OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
             .SYNCHRONIZE_RESET              ( 1   ),
-            .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
-            .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
+            .DISABLE_WAITREQUEST_BUFFERING  ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
+            .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
         ) avmm_pipeline_inst (
             .clk               (clk),
             .reset             (!reset_n),
@@ -97,14 +95,14 @@ generate
 endgenerate
 
 `ifdef INCLUDE_USM_SUPPORT
-    logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
+    logic [dc_bsp_pkg::OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
     logic kernel_system_svm_read, kernel_system_svm_write;
     
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
     ) svm_avmm_bridge ();
     
     always_comb begin
@@ -112,13 +110,13 @@ endgenerate
     end
     
     acl_avalon_mm_bridge_s10 #(
-        .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
+        .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
         .SYMBOL_WIDTH                   ( 8   ),
-        .HDL_ADDR_WIDTH                 ( OPENCL_SVM_QSYS_ADDR_WIDTH ),
-        .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
+        .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH ),
+        .BURSTCOUNT_WIDTH               ( dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
         .SYNCHRONIZE_RESET              ( 1   ),
         .DISABLE_WAITREQUEST_BUFFERING  ( 1   ),
-        .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
+        .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
     )  kernel_mem_acl_avalon_mm_bridge_s10 (
         .clk                          (clk),
         .reset                        (!reset_n),
@@ -145,13 +143,13 @@ endgenerate
 
 //avmm pipeline for kernel cra
 acl_avalon_mm_bridge_s10 #(
-    .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
+    .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
     .SYMBOL_WIDTH                   ( 8   ),
-    .HDL_ADDR_WIDTH                 ( OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
+    .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
     .BURSTCOUNT_WIDTH               ( 1   ),
     .SYNCHRONIZE_RESET              ( 1   ),
-    .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
-    .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
+    .DISABLE_WAITREQUEST_BUFFERING  ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
+    .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
 ) kernel_cra_avalon_mm_bridge_s10 (
     .clk               (clk),
     .reset             (!reset_n),
@@ -274,16 +272,16 @@ kernel_system kernel_system_inst (
     `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
         
         typedef struct packed {
-            logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
+            logic [dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
             logic valid;
             logic read;
             logic write;
         } usm_avmm_burstcnt_t;
-        localparam USM_BCNT_DWIDTH = OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH + 1 + 1 + 1;
+        localparam USM_BCNT_DWIDTH = dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH + 1 + 1 + 1;
         usm_avmm_burstcnt_t [1:0] usm_burstcnt;
         usm_avmm_burstcnt_t usm_burstcnt_dout;
-        logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] current_bcnt;
-        logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] prev_address_plus1;
+        logic [dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] current_bcnt;
+        logic [dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] prev_address_plus1;
         localparam USM_BCNT_WDOG_WIDTH = 10;
         logic [USM_BCNT_WDOG_WIDTH-1:0] usm_burstcnt_wdog;
         logic usm_burstcnt_buffer_full, usm_burstcnt_buffer_almfull, usm_burstcnt_buffer_empty;
@@ -293,7 +291,7 @@ kernel_system kernel_system_inst (
                         XXX } usm_bcnt_st_e;
         usm_bcnt_st_e usm_bcnt_cs, usm_bcnt_ns;
         logic usm_bcnt_st_is_setbcnt, usm_bcnt_st_is_do_wr_burst;
-        logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] usm_avmm_fifo_rd_remaining;
+        logic [dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] usm_avmm_fifo_rd_remaining;
         logic usm_avmm_fifo_rd, usm_bcnt_fifo_rd;
         logic [7:0] svm_addr_cnt;
         
@@ -442,7 +440,7 @@ kernel_system kernel_system_inst (
                             usm_burstcnt[0].read <= 1'b0;
                             current_bcnt <= 'h1;
                         //not a partial write and not a full burst, so keep adding to burstcount
-                        end else if (current_bcnt < OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX) begin
+                        end else if (current_bcnt < dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX) begin
                             current_bcnt <= current_bcnt + 'h1;
                         //full burst, so send burst and start again
                         end else begin

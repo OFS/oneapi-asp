@@ -12,8 +12,7 @@ module ofs_plat_afu
     );
     
     import cci_mpf_shim_pkg::t_cci_mpf_shim_mdata_value;
-    import dc_bsp_pkg::*;
-    
+
     // ====================================================================
     //
     //  Get an Avalon host channel collection from the platform.
@@ -53,7 +52,7 @@ module ofs_plat_afu
 
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
       #(
-        .ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
+        .ADD_CLOCK_CROSSING(dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN),
         .ADD_TIMING_REG_STAGES(1)
         )
       primary_avalon
@@ -87,7 +86,7 @@ module ofs_plat_afu
             ofs_plat_local_mem_as_avalon_mem
               #(
                 // EMIF closs crossings occur in the BSP Qsys-system
-                .ADD_CLOCK_CROSSING(USE_PIM_CDC_LOCALMEM),
+                .ADD_CLOCK_CROSSING(dc_bsp_pkg::USE_PIM_CDC_LOCALMEM),
                 .ADD_TIMING_REG_STAGES(3)
                 )
               shim
@@ -101,13 +100,14 @@ module ofs_plat_afu
                 );
         end
     endgenerate
-    
-    
+
+
     // ====================================================================
     //
     //  Tie off unused ports.
     //
     // ====================================================================
+
     ofs_plat_if_tie_off_unused
       #(
         // Masks are bit masks, with bit 0 corresponding to port/bank zero.
@@ -138,9 +138,9 @@ module ofs_plat_afu
 
     //set pClk depending on if we are using PIM for PCIe/host-channel CDC
     logic pclk_bsp,pclk_bsp_reset;
-    assign pclk_bsp = USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
+    assign pclk_bsp = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
                                                          plat_ifc.clocks.pClk.clk;
-    assign pclk_bsp_reset = USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
+    assign pclk_bsp_reset = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
                                                                ~plat_ifc.clocks.pClk.reset_n;
 
     afu

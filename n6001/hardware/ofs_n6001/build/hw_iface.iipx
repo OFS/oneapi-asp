@@ -276,6 +276,20 @@
   <tag2 key="TCL_PACKAGE_VERSION" value="12.1" />
  </component>
  <component
+   name="acl_kernel_interface"
+   file="./ip/acl_kernel_interface_hw.tcl"
+   displayName="oneAPI Kernel Interface IP"
+   version="23.2"
+   description="Connects the oneAPI host to the FPGA kernel"
+   tags="AUTHORSHIP=OFS"
+   categories="oneAPI ASP Components"
+   factory="TclModuleFactory">
+  <tag2 key="ANALYZE_HDL" value="false" />
+  <tag2 key="COMPONENT_EDITABLE" value="false" />
+  <tag2 key="COMPOSITION_CALLBACK" value="compose" />
+  <tag2 key="TCL_PACKAGE_VERSION" value="12.1" />
+ </component>
+ <component
    name="acl_snoop_adapter"
    file="${INTELFPGAOCLSDKROOT}/ip/board/export/snoop_adapter_hw.tcl"
    displayName="Avalon Snoop Adapter"
