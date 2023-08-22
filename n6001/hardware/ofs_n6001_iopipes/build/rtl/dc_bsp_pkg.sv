@@ -97,6 +97,6 @@ package dc_bsp_pkg;
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
     
     //number of IO Channels/Pipes enabled in the ASP.
-    parameter IO_PIPES_NUM_CHAN = 5'h01;
+    parameter IO_PIPES_NUM_CHAN = 5'h08;
     
 endpackage : dc_bsp_pkg
