@@ -68,7 +68,6 @@ do
     this_cmd="aoc -board-package="$BSP_ROOT" -no-env-check -bsp-flow="$BSP_FLOW" -board="$this_variant" -v -o "$this_variant" "$BSP_ROOT/$CL_FILE""
     #display the build cmd we'll run
     echo "Running this command: ${this_cmd}"
-    aoc -board-package="$BSP_ROOT" -no-env-check -bsp-flow="$BSP_FLOW" -board="$this_variant" -v -o "$this_variant" "$BSP_ROOT/$CL_FILE"
     #run the command
     $this_cmd
     echo "Finished aocx compile at: $(date)"
