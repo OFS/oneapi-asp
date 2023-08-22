@@ -30,7 +30,7 @@ import dc_bsp_pkg::*;
 
 kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
 opencl_kernel_control_intf kernel_cra_avmm_bridge ();
-        
+
 always_comb begin
     opencl_kernel_control.kernel_irq                = kernel_cra_avmm_bridge.kernel_irq;
 end
@@ -286,8 +286,8 @@ kernel_system kernel_system_inst (
         (
             .clk      ,
             .reset_n  ,
-            .avmm_to_source (svm_avmm_kernelsystem),
-            .avmm_to_sink   (svm_avmm_bridge)
+            .to_avmm_source (svm_avmm_kernelsystem),
+            .to_avmm_sink   (svm_avmm_bridge)
         );
     `else
         //if not requiring partial-writes splitting, just pass the signals through

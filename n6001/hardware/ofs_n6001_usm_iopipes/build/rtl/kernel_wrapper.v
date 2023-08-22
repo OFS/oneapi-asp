@@ -286,8 +286,8 @@ kernel_system kernel_system_inst (
         (
             .clk      ,
             .reset_n  ,
-            .avmm_to_source (svm_avmm_kernelsystem),
-            .avmm_to_sink   (svm_avmm_bridge)
+            .to_avmm_source (svm_avmm_kernelsystem),
+            .to_avmm_sink   (svm_avmm_bridge)
         );
     `else
         //if not requiring partial-writes splitting, just pass the signals through
