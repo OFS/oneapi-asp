@@ -74,7 +74,6 @@ bool iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : IO-PIPES : Inside setup-iopipes_asp function");
   }
-  printf("** Inside setup-iopipes_asp function **\n");
   const uint64_t REG_UDPOE_BASE_ADDR       = iopipes::iopipes_dfh_offset_;
   const uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
   const uint64_t CSR_SCRATCHPAD_ADDR           = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
@@ -250,15 +249,20 @@ bool iopipes::setup_iopipes_asp(fpga_handle afc_handle)
   }
   int i = 0x00;
   for(uint64_t loop=0; loop<number_of_channels; loop++) { 
-    printf("Looping on channel %ld, Writing CSRs for channel %ld\n", loop, loop); 
-    printf("Writing CSR_RESET_REG_ADDR for IO Pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Looping on channel %ld, Writing CSRs for channel %ld\n", loop, loop);
+      DEBUG_LOG("Writing CSR_RESET_REG_ADDR for IO Pipe %ld\n", loop);
+    }
+
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (++i*0x8)), 0x1)) != FPGA_OK) {
       printf("Error:writing CSR_RESET_REG CSR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
     i = i+CSR_ADDRESS_MAP_JUMP_1;
-    printf("Writing CSR_MISC_CTRL_REG for IO Pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Writing CSR_MISC_CTRL_REG for IO Pipe %ld\n", loop);
+    }
     if ((res = fpgaWriteMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i*0x8)), 0xFFFFFFFF)) != FPGA_OK) {
       printf("Error:writing CSR_MISC_CTRL_REG CSR");
       printf("%s \n",fpgaErrStr(res));
