@@ -9,7 +9,7 @@
 # the required files in BSP HW folder.
 ###############################################################################
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
@@ -30,27 +30,22 @@ while getopts ":b:f:h" arg; do
 done
 
 # Check that board variant is configured
-BOARD=${BOARD:-ofs_d5005}
-if [ ! -f "$BSP_ROOT/hardware/$BOARD/build/d5005.qdb" ]; then
-  echo "Error: cannot find required OFS FIM QDB file for board '$BOARD'"
+BOARD=${BOARD:-all}
+QDB_FILES="$(find $BSP_ROOT/hardware -name d5005.qdb)"
+if [ -z "$QDB_FILES" ]; then
+  echo "Error: cannot find required OFS FIM QDB files. Please set up the ASP first."
   exit 1
 fi
-echo "Generating default aocx for board variant: $BOARD"
 
-# Select cl file for building default aocx
-case $BOARD in
-  ofs_d5005)
-    CL_FILE="bringup/source/hello_world/device/hello_world.cl"
-    INTERLEAVE_OPTION=""
-    ;;
-  ofs_d5005_usm)
-    CL_FILE="bringup/source/hello_world/device/hello_world.cl"
-    INTERLEAVE_OPTION="" 
-    ;;
-  *)
-    echo "Error: invalid board type: $BOARD"
-    exit 1
-esac
+if [ "$BOARD" == "all" ] ; then
+    declare -a variant_list=("ofs_d5005" "ofs_d5005_usm")
+else
+    declare -a variant_list=("$BOARD")
+fi
+echo "Generating default aocx for board variant(s): ${variant_list[@]]}"
+
+# Using the same hello_world.cl file for the default source
+CL_FILE="bringup/source/hello_world/device/hello_world.cl"
 
 # Check that BSP flow is valid
 BSP_FLOW=${BSP_FLOW:-afu_flat}
@@ -63,19 +58,25 @@ echo "Using build flow: '$BSP_FLOW'"
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR" || exit
 
-echo "---------------------------------------------------------------"
-echo "Starting aocx compile at: $(date)"
-echo -e "Using OpenCL version:\n$(aoc -version)\n"
-echo -e "Using Quartus version:\n$(quartus_sh --version)"
-echo "---------------------------------------------------------------"
-echo -e "aoc -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE""
-aoc -board-package="$BSP_ROOT" -bsp-flow="$BSP_FLOW" -board="$BOARD" "$INTERLEAVE_OPTION" -v -o "$BOARD" "$BSP_ROOT/$CL_FILE"
-echo "Finished aocx compile at: $(date)"
-
-if [ -f "$BUILD_DIR/${BOARD}.aocx" ]; then
-  mkdir -p "$BSP_ROOT/bringup/aocxs"
-  cp "$BUILD_DIR/${BOARD}.aocx" "$BSP_ROOT/bringup/aocxs/${BOARD}.aocx"
-else
-  echo "Error failed to generate default aocx"
-  exit 1
-fi
+for this_variant in "${variant_list[@]]}"
+do
+    echo "---------------------------------------------------------------"
+    echo "Starting default ${this_variant} aocx compile at: $(date)"
+    echo -e "Using OpenCL version:\n$(aoc -version)\n"
+    echo -e "Using Quartus version:\n$(quartus_sh --version)"
+    echo "---------------------------------------------------------------"
+    this_cmd="aoc -board-package="$BSP_ROOT" -no-env-check -bsp-flow="$BSP_FLOW" -board="$this_variant" -v -o "$this_variant" "$BSP_ROOT/$CL_FILE""
+    #display the build cmd we'll run
+    echo "Running this command: ${this_cmd}"
+    #run the command
+    $this_cmd
+    echo "Finished aocx compile at: $(date)"
+    
+    if [ -f "$BUILD_DIR/${this_variant}.aocx" ]; then
+        mkdir -p "$BSP_ROOT/bringup/aocxs"
+        cp "$BUILD_DIR/${this_variant}.aocx" "$BSP_ROOT/bringup/aocxs/${this_variant}.aocx"
+    else
+        echo "Error failed to generate default aocx"
+        exit 1
+    fi
+done

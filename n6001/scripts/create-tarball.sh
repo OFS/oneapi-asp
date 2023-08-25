@@ -5,7 +5,7 @@
 
 ###############################################################################
 # Script to generate the tarball used for distributing the OneAPI ASP.  Creates
-# tarball with directory prefix opencl-bsp and includes files for hardware
+# tarball with directory prefix oneapi-asp-n6001 and includes files for hardware
 # targets, MMD, and the default aocx in bringup directory.
 ###############################################################################
 
@@ -18,13 +18,7 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 cd "$BSP_ROOT" || exit
 
-bsp_files=("README.md" "scripts" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install" "pr_build_template/hw/blue_bits")
-
-search_dir=bringup/aocxs
-for entry in "$search_dir"/*.aocx
-do
-  bsp_files+=($entry)
-done
+bsp_files=("README.md" "scripts" "source" "hardware" "linux64" "board_env.xml" "pr_build_template")
 
 for i in "${!bsp_files[@]}"; do
   if [ ! -e "${bsp_files[i]}" ]; then
@@ -40,6 +34,16 @@ fi
 mkdir $BSP_ROOT/oneapi-asp-n6001
 
 cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-n6001/
+
+if [ -d "build/opae/install" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-n6001/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-n6001/build/opae/
+fi
+if [ -d "build/json-c/install" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-n6001/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-n6001/build/json-c/
+fi
+if [ -n "$(find ./bringup/ -name *.aocx)" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-n6001/bringup/aocxs && cp -f bringup/aocxs/*.aocx $BSP_ROOT/oneapi-asp-n6001/bringup/aocxs/
+fi
 
 tar czf oneapi-asp-n6001.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-n6001
 

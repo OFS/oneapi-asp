@@ -5,11 +5,11 @@
 
 ###############################################################################
 # Script to generate the tarball used for distributing the OneAPI ASP.  Creates
-# tarball with directory prefix opencl-bsp and includes files for hardware
+# tarball with directory prefix oneapi-asp-d5005 and includes files for hardware
 # targets, MMD, and the default aocx in bringup directory.
 ###############################################################################
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
@@ -18,13 +18,7 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 cd "$BSP_ROOT" || exit
 
-bsp_files=("README.md" "scripts" "source" "hardware" "linux64/lib" "linux64/libexec" "board_env.xml" "build/opae/install" "build/json-c/install" "pr_build_template/hw/blue_bits")
-
-search_dir=bringup/aocxs
-for entry in "$search_dir"/*.aocx
-do
-  bsp_files+=($entry)
-done
+bsp_files=("README.md" "scripts" "source" "hardware" "linux64" "board_env.xml" "pr_build_template")
 
 for i in "${!bsp_files[@]}"; do
   if [ ! -e "${bsp_files[i]}" ]; then
@@ -32,5 +26,25 @@ for i in "${!bsp_files[@]}"; do
   fi
 done
 
-tar --transform='s,^,oneapi-asp-d5005/,' --create --gzip \
-    --file="$BSP_ROOT/oneapi-asp-d5005.tar.gz" --owner=0 --group=0  "${bsp_files[@]}"
+if [ -d "$BSP_ROOT/oneapi-asp-d5005" ]; then
+    echo "$BSP_ROOT/oneapi-asp-d5005 exists; Removing it first"
+    rm -rf $BSP_ROOT/oneapi-asp-d5005
+fi
+
+mkdir $BSP_ROOT/oneapi-asp-d5005
+
+cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-d5005/
+
+if [ -d "build/opae/install" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-d5005/build/opae/
+fi
+if [ -d "build/json-c/install" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-d5005/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-d5005/build/json-c/
+fi
+if [ -n "$(find ./bringup/ -name *.aocx)" ]; then
+    mkdir -p $BSP_ROOT/oneapi-asp-d5005/bringup/aocxs && cp -f bringup/aocxs/*.aocx $BSP_ROOT/oneapi-asp-d5005/bringup/aocxs/
+fi
+
+tar czf oneapi-asp-d5005.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-d5005
+
+rm -rf "$BSP_ROOT/oneapi-asp-d5005"
