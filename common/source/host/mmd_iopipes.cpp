@@ -40,43 +40,7 @@ namespace intel_opae_mmd {
 //base address is 0x20800
 //dfh base offset is 0x0
 //udp offload engine csrs offset is 0x10
-// do we need below defines anymore?
 #define CHECKSUM_IP     43369
-/*#define UDP_MAX_BUFSIZE 16*1024
-#define UDP_PORT_NUM    12345
-#define CSR_MAC_VAL     0x001122334455
-
-#define N               50 // data size*/
-
-// Utility to parse a MAC address string
-// It converts MAC address to unsigned long number
-/*unsigned long ParseMACAddress(std::string mac_str){
-  std::replace(mac_str.begin(), mac_str.end(), ':', ' ');
-  std::array<int, 6> mac_nums;
-  std::stringstream ss(mac_str);
-  int i = 0;
-  int tmp;
-
-  while (ss >> std::hex >> tmp) {
-    mac_nums[i++] = tmp;
-  }
-
-  if (i != 6) {
-    std::cerr << "ERROR: invalid MAC address string\n";
-    return 0;
-  }
-
-  unsigned long ret = 0;
-  for (size_t j = 0; j < 6; j++) {
-    ret += mac_nums[j] & 0xFF;
-    if (j != 5) {
-      ret <<= 8;
-    }
-  }
-
-  return ret;
-}*/
-
 uint64_t ParseMACAddress(std::string addr)
 {
     uint64_t res = INVALID_MAC;
@@ -108,13 +72,11 @@ iopipes::~iopipes(){}
 bool iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 {
   if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : IO-PIPES : Inside setup-iopipes_asp function");
+    DEBUG_LOG("DEBUG LOG : IO-PIPES : Inside setup-iopipes_asp function");
   }
   printf("** Inside setup-iopipes_asp function **\n");
   const uint64_t REG_UDPOE_BASE_ADDR       = iopipes::iopipes_dfh_offset_;
-  //uint64_t REG_UDPOE_DFH_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x0*0x8);
   const uint64_t REG_UDPOE_CSR_BASE_ADDR   = REG_UDPOE_BASE_ADDR + (0x10*0x8);
-  //uint64_t CSR_SCRATCHPAD_ADDR      = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
   const uint64_t CSR_SCRATCHPAD_ADDR           = REG_UDPOE_CSR_BASE_ADDR+(0x00*0x8);
   const uint64_t CSR_UDPOE_NUM_IOPIPES_ADDR     = REG_UDPOE_CSR_BASE_ADDR+(0x01*0x8);
 
@@ -128,40 +90,54 @@ bool iopipes::setup_iopipes_asp(fpga_handle afc_handle)
 
   const uint64_t CSR_PAYLOAD_PER_PACKET_ADDR   = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
   const uint64_t CSR_CHECKSUM_IP_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x0a*0x8);
-  //uint64_t CSR_RESET_REG_ADDR            = REG_UDPOE_CSR_BASE_ADDR+(0x09*0x8);
 
   const uint64_t IOPIPES_CSR_START_ADDR          = REG_UDPOE_CSR_BASE_ADDR+(0x10*0x8);
 
   std::string local_ip_addr = local_ip_address_;
-  printf("local ip address= %s\n", local_ip_addr.c_str());
-  
+
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("local ip address= %s\n", local_ip_addr.c_str());
+  }
+ 
   uint64_t local_mac_addr = ParseMACAddress(local_mac_address_);
   if(local_mac_addr == 0xffffffffffffffffULL){
     printf("Invalid Local MAC address. Please provide MAC address in 'aa:bb:cc:dd:ee:ff' format\n");
     return false;
   } else{
-    printf("local mac address= %ld\n", local_mac_addr);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("local mac address= %ld\n", local_mac_addr);
+    }
   }
 
   std::string local_netmask = local_netmask_;
-  printf("local netmask = %s\n", local_netmask.c_str());
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("local netmask = %s\n", local_netmask.c_str());
+  }
 
   uint64_t local_udp_port = (unsigned long)local_udp_port_;
-  printf("local udp port= %ld\n", local_udp_port);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("local udp port= %ld\n", local_udp_port);
+  }
 
   std::string remote_ip_addr = remote_ip_address_;
-  printf("remote ip address= %s\n", remote_ip_addr.c_str());
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("remote ip address= %s\n", remote_ip_addr.c_str());
+  }
  
   uint64_t remote_mac_addr = ParseMACAddress(remote_mac_address_); 
   if(remote_mac_addr == 0xffffffffffffffffULL){
     printf("Invalid Remote MAC address. Please provide MAC address in 'aa:bb:cc:dd:ee:ff' format\n");
     return false;
   } else{
-    printf("remote mac address= %ld\n", remote_mac_addr);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("remote mac address= %ld\n", remote_mac_addr);
+    }
   }
 
   uint64_t remote_udp_port = (unsigned long)remote_udp_port_;
-  printf("remote udp port= %ld\n", remote_udp_port);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("remote udp port= %ld\n", remote_udp_port);
+  }
 
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : IO-PIPES : \n local ip address= %s\n local mac address= %ld\n" 
@@ -302,77 +278,99 @@ bool iopipes::setup_iopipes_asp(fpga_handle afc_handle)
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: Scratchpad:%ld\n", debug_scratchpad_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: Scratchpad:%ld\n", debug_scratchpad_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_UDPOE_NUM_IOPIPES_ADDR, &debug_num_iopipes_csr)) != FPGA_OK) {
     printf("Error reading CSR_UDPOE_NUM_IOPIPES_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: Number of IO Channels/Pipes:%ld\n", debug_num_iopipes_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: Number of IO Channels/Pipes:%ld\n", debug_num_iopipes_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_FPGA_MAC_ADR_ADDR, &debug_fpga_mac_addr_csr)) != FPGA_OK) {
     printf("Error reading CSR_FPGA_MAC_ADR_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: FPGA_MAC_ADDR:%ld\n", debug_fpga_mac_addr_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: FPGA_MAC_ADDR:%ld\n", debug_fpga_mac_addr_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_FPGA_IP_ADR_ADDR, &debug_fpga_ip_addr_csr)) != FPGA_OK) {
     printf("Error reading CSR_FPGA_IP_ADR_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: FPGA_IP_ADDR:%ld\n", debug_fpga_ip_addr_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: FPGA_IP_ADDR:%ld\n", debug_fpga_ip_addr_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_FPGA_UDP_PORT_ADDR, &debug_fpga_udp_port_csr)) != FPGA_OK) {
     printf("Error reading CSR_FPGA_UDP_PORT_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }   
-  printf("Read CSR: FPGA_UDP_PORT:%ld\n", debug_fpga_udp_port_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: FPGA_UDP_PORT:%ld\n", debug_fpga_udp_port_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_FPGA_NETMASK_ADDR, &debug_fpga_netmask_csr)) != FPGA_OK) {
     printf("Error reading CSR_FPGA_NETMASK_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: FPGA_NETMASK:%ld\n", debug_fpga_netmask_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: FPGA_NETMASK:%ld\n", debug_fpga_netmask_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_HOST_MAC_ADR_ADDR, &debug_host_mac_addr_csr)) != FPGA_OK) {
     printf("Error reading CSR_HOST_MAC_ADR_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: HOST_MAC_ADDR:%ld\n", debug_host_mac_addr_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: HOST_MAC_ADDR:%ld\n", debug_host_mac_addr_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_HOST_IP_ADR_ADDR, &debug_host_ip_addr_csr)) != FPGA_OK) {
     printf("Error reading CSR_HOST_IP_ADR_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: HOST_IP_ADDR:%ld\n", debug_host_ip_addr_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: HOST_IP_ADDR:%ld\n", debug_host_ip_addr_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_HOST_UDP_PORT_ADDR, &debug_host_udp_port_csr)) != FPGA_OK) {
     printf("Error reading CSR_HOST_UDP_PORT_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: HOST_UDP_PORT:%ld\n", debug_host_udp_port_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: HOST_UDP_PORT:%ld\n", debug_host_udp_port_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_PAYLOAD_PER_PACKET_ADDR, &debug_payload_per_packet_csr)) != FPGA_OK) {
     printf("Error reading CSR_PAYLOAD_PER_PACKET_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false;
   }
-  printf("Read CSR: PAYLOAD_PER_PACKET:%ld\n", debug_payload_per_packet_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: PAYLOAD_PER_PACKET:%ld\n", debug_payload_per_packet_csr);
+  }
 
   if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, CSR_CHECKSUM_IP_ADDR , &debug_checksum_ip_csr)) != FPGA_OK) {
     printf("Error reading CSR_CHECKSUM_IP_ADDR\n");
     printf("%s \n",fpgaErrStr(res));
     return false; 
   }
-  printf("Read CSR: CHECKSUM_IP:%ld\n", debug_checksum_ip_csr);
+  if(std::getenv("MMD_ENABLE_DEBUG")){
+    DEBUG_LOG("Read CSR: CHECKSUM_IP:%ld\n", debug_checksum_ip_csr);
+  }
 
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : IO-PIPES : \n CSR: Scratchpad:%ld\n CSR: Number of IO Channels/Pipes:%ld\n"
@@ -390,54 +388,83 @@ bool iopipes::setup_iopipes_asp(fpga_handle afc_handle)
            debug_tx_status_csr, debug_rx_status_csr;
   i = 0x00;
   for(uint64_t loop=0; loop<number_of_channels; loop++) { 
-    printf("Looping on channel %ld, Reading CSRs for channel %ld\n", loop, loop); 
-    printf("Reading CSR_IOPIPE_INFO_REG_ADDR for IO pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Looping on channel %ld, Reading CSRs for channel %ld\n", loop, loop);
+      DEBUG_LOG("Reading CSR_IOPIPE_INFO_REG_ADDR for IO pipe %ld\n", loop);
+    }
+
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &debug_iopipe_info_csr)) != FPGA_OK) {
       printf("Error:reading CSR_IOPIPE_INFO_REG_ADDR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
-    printf("Read CSR_IOPIPE_INFO_REG_ADDR:%ld\n", debug_iopipe_info_csr);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Read CSR_IOPIPE_INFO_REG_ADDR:%ld\n", debug_iopipe_info_csr);
+    }
 
-    printf("Reading CSR_RESET_REG_ADDR for IO pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Reading CSR_RESET_REG_ADDR for IO pipe %ld\n", loop);
+    }
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &debug_reset_csr)) != FPGA_OK) {
       printf("Error:reading CSR_RESET_REG_ADDR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
-    printf("Read CSR_RESET_REG_ADDR:%ld\n", debug_reset_csr);
 
-    printf("Reading CSR_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Read CSR_RESET_REG_ADDR:%ld\n", debug_reset_csr);
+    }
+
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Reading CSR_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    }
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &debug_status_csr)) != FPGA_OK) {
       printf("Error:reading CSR_STATUS_REG_ADDR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
-    printf("Read CSR_STATUS_REG_ADDR:%ld\n", debug_status_csr);
 
-    printf("Reading CSR_MISC_CTRL_REG_ADDR for IO Pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Read CSR_STATUS_REG_ADDR:%ld\n", debug_status_csr);
+    }
+
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Reading CSR_MISC_CTRL_REG_ADDR for IO Pipe %ld\n", loop);
+    }
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &debug_misc_ctrl_csr)) != FPGA_OK) {
       printf("Error:reading CSR_MISC_CTRL_REG_ADDR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
-    printf("Read CSR_MISC_CTRL_REG_ADDR:%ld\n", debug_misc_ctrl_csr);
 
-    printf("Reading CSR_TX_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Read CSR_MISC_CTRL_REG_ADDR:%ld\n", debug_misc_ctrl_csr);
+    }
+
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Reading CSR_TX_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    }
+
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &debug_tx_status_csr)) != FPGA_OK) {
       printf("Error:reading CSR_TX_STATUS_REG_ADDR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
-    printf("Read CSR_TX_STATUS_REG_ADDR:%ld\n", debug_tx_status_csr);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Read CSR_TX_STATUS_REG_ADDR:%ld\n", debug_tx_status_csr);
+    }
 
-    printf("Reading CSR_RX_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Reading CSR_RX_STATUS_REG_ADDR for IO Pipe %ld\n", loop);
+    }
     if ((res = fpgaReadMMIO64(afc_handle, mmio_num_, (IOPIPES_CSR_START_ADDR + (i++*0x8)), &debug_rx_status_csr)) != FPGA_OK) {
       printf("Error:reading CSR_RX_STATUS_REG_ADDR");
       printf("%s \n",fpgaErrStr(res));
       return false;
     }
-    printf("Read CSR_RX_STATUS_REG_ADDR:%ld\n", debug_rx_status_csr);
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("Read CSR_RX_STATUS_REG_ADDR:%ld\n", debug_rx_status_csr);
+    }
 
     if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : IO-PIPES : \n CSR_IOPIPE_INFO_REG_ADDR:%ld\n CSR_RESET_REG_ADDR:%ld\n"
