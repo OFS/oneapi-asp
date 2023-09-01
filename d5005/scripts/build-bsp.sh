@@ -22,7 +22,7 @@
 #   OFS_PLATFORM_AFU_BBB: path to ofs-platform-afu-bbb repository
 ###############################################################################
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   echo "Running ${BASH_SOURCE[0]} with debug logging"
   set -x
 fi

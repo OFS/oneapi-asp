@@ -97,39 +97,14 @@ def copy_glob(src, dst, verbose=False):
                 rm_glob(full_dst)
             shutil.copy2(i, dst)
 
-
-# symlink function that accepts globs and can overlay existing directories
-def symlink_glob(src, dst):
-    for i in glob.glob(src):
-        if os.path.isdir(i):
-            dst_dir_path = os.path.join(dst, os.path.basename(i))
-            if(not os.path.exists(dst_dir_path)):
-                os.mkdir(dst_dir_path)
-            symlink_glob(os.path.join(i, '*'), dst_dir_path)
-            # '.' files(hidden files) are not included in '*'
-            symlink_glob(os.path.join(i, '.*'), dst_dir_path)
-        else:
-            dst_link = os.path.join(dst, os.path.basename(i))
-            if(os.path.exists(dst_link)):
-                os.remove(dst_link)
-            os.symlink(i, dst_link)
-            #print ("create symlink src: %s    dest: %s   dest_link: %s" % (src, dst, dst_link))
-
-
+            
 # take a glob path and remove the files
 def rm_glob(src, verbose=False):
     for i in glob.glob(src):
         os.remove(i)
         #print ("Removed: %s" % i)
 
-
-# create a text file
-def create_text_file(dst, lines):
-    with open(dst, 'w') as f:
-        for line in lines:
-            f.write(line)
-
-
+        
 # main work function for setting up bsp
 def setup_bsp(bsp_root, env_vars, bsp, verbose):
 
@@ -230,135 +205,6 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     rm_glob(os.path.join(bsp_dir, 'ofs_top.qpf'))
     OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/ofs_top.qpf ."
     run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
-
-
-# create a file manifest for use in later copy-steps
-def create_manifest(dst_dir):
-    files = []
-    for i in glob.glob(os.path.join(dst_dir, '*')):
-        filename = os.path.basename(i)
-        print ("create-manifest: filename is %s" % filename)
-        files.append("%s\n" % filename)
-    manifest_file = 'bsp_dir_filelist.txt'
-    files.append("%s\n" % manifest_file)
-    # add qdb so that it is not copied to build directory
-    files.append('qdb\n')
-    create_text_file(os.path.join(dst_dir, manifest_file), files)
-
-
-# remove lines with search_text in file
-def remove_lines_in_file(file_name, search_text):
-    lines = []
-    with open(file_name) as f:
-        for line in f:
-            if search_text in line:
-                continue
-            lines.append(line)
-
-    with open(file_name, 'w') as f:
-        for line in lines:
-            f.write(line)
-
-
-# replace a line containing search_text with replace_text in file
-def replace_lines_in_file(file_name, search_text, replace_text):
-    lines = []
-    with open(file_name) as f:
-        for line in f:
-            if search_text in line:
-                lines.append(line.replace(search_text, replace_text))
-            else:
-                lines.append(line)
-
-    with open(file_name, 'w') as f:
-        for line in lines:
-            f.write(line)
-
-
-# replace search_text with replace_text in file
-def replace_text_in_file(file_name, search_text, replace_text):
-    with open(file_name, 'r') as f:
-        data = f.read()
-        data = data.replace(search_text, replace_text)
-    with open(file_name, 'w') as f:
-        f.write(data)
-
-
-# python equivalent of "chmod +w"
-def chmod_plus_w(file_path):
-    file_stats = os.stat(file_path)
-    os.chmod(file_path, file_stats.st_mode | (stat.S_IWRITE))
-
-
-# update quartus project for opencl flow
-def update_qpf_project_for_opencl_flow(qpf_path):
-    chmod_plus_w(qpf_path)
-
-    # need to rewrite these lines so that opencl AOC qsys flow modifies the
-    # correct project
-    remove_lines_in_file(qpf_path, 'PROJECT_REVISION')
-
-    with open(qpf_path, 'a') as f:
-        f.write('\n')
-        f.write('\n')
-        f.write('#YOU MUST PUT SYNTH REVISION FIRST SO THAT '
-                'AOC WILL DEFAULT TO THAT WITH qsys-script!\n')
-        f.write('PROJECT_REVISION = "afu_opencl_kernel"\n')
-        f.write('PROJECT_REVISION = "ofs_top"\n')
-
-# update quartus project for afu compile flow
-def update_qpf_project_for_afu(qpf_path):
-    chmod_plus_w(qpf_path)
-
-    # need to rewrite these lines so that opencl AOC qsys flow modifies the
-    # correct project
-    remove_lines_in_file(qpf_path, 'PROJECT_REVISION')
-
-    with open(qpf_path, 'a') as f:
-        f.write('\n')
-        f.write('\n')
-        f.write('PROJECT_REVISION = "afu_flat"\n')
-        f.write('PROJECT_REVISION = "ofs_top"\n')
-
-def update_qsf_settings_for_opencl_kernel_qsf(qsf_path):
-    # create stripped down version of qsf for opencl qsys flow
-    chmod_plus_w(qsf_path)
-
-    remove_lines_in_file(qsf_path, 'user_clocks.sdc')
-    remove_lines_in_file(qsf_path, 'SCJIO')
-
-    remove_lines_in_file(qsf_path, '..')
-    remove_lines_in_file(qsf_path, '.qsf')
-    remove_lines_in_file(qsf_path, '.tcl')
-    remove_lines_in_file(qsf_path, 'SOURCE')
-    remove_lines_in_file(qsf_path, 'SEARCH_PATH')
-    remove_lines_in_file(qsf_path, '_FILE ')
-
-    with open(qsf_path, 'a') as f:
-        f.write('\n')
-        f.write('\n')
-        f.write('##OPENCL_KERNEL_ASSIGNMENTS_START_HERE\n')
-        f.write('\n')
-        f.write('\n')
-
-
-def update_qsf_settings_for_opencl_afu(qsf_path):
-    chmod_plus_w(qsf_path)
-
-    remove_lines_in_file(qsf_path, 'OPTIMIZATION_MODE')
-    remove_lines_in_file(qsf_path, 'user_clocks.sdc')
-    remove_lines_in_file(qsf_path, 'SCJIO')
-
-    with open(qsf_path, 'a') as f:
-        f.write('\n')
-        #increase OPTIMIZATION_MODE effort level
-        f.write("set_global_assignment -name OPTIMIZATION_MODE \"SUPERIOR PERFORMANCE WITH MAXIMUM PLACEMENT EFFORT\"\n")
-        f.write('\n\n')
-        f.write("# AFU  section - User AFU RTL goes here\n")
-        f.write("# =============================================\n")
-        f.write("#\n")
-        f.write("# AFU + MPF IPs\n")
-        f.write("source afu_ip.qsf\n")
 
 
 # Read environment variables required for script operations
