@@ -42,7 +42,7 @@ if [ "$BOARD" == "all" ] ; then
 else
     declare -a variant_list=("$BOARD")
 fi
-echo "Generating default aocx for board variant(s): ${variant_list[@]]}"
+echo "Generating default aocx for board variant(s): ${variant_list[@]}"
 
 # Using the same hello_world.cl file for the default source
 CL_FILE="bringup/source/hello_world/device/hello_world.cl"
@@ -58,7 +58,7 @@ echo "Using build flow: '$BSP_FLOW'"
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR" || exit
 
-for this_variant in "${variant_list[@]]}"
+for this_variant in "${variant_list[@]}"
 do
     echo "---------------------------------------------------------------"
     echo "Starting default ${this_variant} aocx compile at: $(date)"
