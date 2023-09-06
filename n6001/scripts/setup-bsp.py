@@ -197,13 +197,20 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     ASP_BUILD_DIR_SYMLINK_CMD="cd " + QUARTUS_SYN_DIR + " && ln -s " + ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR + "/* ."
     run_cmd(ASP_BUILD_DIR_SYMLINK_CMD)
     
-    #symlink the ofs_top.qpf and ofs_pr_afu.qsf file to bsp_dir
-    rm_glob(os.path.join(bsp_dir, 'ofs_pr_afu.qsf'))
-    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/ofs_pr_afu.qsf ."
+    #symlink the (i)ofs_top.qpf and (i)ofs_pr_afu.qsf file to bsp_dir
+    if "n6001" in bsp:
+        PR_AFU_QSF_FILENAME="ofs_pr_afu.qsf"
+        PR_AFU_QPF_FILENAME="ofs_pr_afu.qpf"
+    else:
+        PR_AFU_QSF_FILENAME="iofs_pr_afu.qsf"
+        PR_AFU_QPF_FILENAME="iofs_pr_afu.qpf"
+        
+    rm_glob(os.path.join(bsp_dir, PR_AFU_QSF_FILENAME))
+    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QSF_FILENAME + " ."
     run_cmd(OFS_PR_AFU_QSF_SYMLINK_CMD)
 
-    rm_glob(os.path.join(bsp_dir, 'ofs_top.qpf'))
-    OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/ofs_top.qpf ."
+    rm_glob(os.path.join(bsp_dir, PR_AFU_QPF_FILENAME))
+    OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QPF_FILENAME + " ."
     run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
 
 
