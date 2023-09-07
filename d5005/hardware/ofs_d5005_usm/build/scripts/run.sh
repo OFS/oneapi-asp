@@ -3,11 +3,17 @@
 # Copyright 2022 Intel Corporation
 # SPDX-License-Identifier: MIT
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
-echo "This is the OFS HLD shim BSP run.sh script."
+echo "This is the OFS OneAPI ASP run.sh script."
+
+KERNEL_BUILD_PWD=`pwd`
+echo "run.sh KERNEL_BUILD_PWD is $KERNEL_BUILD_PWD"
+
+BSP_BUILD_PWD="$KERNEL_BUILD_PWD/../"
+echo "run.sh BSP_BUILD_PWD is $BSP_BUILD_PWD"
 
 # set BSP flow
 if [ $# -eq 0 ]
@@ -20,9 +26,7 @@ echo "Compiling '$BSP_FLOW' bsp-flow"
 
 SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
 echo "OFS BSP run.sh script path: $SCRIPT_PATH"
-
 SCRIPT_DIR_PATH="$(dirname "$SCRIPT_PATH")"
-echo "OFS BSP build dir: $SCRIPT_DIR_PATH"
 
 #if flow-type is 'flat_kclk' uncomment USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION in opencl_bsp.vh
 if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
@@ -34,6 +38,8 @@ if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
 fi
 
 cd "$SCRIPT_DIR_PATH/.." || exit
+AFU_BUILD_PWD=`pwd`
+echo "run.sh AFU_BUILD_PWD is $AFU_BUILD_PWD"
 
 if [ -n "$PACKAGER_BIN" ]; then
   echo "Selected explicitly configured PACKAGER_BIN=\"$PACKAGER_BIN\""
@@ -58,63 +64,62 @@ if ! PACKAGER_OUTPUT=$($PACKAGER_BIN); then
 fi
 
 ##make sure bbs files exist
-if [ ! -f "d5005.qdb" ]; then
+if [[ ! $(find . -name d5005.qdb -print -quit) ]]
+then
     echo "ERROR: BSP is not setup"
 fi
 
-cp ../quartus.ini .
+RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
+RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
+#create new 'afu_flat' revision based on the one used to compile the kernel
+cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/iofs_pr_afu.qsf ./afu_flat.qsf
+#add ASP/afu_flat-specific stuff to the qsf file
+echo "source afu_ip.qsf" >> ./afu_flat.qsf
 
-#import opencl kernel files
-quartus_sh -t scripts/import_opencl_kernel.tcl
+#symlink the compiled kernel files to here from their origin (except the )
+MYLIST=`ls --ignore=fim_platform --ignore=build $RELATIVE_KERNEL_BUILD_PATH_TO_HERE`
+for f in ${MYLIST}
+do
+    #merge the ASP's 'ip' folder with the kernel-system's 'ip' folder
+    if [ "$f" == "ip" ]; then
+        cd ip
+        ln -s ../${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/ip/* .
+        cd  ..
+    else
+        ln -s ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/${f} .
+    fi
+done
 
+qsys-generate -syn --quartus-project=d5005 --rev=afu_flat board.qsys
+## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
+qsys-archive --quartus-project=d5005 --rev=afu_flat --add-to-project board.qsys
+
+# compile project
+# =====================
 #check for bypass/alternative flows
-if [ -n "$OFS_OCL_ENV_ENABLE_ASE" ]; then
+if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "Calling ASE simulation flow compile"
     sh ./scripts/ase-sim-compile.sh
     exit $?
 fi
 
-#add BBBs to quartus pr project
-quartus_sh -t scripts/add_bbb_to_pr_project.tcl "$BSP_FLOW"
-
-cp ../afu_opencl_kernel.qsf .
-
-#get a list of gsys files that are mentioned in qsf files; then generate each of them
-eval "$(grep "QSYS_FILE" afu_flat.qsf | grep -v "^#" > qsys_filelist.txt)"
-
-while read -r line; do
-    f=$(echo "$line" | awk '{print $4}')
-    qsys-generate -syn --quartus-project=d5005 --rev=afu_opencl_kernel "$f"
-    # adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-    qsys-archive --quartus-project=d5005 --rev=afu_opencl_kernel --add-to-project "$f"
-done < qsys_filelist.txt
-
-rm -rf qsys_filelist.txt
-
-qsys-generate -syn --quartus-project=d5005 --rev=afu_opencl_kernel board.qsys
-# adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=d5005 --rev=afu_opencl_kernel --add-to-project board.qsys
-
-#append kernel_system qsys/ip assignments to all revisions
-rm -f kernel_system_qsf_append.txt
-{ echo
-  grep -A10000 OPENCL_KERNEL_ASSIGNMENTS_START_HERE afu_opencl_kernel.qsf
-  echo
-} >> kernel_system_qsf_append.txt
-
-cat kernel_system_qsf_append.txt >> afu_flat.qsf
-
-
-# compile project
-# =====================
+echo "Calling compile_script"
 quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
 FLOW_SUCCESS=$?
 
 # Report Timing
 # =============
+DO_ADJUST_PLLS=1
+PLL_METADATA_FILE="pll_metadata.txt"
 if [ $FLOW_SUCCESS -eq 0 ]
 then
-    quartus_sh -t scripts/adjust_plls.tcl d5005 "${BSP_FLOW}"
+    if [ $DO_ADJUST_PLLS -eq 0 ]; then
+        echo "Not running adjust_plls.tcl. We still need to create a pll_metadata.txt file. Doing that now with 1x clock @ 150MHz and 2x clock @ 300 MHz."
+        echo "clock-frequency-low:150 clock-frequency-high:300" >> "$PLL_METADATA_FILE"
+    else
+        echo "Running adjust_plls.txt script to find the highest valid kernel_clock."
+        quartus_sh -t scripts/adjust_plls.tcl d5005 "${BSP_FLOW}"
+    fi
 else
     echo "ERROR: kernel compilation failed. Please see quartus_sh_compile.log for more information."
     exit 1
@@ -124,12 +129,13 @@ fi
 BBS_ID_FILE="fme-ifc-id.txt"
 if [ -f "$BBS_ID_FILE" ]; then
     FME_IFC_ID=$(cat $BBS_ID_FILE)
+    echo "FME_IFC_ID is $FME_IFC_ID"
+    cat $BBS_ID_FILE
 else
     echo "ERROR: fme id not found."
     exit 1
 fi
 
-PLL_METADATA_FILE="pll_metadata.txt"
 if [ -f "$PLL_METADATA_FILE" ]; then
     IFS=" " read -r -a PLL_METADATA <<< "$(cat $PLL_METADATA_FILE)"
 else
@@ -143,7 +149,7 @@ if [ ! -f "./output_files/${BSP_FLOW}.persona1.rbf" ]; then
     exit 1
 fi
 
-rm -f afu.gbs
+rm -f ./output_files/"${BSP_FLOW}".gbs
 $PACKAGER_BIN create-gbs \
     --rbf "./output_files/${BSP_FLOW}.persona1.rbf" \
     --gbs "./output_files/${BSP_FLOW}.gbs" \
@@ -184,11 +190,11 @@ if [ ! -f fpga.bin ]; then
 fi
 
 #copy fpga.bin to parent directory so aoc flow can find it
-cp fpga.bin ../
-cp acl_quartus_report.txt ../
+cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
+cp acl_quartus_report.txt $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
 
 echo ""
 echo "==========================================================================="
-echo "OpenCL AFU compilation complete"
+echo "OneAPI ASP AFU compilation complete"
 echo "==========================================================================="
 echo ""
