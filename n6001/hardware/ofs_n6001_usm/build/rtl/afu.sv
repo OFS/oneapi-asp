@@ -8,7 +8,7 @@
 module afu
 import dc_bsp_pkg::*;
   #(
-    parameter NUM_LOCAL_MEM_BANKS = 4
+    parameter NUM_LOCAL_MEM_BANKS = 0
    )
   (
     // Host memory (Avalon)
@@ -31,7 +31,7 @@ import dc_bsp_pkg::*;
 
 import dma_pkg::*;
 
-logic  reset, clk;
+logic reset, clk;
 assign reset = pClk_reset;
 assign clk   = pClk;
 
@@ -121,7 +121,7 @@ host_mem_if_vtp host_mem_if_vtp_inst (
     .mmio64_if_shim
 );
 
-//wrapper file for board.qsys (Platform Designer)
+// wrapper file for board IP (Platform Designer)
 bsp_logic bsp_logic_inst (
     .clk                    ( pClk ),
     .reset,
@@ -135,7 +135,7 @@ bsp_logic bsp_logic_inst (
     .kernel_mem
 );
 
-//wrapper for the kernel-region
+// wrapper for the kernel-region
 kernel_wrapper kernel_wrapper_inst (
     .clk        (uClk_usrDiv2),
     .clk2x      (uClk_usr),
@@ -143,9 +143,9 @@ kernel_wrapper kernel_wrapper_inst (
     
     .opencl_kernel_control,
     .kernel_mem
-    `ifdef INCLUDE_USM_SUPPORT
-        , .kernel_svm (kernel_svm_kclk)
-    `endif
+`ifdef INCLUDE_USM_SUPPORT
+   ,.kernel_svm (kernel_svm_kclk)
+`endif
 );
 
 endmodule : afu

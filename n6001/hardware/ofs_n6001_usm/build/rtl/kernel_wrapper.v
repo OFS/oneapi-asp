@@ -10,15 +10,13 @@
 // Using kernel wrapper instead of kernel_system, since kernel_system is auto generated.
 // kernel_system introduces boundary ports that are not used, and in PR they get preserved
 
-module kernel_wrapper  
-import dc_bsp_pkg::*;
-(
+module kernel_wrapper (
     input       clk,
     input       clk2x,
     input       reset_n,
     
     opencl_kernel_control_intf.kw opencl_kernel_control,
-    kernel_mem_intf.ker kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
+    kernel_mem_intf.ker kernel_mem[dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS]
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
@@ -28,7 +26,7 @@ import dc_bsp_pkg::*;
     `endif
 );
 
-kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
+kernel_mem_intf mem_avmm_bridge [dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
 opencl_kernel_control_intf kernel_cra_avmm_bridge ();
 
 always_comb begin
@@ -38,17 +36,17 @@ end
 //add pipeline stages to the memory interfaces
 genvar m;
 generate 
-    for (m = 0; m<BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
+    for (m = 0; m<dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
     
         //pipeline bridge from the kernel to board.qsys
         acl_avalon_mm_bridge_s10 #(
-            .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_DATA_WIDTH ),
+            .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_DATA_WIDTH ),
             .SYMBOL_WIDTH                   ( 8   ),
-            .HDL_ADDR_WIDTH                 ( OPENCL_QSYS_ADDR_WIDTH ),
-            .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
+            .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_QSYS_ADDR_WIDTH ),
+            .BURSTCOUNT_WIDTH               ( dc_bsp_pkg::OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
             .SYNCHRONIZE_RESET              ( 1   ),
-            .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
-            .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
+            .DISABLE_WAITREQUEST_BUFFERING  ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
+            .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
         ) avmm_pipeline_inst (
             .clk               (clk),
             .reset             (!reset_n),
@@ -80,13 +78,13 @@ generate
 endgenerate
 
 `ifdef INCLUDE_USM_SUPPORT
-    logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
+    logic [dc_bsp_pkg::OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
     
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
     ) svm_avmm_bridge ();
     ofs_plat_avalon_mem_if
     # (
@@ -100,13 +98,13 @@ endgenerate
     end
     
     acl_avalon_mm_bridge_s10 #(
-        .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
+        .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
         .SYMBOL_WIDTH                   ( 8   ),
-        .HDL_ADDR_WIDTH                 ( OPENCL_SVM_QSYS_ADDR_WIDTH ),
-        .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
+        .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH ),
+        .BURSTCOUNT_WIDTH               ( dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
         .SYNCHRONIZE_RESET              ( 1   ),
         .DISABLE_WAITREQUEST_BUFFERING  ( 1   ),
-        .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
+        .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
     )  kernel_mem_acl_avalon_mm_bridge_s10 (
         .clk                          (clk),
         .reset                        (!reset_n),
@@ -133,13 +131,13 @@ endgenerate
 
 //avmm pipeline for kernel cra
 acl_avalon_mm_bridge_s10 #(
-    .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
+    .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
     .SYMBOL_WIDTH                   ( 8   ),
-    .HDL_ADDR_WIDTH                 ( OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
+    .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
     .BURSTCOUNT_WIDTH               ( 1   ),
     .SYNCHRONIZE_RESET              ( 1   ),
-    .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
-    .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
+    .DISABLE_WAITREQUEST_BUFFERING  ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
+    .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
 ) kernel_cra_avalon_mm_bridge_s10 (
     .clk               (clk),
     .reset             (!reset_n),

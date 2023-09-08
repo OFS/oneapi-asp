@@ -5,7 +5,6 @@
 `include "ofs_plat_if.vh"
 `include "opencl_bsp.vh"
 
-
 module afu
 import dc_bsp_pkg::*;
   #(
@@ -76,7 +75,7 @@ kernel_mem_intf kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]();
     );
 `endif
 
-
+// wrapper file for board IP (Platform Designer)
 bsp_logic bsp_logic_inst (
     .clk                    ( pClk ),
     .reset,
@@ -95,12 +94,17 @@ bsp_logic bsp_logic_inst (
     .kernel_mem
 );
 
+// wrapper for the kernel-region
 kernel_wrapper kernel_wrapper_inst (
     .clk        (uClk_usrDiv2),
     .clk2x      (uClk_usr),
     .reset_n    (!uClk_usrDiv2_reset),
+    
     .opencl_kernel_control,
     .kernel_mem
+`ifdef INCLUDE_USM_SUPPORT
+   ,.kernel_svm (kernel_svm_kclk)
+`endif
 );
 
 endmodule : afu

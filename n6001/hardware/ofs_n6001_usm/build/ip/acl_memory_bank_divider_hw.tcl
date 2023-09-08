@@ -92,7 +92,7 @@ proc add_burst_splitter { name width awidth burst_count pending_reads async_rese
 }
 
 proc add_pipeline_stage { name width awidth burst_width pending_reads } {
-  add_instance $name acl_avalon_mm_bridge_s10 17.1
+  add_instance $name acl_avalon_mm_bridge_s10 16.930
   set_instance_parameter_value $name {DATA_WIDTH} $width
   set_instance_parameter_value $name {SYMBOL_WIDTH} {8}
   set_instance_parameter_value $name {ADDRESS_WIDTH} $awidth
@@ -162,15 +162,15 @@ proc compose {} {
 
   # Instances and instance parameters
   # (disabled instances are intentionally culled)
-  add_instance clk clock_source 21.3
-  set_instance_parameter_value clk clockFrequency {100000000.0}
+  add_instance clk clock_source 23.2
+  set_instance_parameter_value clk clockFrequency {200000000}
   set_instance_parameter_value clk clockFrequencyKnown {1}
   set_instance_parameter_value clk resetSynchronousEdges {DEASSERT}
 
   add_instance acl_snoop_adapter acl_snoop_adapter 11.0
 
-  add_instance kernel_clk clock_source 21.3
-  set_instance_parameter_value kernel_clk clockFrequency {100000000.0}
+  add_instance kernel_clk clock_source 23.2
+  set_instance_parameter_value kernel_clk clockFrequency {200000000}
   set_instance_parameter_value kernel_clk clockFrequencyKnown {1}
   set_instance_parameter_value kernel_clk resetSynchronousEdges {NONE}
 
@@ -233,7 +233,7 @@ proc compose {} {
     set_instance_parameter_value mem_splitter ASYNC_RESET $async_reset
     set_instance_parameter_value mem_splitter SYNCHRONIZE_RESET $synchronize_reset
 
-    add_instance pipe_stage_presplitter acl_avalon_mm_bridge_s10 17.1
+    add_instance pipe_stage_presplitter acl_avalon_mm_bridge_s10 16.930
     set_instance_parameter_value pipe_stage_presplitter {DATA_WIDTH} $width
     set_instance_parameter_value pipe_stage_presplitter {SYMBOL_WIDTH} {8}
     set_instance_parameter_value pipe_stage_presplitter {ADDRESS_WIDTH} $aggr_awidth

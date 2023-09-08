@@ -22,6 +22,7 @@ package dc_bsp_pkg;
 
     parameter OPENCL_BSP_KERNEL_SVM_DATA_WIDTH = 512;
     parameter OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH = 5;
+    parameter OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX = 16;
     parameter OPENCL_BSP_KERNEL_SVM_BYTEENABLE_WIDTH = 64;
 
     parameter OPENCL_BSP_KERNEL_DATA_WIDTH = 512;
@@ -90,5 +91,9 @@ package dc_bsp_pkg;
     parameter VTP_SVC_MMIO_BASE_ADDR = 'h2_4000;
     // DFH end-of-list flag - '0' means this is the end of the DFH list
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
+    
+    //USM clock-crossing bridge response FIFO depth (controls the number of
+    // outstanding read requests to the host) (default was 256, but that was too low)
+    parameter USM_CCB_RESPONSE_FIFO_DEPTH = 512;
     
 endpackage : dc_bsp_pkg

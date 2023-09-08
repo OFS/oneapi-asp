@@ -1,3 +1,6 @@
+# Copyright 2022 Intel Corporation
+# SPDX-License-Identifier: MIT
+
 # Make the kernel reset multicycle
 set_multicycle_path -to * -setup 5 -from {green_bs|pim_green_bs|ofs_plat_afu|afu|bsp_logic_inst|board_inst|*|reset_controller_*|alt_rst_sync_uq?|altera_reset_synchronizer_int_chain_out}
 set_multicycle_path -to * -hold  4  -from {green_bs|pim_green_bs|ofs_plat_afu|afu|bsp_logic_inst|board_inst|*|reset_controller_*|alt_rst_sync_uq?|altera_reset_synchronizer_int_chain_out}

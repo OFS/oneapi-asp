@@ -50,7 +50,8 @@ else
   if [ -f ./tools/packager ]; then
     chmod +x ./tools/packager
     PACKAGER_BIN=$(readlink -f ./tools/packager)
-    PYTHONPATH="$OFS_ASP_ROOT/build/opae/install/lib/python3.8/site-packages"
+    PYTHONPATH=`find $OFS_ASP_ROOT -path *install*site-packages`
+    echo "PYTHONPATH is $PYTHONPATH"
   else
     echo "Error cannot find BSP copy of packager"
     exit 1
@@ -66,13 +67,6 @@ fi
 if [[ ! $(find . -name ofs_top.qdb -print -quit) ]]
 then
     echo "ERROR: BSP is not setup"
-fi
-
-#check for bypass/alternative flows
-if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
-    echo "Calling ASE simulation flow compile"
-    sh ./scripts/ase-sim-compile.sh
-    exit $?
 fi
 
 RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
@@ -96,12 +90,24 @@ do
     fi
 done
 
-qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board.qsys
-## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=ofs_top --rev=afu_flat --add-to-project board.qsys
+# use ip-deploy to create board.ip file from toplevel Platform Designer
+# project board_hw.tcl
+ip-deploy --component-name=board 
+
+# use qsys-generate to create RTL from toplevel Platform Designer
+# board.ip file
+qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board.ip
 
 # compile project
 # =====================
+#check for bypass/alternative flows
+if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
+    echo "Calling ASE simulation flow compile"
+    sh ./scripts/ase-sim-compile.sh
+    exit $?
+fi
+
+echo "Calling compile_script"
 quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
 FLOW_SUCCESS=$?
 

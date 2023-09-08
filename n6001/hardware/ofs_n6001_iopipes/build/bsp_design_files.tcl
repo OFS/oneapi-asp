@@ -4,9 +4,7 @@
 #--------------------
 # IPs
 #--------------------
-set_global_assignment -name QSYS_FILE "board.qsys"
-set_global_assignment -name QSYS_FILE "ddr_channel.qsys"
-set_global_assignment -name QSYS_FILE "ddr_board.qsys"
+set_global_assignment -name IP_FILE "board.ip"
 
 #--------------------
 # DMA controller

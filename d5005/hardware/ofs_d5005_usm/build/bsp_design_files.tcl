@@ -1,12 +1,10 @@
 # Copyright 2022 Intel Corporation
 # SPDX-License-Identifier: MIT
-#
+
 #--------------------
 # IPs
 #--------------------
-set_global_assignment -name QSYS_FILE "board.qsys"
-set_global_assignment -name QSYS_FILE "ddr_channel.qsys"
-set_global_assignment -name QSYS_FILE "ddr_board.qsys"
+set_global_assignment -name QSYS_FILE "board.ip"
 
 #--------------------
 # DMA controller
@@ -16,7 +14,7 @@ set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/dma/par/dma_controlle
 #--------------------
 # MPF VTP files
 #--------------------
-source mpf_vtp.qsf
+source "mpf_vtp.qsf"
 
 #--------------------
 # BSP RTL files
