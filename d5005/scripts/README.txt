@@ -1,4 +1,4 @@
-This directory contains scripts that are used to generate the OFS HLD Shim
+This directory contains scripts that are used to generate the OFS HLD oneAPI-ASP
 for a specific OFS build.
 
 The scripts are structured as follows:

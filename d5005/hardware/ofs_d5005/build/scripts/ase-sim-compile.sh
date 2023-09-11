@@ -8,9 +8,7 @@ echo "Start of sim_compile.sh"
 rm -fr sim_files
 mkdir sim_files
 
-PROJECT_REVISION="afu_flat"
 
-qsys-generate --synthesis=VERILOG -qpf=d5005 -c=$PROJECT_REVISION board.qsys
 #qsys-less flow needs to parse the kernel_system.qip file and grab the files listed therein
 KERNEL_SYSTEM_QIP_FILE="./kernel_system.qip"
 while IFS= read -r line
@@ -41,12 +39,13 @@ cp -rf mem_sim_model.sv ./sim_files/mem_sim_model.sv
 
 find *.sv  | xargs cp -t ./sim_files
 
-cp -rf ./*v ./sim_files/
+cp -Lrf ./*v ./sim_files/
 rm simulation.tar.gz
 tar -hzcvf simulation.tar.gz sim_files sys_description.hex *.hex 
 cp -rf simulation.tar.gz fpga.bin
 
 #copy fpga.bin to parent directory so aoc flow can find it
-cp fpga.bin ../
+echo "Quartus compilation occurs deep in fim_platform; need to copy fpga.bin back up to where OneAPI compiler expects it."
+cp fpga.bin ../../../..
 
 echo "end of sim_compile.sh"

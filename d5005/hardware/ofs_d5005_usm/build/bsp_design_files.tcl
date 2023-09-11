@@ -16,7 +16,7 @@ set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/dma/par/dma_controlle
 #--------------------
 # MPF VTP files
 #--------------------
-source mpf_vtp.qsf
+source "mpf_vtp.qsf"
 
 #--------------------
 # BSP RTL files

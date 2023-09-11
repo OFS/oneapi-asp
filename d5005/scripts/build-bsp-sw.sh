@@ -17,7 +17,7 @@
 # install location, even if that is standard system location.
 ###############################################################################
 
-if [ -n "$OFS_OCL_ENV_DEBUG_SCRIPTS" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 

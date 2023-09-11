@@ -15,7 +15,10 @@ switch $tcl_platform(platform) {
       set revision_name import
     }
     post_message "Compiling revision $revision_name"
-    qexec "bash build/scripts/run.sh $revision_name"
+    set FIM_BOARD_PATH "fim_platform/build/syn/syn_top"
+    post_message "FIM_BOARD_PATH is $FIM_BOARD_PATH"
+    if {[catch {qexec "bash $FIM_BOARD_PATH/scripts/run.sh $revision_name"} result]} {
+        post_message -type error "OneAPI ASP build failed. Please see quartus_sh_compile.log for more information."
   }
 }
-
+}
