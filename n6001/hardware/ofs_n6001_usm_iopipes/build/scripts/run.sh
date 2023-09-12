@@ -144,6 +144,8 @@ if [ ! -f fpga.bin ]; then
     exit 1
 fi
 
+quartus_sh -t scripts/gen-asp-quartus-report.tcl ofs_top "${BSP_FLOW}"
+
 #copy fpga.bin to parent directory so oneAPI flow can find it
 cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
 cp acl_quartus_report.txt $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/

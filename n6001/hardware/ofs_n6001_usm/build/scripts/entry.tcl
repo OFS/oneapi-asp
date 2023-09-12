@@ -18,7 +18,7 @@ switch $tcl_platform(platform) {
     set FIM_BOARD_PATH [glob  -directory fim_platform/build/syn/board/ -type d *]
     post_message "FIM_BOARD_PATH is $FIM_BOARD_PATH"
     if {[catch {qexec "bash $FIM_BOARD_PATH/syn_top/scripts/run.sh $revision_name"} result]} {
-	post_message -type error "OneAPI ASP build failed. Please see quartus_sh_compile.log for more information."
+        post_message -type error "OneAPI ASP build failed. Please see quartus_sh_compile.log for more information."
     }
   }
 }
