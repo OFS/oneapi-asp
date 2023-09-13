@@ -141,4 +141,4 @@ close $outfile
 
 project_close
 
-post_message -type info "The asp_resources_analysis.tcl script is done."
+post_message -type info "The gen-asp-quartus-report.tcl script is done."

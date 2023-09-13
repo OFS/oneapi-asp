@@ -144,6 +144,7 @@ if [ ! -f fpga.bin ]; then
     exit 1
 fi
 
+echo "run.sh: generate acl_quartus_report.txt"
 quartus_sh -t scripts/gen-asp-quartus-report.tcl ofs_top "${BSP_FLOW}"
 
 #copy fpga.bin to parent directory so oneAPI flow can find it
