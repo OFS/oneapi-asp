@@ -128,8 +128,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     print("bsp_dir is %s\n" % bsp_dir)
     
     #preserve the pr-build-template folder
-    #delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
-    #copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
+    delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
+    copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
 
     #preserve the blue_bits folder from $OPAE_PLATFORM_ROOT/hw/
     delete_and_mkdir(os.path.join(bsp_dir, 'blue_bits'))
@@ -200,7 +200,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #symlink the (i)ofs_top.qpf and (i)ofs_pr_afu.qsf file to bsp_dir
     if "n6001" in bsp:
         PR_AFU_QSF_FILENAME="ofs_pr_afu.qsf"
-        PR_AFU_QPF_FILENAME="ofs_pr_afu.qpf"
+        PR_AFU_QPF_FILENAME="ofs_top.qpf"
     else:
         PR_AFU_QSF_FILENAME="iofs_pr_afu.qsf"
         PR_AFU_QPF_FILENAME="d5005.qpf"
