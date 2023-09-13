@@ -200,7 +200,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #symlink the (i)ofs_top.qpf and (i)ofs_pr_afu.qsf file to bsp_dir
     if "n6001" in bsp:
         PR_AFU_QSF_FILENAME="ofs_pr_afu.qsf"
-        PR_AFU_QPF_FILENAME="ofs_pr_afu.qpf"
+        PR_AFU_QPF_FILENAME="ofs_top.qpf"
     else:
         PR_AFU_QSF_FILENAME="iofs_pr_afu.qsf"
         PR_AFU_QPF_FILENAME="d5005.qpf"

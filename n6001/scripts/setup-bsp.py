@@ -200,10 +200,10 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #symlink the (i)ofs_top.qpf and (i)ofs_pr_afu.qsf file to bsp_dir
     if "n6001" in bsp:
         PR_AFU_QSF_FILENAME="ofs_pr_afu.qsf"
-        PR_AFU_QPF_FILENAME="ofs_pr_afu.qpf"
+        PR_AFU_QPF_FILENAME="ofs_top.qpf"
     else:
         PR_AFU_QSF_FILENAME="iofs_pr_afu.qsf"
-        PR_AFU_QPF_FILENAME="iofs_pr_afu.qpf"
+        PR_AFU_QPF_FILENAME="d5005.qpf"
         
     rm_glob(os.path.join(bsp_dir, PR_AFU_QSF_FILENAME))
     OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QSF_FILENAME + " ."
