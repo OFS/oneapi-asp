@@ -128,8 +128,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     print("bsp_dir is %s\n" % bsp_dir)
     
     #preserve the pr-build-template folder
-    #delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
-    #copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
+    delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
+    copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
 
     #preserve the blue_bits folder from $OPAE_PLATFORM_ROOT/hw/
     delete_and_mkdir(os.path.join(bsp_dir, 'blue_bits'))
