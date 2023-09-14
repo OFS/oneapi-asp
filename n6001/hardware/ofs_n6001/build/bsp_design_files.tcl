@@ -41,6 +41,4 @@ set_global_assignment -name SEARCH_PATH rtl/
 #--------------------
 # SDC
 #--------------------
-set_global_assignment -name SDC_FILE "user_clock.sdc"
-set_global_assignment -name SDC_FILE "reset.sdc"
 set_global_assignment -name SDC_FILE "opencl_bsp.sdc"
