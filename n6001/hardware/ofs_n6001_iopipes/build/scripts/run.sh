@@ -72,6 +72,7 @@ fi
 if [[ ! $(find . -name ofs_top.qdb -print -quit) ]]
 then
     echo "ERROR: BSP is not setup"
+    exit 1
 fi
 
 RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
@@ -116,7 +117,7 @@ rm -rf fpga.bin
 generated_gbs="${BSP_FLOW}"."${Q_PR_PARTITION_NAME}".gbs
 if [ ! -f ./output_files/"${generated_gbs}" ]; then
     echo "run.sh ERROR: can't find ./output_files/${generated_gbs}"
-    exit
+    exit 1
 fi
 
 gzip -9c ./output_files/$generated_gbs > $generated_gbs.gz
