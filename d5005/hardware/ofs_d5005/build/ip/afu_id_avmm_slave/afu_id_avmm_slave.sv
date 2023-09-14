@@ -1,5 +1,6 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
+//
 
 `define AFU_ID_AVMM_SLAVE_DATA_WIDTH 64
 `define AFU_ID_AVMM_SLAVE_ADDR_WIDTH 3

@@ -119,7 +119,6 @@ set_devuio_permissions()
   sudo chmod 666 /dev/uio*
 }
 
-
 set_memlock_limits
 set_dev_permission
 set_hugepages

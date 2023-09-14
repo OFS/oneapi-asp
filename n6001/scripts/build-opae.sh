@@ -5,7 +5,7 @@
 
 ###############################################################################
 # Script to build OPAE.
-# Clones and builds OPAE and installs to build directory in BSP repo.
+# Clones and builds OPAE and installs to build directory in ASP repo.
 #
 # Environment variables used in script:
 #

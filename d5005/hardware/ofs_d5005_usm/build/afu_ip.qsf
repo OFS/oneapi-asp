@@ -7,7 +7,6 @@ set_global_assignment -name SOURCE_TCL_SCRIPT_FILE bsp_design_files.tcl
 set_global_assignment -name VERILOG_MACRO "MPF_PLATFORM_DCP_PCIE=1"
 source "./ip/BBB_cci_mpf/hw/par/qsf_cci_mpf_PAR_files.qsf"
 
-
 #The following lines should be included when compiling with SignalTap.
 #  Rename the .stp file as appropriate.
 #set_global_assignment -name VERILOG_MACRO INCLUDE_REMOTE_STP

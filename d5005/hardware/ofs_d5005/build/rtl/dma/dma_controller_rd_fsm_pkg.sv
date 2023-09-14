@@ -1,5 +1,6 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
+//
 
 //DMA controller read-FSM state enumerations
 package dma_controller_rd_fsm_pkg;

@@ -9,7 +9,7 @@
 #
 # Environment variables used in script:
 #
-# OFS_OCL_ENV_FIND_ROOT: used to specify alternate root location to look
+# OFS_ASP_ENV_FIND_ROOT: used to specify alternate root location to look
 #  for dependencies.
 ###############################################################################
 

@@ -97,7 +97,7 @@ def copy_glob(src, dst, verbose=False):
                 rm_glob(full_dst)
             shutil.copy2(i, dst)
 
-
+            
 # take a glob path and remove the files
 def rm_glob(src, verbose=False):
     for i in glob.glob(src):
@@ -130,7 +130,7 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #preserve the pr-build-template folder
     delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
     copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
-
+    
     #preserve the blue_bits folder from $OPAE_PLATFORM_ROOT/hw/
     delete_and_mkdir(os.path.join(bsp_dir, 'blue_bits'))
     copy_glob(deliverable_bluebits_dir, bsp_dir, verbose)
