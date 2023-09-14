@@ -15,8 +15,6 @@ echo "run.sh KERNEL_BUILD_PWD is $KERNEL_BUILD_PWD"
 BSP_BUILD_PWD="$KERNEL_BUILD_PWD/../"
 echo "run.sh BSP_BUILD_PWD is $BSP_BUILD_PWD"
 
-echo "ToDo: need to get these values from build_env_db.txt"
-echo "Hardcoding for now."
 Q_REVISION="ofs_top"
 echo "Q_REVISION is $Q_REVISION"
 Q_PR_PARTITION_NAME="green_region"
