@@ -15,3 +15,4 @@ source "./ip/BBB_cci_mpf/hw/par/qsf_cci_mpf_PAR_files.qsf"
 #set_global_assignment -name SIGNALTAP_FILE stp1.stp
 
 set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2012
+

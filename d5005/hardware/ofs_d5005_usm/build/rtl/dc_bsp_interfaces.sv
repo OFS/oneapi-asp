@@ -61,14 +61,15 @@ interface kernel_mem_intf #(
     logic                           write;
     logic                           read;
     logic [BYTEENABLE_WIDTH-1:0]    byteenable;
+    logic                           writeack;
     
     modport bsp (
         input  read, write, writedata, address, burstcount,
                byteenable,
-        output readdata, readdatavalid, waitrequest
+        output readdata, readdatavalid, waitrequest, writeack
     );
     modport ker (
-        input  readdata, readdatavalid, waitrequest,
+        input  readdata, readdatavalid, waitrequest, writeack,
         output read, write, writedata, address, burstcount,
                byteenable
     );

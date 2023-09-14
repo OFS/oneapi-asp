@@ -5,10 +5,11 @@
 `include "ofs_plat_if.vh"
 `include "opencl_bsp.vh"
 
+
 module afu
 import dc_bsp_pkg::*;
   #(
-    parameter NUM_LOCAL_MEM_BANKS = 4
+    parameter NUM_LOCAL_MEM_BANKS = 0
    )
   (
     // Host memory (Avalon)

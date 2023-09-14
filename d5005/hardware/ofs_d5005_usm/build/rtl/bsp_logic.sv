@@ -256,6 +256,38 @@ always_comb begin
     avmm_mmio64_address [1:0]     = 2'b0;
 end
 
+genvar lm;
+generate
+    for (lm=0;lm<dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS;lm++) begin : local_mem_stuff
+        assign local_mem[lm].user = 'b0;
+        
+        `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            // local-memory/DDR write-ack tracking
+            avmm_wr_ack_gen avmm_wr_ack_gen_inst (
+                //AVMM from kernel-system to mux/emif
+                .kernel_avmm_clk        (kernel_clk),
+                .kernel_avmm_reset      (kernel_clk_reset),
+                .kernel_avmm_waitreq    (kernel_mem[lm].waitrequest),
+                .kernel_avmm_wr         (kernel_mem[lm].write),
+                .kernel_avmm_burstcnt   (kernel_mem[lm].burstcount),
+                .kernel_avmm_address    (kernel_mem[lm].address>>OPENCL_MEMORY_BYTE_OFFSET),
+                .kernel_avmm_wr_ack     (kernel_mem[lm].writeack),
+                
+                //AVMM channel up to PIM (AVMM-AXI conversion with write-ack)
+                .emif_avmm_clk          (local_mem[lm].clk),
+                .emif_avmm_reset        (!local_mem[lm].reset_n),
+                .emif_avmm_waitreq      (local_mem[lm].waitrequest),
+                .emif_avmm_wr           (local_mem[lm].write),
+                .emif_avmm_burstcnt     (local_mem[lm].burstcount),
+                .emif_avmm_address      (local_mem[lm].address),
+                .emif_avmm_wr_ack       (local_mem[lm].writeresponsevalid)
+            );
+        `else // not USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            assign kernel_mem[lm].writeack = 'b0;
+        `endif
+    end //for
+endgenerate
+
 //set unused interrupt lines to 0
 genvar i;
 generate
