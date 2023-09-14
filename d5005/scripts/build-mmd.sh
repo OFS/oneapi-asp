@@ -17,7 +17,7 @@
 #
 # Optional environment varialbes
 #  LIBOPAE_C_ROOT: path to OPAE installation
-#  OFS_OCL_ENV_DEBUG_SCRIPTS: print script debugging information if set
+#  OFS_ASP_ENV_DEBUG_SCRIPTS: print script debugging information if set
 ###############################################################################
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"

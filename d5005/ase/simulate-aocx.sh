@@ -73,7 +73,7 @@ ls -1 dummy_sources/* > dummy_sources.txt
 #MTI_HOME must be set to modelsim_ae or Questa location
 ################################################################################
 
-# VCS is only simulator tested for Intel OFS EA release
+# VCS is only simulator tested for Intel OFS release
 TOOL_ARG=(-t VCS)
 
 # Generate a build tree. This will also generate the rules for building

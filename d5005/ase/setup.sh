@@ -56,7 +56,7 @@ function set_libopae_c_root() {
       echo "libopae-c-root exists : $BSP_ROOT/build/opae/install "
       LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
     else
-      echo "libopae-c-root doesn't exist, running build-opae.sh"	    
+        echo "libopae-c-root doesn't exist, running build-opae.sh"
       "$SCRIPT_DIR_PATH/build-opae.sh" || exit
       LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
     fi
@@ -81,7 +81,7 @@ else
   echo "BSP setup already complete (delete hardware setup files to regenerate)"
   # Build the MMD or use existing MMD if files already exist
   if [ ! -f "$BSP_ROOT/linux64/lib/libintel_opae_mmd.so" ]; then
-    echo "mmd not built yet, run build-bsp-sw.sh" 	  
+    echo "mmd not built yet, run build-bsp-sw.sh"
     "$SCRIPT_DIR_PATH/build-bsp-sw.sh" || exit
     set_libopae_c_root
   else
