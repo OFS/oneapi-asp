@@ -1,5 +1,6 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
+//
 
 //DMA controller instance signals from Dispatcher
 interface opencl_shim_dma_ctrl_intf #(

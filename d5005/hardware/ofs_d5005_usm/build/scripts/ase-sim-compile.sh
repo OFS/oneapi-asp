@@ -8,15 +8,12 @@ echo "Start of sim_compile.sh"
 rm -fr sim_files
 mkdir sim_files
 
-
-#qsys-less flow needs to parse the kernel_system.qip file and grab the files listed therein
 KERNEL_SYSTEM_QIP_FILE="./kernel_system.qip"
 while IFS= read -r line
 do
     ACL_FILE_TO_COPY=$(echo $line | awk '{ print $7 }' | sed 's/"//g' | sed "s|^.*INTELFPGAOCLSDKROOT)|$INTELFPGAOCLSDKROOT|g" | sed 's/]//g')
     cp $ACL_FILE_TO_COPY ./sim_files
 done < "$KERNEL_SYSTEM_QIP_FILE"
-
 
 for this_ip in board kernel_system ddr_board ddr_channel msgdma_bbb ase cci_interface
 do
@@ -40,6 +37,7 @@ cp -rf mem_sim_model.sv ./sim_files/mem_sim_model.sv
 find *.sv  | xargs cp -t ./sim_files
 
 cp -Lrf ./*v ./sim_files/
+
 rm simulation.tar.gz
 tar -hzcvf simulation.tar.gz sim_files sys_description.hex *.hex 
 cp -rf simulation.tar.gz fpga.bin

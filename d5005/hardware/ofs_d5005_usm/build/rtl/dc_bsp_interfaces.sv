@@ -1,5 +1,6 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
+//
 
 //defining OpenCL kernel/cra connections
 interface opencl_kernel_control_intf #(
