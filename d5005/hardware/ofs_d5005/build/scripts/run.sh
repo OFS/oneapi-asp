@@ -15,11 +15,6 @@ echo "run.sh KERNEL_BUILD_PWD is $KERNEL_BUILD_PWD"
 BSP_BUILD_PWD="$KERNEL_BUILD_PWD/../"
 echo "run.sh BSP_BUILD_PWD is $BSP_BUILD_PWD"
 
-Q_REVISION="d5005"
-echo "Q_REVISION is $Q_REVISION"
-Q_PR_PARTITION_NAME="persona1"
-echo "Q_PR_PARTITION_NAME is $Q_PR_PARTITION_NAME"
-
 # set BSP flow
 if [ $# -eq 0 ]
 then
@@ -75,10 +70,39 @@ then
     exit 1
 fi
 
+#Q_REVISION="d5005"
+#echo "Q_REVISION is $Q_REVISION"
+#Q_PR_PARTITION_NAME="persona1"
+#echo "Q_PR_PARTITION_NAME is $Q_PR_PARTITION_NAME"
+#Q_PR_REVISION="iofs_pr_afu"
+#echo "Q_PR_REVISION is $Q_PR_REVISION"
+
+#parse build_env_db.txt to get the Q_REVISION, Q_PR_PARTITION_NAME,
+#and Q_PR_REVISION values to use in this script.
+BUILD_ENV_DB_FILE=`find . -name build_env_db.txt -print -quit`
+if [[ ! -f "${BUILD_ENV_DB_FILE}" ]]; then
+    echo "run.sh ERROR: Can't find build_env_db.txt. Did you import the FIM files?"
+    exit 1
+else
+    while IFS= read -r line
+    do
+        if [[ "$line" == *"Q_REVISION"* ]]; then
+            export $line
+            echo "Q_REVISION is $Q_REVISION"
+        elif [[ "$line" == *"Q_PR_PARTITION_NAME"* ]]; then
+            export $line
+            echo "Q_PR_PARTITION_NAME is $Q_PR_PARTITION_NAME"
+        elif   [[ "$line" == *"Q_PR_REVISION"* ]]; then
+            export $line
+            echo "Q_PR_REVISION is $Q_PR_REVISION"
+        fi
+    done < "${BUILD_ENV_DB_FILE}"
+fi
+
 RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
 RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
 #create new 'afu_flat' revision based on the one used to compile the kernel
-cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/iofs_pr_afu.qsf ./$BSP_FLOW.qsf
+cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/$Q_PR_REVISION.qsf ./$BSP_FLOW.qsf
 #add ASP/afu_flat-specific stuff to the qsf file
 echo "source afu_ip.qsf" >> ./$BSP_FLOW.qsf
 
@@ -144,7 +168,7 @@ if [ ! -f fpga.bin ]; then
 fi
 
 echo "run.sh: generate acl_quartus_report.txt"
-quartus_sh -t scripts/gen-asp-quartus-report.tcl ofs_top "${BSP_FLOW}"
+quartus_sh -t scripts/gen-asp-quartus-report.tcl "${Q_REVISION}" "${BSP_FLOW}"
 
 #copy fpga.bin to parent directory so aoc flow can find it
 cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/
