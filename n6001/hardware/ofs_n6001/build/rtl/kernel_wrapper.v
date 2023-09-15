@@ -10,19 +10,25 @@
 // Using kernel wrapper instead of kernel_system, since kernel_system is auto generated.
 // kernel_system introduces boundary ports that are not used, and in PR they get preserved
 
-module kernel_wrapper (
+module kernel_wrapper  
+import dc_bsp_pkg::*;
+(
     input       clk,
     input       clk2x,
     input       reset_n,
     
     opencl_kernel_control_intf.kw opencl_kernel_control,
-    kernel_mem_intf.ker kernel_mem[dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS]
+    kernel_mem_intf.ker kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ,shim_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
+        shim_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
+    `endif
 );
 
-kernel_mem_intf mem_avmm_bridge [dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
+kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
 opencl_kernel_control_intf kernel_cra_avmm_bridge ();
 
 always_comb begin
@@ -32,17 +38,17 @@ end
 //add pipeline stages to the memory interfaces
 genvar m;
 generate 
-    for (m = 0; m<dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
+    for (m = 0; m<BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
     
         //pipeline bridge from the kernel to board.qsys
         acl_avalon_mm_bridge_s10 #(
-            .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_DATA_WIDTH ),
+            .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_DATA_WIDTH ),
             .SYMBOL_WIDTH                   ( 8   ),
-            .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_QSYS_ADDR_WIDTH ),
-            .BURSTCOUNT_WIDTH               ( dc_bsp_pkg::OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
+            .HDL_ADDR_WIDTH                 ( OPENCL_QSYS_ADDR_WIDTH ),
+            .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
             .SYNCHRONIZE_RESET              ( 1   ),
-            .DISABLE_WAITREQUEST_BUFFERING  ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
-            .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
+            .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
+            .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
         ) avmm_pipeline_inst (
             .clk               (clk),
             .reset             (!reset_n),
@@ -74,28 +80,33 @@ generate
 endgenerate
 
 `ifdef INCLUDE_USM_SUPPORT
-    logic [dc_bsp_pkg::OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
-    logic kernel_system_svm_read, kernel_system_svm_write;
+    logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
     
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
     ) svm_avmm_bridge ();
+    ofs_plat_avalon_mem_if
+    # (
+        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+    ) svm_avmm_kernelsystem ();
     
     always_comb begin
         kernel_svm.user  = 'b0;
     end
     
     acl_avalon_mm_bridge_s10 #(
-        .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
+        .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
         .SYMBOL_WIDTH                   ( 8   ),
-        .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH ),
-        .BURSTCOUNT_WIDTH               ( dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
+        .HDL_ADDR_WIDTH                 ( OPENCL_SVM_QSYS_ADDR_WIDTH ),
+        .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
         .SYNCHRONIZE_RESET              ( 1   ),
         .DISABLE_WAITREQUEST_BUFFERING  ( 1   ),
-        .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
+        .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
     )  kernel_mem_acl_avalon_mm_bridge_s10 (
         .clk                          (clk),
         .reset                        (!reset_n),
@@ -122,13 +133,13 @@ endgenerate
 
 //avmm pipeline for kernel cra
 acl_avalon_mm_bridge_s10 #(
-    .DATA_WIDTH                     ( dc_bsp_pkg::OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
+    .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
     .SYMBOL_WIDTH                   ( 8   ),
-    .HDL_ADDR_WIDTH                 ( dc_bsp_pkg::OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
+    .HDL_ADDR_WIDTH                 ( OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
     .BURSTCOUNT_WIDTH               ( 1   ),
     .SYNCHRONIZE_RESET              ( 1   ),
-    .DISABLE_WAITREQUEST_BUFFERING  ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
-    .READDATA_PIPE_DEPTH            ( dc_bsp_pkg::KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
+    .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
+    .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_CRA_PIPELINE_STAGES_RDDATA)
 ) kernel_cra_avalon_mm_bridge_s10 (
     .clk               (clk),
     .reset             (!reset_n),
@@ -172,7 +183,7 @@ kernel_system kernel_system_inst (
         .kernel_ddr4a_read            (mem_avmm_bridge[0].read         ),
         .kernel_ddr4a_byteenable      (mem_avmm_bridge[0].byteenable   ),
 	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
-	        .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
+	    .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
 	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK2
@@ -186,7 +197,7 @@ kernel_system kernel_system_inst (
         .kernel_ddr4b_read            (mem_avmm_bridge[1].read         ),
         .kernel_ddr4b_byteenable      (mem_avmm_bridge[1].byteenable   ),
     	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
-	        .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
+	    .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
 	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK3
@@ -200,7 +211,7 @@ kernel_system kernel_system_inst (
         .kernel_ddr4c_read            (mem_avmm_bridge[2].read         ),
         .kernel_ddr4c_byteenable      (mem_avmm_bridge[2].byteenable   ),
 	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
-        	.kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
+            .kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
 	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK4
@@ -214,7 +225,7 @@ kernel_system kernel_system_inst (
         .kernel_ddr4d_read            (mem_avmm_bridge[3].read         ),
         .kernel_ddr4d_byteenable      (mem_avmm_bridge[3].byteenable   ),
 	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
-	        .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
+	    .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
     	`endif
     `endif
 
@@ -231,31 +242,178 @@ kernel_system kernel_system_inst (
     .kernel_cra_debugaccess         (kernel_cra_avmm_bridge.kernel_cra_debugaccess)
     
     `ifdef INCLUDE_USM_SUPPORT
-        ,.kernel_mem_waitrequest    (svm_avmm_bridge.waitrequest),
-        .kernel_mem_readdata        (svm_avmm_bridge.readdata),
-        .kernel_mem_readdatavalid   (svm_avmm_bridge.readdatavalid),
-        .kernel_mem_burstcount      (svm_avmm_bridge.burstcount),
-        .kernel_mem_writedata       (svm_avmm_bridge.writedata),
-        .kernel_mem_address         ({svm_avmm_bridge.address,svm_addr_shift}),
-        .kernel_mem_write           (kernel_system_svm_write),
-        .kernel_mem_read            (kernel_system_svm_read),
-        .kernel_mem_byteenable      (svm_avmm_bridge.byteenable)
+        ,.kernel_mem_waitrequest    (svm_avmm_kernelsystem.waitrequest),
+        .kernel_mem_readdata        (svm_avmm_kernelsystem.readdata),
+        .kernel_mem_readdatavalid   (svm_avmm_kernelsystem.readdatavalid),
+        .kernel_mem_burstcount      (svm_avmm_kernelsystem.burstcount),
+        .kernel_mem_writedata       (svm_avmm_kernelsystem.writedata),
+        .kernel_mem_address         ({svm_avmm_kernelsystem.address,svm_addr_shift}),
+        .kernel_mem_write           (svm_avmm_kernelsystem.write),
+        .kernel_mem_read            (svm_avmm_kernelsystem.read),
+        .kernel_mem_byteenable      (svm_avmm_kernelsystem.byteenable)
+    `endif //INCLUDE_USM_SUPPORT
+    
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
+        .udp_out_data          (udp_avst_from_kernel[0].data),
+        .udp_out_ready         (udp_avst_from_kernel[0].ready),
+        .udp_in_valid          (udp_avst_to_kernel[0].valid),
+        .udp_in_data           (udp_avst_to_kernel[0].data),
+        .udp_in_ready          (udp_avst_to_kernel[0].ready)
+        `ifdef ASP_ENABLE_IOPIPE1
+            ,.udp_out_1_valid        (udp_avst_from_kernel[1].valid),
+            .udp_out_1_data          (udp_avst_from_kernel[1].data),
+            .udp_out_1_ready         (udp_avst_from_kernel[1].ready),
+            .udp_in_1_valid          (udp_avst_to_kernel[1].valid),
+            .udp_in_1_data           (udp_avst_to_kernel[1].data),
+            .udp_in_1_ready          (udp_avst_to_kernel[1].ready)
+        `endif //ASP_ENABLE_IOPIPE1
+        `ifdef ASP_ENABLE_IOPIPE2
+            ,.udp_out_2_valid        (udp_avst_from_kernel[2].valid),
+            .udp_out_2_data          (udp_avst_from_kernel[2].data),
+            .udp_out_2_ready         (udp_avst_from_kernel[2].ready),
+            .udp_in_2_valid          (udp_avst_to_kernel[2].valid),
+            .udp_in_2_data           (udp_avst_to_kernel[2].data),
+            .udp_in_2_ready          (udp_avst_to_kernel[2].ready)
+        `endif //ASP_ENABLE_IOPIPE2
+        `ifdef ASP_ENABLE_IOPIPE3
+            ,.udp_out_3_valid        (udp_avst_from_kernel[3].valid),
+            .udp_out_3_data          (udp_avst_from_kernel[3].data),
+            .udp_out_3_ready         (udp_avst_from_kernel[3].ready),
+            .udp_in_3_valid          (udp_avst_to_kernel[3].valid),
+            .udp_in_3_data           (udp_avst_to_kernel[3].data),
+            .udp_in_3_ready          (udp_avst_to_kernel[3].ready)
+        `endif //ASP_ENABLE_IOPIPE3
+        `ifdef ASP_ENABLE_IOPIPE4
+            ,.udp_out_4_valid        (udp_avst_from_kernel[4].valid),
+            .udp_out_4_data          (udp_avst_from_kernel[4].data),
+            .udp_out_4_ready         (udp_avst_from_kernel[4].ready),
+            .udp_in_4_valid          (udp_avst_to_kernel[4].valid),
+            .udp_in_4_data           (udp_avst_to_kernel[4].data),
+            .udp_in_4_ready          (udp_avst_to_kernel[4].ready)
+        `endif //ASP_ENABLE_IOPIPE4
+        `ifdef ASP_ENABLE_IOPIPE5
+            ,.udp_out_5_valid        (udp_avst_from_kernel[5].valid),
+            .udp_out_5_data          (udp_avst_from_kernel[5].data),
+            .udp_out_5_ready         (udp_avst_from_kernel[5].ready),
+            .udp_in_5_valid          (udp_avst_to_kernel[5].valid),
+            .udp_in_5_data           (udp_avst_to_kernel[5].data),
+            .udp_in_5_ready          (udp_avst_to_kernel[5].ready)
+        `endif //ASP_ENABLE_IOPIPE5
+        `ifdef ASP_ENABLE_IOPIPE6
+            ,.udp_out_6_valid        (udp_avst_from_kernel[6].valid),
+            .udp_out_6_data          (udp_avst_from_kernel[6].data),
+            .udp_out_6_ready         (udp_avst_from_kernel[6].ready),
+            .udp_in_6_valid          (udp_avst_to_kernel[6].valid),
+            .udp_in_6_data           (udp_avst_to_kernel[6].data),
+            .udp_in_6_ready          (udp_avst_to_kernel[6].ready)
+        `endif //ASP_ENABLE_IOPIPE6
+        `ifdef ASP_ENABLE_IOPIPE7
+            ,.udp_out_7_valid        (udp_avst_from_kernel[7].valid),
+            .udp_out_7_data          (udp_avst_from_kernel[7].data),
+            .udp_out_7_ready         (udp_avst_from_kernel[7].ready),
+            .udp_in_7_valid          (udp_avst_to_kernel[7].valid),
+            .udp_in_7_data           (udp_avst_to_kernel[7].data),
+            .udp_in_7_ready          (udp_avst_to_kernel[7].ready)
+        `endif //ASP_ENABLE_IOPIPE7
+        `ifdef ASP_ENABLE_IOPIPE8
+            ,.udp_out_8_valid        (udp_avst_from_kernel[8].valid),
+            .udp_out_8_data          (udp_avst_from_kernel[8].data),
+            .udp_out_8_ready         (udp_avst_from_kernel[8].ready),
+            .udp_in_8_valid          (udp_avst_to_kernel[8].valid),
+            .udp_in_8_data           (udp_avst_to_kernel[8].data),
+            .udp_in_8_ready          (udp_avst_to_kernel[8].ready)
+        `endif //ASP_ENABLE_IOPIPE8
+        `ifdef ASP_ENABLE_IOPIPE9
+            ,.udp_out_9_valid        (udp_avst_from_kernel[9].valid),
+            .udp_out_9_data          (udp_avst_from_kernel[9].data),
+            .udp_out_9_ready         (udp_avst_from_kernel[9].ready),
+            .udp_in_9_valid          (udp_avst_to_kernel[9].valid),
+            .udp_in_9_data           (udp_avst_to_kernel[9].data),
+            .udp_in_9_ready          (udp_avst_to_kernel[9].ready)
+        `endif //ASP_ENABLE_IOPIPE9
+        `ifdef ASP_ENABLE_IOPIPE10
+            ,.udp_out_10_valid        (udp_avst_from_kernel[10].valid),
+            .udp_out_10_data          (udp_avst_from_kernel[10].data),
+            .udp_out_10_ready         (udp_avst_from_kernel[10].ready),
+            .udp_in_10_valid          (udp_avst_to_kernel[10].valid),
+            .udp_in_10_data           (udp_avst_to_kernel[10].data),
+            .udp_in_10_ready          (udp_avst_to_kernel[10].ready)
+        `endif //ASP_ENABLE_IOPIPE10
+        `ifdef ASP_ENABLE_IOPIPE11
+            ,.udp_out_11_valid        (udp_avst_from_kernel[11].valid),
+            .udp_out_11_data          (udp_avst_from_kernel[11].data),
+            .udp_out_11_ready         (udp_avst_from_kernel[11].ready),
+            .udp_in_11_valid          (udp_avst_to_kernel[11].valid),
+            .udp_in_11_data           (udp_avst_to_kernel[11].data),
+            .udp_in_11_ready          (udp_avst_to_kernel[11].ready)
+        `endif //ASP_ENABLE_IOPIPE11
+        `ifdef ASP_ENABLE_IOPIPE12
+            ,.udp_out_12_valid        (udp_avst_from_kernel[12].valid),
+            .udp_out_12_data          (udp_avst_from_kernel[12].data),
+            .udp_out_12_ready         (udp_avst_from_kernel[12].ready),
+            .udp_in_12_valid          (udp_avst_to_kernel[12].valid),
+            .udp_in_12_data           (udp_avst_to_kernel[12].data),
+            .udp_in_12_ready          (udp_avst_to_kernel[12].ready)
+        `endif //ASP_ENABLE_IOPIPE12
+        `ifdef ASP_ENABLE_IOPIPE13
+            ,.udp_out_13_valid        (udp_avst_from_kernel[13].valid),
+            .udp_out_13_data          (udp_avst_from_kernel[13].data),
+            .udp_out_13_ready         (udp_avst_from_kernel[13].ready),
+            .udp_in_13_valid          (udp_avst_to_kernel[13].valid),
+            .udp_in_13_data           (udp_avst_to_kernel[13].data),
+            .udp_in_13_ready          (udp_avst_to_kernel[13].ready)
+        `endif //ASP_ENABLE_IOPIPE13
+        `ifdef ASP_ENABLE_IOPIPE14
+            ,.udp_out_14_valid        (udp_avst_from_kernel[14].valid),
+            .udp_out_14_data          (udp_avst_from_kernel[14].data),
+            .udp_out_14_ready         (udp_avst_from_kernel[14].ready),
+            .udp_in_14_valid          (udp_avst_to_kernel[14].valid),
+            .udp_in_14_data           (udp_avst_to_kernel[14].data),
+            .udp_in_14_ready          (udp_avst_to_kernel[14].ready)
+        `endif //ASP_ENABLE_IOPIPE14
+        `ifdef ASP_ENABLE_IOPIPE15
+            ,.udp_out_15_valid        (udp_avst_from_kernel[15].valid),
+            .udp_out_15_data          (udp_avst_from_kernel[15].data),
+            .udp_out_15_ready         (udp_avst_from_kernel[15].ready),
+            .udp_in_15_valid          (udp_avst_to_kernel[15].valid),
+            .udp_in_15_data           (udp_avst_to_kernel[15].data),
+            .udp_in_15_ready          (udp_avst_to_kernel[15].ready)
+        `endif //ASP_ENABLE_IOPIPE15
     `endif
 );
 
 `ifdef INCLUDE_USM_SUPPORT
-    // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
-    // driven by the kernel-system.
-    always_comb begin
-        //drive with the value from the kernel-system by default
-        svm_avmm_bridge.write = kernel_system_svm_write;
-        svm_avmm_bridge.read  = kernel_system_svm_read;
-        //drive with the modified version during simulation
-    // synthesis translate off
-        svm_avmm_bridge.write = kernel_system_svm_write === 'X ? 'b0 : kernel_system_svm_write;
-        svm_avmm_bridge.read  = kernel_system_svm_read  === 'X ? 'b0 : kernel_system_svm_read;
-    // synthesis translate on
-    end
+    `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
+        avmm_single_burst_partial_writes avmm_single_burst_partial_writes_inst
+        (
+            .clk      ,
+            .reset_n  ,
+            .to_avmm_source (svm_avmm_kernelsystem),
+            .to_avmm_sink   (svm_avmm_bridge)
+        );
+    `else
+        //if not requiring partial-writes splitting, just pass the signals through
+        always_comb begin
+            svm_avmm_kernelsystem.waitrequest    = svm_avmm_bridge.waitrequest;
+            svm_avmm_kernelsystem.readdata       = svm_avmm_bridge.readdata;
+            svm_avmm_kernelsystem.readdatavalid  = svm_avmm_bridge.readdatavalid;
+            
+            svm_avmm_bridge.burstcount     = svm_avmm_kernelsystem.burstcount;
+            svm_avmm_bridge.writedata      = svm_avmm_kernelsystem.writedata ;
+            svm_avmm_bridge.address        = svm_avmm_kernelsystem.address   ;
+            svm_avmm_bridge.byteenable     = svm_avmm_kernelsystem.byteenable;
+            svm_avmm_bridge.write          = svm_avmm_kernelsystem.write     ;
+            svm_avmm_bridge.read           = svm_avmm_kernelsystem.read      ;
+            // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
+            // driven by the kernel-system.
+            //drive with the modified version during simulation
+            // synthesis translate off
+                svm_avmm_bridge.write = svm_avmm_kernelsystem.write === 'X ? 'b0 : svm_avmm_kernelsystem.write;
+                svm_avmm_bridge.read  = svm_avmm_kernelsystem.read  === 'X ? 'b0 : svm_avmm_kernelsystem.read;
+            // synthesis translate on
+        end
+    `endif
 `endif
 
 endmodule : kernel_wrapper
