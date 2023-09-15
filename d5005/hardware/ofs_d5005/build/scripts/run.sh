@@ -67,14 +67,37 @@ fi
 if [[ ! $(find . -name d5005.qdb -print -quit) ]]
 then
     echo "ERROR: BSP is not setup"
+    exit 1
+fi
+
+#parse build_env_db.txt to get the Q_REVISION, Q_PR_PARTITION_NAME,
+#and Q_PR_REVISION values to use in this script.
+BUILD_ENV_DB_FILE=`find . -name build_env_db.txt -print -quit`
+if [[ ! -f "${BUILD_ENV_DB_FILE}" ]]; then
+    echo "run.sh ERROR: Can't find build_env_db.txt. Did you import the FIM files?"
+    exit 1
+else
+    while IFS= read -r line
+    do
+        if [[ "$line" == *"Q_REVISION"* ]]; then
+            export $line
+            echo "Q_REVISION is $Q_REVISION"
+        elif [[ "$line" == *"Q_PR_PARTITION_NAME"* ]]; then
+            export $line
+            echo "Q_PR_PARTITION_NAME is $Q_PR_PARTITION_NAME"
+        elif   [[ "$line" == *"Q_PR_REVISION"* ]]; then
+            export $line
+            echo "Q_PR_REVISION is $Q_PR_REVISION"
+        fi
+    done < "${BUILD_ENV_DB_FILE}"
 fi
 
 RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
 RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
 #create new 'afu_flat' revision based on the one used to compile the kernel
-cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/iofs_pr_afu.qsf ./afu_flat.qsf
+cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/$Q_PR_REVISION.qsf ./$BSP_FLOW.qsf
 #add ASP/afu_flat-specific stuff to the qsf file
-echo "source afu_ip.qsf" >> ./afu_flat.qsf
+echo "source afu_ip.qsf" >> ./$BSP_FLOW.qsf
 
 #symlink the compiled kernel files to here from their origin (except the )
 MYLIST=`ls --ignore=fim_platform --ignore=build $RELATIVE_KERNEL_BUILD_PATH_TO_HERE`
@@ -90,9 +113,9 @@ do
     fi
 done
 
-qsys-generate -syn --quartus-project=d5005 --rev=afu_flat board.qsys
+qsys-generate -syn --quartus-project=$Q_REVISION --rev=$BSP_FLOW board.qsys
 ## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=d5005 --rev=afu_flat --add-to-project board.qsys
+qsys-archive --quartus-project=$Q_REVISION --rev=$BSP_FLOW --add-to-project board.qsys
 
 # compile project
 # =====================
@@ -103,72 +126,20 @@ if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     exit $?
 fi
 
-echo "Calling compile_script"
-quartus_sh -t scripts/compile_script.tcl "$BSP_FLOW"
-FLOW_SUCCESS=$?
-
-# Report Timing
-# =============
-DO_ADJUST_PLLS=1
-PLL_METADATA_FILE="pll_metadata.txt"
-if [ $FLOW_SUCCESS -eq 0 ]
-then
-    if [ $DO_ADJUST_PLLS -eq 0 ]; then
-        echo "Not running adjust_plls.tcl. We still need to create a pll_metadata.txt file. Doing that now with 1x clock @ 150MHz and 2x clock @ 300 MHz."
-        echo "clock-frequency-low:150 clock-frequency-high:300" >> "$PLL_METADATA_FILE"
-    else
-        echo "Running adjust_plls.txt script to find the highest valid kernel_clock."
-        quartus_sh -t scripts/adjust_plls.tcl d5005 "${BSP_FLOW}"
-    fi
-else
-    echo "ERROR: kernel compilation failed. Please see quartus_sh_compile.log for more information."
-    exit 1
-fi
-
-#run packager tool to create GBS
-BBS_ID_FILE="fme-ifc-id.txt"
-if [ -f "$BBS_ID_FILE" ]; then
-    FME_IFC_ID=$(cat $BBS_ID_FILE)
-    echo "FME_IFC_ID is $FME_IFC_ID"
-    cat $BBS_ID_FILE
-else
-    echo "ERROR: fme id not found."
-    exit 1
-fi
-
-if [ -f "$PLL_METADATA_FILE" ]; then
-    IFS=" " read -r -a PLL_METADATA <<< "$(cat $PLL_METADATA_FILE)"
-else
-    echo "Error: cannot find $PLL_METADATA_FILE"
-    exit 1
-fi
-
-#check for generated rbf and gbs files
-if [ ! -f "./output_files/${BSP_FLOW}.persona1.rbf" ]; then
-    echo "ERROR: ./output_files/${BSP_FLOW}.persona1.rbf is missing!"
-    exit 1
-fi
-
-rm -f ./output_files/"${BSP_FLOW}".gbs
-$PACKAGER_BIN create-gbs \
-    --rbf "./output_files/${BSP_FLOW}.persona1.rbf" \
-    --gbs "./output_files/${BSP_FLOW}.gbs" \
-    --afu-json opencl_afu.json \
-    --set-value \
-        interface-uuid:"$FME_IFC_ID" \
-        "${PLL_METADATA[@]}"
-
-FLOW_SUCCESS=$?
-if [ $FLOW_SUCCESS != 0 ]; then
-    echo "ERROR: packager tool failed to create .gbs file."
-    exit 1
-fi
+echo "Starting: quartus_sh --flow compile $Q_REVISION -c $BSP_FLOW"
+quartus_sh --flow compile $Q_REVISION -c $BSP_FLOW
 
 rm -rf fpga.bin
 
-gzip -9c ./output_files/"${BSP_FLOW}".gbs > "${BSP_FLOW}".gbs.gz
+generated_gbs="${BSP_FLOW}"."${Q_PR_PARTITION_NAME}".gbs
+if [ ! -f ./output_files/"${generated_gbs}" ]; then
+    echo "run.sh ERROR: can't find ./output_files/${generated_gbs}"
+    exit 1
+fi
+
+gzip -9c ./output_files/$generated_gbs > $generated_gbs.gz
 aocl binedit fpga.bin create
-aocl binedit fpga.bin add .acl.gbs.gz "./${BSP_FLOW}.gbs.gz"
+aocl binedit fpga.bin add .acl.gbs.gz "./${generated_gbs}.gz"
 
 echo "run.sh: done zipping up the gbs into gbs.gz, and creating fpga.bin"
 
@@ -185,9 +156,12 @@ if [ -f "${BSP_FLOW}.failing_paths.rpt" ]; then
 fi
 
 if [ ! -f fpga.bin ]; then
-    echo "ERROR: no fpga.bin found.  FPGA compilation failed!"
+    echo "run.sh ERROR: no fpga.bin found.  FPGA compilation failed!"
     exit 1
 fi
+
+echo "run.sh: generate acl_quartus_report.txt"
+quartus_sh -t scripts/gen-asp-quartus-report.tcl "${Q_REVISION}" "${BSP_FLOW}"
 
 #copy fpga.bin to parent directory so aoc flow can find it
 cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/

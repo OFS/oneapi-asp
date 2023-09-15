@@ -66,6 +66,10 @@ generate
             .m0_byteenable     (kernel_mem[m].byteenable   )
         );
         
+        always_ff @(posedge clk) begin
+            mem_avmm_bridge[m].writeack <= kernel_mem[m].writeack;
+            if (!reset_n) mem_avmm_bridge[m].writeack <= 'b0;
+        end
     end : mem_pipes
 endgenerate
 
@@ -167,6 +171,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4a_write           (mem_avmm_bridge[0].write        ),
         .kernel_ddr4a_read            (mem_avmm_bridge[0].read         ),
         .kernel_ddr4a_byteenable      (mem_avmm_bridge[0].byteenable   ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	        .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK2
         .kernel_ddr4b_waitrequest     (mem_avmm_bridge[1].waitrequest  ),
@@ -178,6 +185,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4b_write           (mem_avmm_bridge[1].write        ),
         .kernel_ddr4b_read            (mem_avmm_bridge[1].read         ),
         .kernel_ddr4b_byteenable      (mem_avmm_bridge[1].byteenable   ),
+    	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	        .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK3
         .kernel_ddr4c_waitrequest     (mem_avmm_bridge[2].waitrequest  ),
@@ -189,6 +199,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4c_write           (mem_avmm_bridge[2].write        ),
         .kernel_ddr4c_read            (mem_avmm_bridge[2].read         ),
         .kernel_ddr4c_byteenable      (mem_avmm_bridge[2].byteenable   ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+        	.kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK4
         .kernel_ddr4d_waitrequest     (mem_avmm_bridge[3].waitrequest  ),
@@ -200,6 +213,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4d_write           (mem_avmm_bridge[3].write        ),
         .kernel_ddr4d_read            (mem_avmm_bridge[3].read         ),
         .kernel_ddr4d_byteenable      (mem_avmm_bridge[3].byteenable   ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	        .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
+    	`endif
     `endif
 
     .kernel_irq_irq                 (kernel_cra_avmm_bridge.kernel_irq),
