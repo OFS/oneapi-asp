@@ -70,13 +70,6 @@ then
     exit 1
 fi
 
-#Q_REVISION="d5005"
-#echo "Q_REVISION is $Q_REVISION"
-#Q_PR_PARTITION_NAME="persona1"
-#echo "Q_PR_PARTITION_NAME is $Q_PR_PARTITION_NAME"
-#Q_PR_REVISION="iofs_pr_afu"
-#echo "Q_PR_REVISION is $Q_PR_REVISION"
-
 #parse build_env_db.txt to get the Q_REVISION, Q_PR_PARTITION_NAME,
 #and Q_PR_REVISION values to use in this script.
 BUILD_ENV_DB_FILE=`find . -name build_env_db.txt -print -quit`
