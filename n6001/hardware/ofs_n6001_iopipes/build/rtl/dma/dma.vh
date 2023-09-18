@@ -10,5 +10,5 @@
     `define DO_F2H_MAGIC_NUMBER_WRITE 1
     
     `define DMA_DO_SINGLE_BURST_PARTIAL_WRITES 1
-    
+
 `endif

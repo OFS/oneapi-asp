@@ -101,8 +101,8 @@ module ofs_plat_afu
                 );
         end
     endgenerate
-    
-    
+
+
     // ====================================================================
     //
     //  Tie off unused ports.
