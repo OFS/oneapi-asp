@@ -22,6 +22,7 @@ package dc_bsp_pkg;
 
     parameter OPENCL_BSP_KERNEL_SVM_DATA_WIDTH = 512;
     parameter OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH = 5;
+    parameter OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX = 16;
     parameter OPENCL_BSP_KERNEL_SVM_BYTEENABLE_WIDTH = 64;
 
     parameter OPENCL_BSP_KERNEL_DATA_WIDTH = 512;
@@ -54,6 +55,10 @@ package dc_bsp_pkg;
     //this wait-req needs to be reflected in both the board_spc.xml and ccb (cross-to-kernel) settings
     parameter KERNELWRAPPER_SVM_PIPELINE_DISABLEWAITREQBUFFERING = 1;
 
+    //Avalon Streaming data width - I/O Pipe connection to kernel-system
+    parameter SHIM_AVST_DATA_WIDTH = 64;
+    
+    //Interrupt parameters
     parameter BSP_NUM_INTERRUPT_LINES = 4;
     parameter BSP_AVMM_NUM_IRQ_USED = 3; //DMA_0, kernel, DMA_1
     parameter BSP_DMA_0_IRQ_BIT    = 0;
@@ -90,5 +95,14 @@ package dc_bsp_pkg;
     parameter VTP_SVC_MMIO_BASE_ADDR = 'h2_4000;
     // DFH end-of-list flag - '0' means this is the end of the DFH list
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
+    
+    // USM kernel clock crossing bridge
+    parameter USM_CCB_RESPONSE_FIFO_DEPTH       = 512;
+    parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
+    parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
+    
+    
+    //number of IO Channels/Pipes enabled in the ASP.
+    parameter IO_PIPES_NUM_CHAN = 5'h08;
     
 endpackage : dc_bsp_pkg

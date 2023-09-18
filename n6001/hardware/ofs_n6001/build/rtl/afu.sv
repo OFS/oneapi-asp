@@ -18,6 +18,11 @@ import dc_bsp_pkg::*;
     // Local memory interface.
     ofs_plat_avalon_mem_if.to_slave local_mem[NUM_LOCAL_MEM_BANKS],
     
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        // Ethernet
+        ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
+    `endif
+
     // clocks and reset
     input logic pClk,                      //Primary interface clock
     input logic pClk_reset,                // ACTIVE HIGH Soft Reset
@@ -98,8 +103,9 @@ assign mmio64_if_shim.instance_number = mmio64_if.instance_number;
     assign kernel_svm.reset_n = host_mem_if.reset_n;
     
     ofs_plat_avalon_mem_if_async_shim #(
-        //change waitreq to be more like 'almost-full' rather than 'full'
-        .COMMAND_ALMFULL_THRESHOLD (8)
+        .RESPONSE_FIFO_DEPTH       (USM_CCB_RESPONSE_FIFO_DEPTH),
+        .COMMAND_FIFO_DEPTH        (USM_CCB_COMMAND_FIFO_DEPTH),
+        .COMMAND_ALMFULL_THRESHOLD (USM_CCB_COMMAND_ALMFULL_THRESHOLD)
     ) kernel_svm_avmm_ccb_inst (
         .mem_sink   (kernel_svm),
         .mem_source (kernel_svm_kclk)
@@ -122,6 +128,36 @@ host_mem_if_vtp host_mem_if_vtp_inst (
     .mmio64_if_shim
 );
 
+`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+//UDP/HSSI offload engine
+    shim_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    shim_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    ofs_plat_avalon_mem_if #(
+        `OFS_PLAT_AVALON_MEM_IF_REPLICATE_PARAMS(mmio64_if)
+    ) uoe_csr_avmm();
+    assign uoe_csr_avmm.clk     = clk;
+    assign uoe_csr_avmm.reset_n = ~reset;
+    
+    udp_offload_engine udp_offload_engine
+    (
+        //MAC interfaces
+        .hssi_pipes,
+    
+        // kernel clock and reset
+        .kernel_clk(uClk_usrDiv2),
+        .kernel_resetn(opencl_kernel_control.kernel_reset_n),
+    
+        // from kernel
+        .udp_avst_from_kernel,
+        
+        // to kernel
+        .udp_avst_to_kernel,
+    
+        // CSR
+        .uoe_csr_avmm
+    );
+`endif
+
 
 bsp_logic bsp_logic_inst (
     .clk                    ( pClk ),
@@ -130,6 +166,9 @@ bsp_logic bsp_logic_inst (
     .kernel_clk_reset       ( uClk_usrDiv2_reset ),
     .host_mem_if            ( host_mem_va_if_dma ),
     .mmio64_if              ( mmio64_if_shim ),
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        .uoe_csr_avmm,
+    `endif
     .local_mem,
     
     .opencl_kernel_control,
@@ -140,11 +179,17 @@ kernel_wrapper kernel_wrapper_inst (
     .clk        (uClk_usrDiv2),
     .clk2x      (uClk_usr),
     .reset_n    (!uClk_usrDiv2_reset),
+    
     .opencl_kernel_control,
     .kernel_mem
-`ifdef INCLUDE_USM_SUPPORT
-    ,.kernel_svm            (kernel_svm_kclk)
-`endif
+    `ifdef INCLUDE_USM_SUPPORT
+        , .kernel_svm           ( kernel_svm_kclk )
+    `endif
+
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ,.udp_avst_from_kernel,
+         .udp_avst_to_kernel
+    `endif
 );
 
 endmodule : afu
