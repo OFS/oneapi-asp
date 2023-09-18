@@ -134,11 +134,7 @@ module ofs_plat_afu
     assign pclk_bsp_reset = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
                                                                ~plat_ifc.clocks.pClk.reset_n;
 
-    afu
-     #(
-        .NUM_LOCAL_MEM_BANKS(local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS)
-       )
-     afu
+    afu afu_inst
       (
         .host_mem_if(host_mem_to_afu),
         .mmio64_if(mmio64_to_afu),

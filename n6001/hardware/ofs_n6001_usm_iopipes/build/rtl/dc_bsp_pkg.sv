@@ -101,7 +101,8 @@ package dc_bsp_pkg;
     parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
     parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
     
+    
     //number of IO Channels/Pipes enabled in the ASP.
-    parameter IO_PIPES_NUM_CHAN = 5'h01;
+    parameter IO_PIPES_NUM_CHAN = 5'h08;
     
 endpackage : dc_bsp_pkg

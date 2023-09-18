@@ -15,7 +15,8 @@
     
     //enable USM-support
     `define INCLUDE_USM_SUPPORT 1
-    
+    `define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
+
     //enable UDP offload engine and I/O channels
     `define INCLUDE_UDP_OFFLOAD_ENGINE 1
     `define ASP_ENABLE_IOPIPE0 1
@@ -58,7 +59,5 @@
     //if this is disabled, you also need to remove the 
     // bsp_avmm_write_ack="1" setting(s) board_spec.xml.
     `define USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES 1
-    
-    `define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
 
 `endif
