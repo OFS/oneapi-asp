@@ -117,20 +117,23 @@ module ofs_plat_afu
         .HOST_CHAN_IN_USE_MASK(1),
         // All banks are used
         .LOCAL_MEM_IN_USE_MASK(-1)
-	`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
             // The argument to each parameter is a bit mask of channels used.
             // Passing "-1" indicates all available channels are in use.
             ,.HSSI_IN_USE_MASK({IO_PIPES_NUM_CHAN{1'b1}})
-	`endif
+        `endif //INCLUDE_UDP_OFFLOAD_ENGINE
         )
         tie_off(plat_ifc);
 
-    //ensure the ASP supports/expects no more IO Pipes than the FIM provides; fatal at compile-time
-    generate
-        if (IO_PIPES_NUM_CHAN > plat_ifc.hssi.NUM_CHANNELS) begin : Illegal_IO_Pipes_Num_Chan
-            $fatal("Error: The IO_PIPES_NUM_CHAN parameter defined in the ASP, %d, is larger than NUM_CHANNELS supported by the FIM, %d.",IO_PIPES_NUM_CHAN, plat_ifc.hssi.NUM_CHANNELS);
-        end
-    endgenerate
+    
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        //ensure the ASP supports/expects no more IO Pipes than the FIM provides; fatal at compile-time
+        generate
+            if (IO_PIPES_NUM_CHAN > plat_ifc.hssi.NUM_CHANNELS) begin : Illegal_IO_Pipes_Num_Chan
+                $fatal("Error: The IO_PIPES_NUM_CHAN parameter defined in the ASP, %d, is larger than NUM_CHANNELS supported by the FIM, %d.",IO_PIPES_NUM_CHAN, plat_ifc.hssi.NUM_CHANNELS);
+            end
+        endgenerate
+    `endif //INCLUDE_UDP_OFFLOAD_ENGINE
 
     // ====================================================================
     //
@@ -150,9 +153,9 @@ module ofs_plat_afu
         .host_mem_if(host_mem_to_afu),
         .mmio64_if(mmio64_to_afu),
         .local_mem(local_mem_to_afu),
-	`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
             .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),
-	`endif
+        `endif
        
         .pClk(pclk_bsp),
         .pClk_reset(pclk_bsp_reset),
