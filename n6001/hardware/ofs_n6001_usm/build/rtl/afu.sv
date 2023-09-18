@@ -16,7 +16,7 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[NUM_LOCAL_MEM_BANKS],
+    ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
     
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
         // Ethernet
