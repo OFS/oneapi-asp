@@ -166,7 +166,6 @@ bsp_logic bsp_logic_inst (
     .kernel_clk_reset       ( uClk_usrDiv2_reset ),
     .host_mem_if            ( host_mem_va_if_dma ),
     .mmio64_if              ( mmio64_if_shim ),
-
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
         .uoe_csr_avmm,
     `endif
@@ -184,7 +183,7 @@ kernel_wrapper kernel_wrapper_inst (
     .opencl_kernel_control,
     .kernel_mem
     `ifdef INCLUDE_USM_SUPPORT
-        , .kernel_svm           ( kernel_svm_kclk )
+        , .kernel_svm (kernel_svm_kclk)
     `endif
 
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE

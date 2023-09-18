@@ -183,7 +183,7 @@ kernel_wrapper kernel_wrapper_inst (
     .opencl_kernel_control,
     .kernel_mem
     `ifdef INCLUDE_USM_SUPPORT
-        , .kernel_svm           ( kernel_svm_kclk )
+        , .kernel_svm (kernel_svm_kclk)
     `endif
 
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
