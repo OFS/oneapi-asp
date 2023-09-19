@@ -194,94 +194,6 @@
   <tag2 key="TCL_PACKAGE_VERSION" value="10.0" />
  </component>
  <component
-   name="acl_kernel_clk"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/iface/acl_kernel_clk.qsys"
-   displayName="OpenCL Kernel Clock Generator"
-   version="1.0"
-   description="Generates the kernel clocks for ACL"
-   tags="INTERNAL_COMPONENT=false"
-   categories="OpenCL BSP Components"
-   factory="QsysFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPONENT_HIDE_FROM_QUARTUS" value="true" />
- </component>
- <component
-   name="acl_kernel_clk_a10"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/bsp/acl_kernel_clk_a10_hw.tcl"
-   displayName="OpenCL A10 Kernel Clock Generator"
-   version="16.1"
-   description="default description"
-   tags="AUTHORSHIP=author"
-   categories="OpenCL BSP Components"
-   factory="TclModuleFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPOSITION_CALLBACK" value="comp" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="16.1" />
- </component>
- <component
-   name="acl_kernel_clk_noreconfig"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/iface/acl_kernel_clk_noreconfig.qsys"
-   displayName="OpenCL Kernel Clock Generator - no Dynamic Reconfig"
-   version="1.0"
-   description="Generates the kernel clocks for ACL"
-   tags="INTERNAL_COMPONENT=false"
-   categories="OpenCL BSP Components"
-   factory="QsysFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPONENT_HIDE_FROM_QUARTUS" value="true" />
- </component>
- <component
-   name="acl_kernel_clk_s10"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/bsp/acl_kernel_clk_s10_hw.tcl"
-   displayName="OpenCL S10 Kernel Clock Generator"
-   version="17.0"
-   description="default description"
-   tags="AUTHORSHIP=author"
-   categories="OpenCL BSP Components"
-   factory="TclModuleFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPOSITION_CALLBACK" value="comp" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="16.1" />
- </component>
- <component
-   name="acl_kernel_clk_s10_reconfig"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/bsp/acl_kernel_clk_s10_reconfig_hw.tcl"
-   displayName="OpenCL S10 reconfigurable kernel clock generator"
-   version="17.0"
-   description="default description"
-   tags="AUTHORSHIP=author"
-   categories="OpenCL BSP Components"
-   factory="TclModuleFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPOSITION_CALLBACK" value="comp" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="16.1" />
- </component>
- <component
-   name="acl_kernel_interface_soc"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/iface/acl_kernel_interface_soc.qsys"
-   displayName="acl_kernel_interface_soc"
-   version="1.0"
-   description="ACL Kernel Interface"
-   tags=""
-   categories="ACL BSP Components"
-   factory="QsysFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPONENT_HIDE_FROM_QUARTUS" value="true" />
- </component>
- <component
-   name="acl_memory_bank_divider"
-   file="./ip/acl_memory_bank_divider_hw.tcl"
-   displayName="OpenCL Memory Bank Divider"
-   version="21.3"
-   description="default description"
-   tags="AUTHORSHIP=author"
-   categories="OpenCL BSP Components"
-   factory="TclModuleFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPOSITION_CALLBACK" value="compose" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="17.0" />
- </component>
- <component
    name="acl_snoop_adapter"
    file="${INTELFPGAOCLSDKROOT}/ip/board/export/snoop_adapter_hw.tcl"
    displayName="Avalon Snoop Adapter"
@@ -709,36 +621,6 @@
   <tag2 key="OPAQUE_ADDRESS_MAP" value="true" />
   <tag2 key="SUPPORTED_FILE_SETS" value="QUARTUS_SYNTH,SIM_VERILOG" />
   <tag2 key="TCL_PACKAGE_VERSION" value="12.1" />
- </component>
- <component
-   name="kernel_interface"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/bsp/acl_kernel_interface_hw.tcl"
-   displayName="OpenCL Kernel Interface"
-   version="15.1"
-   description="Connects the OpenCL host to the FPGA kernel"
-   tags="AUTHORSHIP=author"
-   categories="OpenCL BSP Components"
-   factory="TclModuleFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPOSITION_CALLBACK" value="compose" />
-  <tag2 key="OPAQUE_ADDRESS_MAP" value="false" />
-  <tag2 key="PARAMETER_UPGRADE_CALLBACK" value="ip_upgrade" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="13.1" />
- </component>
- <component
-   name="kernel_interface_s10"
-   file="${INTELFPGAOCLSDKROOT}/ip/board/bsp/acl_kernel_interface_s10_hw.tcl"
-   displayName="OpenCL Kernel Interface for S10"
-   version="17.1"
-   description="Connects the OpenCL host to the FPGA kernel"
-   tags="AUTHORSHIP=author"
-   categories="OpenCL BSP Components"
-   factory="TclModuleFactory">
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="COMPOSITION_CALLBACK" value="compose" />
-  <tag2 key="OPAQUE_ADDRESS_MAP" value="false" />
-  <tag2 key="PARAMETER_UPGRADE_CALLBACK" value="ip_upgrade" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="17.0" />
  </component>
  <component
    name="mem_org_mode"

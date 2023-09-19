@@ -14,16 +14,16 @@ refer to the applicable agreement for further details, at
 https://fpgasoftware.intel.com/eula.-->
 <ipxact:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
   <ipxact:vendor>author</ipxact:vendor>
-  <ipxact:library>board_kernel_interface_s10_0</ipxact:library>
-  <ipxact:name>kernel_interface_s10_0</ipxact:name>
-  <ipxact:version>17.1</ipxact:version>
+  <ipxact:library>board_kernel_interface</ipxact:library>
+  <ipxact:name>kernel_interface</ipxact:name>
+  <ipxact:version>23.2</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>kernel_cra</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -284,10 +284,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>ctrl</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -605,10 +605,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>acl_bsp_memorg_host0x018</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="conduit" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="conduit" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="conduit" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="conduit" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -642,10 +642,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -689,10 +689,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -731,10 +731,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_irq_from_kernel</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -778,10 +778,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_irq_to_host</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="interrupt" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="interrupt" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -819,7 +819,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="bridgesToReceiver" type="string">
           <ipxact:name>bridgesToReceiver</ipxact:name>
           <ipxact:displayName>Bridges to receiver</ipxact:displayName>
-          <ipxact:value>board_kernel_interface_s10_0.kernel_irq_from_kernel</ipxact:value>
+          <ipxact:value>board_kernel_interface.kernel_irq_from_kernel</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="irqScheme" type="string">
           <ipxact:name>irqScheme</ipxact:name>
@@ -830,10 +830,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>sw_reset_in</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -862,10 +862,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -899,10 +899,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -941,10 +941,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>sw_reset_export</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.1"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.1"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -993,11 +993,10 @@ https://fpgasoftware.intel.com/eula.-->
     <ipxact:instantiations>
       <ipxact:componentInstantiation>
         <ipxact:name>QUARTUS_SYNTH</ipxact:name>
-        <ipxact:moduleName>kernel_interface_s10</ipxact:moduleName>
+        <ipxact:moduleName>kernel_interface</ipxact:moduleName>
         <ipxact:fileSetRef>
           <ipxact:localName>QUARTUS_SYNTH</ipxact:localName>
         </ipxact:fileSetRef>
-        <ipxact:parameters></ipxact:parameters>
       </ipxact:componentInstantiation>
     </ipxact:instantiations>
     <ipxact:ports>
@@ -1005,7 +1004,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_cra_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1036,7 +1034,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_cra_readdatavalid</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1049,7 +1046,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_cra_burstcount</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC_VECTOR</ipxact:typeName>
@@ -1098,7 +1094,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_cra_write</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1111,7 +1106,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_cra_read</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1142,7 +1136,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_cra_debugaccess</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1155,7 +1148,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>ctrl_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1186,7 +1178,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>ctrl_readdatavalid</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1199,7 +1190,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>ctrl_burstcount</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC_VECTOR</ipxact:typeName>
@@ -1248,7 +1238,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>ctrl_write</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1261,7 +1250,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>ctrl_read</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1292,7 +1280,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>ctrl_debugaccess</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1323,7 +1310,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>clk_clk</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1336,7 +1322,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>reset_reset_n</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1349,7 +1334,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_irq_from_kernel_irq</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC_VECTOR</ipxact:typeName>
@@ -1362,7 +1346,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_irq_to_host_irq</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1375,7 +1358,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>sw_reset_in_reset</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1388,7 +1370,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_clk_clk</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1401,7 +1382,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>kernel_reset_reset_n</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1414,7 +1394,6 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:name>sw_reset_export_reset_n</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
-          <ipxact:vectors></ipxact:vectors>
           <ipxact:wireTypeDefs>
             <ipxact:wireTypeDef>
               <ipxact:typeName>STD_LOGIC</ipxact:typeName>
@@ -1428,9 +1407,9 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:vendorExtensions>
     <altera:entity_info>
       <ipxact:vendor>author</ipxact:vendor>
-      <ipxact:library>board_kernel_interface_s10_0</ipxact:library>
-      <ipxact:name>kernel_interface_s10</ipxact:name>
-      <ipxact:version>17.1</ipxact:version>
+      <ipxact:library>board_kernel_interface</ipxact:library>
+      <ipxact:name>kernel_interface</ipxact:name>
+      <ipxact:version>23.2</ipxact:version>
     </altera:entity_info>
     <altera:altera_module_parameters>
       <ipxact:parameters>
@@ -1447,12 +1426,12 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="AUTO_DEVICE_FAMILY" type="string">
           <ipxact:name>AUTO_DEVICE_FAMILY</ipxact:name>
           <ipxact:displayName>Auto DEVICE_FAMILY</ipxact:displayName>
-          <ipxact:value>Stratix 10</ipxact:value>
+          <ipxact:value>Agilex</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="AUTO_DEVICE" type="string">
           <ipxact:name>AUTO_DEVICE</ipxact:name>
           <ipxact:displayName>Auto DEVICE</ipxact:displayName>
-          <ipxact:value>1SX280HN2F43E2VG</ipxact:value>
+          <ipxact:value>AGFB014R24A2E2V</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="AUTO_DEVICE_SPEEDGRADE" type="string">
           <ipxact:name>AUTO_DEVICE_SPEEDGRADE</ipxact:name>
@@ -1466,17 +1445,17 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="board" type="string">
           <ipxact:name>board</ipxact:name>
           <ipxact:displayName>Board</ipxact:displayName>
-          <ipxact:value>default</ipxact:value>
+          <ipxact:value>Unknown</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="device" type="string">
           <ipxact:name>device</ipxact:name>
           <ipxact:displayName>Device</ipxact:displayName>
-          <ipxact:value>1SX280HN2F43E2VG</ipxact:value>
+          <ipxact:value>AGFB014R24A2E2V</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="deviceFamily" type="string">
           <ipxact:name>deviceFamily</ipxact:name>
           <ipxact:displayName>Device family</ipxact:displayName>
-          <ipxact:value>Stratix 10</ipxact:value>
+          <ipxact:value>Agilex</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="deviceSpeedGrade" type="string">
           <ipxact:name>deviceSpeedGrade</ipxact:name>
@@ -1493,17 +1472,6 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>bonusData</ipxact:displayName>
           <ipxact:value>bonusData 
 {
-   element $system
-   {
-      datum _originalDeviceFamily
-      {
-         value = "Stratix 10";
-         type = "String";
-      }
-   }
-   element kernel_interface_s10_0
-   {
-   }
 }
 </ipxact:value>
         </ipxact:parameter>
@@ -2227,7 +2195,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToReceiver&lt;/key&gt;
-                        &lt;value&gt;board_kernel_interface_s10_0.kernel_irq_from_kernel&lt;/value&gt;
+                        &lt;value&gt;board_kernel_interface.kernel_irq_from_kernel&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;irqScheme&lt;/key&gt;
@@ -2411,21 +2379,16 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/connPtSystemInfos&gt;
 &lt;/systemInfosDefinition&gt;</ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
-          <ipxact:value>&lt;pinAssignmentListDefinition/&gt;</ipxact:value>
-        </ipxact:parameter>
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="acl_bsp_memorg_host0x018" altera:internal="kernel_interface_s10_0.acl_bsp_memorg_host0x018" altera:type="conduit" altera:dir="end">
+      <altera:interface_mapping altera:name="acl_bsp_memorg_host0x018" altera:internal="kernel_interface.acl_bsp_memorg_host0x018" altera:type="conduit" altera:dir="end">
         <altera:port_mapping altera:name="acl_bsp_memorg_host0x018_mode" altera:internal="acl_bsp_memorg_host0x018_mode"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="clk" altera:internal="kernel_interface_s10_0.clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="clk" altera:internal="kernel_interface.clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="clk_clk" altera:internal="clk_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="ctrl" altera:internal="kernel_interface_s10_0.ctrl" altera:type="avalon" altera:dir="end">
+      <altera:interface_mapping altera:name="ctrl" altera:internal="kernel_interface.ctrl" altera:type="avalon" altera:dir="end">
         <altera:port_mapping altera:name="ctrl_address" altera:internal="ctrl_address"></altera:port_mapping>
         <altera:port_mapping altera:name="ctrl_burstcount" altera:internal="ctrl_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="ctrl_byteenable" altera:internal="ctrl_byteenable"></altera:port_mapping>
@@ -2437,10 +2400,10 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="ctrl_write" altera:internal="ctrl_write"></altera:port_mapping>
         <altera:port_mapping altera:name="ctrl_writedata" altera:internal="ctrl_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_clk" altera:internal="kernel_interface_s10_0.kernel_clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_clk" altera:internal="kernel_interface.kernel_clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="kernel_clk_clk" altera:internal="kernel_clk_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_cra" altera:internal="kernel_interface_s10_0.kernel_cra" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="kernel_cra" altera:internal="kernel_interface.kernel_cra" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="kernel_cra_address" altera:internal="kernel_cra_address"></altera:port_mapping>
         <altera:port_mapping altera:name="kernel_cra_burstcount" altera:internal="kernel_cra_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="kernel_cra_byteenable" altera:internal="kernel_cra_byteenable"></altera:port_mapping>
@@ -2452,22 +2415,22 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="kernel_cra_write" altera:internal="kernel_cra_write"></altera:port_mapping>
         <altera:port_mapping altera:name="kernel_cra_writedata" altera:internal="kernel_cra_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_irq_from_kernel" altera:internal="kernel_interface_s10_0.kernel_irq_from_kernel" altera:type="interrupt" altera:dir="start">
+      <altera:interface_mapping altera:name="kernel_irq_from_kernel" altera:internal="kernel_interface.kernel_irq_from_kernel" altera:type="interrupt" altera:dir="start">
         <altera:port_mapping altera:name="kernel_irq_from_kernel_irq" altera:internal="kernel_irq_from_kernel_irq"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_irq_to_host" altera:internal="kernel_interface_s10_0.kernel_irq_to_host" altera:type="interrupt" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_irq_to_host" altera:internal="kernel_interface.kernel_irq_to_host" altera:type="interrupt" altera:dir="end">
         <altera:port_mapping altera:name="kernel_irq_to_host_irq" altera:internal="kernel_irq_to_host_irq"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_reset" altera:internal="kernel_interface_s10_0.kernel_reset" altera:type="reset" altera:dir="start">
+      <altera:interface_mapping altera:name="kernel_reset" altera:internal="kernel_interface.kernel_reset" altera:type="reset" altera:dir="start">
         <altera:port_mapping altera:name="kernel_reset_reset_n" altera:internal="kernel_reset_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="reset" altera:internal="kernel_interface_s10_0.reset" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="reset" altera:internal="kernel_interface.reset" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="reset_reset_n" altera:internal="reset_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="sw_reset_export" altera:internal="kernel_interface_s10_0.sw_reset_export" altera:type="reset" altera:dir="start">
+      <altera:interface_mapping altera:name="sw_reset_export" altera:internal="kernel_interface.sw_reset_export" altera:type="reset" altera:dir="start">
         <altera:port_mapping altera:name="sw_reset_export_reset_n" altera:internal="sw_reset_export_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="sw_reset_in" altera:internal="kernel_interface_s10_0.sw_reset_in" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="sw_reset_in" altera:internal="kernel_interface.sw_reset_in" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="sw_reset_in_reset" altera:internal="sw_reset_in_reset"></altera:port_mapping>
       </altera:interface_mapping>
     </altera:altera_interface_boundary>
@@ -2480,52 +2443,52 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:busInterfaces>
           <ipxact:busInterface>
             <ipxact:name>kernel_cra.s0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>clock_crosser.slave</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>address_span_extender_0.windowed_slave</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>address_span_extender_0.cntl</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>sw_reset.s</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ctrl.s0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>mem_org_mode0.s</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>version_id_0.s</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:slave></ipxact:slave>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>kernel_cra.m0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:master></ipxact:master>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>clock_crosser.master</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="clock_crosser.master">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
@@ -2534,7 +2497,7 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>address_span_extender_0.expanded_master</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="address_span_extender_0.expanded_master">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
@@ -2543,7 +2506,7 @@ https://fpgasoftware.intel.com/eula.-->
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ctrl.m0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.1"></ipxact:busType>
             <ipxact:master>
               <ipxact:addressSpaceRef addressSpaceRef="ctrl.m0">
                 <ipxact:baseAddress>0x1000</ipxact:baseAddress>

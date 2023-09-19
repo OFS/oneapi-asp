@@ -14,9 +14,9 @@ refer to the applicable agreement for further details, at
 https://fpgasoftware.intel.com/eula.-->
 <ipxact:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
   <ipxact:vendor>author</ipxact:vendor>
-  <ipxact:library>board_kernel_interface_agilex_0</ipxact:library>
-  <ipxact:name>kernel_interface_agilex_0</ipxact:name>
-  <ipxact:version>17.1</ipxact:version>
+  <ipxact:library>board_kernel_interface</ipxact:library>
+  <ipxact:name>kernel_interface</ipxact:name>
+  <ipxact:version>23.2</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>kernel_cra</ipxact:name>
@@ -819,7 +819,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="bridgesToReceiver" type="string">
           <ipxact:name>bridgesToReceiver</ipxact:name>
           <ipxact:displayName>Bridges to receiver</ipxact:displayName>
-          <ipxact:value>board_kernel_interface_agilex_0.kernel_irq_from_kernel</ipxact:value>
+          <ipxact:value>board_kernel_interface.kernel_irq_from_kernel</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="irqScheme" type="string">
           <ipxact:name>irqScheme</ipxact:name>
@@ -993,7 +993,7 @@ https://fpgasoftware.intel.com/eula.-->
     <ipxact:instantiations>
       <ipxact:componentInstantiation>
         <ipxact:name>QUARTUS_SYNTH</ipxact:name>
-        <ipxact:moduleName>kernel_interface_agilex</ipxact:moduleName>
+        <ipxact:moduleName>kernel_interface</ipxact:moduleName>
         <ipxact:fileSetRef>
           <ipxact:localName>QUARTUS_SYNTH</ipxact:localName>
         </ipxact:fileSetRef>
@@ -1407,8 +1407,8 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:vendorExtensions>
     <altera:entity_info>
       <ipxact:vendor>author</ipxact:vendor>
-      <ipxact:library>board_kernel_interface_agilex_0</ipxact:library>
-      <ipxact:name>kernel_interface_agilex</ipxact:name>
+      <ipxact:library>board_kernel_interface</ipxact:library>
+      <ipxact:name>kernel_interface</ipxact:name>
       <ipxact:version>17.1</ipxact:version>
     </altera:entity_info>
     <altera:altera_module_parameters>
@@ -2195,7 +2195,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToReceiver&lt;/key&gt;
-                        &lt;value&gt;board_kernel_interface_agilex_0.kernel_irq_from_kernel&lt;/value&gt;
+                        &lt;value&gt;board_kernel_interface.kernel_irq_from_kernel&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;irqScheme&lt;/key&gt;
@@ -2382,13 +2382,13 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="acl_bsp_memorg_host0x018" altera:internal="kernel_interface_agilex_0.acl_bsp_memorg_host0x018" altera:type="conduit" altera:dir="end">
+      <altera:interface_mapping altera:name="acl_bsp_memorg_host0x018" altera:internal="kernel_interface.acl_bsp_memorg_host0x018" altera:type="conduit" altera:dir="end">
         <altera:port_mapping altera:name="acl_bsp_memorg_host0x018_mode" altera:internal="acl_bsp_memorg_host0x018_mode"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="clk" altera:internal="kernel_interface_agilex_0.clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="clk" altera:internal="kernel_interface.clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="clk_clk" altera:internal="clk_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="ctrl" altera:internal="kernel_interface_agilex_0.ctrl" altera:type="avalon" altera:dir="end">
+      <altera:interface_mapping altera:name="ctrl" altera:internal="kernel_interface.ctrl" altera:type="avalon" altera:dir="end">
         <altera:port_mapping altera:name="ctrl_address" altera:internal="ctrl_address"></altera:port_mapping>
         <altera:port_mapping altera:name="ctrl_burstcount" altera:internal="ctrl_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="ctrl_byteenable" altera:internal="ctrl_byteenable"></altera:port_mapping>
@@ -2400,10 +2400,10 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="ctrl_write" altera:internal="ctrl_write"></altera:port_mapping>
         <altera:port_mapping altera:name="ctrl_writedata" altera:internal="ctrl_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_clk" altera:internal="kernel_interface_agilex_0.kernel_clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_clk" altera:internal="kernel_interface.kernel_clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="kernel_clk_clk" altera:internal="kernel_clk_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_cra" altera:internal="kernel_interface_agilex_0.kernel_cra" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="kernel_cra" altera:internal="kernel_interface.kernel_cra" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="kernel_cra_address" altera:internal="kernel_cra_address"></altera:port_mapping>
         <altera:port_mapping altera:name="kernel_cra_burstcount" altera:internal="kernel_cra_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="kernel_cra_byteenable" altera:internal="kernel_cra_byteenable"></altera:port_mapping>
@@ -2415,22 +2415,22 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="kernel_cra_write" altera:internal="kernel_cra_write"></altera:port_mapping>
         <altera:port_mapping altera:name="kernel_cra_writedata" altera:internal="kernel_cra_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_irq_from_kernel" altera:internal="kernel_interface_agilex_0.kernel_irq_from_kernel" altera:type="interrupt" altera:dir="start">
+      <altera:interface_mapping altera:name="kernel_irq_from_kernel" altera:internal="kernel_interface.kernel_irq_from_kernel" altera:type="interrupt" altera:dir="start">
         <altera:port_mapping altera:name="kernel_irq_from_kernel_irq" altera:internal="kernel_irq_from_kernel_irq"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_irq_to_host" altera:internal="kernel_interface_agilex_0.kernel_irq_to_host" altera:type="interrupt" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_irq_to_host" altera:internal="kernel_interface.kernel_irq_to_host" altera:type="interrupt" altera:dir="end">
         <altera:port_mapping altera:name="kernel_irq_to_host_irq" altera:internal="kernel_irq_to_host_irq"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_reset" altera:internal="kernel_interface_agilex_0.kernel_reset" altera:type="reset" altera:dir="start">
+      <altera:interface_mapping altera:name="kernel_reset" altera:internal="kernel_interface.kernel_reset" altera:type="reset" altera:dir="start">
         <altera:port_mapping altera:name="kernel_reset_reset_n" altera:internal="kernel_reset_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="reset" altera:internal="kernel_interface_agilex_0.reset" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="reset" altera:internal="kernel_interface.reset" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="reset_reset_n" altera:internal="reset_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="sw_reset_export" altera:internal="kernel_interface_agilex_0.sw_reset_export" altera:type="reset" altera:dir="start">
+      <altera:interface_mapping altera:name="sw_reset_export" altera:internal="kernel_interface.sw_reset_export" altera:type="reset" altera:dir="start">
         <altera:port_mapping altera:name="sw_reset_export_reset_n" altera:internal="sw_reset_export_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="sw_reset_in" altera:internal="kernel_interface_agilex_0.sw_reset_in" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="sw_reset_in" altera:internal="kernel_interface.sw_reset_in" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="sw_reset_in_reset" altera:internal="sw_reset_in_reset"></altera:port_mapping>
       </altera:interface_mapping>
     </altera:altera_interface_boundary>
