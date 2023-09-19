@@ -182,7 +182,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4a_write           (mem_avmm_bridge[0].write        ),
         .kernel_ddr4a_read            (mem_avmm_bridge[0].read         ),
         .kernel_ddr4a_byteenable      (mem_avmm_bridge[0].byteenable   ),
-        .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	    .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK2
         .kernel_ddr4b_waitrequest     (mem_avmm_bridge[1].waitrequest  ),
@@ -194,7 +196,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4b_write           (mem_avmm_bridge[1].write        ),
         .kernel_ddr4b_read            (mem_avmm_bridge[1].read         ),
         .kernel_ddr4b_byteenable      (mem_avmm_bridge[1].byteenable   ),
-        .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
+    	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	    .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK3
         .kernel_ddr4c_waitrequest     (mem_avmm_bridge[2].waitrequest  ),
@@ -206,7 +210,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4c_write           (mem_avmm_bridge[2].write        ),
         .kernel_ddr4c_read            (mem_avmm_bridge[2].read         ),
         .kernel_ddr4c_byteenable      (mem_avmm_bridge[2].byteenable   ),
-        .kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            .kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK4
         .kernel_ddr4d_waitrequest     (mem_avmm_bridge[3].waitrequest  ),
@@ -218,7 +224,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4d_write           (mem_avmm_bridge[3].write        ),
         .kernel_ddr4d_read            (mem_avmm_bridge[3].read         ),
         .kernel_ddr4d_byteenable      (mem_avmm_bridge[3].byteenable   ),
-        .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	    .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
+    	`endif
     `endif
 
     .kernel_irq_irq                 (kernel_cra_avmm_bridge.kernel_irq),
@@ -276,6 +284,102 @@ kernel_system kernel_system_inst (
             .udp_in_3_data           (udp_avst_to_kernel[3].data),
             .udp_in_3_ready          (udp_avst_to_kernel[3].ready)
         `endif //ASP_ENABLE_IOPIPE3
+        `ifdef ASP_ENABLE_IOPIPE4
+            ,.udp_out_4_valid        (udp_avst_from_kernel[4].valid),
+            .udp_out_4_data          (udp_avst_from_kernel[4].data),
+            .udp_out_4_ready         (udp_avst_from_kernel[4].ready),
+            .udp_in_4_valid          (udp_avst_to_kernel[4].valid),
+            .udp_in_4_data           (udp_avst_to_kernel[4].data),
+            .udp_in_4_ready          (udp_avst_to_kernel[4].ready)
+        `endif //ASP_ENABLE_IOPIPE4
+        `ifdef ASP_ENABLE_IOPIPE5
+            ,.udp_out_5_valid        (udp_avst_from_kernel[5].valid),
+            .udp_out_5_data          (udp_avst_from_kernel[5].data),
+            .udp_out_5_ready         (udp_avst_from_kernel[5].ready),
+            .udp_in_5_valid          (udp_avst_to_kernel[5].valid),
+            .udp_in_5_data           (udp_avst_to_kernel[5].data),
+            .udp_in_5_ready          (udp_avst_to_kernel[5].ready)
+        `endif //ASP_ENABLE_IOPIPE5
+        `ifdef ASP_ENABLE_IOPIPE6
+            ,.udp_out_6_valid        (udp_avst_from_kernel[6].valid),
+            .udp_out_6_data          (udp_avst_from_kernel[6].data),
+            .udp_out_6_ready         (udp_avst_from_kernel[6].ready),
+            .udp_in_6_valid          (udp_avst_to_kernel[6].valid),
+            .udp_in_6_data           (udp_avst_to_kernel[6].data),
+            .udp_in_6_ready          (udp_avst_to_kernel[6].ready)
+        `endif //ASP_ENABLE_IOPIPE6
+        `ifdef ASP_ENABLE_IOPIPE7
+            ,.udp_out_7_valid        (udp_avst_from_kernel[7].valid),
+            .udp_out_7_data          (udp_avst_from_kernel[7].data),
+            .udp_out_7_ready         (udp_avst_from_kernel[7].ready),
+            .udp_in_7_valid          (udp_avst_to_kernel[7].valid),
+            .udp_in_7_data           (udp_avst_to_kernel[7].data),
+            .udp_in_7_ready          (udp_avst_to_kernel[7].ready)
+        `endif //ASP_ENABLE_IOPIPE7
+        `ifdef ASP_ENABLE_IOPIPE8
+            ,.udp_out_8_valid        (udp_avst_from_kernel[8].valid),
+            .udp_out_8_data          (udp_avst_from_kernel[8].data),
+            .udp_out_8_ready         (udp_avst_from_kernel[8].ready),
+            .udp_in_8_valid          (udp_avst_to_kernel[8].valid),
+            .udp_in_8_data           (udp_avst_to_kernel[8].data),
+            .udp_in_8_ready          (udp_avst_to_kernel[8].ready)
+        `endif //ASP_ENABLE_IOPIPE8
+        `ifdef ASP_ENABLE_IOPIPE9
+            ,.udp_out_9_valid        (udp_avst_from_kernel[9].valid),
+            .udp_out_9_data          (udp_avst_from_kernel[9].data),
+            .udp_out_9_ready         (udp_avst_from_kernel[9].ready),
+            .udp_in_9_valid          (udp_avst_to_kernel[9].valid),
+            .udp_in_9_data           (udp_avst_to_kernel[9].data),
+            .udp_in_9_ready          (udp_avst_to_kernel[9].ready)
+        `endif //ASP_ENABLE_IOPIPE9
+        `ifdef ASP_ENABLE_IOPIPE10
+            ,.udp_out_10_valid        (udp_avst_from_kernel[10].valid),
+            .udp_out_10_data          (udp_avst_from_kernel[10].data),
+            .udp_out_10_ready         (udp_avst_from_kernel[10].ready),
+            .udp_in_10_valid          (udp_avst_to_kernel[10].valid),
+            .udp_in_10_data           (udp_avst_to_kernel[10].data),
+            .udp_in_10_ready          (udp_avst_to_kernel[10].ready)
+        `endif //ASP_ENABLE_IOPIPE10
+        `ifdef ASP_ENABLE_IOPIPE11
+            ,.udp_out_11_valid        (udp_avst_from_kernel[11].valid),
+            .udp_out_11_data          (udp_avst_from_kernel[11].data),
+            .udp_out_11_ready         (udp_avst_from_kernel[11].ready),
+            .udp_in_11_valid          (udp_avst_to_kernel[11].valid),
+            .udp_in_11_data           (udp_avst_to_kernel[11].data),
+            .udp_in_11_ready          (udp_avst_to_kernel[11].ready)
+        `endif //ASP_ENABLE_IOPIPE11
+        `ifdef ASP_ENABLE_IOPIPE12
+            ,.udp_out_12_valid        (udp_avst_from_kernel[12].valid),
+            .udp_out_12_data          (udp_avst_from_kernel[12].data),
+            .udp_out_12_ready         (udp_avst_from_kernel[12].ready),
+            .udp_in_12_valid          (udp_avst_to_kernel[12].valid),
+            .udp_in_12_data           (udp_avst_to_kernel[12].data),
+            .udp_in_12_ready          (udp_avst_to_kernel[12].ready)
+        `endif //ASP_ENABLE_IOPIPE12
+        `ifdef ASP_ENABLE_IOPIPE13
+            ,.udp_out_13_valid        (udp_avst_from_kernel[13].valid),
+            .udp_out_13_data          (udp_avst_from_kernel[13].data),
+            .udp_out_13_ready         (udp_avst_from_kernel[13].ready),
+            .udp_in_13_valid          (udp_avst_to_kernel[13].valid),
+            .udp_in_13_data           (udp_avst_to_kernel[13].data),
+            .udp_in_13_ready          (udp_avst_to_kernel[13].ready)
+        `endif //ASP_ENABLE_IOPIPE13
+        `ifdef ASP_ENABLE_IOPIPE14
+            ,.udp_out_14_valid        (udp_avst_from_kernel[14].valid),
+            .udp_out_14_data          (udp_avst_from_kernel[14].data),
+            .udp_out_14_ready         (udp_avst_from_kernel[14].ready),
+            .udp_in_14_valid          (udp_avst_to_kernel[14].valid),
+            .udp_in_14_data           (udp_avst_to_kernel[14].data),
+            .udp_in_14_ready          (udp_avst_to_kernel[14].ready)
+        `endif //ASP_ENABLE_IOPIPE14
+        `ifdef ASP_ENABLE_IOPIPE15
+            ,.udp_out_15_valid        (udp_avst_from_kernel[15].valid),
+            .udp_out_15_data          (udp_avst_from_kernel[15].data),
+            .udp_out_15_ready         (udp_avst_from_kernel[15].ready),
+            .udp_in_15_valid          (udp_avst_to_kernel[15].valid),
+            .udp_in_15_data           (udp_avst_to_kernel[15].data),
+            .udp_in_15_ready          (udp_avst_to_kernel[15].ready)
+        `endif //ASP_ENABLE_IOPIPE15
     `endif
 );
 

@@ -10,7 +10,7 @@
 // Using kernel wrapper instead of kernel_system, since kernel_system is auto generated.
 // kernel_system introduces boundary ports that are not used, and in PR they get preserved
 
-module kernel_wrapper 
+module kernel_wrapper  
 import dc_bsp_pkg::*;
 (
     input       clk,
@@ -81,7 +81,6 @@ endgenerate
 
 `ifdef INCLUDE_USM_SUPPORT
     logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
-    logic kernel_system_svm_read, kernel_system_svm_write;
     
     ofs_plat_avalon_mem_if
     # (
@@ -89,6 +88,12 @@ endgenerate
         .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
         .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
     ) svm_avmm_bridge ();
+    ofs_plat_avalon_mem_if
+    # (
+        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+    ) svm_avmm_kernelsystem ();
     
     always_comb begin
         kernel_svm.user  = 'b0;
@@ -177,7 +182,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4a_write           (mem_avmm_bridge[0].write        ),
         .kernel_ddr4a_read            (mem_avmm_bridge[0].read         ),
         .kernel_ddr4a_byteenable      (mem_avmm_bridge[0].byteenable   ),
-        .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	    .kernel_ddr4a_writeack        (mem_avmm_bridge[0].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK2
         .kernel_ddr4b_waitrequest     (mem_avmm_bridge[1].waitrequest  ),
@@ -189,7 +196,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4b_write           (mem_avmm_bridge[1].write        ),
         .kernel_ddr4b_read            (mem_avmm_bridge[1].read         ),
         .kernel_ddr4b_byteenable      (mem_avmm_bridge[1].byteenable   ),
-        .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
+    	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	    .kernel_ddr4b_writeack        (mem_avmm_bridge[1].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK3
         .kernel_ddr4c_waitrequest     (mem_avmm_bridge[2].waitrequest  ),
@@ -201,7 +210,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4c_write           (mem_avmm_bridge[2].write        ),
         .kernel_ddr4c_read            (mem_avmm_bridge[2].read         ),
         .kernel_ddr4c_byteenable      (mem_avmm_bridge[2].byteenable   ),
-        .kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            .kernel_ddr4c_writeack        (mem_avmm_bridge[2].writeack     ),
+	`endif
     `endif
     `ifdef PAC_BSP_ENABLE_DDR4_BANK4
         .kernel_ddr4d_waitrequest     (mem_avmm_bridge[3].waitrequest  ),
@@ -213,7 +224,9 @@ kernel_system kernel_system_inst (
         .kernel_ddr4d_write           (mem_avmm_bridge[3].write        ),
         .kernel_ddr4d_read            (mem_avmm_bridge[3].read         ),
         .kernel_ddr4d_byteenable      (mem_avmm_bridge[3].byteenable   ),
-        .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
+	`ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+	    .kernel_ddr4d_writeack        (mem_avmm_bridge[3].writeack     ),
+    	`endif
     `endif
 
     .kernel_irq_irq                 (kernel_cra_avmm_bridge.kernel_irq),
@@ -229,16 +242,17 @@ kernel_system kernel_system_inst (
     .kernel_cra_debugaccess         (kernel_cra_avmm_bridge.kernel_cra_debugaccess)
     
     `ifdef INCLUDE_USM_SUPPORT
-        ,.kernel_mem_waitrequest    (svm_avmm_bridge.waitrequest),
-        .kernel_mem_readdata        (svm_avmm_bridge.readdata),
-        .kernel_mem_readdatavalid   (svm_avmm_bridge.readdatavalid),
-        .kernel_mem_burstcount      (svm_avmm_bridge.burstcount),
-        .kernel_mem_writedata       (svm_avmm_bridge.writedata),
-        .kernel_mem_address         ({svm_avmm_bridge.address,svm_addr_shift}),
-        .kernel_mem_write           (kernel_system_svm_write),
-        .kernel_mem_read            (kernel_system_svm_read),
-        .kernel_mem_byteenable      (svm_avmm_bridge.byteenable)
-    `endif
+        ,.kernel_mem_waitrequest    (svm_avmm_kernelsystem.waitrequest),
+        .kernel_mem_readdata        (svm_avmm_kernelsystem.readdata),
+        .kernel_mem_readdatavalid   (svm_avmm_kernelsystem.readdatavalid),
+        .kernel_mem_burstcount      (svm_avmm_kernelsystem.burstcount),
+        .kernel_mem_writedata       (svm_avmm_kernelsystem.writedata),
+        .kernel_mem_address         ({svm_avmm_kernelsystem.address,svm_addr_shift}),
+        .kernel_mem_write           (svm_avmm_kernelsystem.write),
+        .kernel_mem_read            (svm_avmm_kernelsystem.read),
+        .kernel_mem_byteenable      (svm_avmm_kernelsystem.byteenable)
+    `endif //INCLUDE_USM_SUPPORT
+    
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
         ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
         .udp_out_data          (udp_avst_from_kernel[0].data),
@@ -370,18 +384,36 @@ kernel_system kernel_system_inst (
 );
 
 `ifdef INCLUDE_USM_SUPPORT
-    // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
-    // driven by the kernel-system.
-    always_comb begin
-        //drive with the value from the kernel-system by default
-        svm_avmm_bridge.write = kernel_system_svm_write;
-        svm_avmm_bridge.read  = kernel_system_svm_read;
-        //drive with the modified version during simulation
-    // synthesis translate off
-        svm_avmm_bridge.write = kernel_system_svm_write === 'X ? 'b0 : kernel_system_svm_write;
-        svm_avmm_bridge.read  = kernel_system_svm_read  === 'X ? 'b0 : kernel_system_svm_read;
-    // synthesis translate on
-    end
+    `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
+        avmm_single_burst_partial_writes avmm_single_burst_partial_writes_inst
+        (
+            .clk      ,
+            .reset_n  ,
+            .to_avmm_source (svm_avmm_kernelsystem),
+            .to_avmm_sink   (svm_avmm_bridge)
+        );
+    `else
+        //if not requiring partial-writes splitting, just pass the signals through
+        always_comb begin
+            svm_avmm_kernelsystem.waitrequest    = svm_avmm_bridge.waitrequest;
+            svm_avmm_kernelsystem.readdata       = svm_avmm_bridge.readdata;
+            svm_avmm_kernelsystem.readdatavalid  = svm_avmm_bridge.readdatavalid;
+            
+            svm_avmm_bridge.burstcount     = svm_avmm_kernelsystem.burstcount;
+            svm_avmm_bridge.writedata      = svm_avmm_kernelsystem.writedata ;
+            svm_avmm_bridge.address        = svm_avmm_kernelsystem.address   ;
+            svm_avmm_bridge.byteenable     = svm_avmm_kernelsystem.byteenable;
+            svm_avmm_bridge.write          = svm_avmm_kernelsystem.write     ;
+            svm_avmm_bridge.read           = svm_avmm_kernelsystem.read      ;
+            // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
+            // driven by the kernel-system.
+            //drive with the modified version during simulation
+            // synthesis translate off
+                svm_avmm_bridge.write = svm_avmm_kernelsystem.write === 'X ? 'b0 : svm_avmm_kernelsystem.write;
+                svm_avmm_bridge.read  = svm_avmm_kernelsystem.read  === 'X ? 'b0 : svm_avmm_kernelsystem.read;
+            // synthesis translate on
+        end
+    `endif
 `endif
 
 endmodule : kernel_wrapper
