@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: MIT
 //
 
-`define ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK 1
-
 module udp_offload_engine
 import dc_bsp_pkg::*;
 (
