@@ -103,6 +103,6 @@ package dc_bsp_pkg;
     
     
     //number of IO Channels/Pipes enabled in the ASP.
-    //parameter IO_PIPES_NUM_CHAN = 5'h08;
+    parameter IO_PIPES_NUM_CHAN = 5'h00;
     
 endpackage : dc_bsp_pkg
