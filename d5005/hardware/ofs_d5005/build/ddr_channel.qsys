@@ -277,7 +277,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;suppliedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;9&lt;/value&gt;
+                        &lt;value&gt;3&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -285,7 +285,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;9&lt;/value&gt;
+                        &lt;value&gt;3&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/suppliedSystemInfos&gt;
                 &lt;consumedSystemInfos/&gt;
@@ -315,7 +315,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;suppliedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;13&lt;/value&gt;
+                        &lt;value&gt;6&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -323,7 +323,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;13&lt;/value&gt;
+                        &lt;value&gt;6&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/suppliedSystemInfos&gt;
                 &lt;consumedSystemInfos/&gt;
@@ -336,7 +336,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;suppliedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;14&lt;/value&gt;
+                        &lt;value&gt;7&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;CLOCK_RATE&lt;/key&gt;
@@ -344,7 +344,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;RESET_DOMAIN&lt;/key&gt;
-                        &lt;value&gt;14&lt;/value&gt;
+                        &lt;value&gt;7&lt;/value&gt;
                     &lt;/entry&gt;
                 &lt;/suppliedSystemInfos&gt;
                 &lt;consumedSystemInfos/&gt;
@@ -3037,18 +3037,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_board_acl_hyper_optimized_ccb_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_board_acl_hyper_optimized_ccb_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_board_acl_hyper_optimized_ccb_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_board_acl_hyper_optimized_ccb_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -3377,7 +3365,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;64&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -4026,7 +4014,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                        &lt;value&gt;64&lt;/value&gt;
+                        &lt;value&gt;512&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -4371,18 +4359,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetName&gt;ddr4emif_pipe_0&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;ddr4emif_pipe_0&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4emif_pipe_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4emif_pipe_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4emif_pipe_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4emif_pipe_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
     &lt;/fileSets&gt;
@@ -4766,7 +4742,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;256&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -5415,7 +5391,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                        &lt;value&gt;256&lt;/value&gt;
+                        &lt;value&gt;512&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -5760,18 +5736,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetName&gt;ddr4_pipe_to_bankdiv&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;ddr4_pipe_to_bankdiv&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_bankdiv&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_bankdiv&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_bankdiv&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_bankdiv&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
     &lt;/fileSets&gt;
@@ -7151,18 +7115,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_channel_acl_avalon_mm_bridge_s10_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_channel_acl_avalon_mm_bridge_s10_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_channel_acl_avalon_mm_bridge_s10_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_channel_acl_avalon_mm_bridge_s10_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -8540,18 +8492,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_bankdiv_2&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_bankdiv_2&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_bankdiv_2&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_bankdiv_2&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -8933,7 +8873,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;256&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -9582,7 +9522,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                        &lt;value&gt;256&lt;/value&gt;
+                        &lt;value&gt;512&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -9929,18 +9869,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_kernel&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_kernel&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr4_pipe_to_kernel&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr4_pipe_to_kernel&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -10285,18 +10213,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_board_clock_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_board_clock_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_board_clock_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_board_clock_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -10620,18 +10536,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_channel_reset_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_channel_reset_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_channel_reset_bridge_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_channel_reset_bridge_0&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -10911,18 +10815,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetName&gt;ddr_clk&lt;/fileSetName&gt;
             &lt;fileSetFixedName&gt;ddr_clk&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_clk&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_clk&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;ddr_clk&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;ddr_clk&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
     &lt;/fileSets&gt;
@@ -11206,18 +11098,6 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;kernel_clk&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;kernel_clk&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
-        &lt;fileSet&gt;
-            &lt;fileSetName&gt;kernel_clk&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;kernel_clk&lt;/fileSetFixedName&gt;
-            &lt;fileSetKind&gt;CDC_VHDL&lt;/fileSetKind&gt;
-            &lt;fileSetFiles/&gt;
-        &lt;/fileSet&gt;
     &lt;/fileSets&gt;
     &lt;pinAssignments/&gt;
 &lt;/generationInfoDefinition&gt;</ipxact:value>
@@ -11418,19 +11298,6 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
-            <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_host.master">
-                <ipxact:baseAddress>0x0000_0000_0000_0000</ipxact:baseAddress>
-              </ipxact:addressSpaceRef>
-            </ipxact:master>
-          </ipxact:busInterface>
-          <ipxact:busInterface>
-            <ipxact:name>ddr4_emif_pipe.s0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
-          </ipxact:busInterface>
-          <ipxact:busInterface>
             <ipxact:name>ddr4_cross_to_kernel.master</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
             <ipxact:master>
@@ -11438,11 +11305,6 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:baseAddress>0x0000_0000_0000_0000</ipxact:baseAddress>
               </ipxact:addressSpaceRef>
             </ipxact:master>
-          </ipxact:busInterface>
-          <ipxact:busInterface>
-            <ipxact:name>ddr4_emif_pipe.m0</ipxact:name>
-            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
-            <ipxact:master></ipxact:master>
           </ipxact:busInterface>
           <ipxact:busInterface>
             <ipxact:name>ddr4_cross_to_host.slave</ipxact:name>
@@ -11524,18 +11386,26 @@ https://fpgasoftware.intel.com/eula.-->
               </ipxact:addressSpaceRef>
             </ipxact:master>
           </ipxact:busInterface>
+          <ipxact:busInterface>
+            <ipxact:name>ddr4_emif_pipe.m0</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:master></ipxact:master>
+          </ipxact:busInterface>
+          <ipxact:busInterface>
+            <ipxact:name>ddr4_emif_pipe.s0</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+          </ipxact:busInterface>
+          <ipxact:busInterface>
+            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
+            <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+            <ipxact:master>
+              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_host.master">
+                <ipxact:baseAddress>0x0000_0000_0000_0000</ipxact:baseAddress>
+              </ipxact:addressSpaceRef>
+            </ipxact:master>
+          </ipxact:busInterface>
         </ipxact:busInterfaces>
         <ipxact:addressSpaces>
-          <ipxact:addressSpace>
-            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
-            <ipxact:segments>
-              <ipxact:segment>
-                <ipxact:name>ddr4_emif_pipe.s0</ipxact:name>
-                <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
-                <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
-              </ipxact:segment>
-            </ipxact:segments>
-          </ipxact:addressSpace>
           <ipxact:addressSpace>
             <ipxact:name>ddr4_cross_to_kernel.master</ipxact:name>
             <ipxact:segments>
@@ -11616,6 +11486,16 @@ https://fpgasoftware.intel.com/eula.-->
               </ipxact:segment>
               <ipxact:segment>
                 <ipxact:name>ddr4_emif_pipe.s0 via ddr4_cross_to_kernel</ipxact:name>
+                <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
+                <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
+              </ipxact:segment>
+            </ipxact:segments>
+          </ipxact:addressSpace>
+          <ipxact:addressSpace>
+            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
+            <ipxact:segments>
+              <ipxact:segment>
+                <ipxact:name>ddr4_emif_pipe.s0</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
