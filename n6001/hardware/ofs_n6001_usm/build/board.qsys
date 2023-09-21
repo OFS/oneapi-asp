@@ -256,7 +256,7 @@ https://fpgasoftware.intel.com/eula.-->
          type = "int";
       }
    }
-   element kernel_interface_agilex_0
+   element kernel_interface
    {
       datum _sortIndex
       {
@@ -264,7 +264,7 @@ https://fpgasoftware.intel.com/eula.-->
          type = "int";
       }
    }
-   element kernel_interface_agilex_0.ctrl
+   element kernel_interface.ctrl
    {
       datum baseAddress
       {
@@ -369,7 +369,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;consumedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;ADDRESS_MAP&lt;/key&gt;
-                        &lt;value&gt;&amp;lt;address-map&amp;gt;&amp;lt;slave name='board_afu_id_avmm_slave_0.afu_cfg_slave' start='0x0' end='0x40' datawidth='64' /&amp;gt;&amp;lt;slave name='board_irq_ctrl_0.IRQ_Read_Slave' start='0x100' end='0x104' datawidth='32' /&amp;gt;&amp;lt;slave name='board_irq_ctrl_0.IRQ_Mask_Slave' start='0x108' end='0x10C' datawidth='32' /&amp;gt;&amp;lt;slave name='kernel_interface_agilex_0.ctrl' start='0x4000' end='0x8000' datawidth='32' /&amp;gt;&amp;lt;slave name='pipe_stage_dma_csr.s0' start='0x20000' end='0x20800' datawidth='64' /&amp;gt;&amp;lt;slave name='ddr_board.null_dfh_id' start='0x20800' end='0x20840' datawidth='64' /&amp;gt;&amp;lt;/address-map&amp;gt;&lt;/value&gt;
+                        &lt;value&gt;&amp;lt;address-map&amp;gt;&amp;lt;slave name='board_afu_id_avmm_slave_0.afu_cfg_slave' start='0x0' end='0x40' datawidth='64' /&amp;gt;&amp;lt;slave name='board_irq_ctrl_0.IRQ_Read_Slave' start='0x100' end='0x104' datawidth='32' /&amp;gt;&amp;lt;slave name='board_irq_ctrl_0.IRQ_Mask_Slave' start='0x108' end='0x10C' datawidth='32' /&amp;gt;&amp;lt;slave name='kernel_interface.ctrl' start='0x4000' end='0x8000' datawidth='32' /&amp;gt;&amp;lt;slave name='pipe_stage_dma_csr.s0' start='0x20000' end='0x20800' datawidth='64' /&amp;gt;&amp;lt;slave name='ddr_board.null_dfh_id' start='0x20800' end='0x20840' datawidth='64' /&amp;gt;&amp;lt;/address-map&amp;gt;&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;ADDRESS_WIDTH&lt;/key&gt;
@@ -10861,7 +10861,7 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:module altera:enabled="true" altera:auto_export="false">
         <altera:entity_info>
           <ipxact:vendor>Altera Corporation</ipxact:vendor>
-          <ipxact:library>kernel_interface_agilex_0</ipxact:library>
+          <ipxact:library>kernel_interface</ipxact:library>
           <ipxact:name>altera_generic_component</ipxact:name>
           <ipxact:version>1.0</ipxact:version>
         </altera:entity_info>
@@ -11587,7 +11587,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bridgesToReceiver&lt;/key&gt;
-                            &lt;value&gt;kernel_interface_agilex_0.kernel_irq_from_kernel&lt;/value&gt;
+                            &lt;value&gt;kernel_interface.kernel_irq_from_kernel&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;irqScheme&lt;/key&gt;
@@ -11742,9 +11742,9 @@ https://fpgasoftware.intel.com/eula.-->
         &lt;/interfaces&gt;
     &lt;/boundary&gt;
     &lt;originalModuleInfo&gt;
-        &lt;className&gt;kernel_interface_agilex&lt;/className&gt;
-        &lt;version&gt;17.1&lt;/version&gt;
-        &lt;displayName&gt;OpenCL Kernel Interface for Agilex&lt;/displayName&gt;
+        &lt;className&gt;kernel_interface&lt;/className&gt;
+        &lt;version&gt;23.2&lt;/version&gt;
+        &lt;displayName&gt;oneAPI Kernel Interface&lt;/displayName&gt;
     &lt;/originalModuleInfo&gt;
     &lt;systemInfoParameterDescriptors&gt;
         &lt;descriptors&gt;
@@ -12510,7 +12510,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToReceiver&lt;/key&gt;
-                        &lt;value&gt;kernel_interface_agilex_0.kernel_irq_from_kernel&lt;/value&gt;
+                        &lt;value&gt;kernel_interface.kernel_irq_from_kernel&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;irqScheme&lt;/key&gt;
@@ -12669,29 +12669,29 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:name>generationInfoDefinition</ipxact:name>
               <ipxact:displayName>Generation Behavior</ipxact:displayName>
               <ipxact:value>&lt;generationInfoDefinition&gt;
-    &lt;hdlLibraryName&gt;board_kernel_interface_agilex_0&lt;/hdlLibraryName&gt;
+    &lt;hdlLibraryName&gt;board_kernel_interface&lt;/hdlLibraryName&gt;
     &lt;fileSets&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;board_kernel_interface_agilex_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;board_kernel_interface_agilex_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;board_kernel_interface&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;board_kernel_interface&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;QUARTUS_SYNTH&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;board_kernel_interface_agilex_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;board_kernel_interface_agilex_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;board_kernel_interface&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;board_kernel_interface&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VERILOG&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;board_kernel_interface_agilex_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;board_kernel_interface_agilex_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;board_kernel_interface&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;board_kernel_interface&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;SIM_VHDL&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
         &lt;fileSet&gt;
-            &lt;fileSetName&gt;board_kernel_interface_agilex_0&lt;/fileSetName&gt;
-            &lt;fileSetFixedName&gt;board_kernel_interface_agilex_0&lt;/fileSetFixedName&gt;
+            &lt;fileSetName&gt;board_kernel_interface&lt;/fileSetName&gt;
+            &lt;fileSetFixedName&gt;board_kernel_interface&lt;/fileSetFixedName&gt;
             &lt;fileSetKind&gt;CDC&lt;/fileSetKind&gt;
             &lt;fileSetFiles/&gt;
         &lt;/fileSet&gt;
@@ -12711,7 +12711,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:parameter parameterId="logicalView" type="string">
               <ipxact:name>logicalView</ipxact:name>
               <ipxact:displayName>Logical view</ipxact:displayName>
-              <ipxact:value>ip/board/board_kernel_interface_agilex_0.ip</ipxact:value>
+              <ipxact:value>ip/board/board_kernel_interface.ip</ipxact:value>
             </ipxact:parameter>
             <ipxact:parameter parameterId="moduleAssignmentDefinition" type="string">
               <ipxact:name>moduleAssignmentDefinition</ipxact:name>
@@ -15480,7 +15480,7 @@ https://fpgasoftware.intel.com/eula.-->
       </altera:module>
     </altera:modules>
     <altera:connections>
-      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="kernel_interface_agilex_0.kernel_cra" altera:end="board_kernel_cra_pipe.s0">
+      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="kernel_interface.kernel_cra" altera:end="board_kernel_cra_pipe.s0">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -15564,7 +15564,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="pipe_stage_host_ctrl.m0" altera:end="kernel_interface_agilex_0.ctrl">
+      <altera:connection altera:kind="avalon" altera:version="23.1" altera:start="pipe_stage_host_ctrl.m0" altera:end="kernel_interface.ctrl">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x4000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -15633,7 +15633,7 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk_in.out_clk" altera:end="board_kernel_cra_reset.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk_in.out_clk" altera:end="board_kernel_cra_pipe.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="clk_200.out_clk" altera:end="pipe_stage_dma_csr.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="clk_200.out_clk" altera:end="kernel_interface_agilex_0.clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="clk_200.out_clk" altera:end="kernel_interface.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk_in.out_clk" altera:end="kernel_clk_export.clk_in"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="clk_200.out_clk" altera:end="board_afu_id_avmm_slave_0.clock"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="emif_ddr4a_clk.out_clk" altera:end="ddr_board.ddr_clk_a"></altera:connection>
@@ -15642,19 +15642,19 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="emif_ddr4d_clk.out_clk" altera:end="ddr_board.ddr_clk_d"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="clk_200.out_clk" altera:end="ddr_board.host_clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk_in.out_clk" altera:end="ddr_board.kernel_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk_in.out_clk" altera:end="kernel_interface_agilex_0.kernel_clk"></altera:connection>
-      <altera:connection altera:kind="conduit" altera:version="23.1" altera:start="kernel_interface_agilex_0.acl_bsp_memorg_host0x018" altera:end="ddr_board.acl_bsp_memorg_host">
+      <altera:connection altera:kind="clock" altera:version="23.1" altera:start="kernel_clk_in.out_clk" altera:end="kernel_interface.kernel_clk"></altera:connection>
+      <altera:connection altera:kind="conduit" altera:version="23.1" altera:start="kernel_interface.acl_bsp_memorg_host0x018" altera:end="ddr_board.acl_bsp_memorg_host">
         <altera:connection_parameter altera:parameter_name="endPort" altera:parameter_value=""></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="endPortLSB" altera:parameter_value="0"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="startPort" altera:parameter_value=""></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="startPortLSB" altera:parameter_value="0"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="width" altera:parameter_value="0"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="interrupt" altera:version="23.1" altera:start="board_irq_ctrl_0.interrupt_receiver" altera:end="kernel_interface_agilex_0.kernel_irq_to_host">
+      <altera:connection altera:kind="interrupt" altera:version="23.1" altera:start="board_irq_ctrl_0.interrupt_receiver" altera:end="kernel_interface.kernel_irq_to_host">
         <altera:connection_parameter altera:parameter_name="irqNumber" altera:parameter_value="0"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="kernel_interface_agilex_0.kernel_reset" altera:end="kernel_clk_export.clk_in_reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="kernel_interface_agilex_0.kernel_reset" altera:end="ddr_board.kernel_reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="kernel_interface.kernel_reset" altera:end="kernel_clk_export.clk_in_reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="kernel_interface.kernel_reset" altera:end="ddr_board.kernel_reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="board_irq_ctrl_0.Resetn"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="ddr_board.global_reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="board_kernel_cra_reset.in_reset"></altera:connection>
@@ -15662,8 +15662,8 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="pipe_stage_host_ctrl.reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="23.1" altera:start="board_kernel_cra_reset.out_reset" altera:end="board_kernel_cra_pipe.reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="pipe_stage_dma_csr.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="kernel_interface_agilex_0.reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="kernel_interface_agilex_0.sw_reset_in"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="kernel_interface.reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="23.1" altera:start="global_reset_in.out_reset" altera:end="kernel_interface.sw_reset_in"></altera:connection>
     </altera:connections>
     <altera:interconnect_requirements></altera:interconnect_requirements>
     <altera:wire_level_connections></altera:wire_level_connections>
@@ -15693,7 +15693,7 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:interface_mapping altera:name="kernel_ddr4b" altera:internal="ddr_board.kernel_ddr4b" altera:type="avalon" altera:dir="end"></altera:interface_mapping>
       <altera:interface_mapping altera:name="kernel_ddr4c" altera:internal="ddr_board.kernel_ddr4c" altera:type="avalon" altera:dir="end"></altera:interface_mapping>
       <altera:interface_mapping altera:name="kernel_ddr4d" altera:internal="ddr_board.kernel_ddr4d" altera:type="avalon" altera:dir="end"></altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_irq" altera:internal="kernel_interface_agilex_0.kernel_irq_from_kernel" altera:type="interrupt" altera:dir="start"></altera:interface_mapping>
+      <altera:interface_mapping altera:name="kernel_irq" altera:internal="kernel_interface.kernel_irq_from_kernel" altera:type="interrupt" altera:dir="start"></altera:interface_mapping>
       <altera:interface_mapping altera:name="kernel_reset" altera:internal="kernel_clk_export.clk_reset" altera:type="reset" altera:dir="start"></altera:interface_mapping>
     </altera:altera_interface_boundary>
     <ipxact:components>
@@ -15713,10 +15713,10 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>kernel_interface_agilex_0.kernel_cra</ipxact:name>
+            <ipxact:name>kernel_interface.kernel_cra</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
             <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="kernel_interface_agilex_0.kernel_cra">
+              <ipxact:addressSpaceRef addressSpaceRef="kernel_interface.kernel_cra">
                 <ipxact:baseAddress>0x0000_0000</ipxact:baseAddress>
               </ipxact:addressSpaceRef>
             </ipxact:master>
@@ -15739,7 +15739,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>kernel_interface_agilex_0.ctrl</ipxact:name>
+            <ipxact:name>kernel_interface.ctrl</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="23.1"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
@@ -15782,7 +15782,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:busInterfaces>
         <ipxact:addressSpaces>
           <ipxact:addressSpace>
-            <ipxact:name>kernel_interface_agilex_0.kernel_cra</ipxact:name>
+            <ipxact:name>kernel_interface.kernel_cra</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
                 <ipxact:name>board_kernel_cra_pipe.s0</ipxact:name>
@@ -15810,7 +15810,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:range>0x0000_0040</ipxact:range>
               </ipxact:segment>
               <ipxact:segment>
-                <ipxact:name>kernel_interface_agilex_0.ctrl</ipxact:name>
+                <ipxact:name>kernel_interface.ctrl</ipxact:name>
                 <ipxact:addressOffset>0x0000_4000</ipxact:addressOffset>
                 <ipxact:range>0x0000_4000</ipxact:range>
               </ipxact:segment>

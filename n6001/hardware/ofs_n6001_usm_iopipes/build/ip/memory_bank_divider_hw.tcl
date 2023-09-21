@@ -1,14 +1,14 @@
 package require -exact qsys 17.0
 
 # module properties
-set_module_property NAME {acl_memory_bank_divider}
-set_module_property DISPLAY_NAME {OpenCL Memory Bank Divider}
+set_module_property NAME {memory_bank_divider}
+set_module_property DISPLAY_NAME {oneAPI Memory Bank Divider}
 
 # default module properties
-set_module_property VERSION {21.3}
-set_module_property GROUP {OpenCL BSP Components}
-set_module_property DESCRIPTION {default description}
-set_module_property AUTHOR {author}
+set_module_property VERSION {23.2}
+set_module_property GROUP {oneAPI ASP Components}
+set_module_property DESCRIPTION {Handles multiple global memory banks}
+set_module_property AUTHOR {OFS}
 
 # Set the name of the procedure to manipulate parameters
 set_module_property COMPOSITION_CALLBACK compose

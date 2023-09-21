@@ -17,14 +17,14 @@
 package require -exact qsys 17.0
 
 # module properties
-set_module_property NAME {kernel_interface_agilex}
-set_module_property DISPLAY_NAME {OpenCL Kernel Interface for Agilex}
+set_module_property NAME {kernel_interface}
+set_module_property DISPLAY_NAME {oneAPI Kernel Interface}
 
 # default module properties
-set_module_property VERSION {17.1}
-set_module_property GROUP {OpenCL BSP Components}
-set_module_property DESCRIPTION {Connects the OpenCL host to the FPGA kernel}
-set_module_property AUTHOR {author}
+set_module_property VERSION {23.2}
+set_module_property GROUP {oneAPI ASP Components}
+set_module_property DESCRIPTION {Connects the oneAPI host to the FPGA kernel}
+set_module_property AUTHOR {OFS}
 
 set_module_property COMPOSITION_CALLBACK compose
 set_module_property opaque_address_map false

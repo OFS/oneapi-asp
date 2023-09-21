@@ -14,16 +14,16 @@ refer to the applicable agreement for further details, at
 https://fpgasoftware.intel.com/eula.-->
 <ipxact:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
   <ipxact:vendor>author</ipxact:vendor>
-  <ipxact:library>ddr_board_acl_memory_bank_divider_1</ipxact:library>
-  <ipxact:name>acl_memory_bank_divider_1</ipxact:name>
-  <ipxact:version>21.3</ipxact:version>
+  <ipxact:library>ddr_board_memory_bank_divider</ipxact:library>
+  <ipxact:name>memory_bank_divider</ipxact:name>
+  <ipxact:version>23.2</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
       <ipxact:name>clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -67,10 +67,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -109,10 +109,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>acl_bsp_snoop</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon_streaming" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon_streaming" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon_streaming" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon_streaming" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -161,7 +161,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="dataBitsPerSymbol" type="int">
           <ipxact:name>dataBitsPerSymbol</ipxact:name>
           <ipxact:displayName>Data bits per symbol</ipxact:displayName>
-          <ipxact:value>37</ipxact:value>
+          <ipxact:value>36</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="emptyWithinPacket" type="bit">
           <ipxact:name>emptyWithinPacket</ipxact:name>
@@ -217,10 +217,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_clk</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="clock" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="clock" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -264,10 +264,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>kernel_reset</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="reset" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="reset" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -306,10 +306,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>s</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -401,7 +401,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="addressSpan" type="string">
           <ipxact:name>addressSpan</ipxact:name>
           <ipxact:displayName>Address span</ipxact:displayName>
-          <ipxact:value>34359738368</ipxact:value>
+          <ipxact:value>17179869184</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="addressUnits" type="string">
           <ipxact:name>addressUnits</ipxact:name>
@@ -619,10 +619,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>acl_bsp_memorg_host</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="conduit" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="conduit" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="conduit" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="conduit" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -656,10 +656,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>bank1</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -920,10 +920,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>bank2</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -1184,10 +1184,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>bank3</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -1448,10 +1448,10 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:busInterface>
     <ipxact:busInterface>
       <ipxact:name>bank4</ipxact:name>
-      <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
+      <ipxact:busType vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
-          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:abstractionRef>
+          <ipxact:abstractionRef vendor="intel" library="intel" name="avalon" version="21.3"></ipxact:abstractionRef>
           <ipxact:portMaps>
             <ipxact:portMap>
               <ipxact:logicalPort>
@@ -1722,7 +1722,7 @@ https://fpgasoftware.intel.com/eula.-->
     <ipxact:instantiations>
       <ipxact:componentInstantiation>
         <ipxact:name>QUARTUS_SYNTH</ipxact:name>
-        <ipxact:moduleName>acl_memory_bank_divider</ipxact:moduleName>
+        <ipxact:moduleName>memory_bank_divider</ipxact:moduleName>
         <ipxact:fileSetRef>
           <ipxact:localName>QUARTUS_SYNTH</ipxact:localName>
         </ipxact:fileSetRef>
@@ -1763,7 +1763,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>36</ipxact:right>
+              <ipxact:right>35</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -1957,7 +1957,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>28</ipxact:right>
+              <ipxact:right>27</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -2073,7 +2073,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>32</ipxact:right>
+              <ipxact:right>31</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -2228,7 +2228,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>32</ipxact:right>
+              <ipxact:right>31</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -2383,7 +2383,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>32</ipxact:right>
+              <ipxact:right>31</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -2538,7 +2538,7 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:vectors>
             <ipxact:vector>
               <ipxact:left>0</ipxact:left>
-              <ipxact:right>32</ipxact:right>
+              <ipxact:right>31</ipxact:right>
             </ipxact:vector>
           </ipxact:vectors>
           <ipxact:wireTypeDefs>
@@ -2611,9 +2611,9 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:vendorExtensions>
     <altera:entity_info>
       <ipxact:vendor>author</ipxact:vendor>
-      <ipxact:library>ddr_board_acl_memory_bank_divider_1</ipxact:library>
-      <ipxact:name>acl_memory_bank_divider</ipxact:name>
-      <ipxact:version>21.3</ipxact:version>
+      <ipxact:library>ddr_board_memory_bank_divider</ipxact:library>
+      <ipxact:name>memory_bank_divider</ipxact:name>
+      <ipxact:version>23.2</ipxact:version>
     </altera:entity_info>
     <altera:altera_module_parameters>
       <ipxact:parameters>
@@ -2645,7 +2645,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="ADDRESS_WIDTH" type="int">
           <ipxact:name>ADDRESS_WIDTH</ipxact:name>
           <ipxact:displayName>Address Width (total addressable)</ipxact:displayName>
-          <ipxact:value>35</ipxact:value>
+          <ipxact:value>34</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="BURST_SIZE" type="int">
           <ipxact:name>BURST_SIZE</ipxact:name>
@@ -2665,17 +2665,17 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="SYNCHRONIZE_RESET" type="int">
           <ipxact:name>SYNCHRONIZE_RESET</ipxact:name>
           <ipxact:displayName>SYNCHRONIZE_RESET</ipxact:displayName>
-          <ipxact:value>0</ipxact:value>
+          <ipxact:value>1</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="AUTO_DEVICE_FAMILY" type="string">
           <ipxact:name>AUTO_DEVICE_FAMILY</ipxact:name>
           <ipxact:displayName>Auto DEVICE_FAMILY</ipxact:displayName>
-          <ipxact:value>Stratix 10</ipxact:value>
+          <ipxact:value>Agilex</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="AUTO_DEVICE" type="string">
           <ipxact:name>AUTO_DEVICE</ipxact:name>
           <ipxact:displayName>Auto DEVICE</ipxact:displayName>
-          <ipxact:value>1SX280HN2F43E2VG</ipxact:value>
+          <ipxact:value>AGFB014R24A2E2V</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="AUTO_DEVICE_SPEEDGRADE" type="string">
           <ipxact:name>AUTO_DEVICE_SPEEDGRADE</ipxact:name>
@@ -2686,20 +2686,15 @@ https://fpgasoftware.intel.com/eula.-->
     </altera:altera_module_parameters>
     <altera:altera_system_parameters>
       <ipxact:parameters>
-        <ipxact:parameter parameterId="board" type="string">
-          <ipxact:name>board</ipxact:name>
-          <ipxact:displayName>Board</ipxact:displayName>
-          <ipxact:value>default</ipxact:value>
-        </ipxact:parameter>
         <ipxact:parameter parameterId="device" type="string">
           <ipxact:name>device</ipxact:name>
           <ipxact:displayName>Device</ipxact:displayName>
-          <ipxact:value>1SX280HN2F43E2VG</ipxact:value>
+          <ipxact:value>AGFB014R24A2E2V</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="deviceFamily" type="string">
           <ipxact:name>deviceFamily</ipxact:name>
           <ipxact:displayName>Device family</ipxact:displayName>
-          <ipxact:value>Stratix 10</ipxact:value>
+          <ipxact:value>Agilex</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="deviceSpeedGrade" type="string">
           <ipxact:name>deviceSpeedGrade</ipxact:name>
@@ -2720,12 +2715,17 @@ https://fpgasoftware.intel.com/eula.-->
    {
       datum _originalDeviceFamily
       {
-         value = "Stratix 10";
+         value = "Agilex";
          type = "String";
       }
    }
-   element acl_memory_bank_divider_1
+   element memory_bank_divider
    {
+      datum _originalVersion
+      {
+         value = "1.0";
+         type = "String";
+      }
    }
 }
 </ipxact:value>
@@ -2824,7 +2824,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;acl_bsp_snoop_data&lt;/name&gt;
                     &lt;role&gt;data&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
-                    &lt;width&gt;37&lt;/width&gt;
+                    &lt;width&gt;36&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -2867,7 +2867,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;dataBitsPerSymbol&lt;/key&gt;
-                        &lt;value&gt;37&lt;/value&gt;
+                        &lt;value&gt;36&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;emptyWithinPacket&lt;/key&gt;
@@ -3066,7 +3066,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;s_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
-                    &lt;width&gt;29&lt;/width&gt;
+                    &lt;width&gt;28&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -3104,7 +3104,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;addressSpan&lt;/key&gt;
-                        &lt;value&gt;34359738368&lt;/value&gt;
+                        &lt;value&gt;17179869184&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;addressUnits&lt;/key&gt;
@@ -3347,7 +3347,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;bank1_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
-                    &lt;width&gt;33&lt;/width&gt;
+                    &lt;width&gt;32&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -3586,7 +3586,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;bank2_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
-                    &lt;width&gt;33&lt;/width&gt;
+                    &lt;width&gt;32&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -3825,7 +3825,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;bank3_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
-                    &lt;width&gt;33&lt;/width&gt;
+                    &lt;width&gt;32&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -4064,7 +4064,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;name&gt;bank4_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
-                    &lt;width&gt;33&lt;/width&gt;
+                    &lt;width&gt;32&lt;/width&gt;
                     &lt;lowerBound&gt;0&lt;/lowerBound&gt;
                     &lt;vhdlType&gt;STD_LOGIC_VECTOR&lt;/vhdlType&gt;
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
@@ -4265,11 +4265,11 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;consumedSystemInfos&gt;
                     &lt;entry&gt;
                         &lt;key&gt;ADDRESS_MAP&lt;/key&gt;
-                        &lt;value&gt;&amp;lt;address-map&amp;gt;&amp;lt;slave name='s' start='0x0' end='0x800000000' datawidth='512' /&amp;gt;&amp;lt;/address-map&amp;gt;&lt;/value&gt;
+                        &lt;value&gt;&amp;lt;address-map&amp;gt;&amp;lt;slave name='s' start='0x0' end='0x400000000' datawidth='512' /&amp;gt;&amp;lt;/address-map&amp;gt;&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;ADDRESS_WIDTH&lt;/key&gt;
-                        &lt;value&gt;35&lt;/value&gt;
+                        &lt;value&gt;34&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;MAX_SLAVE_DATA_WIDTH&lt;/key&gt;
@@ -4281,23 +4281,18 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;/connPtSystemInfos&gt;
 &lt;/systemInfosDefinition&gt;</ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="pinAssignmentListDefinition" type="string">
-          <ipxact:name>pinAssignmentListDefinition</ipxact:name>
-          <ipxact:displayName>pinAssignmentListDefinition</ipxact:displayName>
-          <ipxact:value>&lt;pinAssignmentListDefinition/&gt;</ipxact:value>
-        </ipxact:parameter>
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="acl_bsp_memorg_host" altera:internal="acl_memory_bank_divider_1.acl_bsp_memorg_host" altera:type="conduit" altera:dir="end">
+      <altera:interface_mapping altera:name="acl_bsp_memorg_host" altera:internal="memory_bank_divider.acl_bsp_memorg_host" altera:type="conduit" altera:dir="end">
         <altera:port_mapping altera:name="acl_bsp_memorg_host_mode" altera:internal="acl_bsp_memorg_host_mode"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="acl_bsp_snoop" altera:internal="acl_memory_bank_divider_1.acl_bsp_snoop" altera:type="avalon_streaming" altera:dir="start">
+      <altera:interface_mapping altera:name="acl_bsp_snoop" altera:internal="memory_bank_divider.acl_bsp_snoop" altera:type="avalon_streaming" altera:dir="start">
         <altera:port_mapping altera:name="acl_bsp_snoop_data" altera:internal="acl_bsp_snoop_data"></altera:port_mapping>
         <altera:port_mapping altera:name="acl_bsp_snoop_ready" altera:internal="acl_bsp_snoop_ready"></altera:port_mapping>
         <altera:port_mapping altera:name="acl_bsp_snoop_valid" altera:internal="acl_bsp_snoop_valid"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="bank1" altera:internal="acl_memory_bank_divider_1.bank1" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="bank1" altera:internal="memory_bank_divider.bank1" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="bank1_address" altera:internal="bank1_address"></altera:port_mapping>
         <altera:port_mapping altera:name="bank1_burstcount" altera:internal="bank1_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="bank1_byteenable" altera:internal="bank1_byteenable"></altera:port_mapping>
@@ -4309,7 +4304,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="bank1_write" altera:internal="bank1_write"></altera:port_mapping>
         <altera:port_mapping altera:name="bank1_writedata" altera:internal="bank1_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="bank2" altera:internal="acl_memory_bank_divider_1.bank2" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="bank2" altera:internal="memory_bank_divider.bank2" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="bank2_address" altera:internal="bank2_address"></altera:port_mapping>
         <altera:port_mapping altera:name="bank2_burstcount" altera:internal="bank2_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="bank2_byteenable" altera:internal="bank2_byteenable"></altera:port_mapping>
@@ -4321,7 +4316,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="bank2_write" altera:internal="bank2_write"></altera:port_mapping>
         <altera:port_mapping altera:name="bank2_writedata" altera:internal="bank2_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="bank3" altera:internal="acl_memory_bank_divider_1.bank3" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="bank3" altera:internal="memory_bank_divider.bank3" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="bank3_address" altera:internal="bank3_address"></altera:port_mapping>
         <altera:port_mapping altera:name="bank3_burstcount" altera:internal="bank3_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="bank3_byteenable" altera:internal="bank3_byteenable"></altera:port_mapping>
@@ -4333,7 +4328,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="bank3_write" altera:internal="bank3_write"></altera:port_mapping>
         <altera:port_mapping altera:name="bank3_writedata" altera:internal="bank3_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="bank4" altera:internal="acl_memory_bank_divider_1.bank4" altera:type="avalon" altera:dir="start">
+      <altera:interface_mapping altera:name="bank4" altera:internal="memory_bank_divider.bank4" altera:type="avalon" altera:dir="start">
         <altera:port_mapping altera:name="bank4_address" altera:internal="bank4_address"></altera:port_mapping>
         <altera:port_mapping altera:name="bank4_burstcount" altera:internal="bank4_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="bank4_byteenable" altera:internal="bank4_byteenable"></altera:port_mapping>
@@ -4345,19 +4340,19 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:port_mapping altera:name="bank4_write" altera:internal="bank4_write"></altera:port_mapping>
         <altera:port_mapping altera:name="bank4_writedata" altera:internal="bank4_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="clk" altera:internal="acl_memory_bank_divider_1.clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="clk" altera:internal="memory_bank_divider.clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="clk_clk" altera:internal="clk_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_clk" altera:internal="acl_memory_bank_divider_1.kernel_clk" altera:type="clock" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_clk" altera:internal="memory_bank_divider.kernel_clk" altera:type="clock" altera:dir="end">
         <altera:port_mapping altera:name="kernel_clk_clk" altera:internal="kernel_clk_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="kernel_reset" altera:internal="acl_memory_bank_divider_1.kernel_reset" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="kernel_reset" altera:internal="memory_bank_divider.kernel_reset" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="kernel_reset_reset_n" altera:internal="kernel_reset_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="reset" altera:internal="acl_memory_bank_divider_1.reset" altera:type="reset" altera:dir="end">
+      <altera:interface_mapping altera:name="reset" altera:internal="memory_bank_divider.reset" altera:type="reset" altera:dir="end">
         <altera:port_mapping altera:name="reset_reset_n" altera:internal="reset_reset_n"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="s" altera:internal="acl_memory_bank_divider_1.s" altera:type="avalon" altera:dir="end">
+      <altera:interface_mapping altera:name="s" altera:internal="memory_bank_divider.s" altera:type="avalon" altera:dir="end">
         <altera:port_mapping altera:name="s_address" altera:internal="s_address"></altera:port_mapping>
         <altera:port_mapping altera:name="s_burstcount" altera:internal="s_burstcount"></altera:port_mapping>
         <altera:port_mapping altera:name="s_byteenable" altera:internal="s_byteenable"></altera:port_mapping>
