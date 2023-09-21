@@ -68,10 +68,8 @@ package dc_bsp_pkg;
     // parameters to differentiate between DMA-only and DMA+USM BSPs
     `ifdef INCLUDE_USM_SUPPORT
         parameter NUM_VTP_PORTS = 4;
-        parameter NUM_SOURCE_PORTS = 2;
     `else
         parameter NUM_VTP_PORTS = 2;
-        parameter NUM_SOURCE_PORTS = 1;
     `endif
     
     `ifdef USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION
