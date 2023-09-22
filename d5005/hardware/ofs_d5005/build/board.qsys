@@ -6525,7 +6525,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;256&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -7048,7 +7048,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;256&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -7571,7 +7571,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;256&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;
@@ -8094,7 +8094,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingReadTransactions&lt;/key&gt;
-                            &lt;value&gt;256&lt;/value&gt;
+                            &lt;value&gt;512&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;maximumPendingWriteTransactions&lt;/key&gt;

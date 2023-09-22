@@ -1409,7 +1409,7 @@ https://fpgasoftware.intel.com/eula.-->
       <ipxact:vendor>author</ipxact:vendor>
       <ipxact:library>board_kernel_interface</ipxact:library>
       <ipxact:name>kernel_interface</ipxact:name>
-      <ipxact:version>17.1</ipxact:version>
+      <ipxact:version>23.2</ipxact:version>
     </altera:entity_info>
     <altera:altera_module_parameters>
       <ipxact:parameters>

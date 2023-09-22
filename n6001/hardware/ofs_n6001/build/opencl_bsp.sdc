@@ -6,4 +6,3 @@ set_clock_groups -asynchronous  -group [get_clocks {sys_pll|iopll_0_clk_sys}] \
                                                     mem_ss_top|mem_ss*inst|mem_ss_fm*|intf_1_core_usr_clk \
                                                     mem_ss_top|mem_ss*inst|mem_ss_fm*|intf_2_core_usr_clk \
                                                     mem_ss_top|mem_ss*inst|mem_ss_fm*|intf_3_core_usr_clk}]
-
