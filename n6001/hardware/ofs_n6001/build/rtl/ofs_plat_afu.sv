@@ -12,7 +12,8 @@ module ofs_plat_afu
     );
     
     import cci_mpf_shim_pkg::t_cci_mpf_shim_mdata_value;
-
+    import dc_bsp_pkg::*;
+    
     // ====================================================================
     //
     //  Get an Avalon host channel collection from the platform.
@@ -52,7 +53,7 @@ module ofs_plat_afu
 
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
       #(
-        .ADD_CLOCK_CROSSING(dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN),
+        .ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
         .ADD_TIMING_REG_STAGES(1)
         )
       primary_avalon
@@ -86,7 +87,7 @@ module ofs_plat_afu
             ofs_plat_local_mem_as_avalon_mem
               #(
                 // EMIF closs crossings occur in the BSP Qsys-system
-                .ADD_CLOCK_CROSSING(dc_bsp_pkg::USE_PIM_CDC_LOCALMEM),
+                .ADD_CLOCK_CROSSING(USE_PIM_CDC_LOCALMEM),
                 .ADD_TIMING_REG_STAGES(3)
                 )
               shim
@@ -107,7 +108,6 @@ module ofs_plat_afu
     //  Tie off unused ports.
     //
     // ====================================================================
-
     ofs_plat_if_tie_off_unused
       #(
         // Masks are bit masks, with bit 0 corresponding to port/bank zero.
@@ -117,9 +117,23 @@ module ofs_plat_afu
         .HOST_CHAN_IN_USE_MASK(1),
         // All banks are used
         .LOCAL_MEM_IN_USE_MASK(-1)
+        `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+            // The argument to each parameter is a bit mask of channels used.
+            // Passing "-1" indicates all available channels are in use.
+            ,.HSSI_IN_USE_MASK({IO_PIPES_NUM_CHAN{1'b1}})
+        `endif //INCLUDE_UDP_OFFLOAD_ENGINE
         )
         tie_off(plat_ifc);
 
+    
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        //ensure the ASP supports/expects no more IO Pipes than the FIM provides; fatal at compile-time
+        generate
+            if (IO_PIPES_NUM_CHAN > plat_ifc.hssi.NUM_CHANNELS) begin : Illegal_IO_Pipes_Num_Chan
+                $fatal("Error: The IO_PIPES_NUM_CHAN parameter defined in the ASP, %d, is larger than NUM_CHANNELS supported by the FIM, %d.",IO_PIPES_NUM_CHAN, plat_ifc.hssi.NUM_CHANNELS);
+            end
+        endgenerate
+    `endif //INCLUDE_UDP_OFFLOAD_ENGINE
 
     // ====================================================================
     //
@@ -129,20 +143,19 @@ module ofs_plat_afu
 
     //set pClk depending on if we are using PIM for PCIe/host-channel CDC
     logic pclk_bsp,pclk_bsp_reset;
-    assign pclk_bsp = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
+    assign pclk_bsp = USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
                                                          plat_ifc.clocks.pClk.clk;
-    assign pclk_bsp_reset = dc_bsp_pkg::USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
+    assign pclk_bsp_reset = USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
                                                                ~plat_ifc.clocks.pClk.reset_n;
 
-    afu
-     #(
-        .NUM_LOCAL_MEM_BANKS(local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS)
-       )
-     afu
+    afu afu_inst
       (
         .host_mem_if(host_mem_to_afu),
         .mmio64_if(mmio64_to_afu),
         .local_mem(local_mem_to_afu),
+        `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+            .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),
+        `endif
        
         .pClk(pclk_bsp),
         .pClk_reset(pclk_bsp_reset),

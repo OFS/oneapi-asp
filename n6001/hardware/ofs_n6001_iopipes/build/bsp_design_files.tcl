@@ -28,7 +28,7 @@ source "mpf_vtp.qsf"
 #--------------------
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/ofs_plat_afu.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/afu.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "rtl/mem_if_vtp.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "rtl/host_mem_if_vtp.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/kernel_wrapper.v"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/bsp_logic.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/dc_bsp_interfaces.sv"

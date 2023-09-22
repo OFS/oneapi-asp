@@ -68,10 +68,8 @@ package dc_bsp_pkg;
     // parameters to differentiate between DMA-only and DMA+USM BSPs
     `ifdef INCLUDE_USM_SUPPORT
         parameter NUM_VTP_PORTS = 4;
-        parameter NUM_SOURCE_PORTS = 2;
     `else
         parameter NUM_VTP_PORTS = 2;
-        parameter NUM_SOURCE_PORTS = 1;
     `endif
     
     `ifdef USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION
@@ -95,6 +93,12 @@ package dc_bsp_pkg;
     parameter VTP_SVC_MMIO_BASE_ADDR = 'h2_4000;
     // DFH end-of-list flag - '0' means this is the end of the DFH list
     parameter MPF_VTP_DFH_NEXT_ADDR = 0;
+    
+    // USM kernel clock crossing bridge
+    parameter USM_CCB_RESPONSE_FIFO_DEPTH       = 512;
+    parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
+    parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
+    
     
     //number of IO Channels/Pipes enabled in the ASP.
     parameter IO_PIPES_NUM_CHAN = 5'h08;

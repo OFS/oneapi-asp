@@ -51,14 +51,9 @@ elif [ -d "$DESIGN_SRC" ]; then
     echo "pwd is $PWD"
     cd n6001
     echo "pwd is $PWD, cmake is next"
-    export USM_ASP=""
-    if [[ "$BOARD" == *"_usm"* ]]; then
-        export USM_ASP="_usm"
-    fi
-    export BOARD_TYPE=pac_a10${USM_ASP}
-    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${BOARD_TYPE}
+    #cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DDEVICE_FLAG=Agilex7 -DIS_BSP=1 -DUSER_HARDWARE_FLAGS="-Xsno-env-check"
+    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DIS_BSP=1 -DUSER_HARDWARE_FLAGS="-Xsno-env-check"
     echo "after cmake"
-    sed -i "s/$BOARD_TYPE/$BOARD -Xsno-env-check /g" src/CMakeFiles/*/link.txt
     make fpga
     echo "make fpga is done; break out the aocx file"
     FPGAFILE=`ls *.fpga`
