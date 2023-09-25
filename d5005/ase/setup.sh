@@ -73,7 +73,7 @@ if ! command -v vcs; then
 fi
 
 export OFS_ASP_ENV_ENABLE_ASE=1
-if [ ! -f "$BSP_ROOT/hardware/ofs_d5005/d5005.qpf" ]; then
+if [ ! -f "$BSP_ROOT/hardware/ofs_*/*.qpf" ]; then
   echo "The qpf file doesn't exist, so we need to run build-bsp.sh"
   "$BSP_ROOT/scripts/build-bsp.sh"
   set_libopae_c_root

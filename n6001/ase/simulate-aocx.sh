@@ -96,7 +96,7 @@ else
     echo "no vhd files exist, nothing to copy over"
 fi
 
-cp -prf vlog_files_base_ofs_n6001.list vlog_files.list
+cp -prf vlog_files_base.list vlog_files.list
 
 # Put package files first
 {
