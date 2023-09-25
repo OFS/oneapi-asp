@@ -8,9 +8,6 @@
 
 module afu
 import dc_bsp_pkg::*;
-  #(
-    parameter NUM_LOCAL_MEM_BANKS = 0
-   )
   (
     // Host memory (Avalon)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
@@ -19,8 +16,13 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[NUM_LOCAL_MEM_BANKS],
+    ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
     
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        // Ethernet
+        ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
+    `endif
+
     // clocks and reset
     input logic pClk,                      //Primary interface clock
     input logic pClk_reset,                // ACTIVE HIGH Soft Reset
@@ -32,7 +34,7 @@ import dc_bsp_pkg::*;
 
 import dma_pkg::*;
 
-logic  reset, clk;
+logic reset, clk;
 assign reset = pClk_reset;
 assign clk   = pClk;
 
@@ -67,62 +69,96 @@ assign mmio64_if_shim.clk = mmio64_if.clk;
 assign mmio64_if_shim.reset_n = mmio64_if.reset_n;
 assign mmio64_if_shim.instance_number = mmio64_if.instance_number;
 
-// Host memory - Kernel-USM
-ofs_plat_avalon_mem_rdwr_if
-#(
-    `OFS_PLAT_AVALON_MEM_RDWR_IF_REPLICATE_PARAMS_EXCEPT_TAGS(host_mem_if),
-    .USER_WIDTH(AFU_AVMM_USER_WIDTH),
-    .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
-) host_mem_va_if_kernel();
-
-assign host_mem_va_if_kernel.clk = host_mem_if.clk;
-assign host_mem_va_if_kernel.reset_n = host_mem_if.reset_n;
-assign host_mem_va_if_kernel.instance_number = host_mem_if.instance_number;
-
-//cross kernel_svm from kernel-clock domain into host-clock domain
-ofs_plat_avalon_mem_if
-# (
-    .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-    .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-    .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
-) kernel_svm_kclk ();
-assign kernel_svm_kclk.clk = uClk_usrDiv2;
-assign kernel_svm_kclk.reset_n = ~uClk_usrDiv2_reset;
-
-//shared Avalon-MM rd/wr interface from the kernel-system
-ofs_plat_avalon_mem_if
-# (
-    .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-    .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-    .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
-) kernel_svm ();
-assign kernel_svm.clk = host_mem_if.clk;
-assign kernel_svm.reset_n = host_mem_if.reset_n;
-
-ofs_plat_avalon_mem_if_async_shim #(
-    //change waitreq to be more like 'almost-full' rather than 'full'
-    .COMMAND_ALMFULL_THRESHOLD (8),
-    .RESPONSE_FIFO_DEPTH (USM_CCB_RESPONSE_FIFO_DEPTH)
-) kernel_svm_avmm_ccb_inst (
-    .mem_sink   (kernel_svm),
-    .mem_source (kernel_svm_kclk)
-);
-
-//convert kernel_svm AVMM interface into host_mem_if
-ofs_plat_avalon_mem_if_to_rdwr_if ofs_plat_avalon_mem_if_to_rdwr_if_inst (
-    .mem_sink   (host_mem_va_if_kernel),
-    .mem_source (kernel_svm)
-);
+`ifdef INCLUDE_USM_SUPPORT
+    // Host memory - Kernel-USM
+    ofs_plat_avalon_mem_rdwr_if
+    #(
+        `OFS_PLAT_AVALON_MEM_RDWR_IF_REPLICATE_PARAMS_EXCEPT_TAGS(host_mem_if),
+        .USER_WIDTH(AFU_AVMM_USER_WIDTH),
+        .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
+    ) host_mem_va_if_kernel();
+    
+    assign host_mem_va_if_kernel.clk = host_mem_if.clk;
+    assign host_mem_va_if_kernel.reset_n = host_mem_if.reset_n;
+    assign host_mem_va_if_kernel.instance_number = host_mem_if.instance_number;
+    
+    //cross kernel_svm from kernel-clock domain into host-clock domain
+    ofs_plat_avalon_mem_if
+    # (
+        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+    ) kernel_svm_kclk ();
+    assign kernel_svm_kclk.clk = uClk_usrDiv2;
+    assign kernel_svm_kclk.reset_n = ~uClk_usrDiv2_reset;
+    
+    //shared Avalon-MM rd/wr interface from the kernel-system
+    ofs_plat_avalon_mem_if
+    # (
+        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+    ) kernel_svm ();
+    assign kernel_svm.clk = host_mem_if.clk;
+    assign kernel_svm.reset_n = host_mem_if.reset_n;
+    
+    ofs_plat_avalon_mem_if_async_shim #(
+        .RESPONSE_FIFO_DEPTH       (USM_CCB_RESPONSE_FIFO_DEPTH),
+        .COMMAND_FIFO_DEPTH        (USM_CCB_COMMAND_FIFO_DEPTH),
+        .COMMAND_ALMFULL_THRESHOLD (USM_CCB_COMMAND_ALMFULL_THRESHOLD)
+    ) kernel_svm_avmm_ccb_inst (
+        .mem_sink   (kernel_svm),
+        .mem_source (kernel_svm_kclk)
+    );
+    
+    //convert kernel_svm AVMM interface into host_mem_if
+    ofs_plat_avalon_mem_if_to_rdwr_if ofs_plat_avalon_mem_if_to_rdwr_if_inst (
+        .mem_sink   (host_mem_va_if_kernel),
+        .mem_source (kernel_svm)
+    );
+`endif
 
 host_mem_if_vtp host_mem_if_vtp_inst (
     .host_mem_if,
     .host_mem_va_if_dma,
-    .host_mem_va_if_kernel,
+    `ifdef INCLUDE_USM_SUPPORT
+        .host_mem_va_if_kernel,
+    `endif
     .mmio64_if,
     .mmio64_if_shim
 );
 
-//wrapper file for board.qsys (Platform Designer)
+`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+//UDP/HSSI offload engine
+    shim_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    shim_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    ofs_plat_avalon_mem_if #(
+        `OFS_PLAT_AVALON_MEM_IF_REPLICATE_PARAMS(mmio64_if)
+    ) uoe_csr_avmm();
+    assign uoe_csr_avmm.clk     = clk;
+    assign uoe_csr_avmm.reset_n = ~reset;
+    
+    udp_offload_engine udp_offload_engine
+    (
+        //MAC interfaces
+        .hssi_pipes,
+    
+        // kernel clock and reset
+        .kernel_clk(uClk_usrDiv2),
+        .kernel_resetn(opencl_kernel_control.kernel_reset_n),
+    
+        // from kernel
+        .udp_avst_from_kernel,
+        
+        // to kernel
+        .udp_avst_to_kernel,
+    
+        // CSR
+        .uoe_csr_avmm
+    );
+`endif
+
+
 bsp_logic bsp_logic_inst (
     .clk                    ( pClk ),
     .reset,
@@ -130,13 +166,15 @@ bsp_logic bsp_logic_inst (
     .kernel_clk_reset       ( uClk_usrDiv2_reset ),
     .host_mem_if            ( host_mem_va_if_dma ),
     .mmio64_if              ( mmio64_if_shim ),
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        .uoe_csr_avmm,
+    `endif
     .local_mem,
     
     .opencl_kernel_control,
     .kernel_mem
 );
 
-//wrapper for the kernel-region
 kernel_wrapper kernel_wrapper_inst (
     .clk        (uClk_usrDiv2),
     .clk2x      (uClk_usr),
@@ -146,6 +184,11 @@ kernel_wrapper kernel_wrapper_inst (
     .kernel_mem
     `ifdef INCLUDE_USM_SUPPORT
         , .kernel_svm (kernel_svm_kclk)
+    `endif
+
+    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+        ,.udp_avst_from_kernel,
+         .udp_avst_to_kernel
     `endif
 );
 
