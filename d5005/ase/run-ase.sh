@@ -19,6 +19,11 @@ fi
 this_design="$1"
 this_design="$(readlink -f "$1")"
 board_name="$2"
+if echo "${board_name}" | grep -qw "ofs_n6001"; then
+    device="Agilex7"
+else
+    device="S10"
+fi
 this_is_oneapi_design=0
 
 if [ -f "$this_design" ]; then
@@ -40,9 +45,9 @@ cd "$SIM_DIR" || exit
 
 mkdir -p kernel
 pushd kernel || exit
-"$ASE_DIR_PATH/compile-kernel.sh" -b "$board_name" "$this_design" || exit
+"$ASE_DIR_PATH/compile-kernel.sh" -b "$board_name" -d "$device" "$this_design" || exit
 if [ "$this_is_oneapi_design" -eq "1" ]; then
-    aocx_file="$(readlink -f "$(ls -1 ./d5005/*.aocx)")"
+    aocx_file="$(readlink -f "$(ls -1 ./*/*.aocx)")"
 else
     aocx_file="$(readlink -f "$(ls -1 ./*.aocx)")"
 fi

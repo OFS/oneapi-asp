@@ -20,9 +20,11 @@ function usage() {
   exit 1
 }
 
-while getopts ":b:h" arg; do
+while getopts ":b:d:h" arg; do
   case $arg in
     b) BOARD="$OPTARG"
+    ;;
+    d) DEVICE="$OPTARG"
     ;;
     *) usage
   esac
@@ -36,34 +38,22 @@ fi
 
 DESIGN_SRC="$1"
 
-# Check that board variant is valid
-BOARD=${BOARD:-ofs_d5005}
-if [ ! -f "$BSP_ROOT/hardware/$BOARD/build/d5005.qdb" ]; then
-  echo "Error: cannot find required OFS FIM QDB file for board '$BOARD'"
-  echo "Error: $BSP_ROOT/hardware/$BOARD/build/d5005.qdb does not exist. You must build the BSP first."
-  exit 1
-fi
-echo "Running ASE for board variant: $BOARD"
+echo "Running ASE for board variant: $BOARD, device: $OPTARG"
 
 if [ -f "$DESIGN_SRC" ]; then
     echo "Running ASE with design: $DESIGN_SRC"
     echo "aoc command is next"
-    aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
+    aoc -v -no-env-check -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
 elif [ -d "$DESIGN_SRC" ]; then
     echo "Running ASE with oneAPI design: $DESIGN_SRC"
     echo "pwd is  $PWD"
-    mkdir -p d5005 
+    mkdir -p ${BOARD} 
     echo "pwd is $PWD"
-    cd d5005 
+    cd ${BOARD}
     echo "pwd is $PWD, cmake is next"
-    export USM_TAIL=""
-    if [ ${BOARD} == "ofs_d5005_usm" ]; then
-        export USM_TAIL="_usm"
-    fi
-    export BOARD_TYPE=pac_s10${USM_TAIL}
-    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${BOARD_TYPE}
+    #cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DDEVICE_FLAG=${DEVICE} -DIS_BSP=1 -DUSER_HARDWARE_FLAGS="-Xsno-env-check"
+    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DIS_BSP=1 -DUSER_HARDWARE_FLAGS="-Xsno-env-check"
     echo "after cmake"
-    sed -i "s/$BOARD_TYPE/$BOARD/g" src/CMakeFiles/*/link.txt
     make fpga
     echo "make fpga is done; break out the aocx file"
     FPGAFILE=`ls *.fpga`

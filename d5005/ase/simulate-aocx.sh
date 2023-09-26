@@ -96,16 +96,7 @@ else
     echo "no vhd files exist, nothing to copy over"
 fi
 
-#all of the base files are the same right now, just pick a base-list and go
-if [ "${board_name}" == "ofs_d5005" ]; then
-    cp -prf vlog_files_base_ofs_d5005.list vlog_files.list
-elif [ "${board_name}" == "ofs_d5005_usm" ]; then
-    cp -prf vlog_files_base_ofs_d5005_usm.list vlog_files.list
-else
-    echo "Invalid board_name value of $board_name -- you MUST set it to a correct value"
-    exit 1
-fi
-
+cp -prf vlog_files_base.list vlog_files.list
 
 # Put package files first
 {
