@@ -58,6 +58,6 @@
     //enable write-acks for kernel-system writes to local memory
     //if this is disabled, you also need to remove the 
     // bsp_avmm_write_ack="1" setting(s) board_spec.xml.
-    `define USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES 1
+    //`define USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES 1
 
 `endif
