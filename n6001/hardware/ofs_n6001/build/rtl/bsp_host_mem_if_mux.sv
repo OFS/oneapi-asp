@@ -16,7 +16,7 @@
 //  set to 1. 
 
 module bsp_host_mem_if_mux 
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     input clk,
     input reset,

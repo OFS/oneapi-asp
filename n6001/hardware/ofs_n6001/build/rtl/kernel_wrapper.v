@@ -4,20 +4,20 @@
 
 `include "platform_if.vh"
 `include "fpga_defines.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 // kernel_wrapper
 // Using kernel wrapper instead of kernel_system, since kernel_system is auto generated.
 // kernel_system introduces boundary ports that are not used, and in PR they get preserved
 
 module kernel_wrapper  
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     input       clk,
     input       clk2x,
     input       reset_n,
     
-    opencl_kernel_control_intf.kw opencl_kernel_control,
+    kernel_control_intf.kw kernel_control,
     kernel_mem_intf.ker kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
@@ -29,10 +29,10 @@ import dc_bsp_pkg::*;
 );
 
 kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
-opencl_kernel_control_intf kernel_cra_avmm_bridge ();
+kernel_control_intf kernel_cra_avmm_bridge ();
 
 always_comb begin
-    opencl_kernel_control.kernel_irq                = kernel_cra_avmm_bridge.kernel_irq;
+    kernel_control.kernel_irq                = kernel_cra_avmm_bridge.kernel_irq;
 end
 
 //add pipeline stages to the memory interfaces
@@ -143,15 +143,15 @@ acl_avalon_mm_bridge_s10 #(
 ) kernel_cra_avalon_mm_bridge_s10 (
     .clk               (clk),
     .reset             (!reset_n),
-    .s0_waitrequest    (opencl_kernel_control.kernel_cra_waitrequest  ),
-    .s0_readdata       (opencl_kernel_control.kernel_cra_readdata     ),
-    .s0_readdatavalid  (opencl_kernel_control.kernel_cra_readdatavalid),
-    .s0_burstcount     (opencl_kernel_control.kernel_cra_burstcount   ),
-    .s0_writedata      (opencl_kernel_control.kernel_cra_writedata    ),
-    .s0_address        (opencl_kernel_control.kernel_cra_address      ),
-    .s0_write          (opencl_kernel_control.kernel_cra_write        ),
-    .s0_read           (opencl_kernel_control.kernel_cra_read         ),
-    .s0_byteenable     (opencl_kernel_control.kernel_cra_byteenable   ),
+    .s0_waitrequest    (kernel_control.kernel_cra_waitrequest  ),
+    .s0_readdata       (kernel_control.kernel_cra_readdata     ),
+    .s0_readdatavalid  (kernel_control.kernel_cra_readdatavalid),
+    .s0_burstcount     (kernel_control.kernel_cra_burstcount   ),
+    .s0_writedata      (kernel_control.kernel_cra_writedata    ),
+    .s0_address        (kernel_control.kernel_cra_address      ),
+    .s0_write          (kernel_control.kernel_cra_write        ),
+    .s0_read           (kernel_control.kernel_cra_read         ),
+    .s0_byteenable     (kernel_control.kernel_cra_byteenable   ),
     .m0_waitrequest    (kernel_cra_avmm_bridge.kernel_cra_waitrequest  ),
     .m0_readdata       (kernel_cra_avmm_bridge.kernel_cra_readdata     ),
     .m0_readdatavalid  (kernel_cra_avmm_bridge.kernel_cra_readdatavalid),

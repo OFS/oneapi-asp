@@ -3,7 +3,7 @@
 //
 
 //defining OpenCL kernel/cra connections
-interface opencl_kernel_control_intf #(
+interface kernel_control_intf #(
     parameter CRA_RDDATA_WIDTH  = 64,
     parameter CRA_WRDATA_WIDTH  = 64,
     parameter CRA_ADDR_WIDTH    = 30,
@@ -43,7 +43,7 @@ interface opencl_kernel_control_intf #(
                 kernel_cra_byteenable
     );
 
-endinterface : opencl_kernel_control_intf
+endinterface : kernel_control_intf
 
 interface kernel_mem_intf #(
     parameter ADDR_WIDTH        = dc_bsp_pkg::OPENCL_QSYS_ADDR_WIDTH,

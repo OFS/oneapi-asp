@@ -1,9 +1,9 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
-package dc_bsp_pkg;
+package ofs_asp_pkg;
 
     //Each memory bank is 4GB. 512b/(8b/B)*(26'1)=4GB.
     parameter OPENCL_DDR_ADDR_WIDTH = 26;
@@ -103,4 +103,4 @@ package dc_bsp_pkg;
     //number of IO Channels/Pipes enabled in the ASP.
     parameter IO_PIPES_NUM_CHAN = 5'h00;
     
-endpackage : dc_bsp_pkg
+endpackage : ofs_asp_pkg

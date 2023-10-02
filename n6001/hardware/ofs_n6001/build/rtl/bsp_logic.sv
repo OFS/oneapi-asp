@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 `include "ofs_plat_if.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 module bsp_logic
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     input           logic             clk,
     input           logic             reset,
@@ -27,7 +27,7 @@ import dc_bsp_pkg::*;
 
    // OpenCL kernel signals
     opencl_kernel_control_intf.bsp opencl_kernel_control,
-    kernel_mem_intf.bsp kernel_mem[dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS]
+    kernel_mem_intf.bsp kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
 );
 
 logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4a_byte_address_bits;
@@ -77,43 +77,24 @@ ofs_plat_avalon_mem_if
     .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
   ) host_mem_wr_avmm_if();
 
-//for n-banks, need to tie off the unused banks
-genvar m;
-generate
-    for (m = dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS; m < local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS; m=m+1) begin : tie_off_unused_local_mem
-        always_comb begin
-            //local_mem[m].waitrequest    =   input, no need to drive
-            //local_mem[m].readdata       =   input, no need to drive
-            //local_mem[m].readdatavalid  =   input, no need to drive
-            local_mem[m].burstcount     = '0;
-            local_mem[m].writedata      = '0;
-            local_mem[m].address        = '0;
-            local_mem[m].write          = '0;
-            local_mem[m].read           = '0;
-            local_mem[m].byteenable     = '0;
-            local_mem[m].user           = '0;
-        end //always_comb
-    end //for
-endgenerate
-
 board board_inst (
     .clk_200_clk                        (clk),                          //   clk.clk
     .global_reset_reset                 (reset),                        //   global_reset.reset_n
     .kernel_clk_clk                     (),                             //   kernel_clk.clk (output from board.qsys)
     .kernel_clk_in_clk                  (kernel_clk),                   //   kernel_clk_in.clk (output from board.qsys)
 
-    .kernel_cra_waitrequest             (opencl_kernel_control.kernel_cra_waitrequest),                    //   kernel_cra.waitrequest
-    .kernel_cra_readdata                (opencl_kernel_control.kernel_cra_readdata),                       //             .readdata
-    .kernel_cra_readdatavalid           (opencl_kernel_control.kernel_cra_readdatavalid),                  //             .readdatavalid
-    .kernel_cra_burstcount              (opencl_kernel_control.kernel_cra_burstcount),                     //             .burstcount
-    .kernel_cra_writedata               (opencl_kernel_control.kernel_cra_writedata),                      //             .writedata
-    .kernel_cra_address                 (opencl_kernel_control.kernel_cra_address),                        //             .address
-    .kernel_cra_write                   (opencl_kernel_control.kernel_cra_write),                          //             .write
-    .kernel_cra_read                    (opencl_kernel_control.kernel_cra_read),                           //             .read
-    .kernel_cra_byteenable              (opencl_kernel_control.kernel_cra_byteenable),                     //             .byteenable
-    .kernel_cra_debugaccess             (opencl_kernel_control.kernel_cra_debugaccess),                    //             .debugaccess
-    .kernel_irq_irq                     (opencl_kernel_control.kernel_irq),                                //   kernel_irq.irq
-    .kernel_reset_reset_n               (opencl_kernel_control.kernel_reset_n),                            // kernel_reset.reset_n
+    .kernel_cra_waitrequest             (kernel_control.kernel_cra_waitrequest),                    //   kernel_cra.waitrequest
+    .kernel_cra_readdata                (kernel_control.kernel_cra_readdata),                       //             .readdata
+    .kernel_cra_readdatavalid           (kernel_control.kernel_cra_readdatavalid),                  //             .readdatavalid
+    .kernel_cra_burstcount              (kernel_control.kernel_cra_burstcount),                     //             .burstcount
+    .kernel_cra_writedata               (kernel_control.kernel_cra_writedata),                      //             .writedata
+    .kernel_cra_address                 (kernel_control.kernel_cra_address),                        //             .address
+    .kernel_cra_write                   (kernel_control.kernel_cra_write),                          //             .write
+    .kernel_cra_read                    (kernel_control.kernel_cra_read),                           //             .read
+    .kernel_cra_byteenable              (kernel_control.kernel_cra_byteenable),                     //             .byteenable
+    .kernel_cra_debugaccess             (kernel_control.kernel_cra_debugaccess),                    //             .debugaccess
+    .kernel_irq_irq                     (kernel_control.kernel_irq),                                //   kernel_irq.irq
+    .kernel_reset_reset_n               (kernel_control.kernel_reset_n),                            // kernel_reset.reset_n
     
     `ifdef PAC_BSP_ENABLE_DDR4_BANK1
         .emif_ddr4a_clk_clk         (local_mem[0].clk),
@@ -275,7 +256,7 @@ end
 
 genvar lm;
 generate
-    for (lm=0;lm<dc_bsp_pkg::BSP_NUM_LOCAL_MEM_BANKS;lm++) begin : local_mem_stuff
+    for (lm=0;lm<BSP_NUM_LOCAL_MEM_BANKS;lm++) begin : local_mem_stuff
         assign local_mem[lm].user = 'b0;
         
         `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
@@ -366,7 +347,7 @@ dma_top dma_controller_inst (
     logic [2:0] kernel_irq_sync;
     //sync the kernel interrupt into the host-clock domain
     always_ff @(posedge clk) begin
-        kernel_irq_sync <= {kernel_irq_sync[1:0], opencl_kernel_control.kernel_irq};
+        kernel_irq_sync <= {kernel_irq_sync[1:0], kernel_control.kernel_irq};
         if (reset) kernel_irq_sync <= '0;
     end
     assign bsp_irq[BSP_KERNEL_IRQ_BIT] = kernel_irq_sync[2];

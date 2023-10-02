@@ -3,7 +3,7 @@
 //
 
 `include "ofs_plat_if.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 module ofs_plat_afu
    (
@@ -12,7 +12,7 @@ module ofs_plat_afu
     );
     
     import cci_mpf_shim_pkg::t_cci_mpf_shim_mdata_value;
-    import dc_bsp_pkg::*;
+    import ofs_asp_pkg::*;
     
     // ====================================================================
     //

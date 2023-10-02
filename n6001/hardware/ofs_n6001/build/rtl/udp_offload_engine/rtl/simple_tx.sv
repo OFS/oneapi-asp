@@ -20,7 +20,7 @@ module simple_tx
   input logic         arp_trigger
 );
 
-  import dc_bsp_pkg::*;
+  import ofs_asp_pkg::*;
   import udp_oe_pkg::*;
   
   // The packets should be as follows:

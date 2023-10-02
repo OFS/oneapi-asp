@@ -1,9 +1,9 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-`ifndef opencl_bsp_vh
+`ifndef ofs_asp_vh
 
-    `define opencl_bsp_vh
+    `define ofs_asp_vh
 
     `define PAC_BSP_ENABLE_DDR4_BANK1 1
     `define PAC_BSP_ENABLE_DDR4_BANK2 1

@@ -3,7 +3,7 @@
 //
 
 interface shim_avst_if #(
-    parameter DATA_WIDTH        = dc_bsp_pkg::SHIM_AVST_DATA_WIDTH
+    parameter DATA_WIDTH        = ofs_asp_pkg::SHIM_AVST_DATA_WIDTH
 );
     logic                           valid;
     logic                           ready;

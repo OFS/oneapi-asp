@@ -19,7 +19,7 @@ module simple_rx
   // to TX of UDP offload engine for ARP response
   output logic        arp_trigger
 );
-  import dc_bsp_pkg::*;
+  import ofs_asp_pkg::*;
   import udp_oe_pkg::*;
   
   logic         mac_eth_startofpacket;
