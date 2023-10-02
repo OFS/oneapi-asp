@@ -21,8 +21,8 @@ package dma_pkg;
     parameter DFH_NEXT_AFU_OFFSET = 24'h01_0000;
 
     //address widths
-    parameter HOST_MEM_ADDR_WIDTH = ofs_asp_pkg::HOSTMEM_WORD_ADDR_WIDTH;
-    parameter DEVICE_MEM_ADDR_WIDTH = $clog2(ofs_asp_pkg::ASP_LOCALMEM_NUM_CHANNELS) + ofs_asp_pkg::ASP_LOCALMEM_AVMM_ADDR_WIDTH;
+    parameter HOST_MEM_ADDR_WIDTH = 48;
+    parameter DEVICE_MEM_ADDR_WIDTH = 34;
     parameter XFER_SIZE_WIDTH   = 40;
 
     //DMA command-queue FIFO usedw width
@@ -30,10 +30,10 @@ package dma_pkg;
 
     // MMIO64 widths
     parameter MMIO64_ADDR_WIDTH = 8;
-    parameter MMIO64_DATA_WIDTH = ofs_asp_pkg::ASP_MMIO_DATA_WIDTH;
+    parameter MMIO64_DATA_WIDTH = 64;
     
     // DMA AVMM widths
-    parameter AVMM_DATA_WIDTH = ofs_asp_pkg::ASP_LOCALMEM_AVMM_DATA_WIDTH;
+    parameter AVMM_DATA_WIDTH = 512;
     parameter AVMM_DOUBLE_DATA_WIDTH = AVMM_DATA_WIDTH*2;
     parameter AVMM_BYTEENABLE_WIDTH = AVMM_DATA_WIDTH/8;
     parameter AVMM_DBL_DATA_UWORD_BIT_HI = AVMM_DOUBLE_DATA_WIDTH-1;
@@ -45,7 +45,7 @@ package dma_pkg;
     parameter AVMM_BURSTCOUNT_BITS = 7;
     
     //host memory data width
-    parameter HOSTMEM_DATA_WIDTH = ofs_asp_pkg::HOSTMEM_DATA_WIDTH;
+    parameter HOSTMEM_DATA_WIDTH = AVMM_DATA_WIDTH;
     parameter HOSTMEM_DATA_BYTES_PER_WORD = HOSTMEM_DATA_WIDTH / 8;
     parameter HOSTMEM_DATA_BYTES_PER_WORD_BITSHIFT = 6;
     parameter HOSTMEM_DATA_BYTES_PER_WORD_SZ = $clog2(HOSTMEM_DATA_BYTES_PER_WORD);
