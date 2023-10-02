@@ -1,9 +1,9 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 //
-
+`ifdef INCLUDE_IO_PIPES
 module udp_offload_engine
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
     
@@ -118,3 +118,4 @@ udp_oe_csr udp_oe_csr
 );
 
 endmodule : udp_offload_engine
+`endif

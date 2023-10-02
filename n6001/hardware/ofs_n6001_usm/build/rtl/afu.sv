@@ -3,11 +3,11 @@
 //
 
 `include "ofs_plat_if.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 
 module afu
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
   (
     // Host memory (Avalon)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
@@ -85,9 +85,9 @@ assign mmio64_if_shim.instance_number = mmio64_if.instance_number;
     //cross kernel_svm from kernel-clock domain into host-clock domain
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
     ) kernel_svm_kclk ();
     assign kernel_svm_kclk.clk = uClk_usrDiv2;
     assign kernel_svm_kclk.reset_n = ~uClk_usrDiv2_reset;
@@ -95,9 +95,9 @@ assign mmio64_if_shim.instance_number = mmio64_if.instance_number;
     //shared Avalon-MM rd/wr interface from the kernel-system
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
+        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
     ) kernel_svm ();
     assign kernel_svm.clk = host_mem_if.clk;
     assign kernel_svm.reset_n = host_mem_if.reset_n;
@@ -145,7 +145,7 @@ host_mem_if_vtp host_mem_if_vtp_inst (
     
         // kernel clock and reset
         .kernel_clk(uClk_usrDiv2),
-        .kernel_resetn(opencl_kernel_control.kernel_reset_n),
+        .kernel_resetn(kernel_control.kernel_reset_n),
     
         // from kernel
         .udp_avst_from_kernel,
@@ -171,7 +171,7 @@ bsp_logic bsp_logic_inst (
     `endif
     .local_mem,
     
-    .opencl_kernel_control,
+    .kernel_control,
     .kernel_mem
 );
 
@@ -180,7 +180,7 @@ kernel_wrapper kernel_wrapper_inst (
     .clk2x      (uClk_usr),
     .reset_n    (!uClk_usrDiv2_reset),
     
-    .opencl_kernel_control,
+    .kernel_control,
     .kernel_mem
     `ifdef INCLUDE_USM_SUPPORT
         , .kernel_svm (kernel_svm_kclk)

@@ -4,7 +4,7 @@
 
 `include "platform_if.vh"
 `include "fpga_defines.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 // avmm_single_burst_partial_writes
 // Split an AVMM interface's partial writes into a single partial-write and 
@@ -12,7 +12,7 @@
 //  (start and/or end), as well as initial bursts of 1.
 
 module avmm_single_burst_partial_writes  
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     input       clk,
     input       reset_n,
