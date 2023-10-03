@@ -5,7 +5,7 @@
 
 package ofs_asp_pkg;
 
-    //Each memory bank is 4GB. 512b/(8b/B)*(26'1)=4GB.
+    //Get memory-bank numbers from FIM-build.
     parameter OPENCL_DDR_ADDR_WIDTH = 26;
     // SVM
     parameter OPENCL_MEMORY_ADDR_WIDTH = 42;
