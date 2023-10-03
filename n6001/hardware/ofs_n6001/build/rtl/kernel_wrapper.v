@@ -23,8 +23,8 @@ import ofs_asp_pkg::*;
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
     `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,shim_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
-        shim_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
+        ,asp_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
+        asp_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
     `endif
 );
 

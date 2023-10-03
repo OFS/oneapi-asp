@@ -54,9 +54,6 @@ package ofs_asp_pkg;
     parameter KERNELWRAPPER_SVM_PIPELINE_STAGES_CMD    = 1;
     //this wait-req needs to be reflected in both the board_spc.xml and ccb (cross-to-kernel) settings
     parameter KERNELWRAPPER_SVM_PIPELINE_DISABLEWAITREQBUFFERING = 1;
-
-    //Avalon Streaming data width - I/O Pipe connection to kernel-system
-    parameter SHIM_AVST_DATA_WIDTH = 64;
     
     //Interrupt parameters
     parameter ASP_NUM_INTERRUPT_LINES = 4;
@@ -102,5 +99,7 @@ package ofs_asp_pkg;
     
     //number of IO Channels/Pipes enabled in the ASP.
     parameter IO_PIPES_NUM_CHAN = 5'h00;
+    //Avalon Streaming data width - I/O Pipe connection to kernel-system
+    parameter ASP_ETH_PKT_DATA_WIDTH = ofs_fim_eth_if_pkg::ETH_PACKET_WIDTH;
     
 endpackage : ofs_asp_pkg

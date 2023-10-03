@@ -130,8 +130,8 @@ host_mem_if_vtp host_mem_if_vtp_inst (
 
 `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
 //UDP/HSSI offload engine
-    shim_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
-    shim_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    asp_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    asp_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
     ofs_plat_avalon_mem_if #(
         `OFS_PLAT_AVALON_MEM_IF_REPLICATE_PARAMS(mmio64_if)
     ) uoe_csr_avmm();

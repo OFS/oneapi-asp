@@ -14,7 +14,7 @@ module simple_rx
   ofs_fim_hssi_ss_rx_axis_if.client eth_rx_axis,
 
   // to kernel
-  shim_avst_if.source udp_avst_to_kernel,
+  asp_avst_if.source udp_avst_to_kernel,
 
   // to TX of UDP offload engine for ARP response
   output logic        arp_trigger
@@ -94,7 +94,7 @@ module simple_rx
     .rdusedw ()
   );
 
-  shim_avst_if tok_udp_avst_ethclk();
+  asp_avst_if tok_udp_avst_ethclk();
 
   // FSM states
   // The data presented from the Ethernet MAC RX follows the depicted states below
