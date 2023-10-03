@@ -26,7 +26,7 @@ import ofs_asp_pkg::*;
     `endif
 
    // OpenCL kernel signals
-    opencl_kernel_control_intf.bsp opencl_kernel_control,
+    kernel_control_intf.bsp kernel_control,
     kernel_mem_intf.bsp kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
 );
 

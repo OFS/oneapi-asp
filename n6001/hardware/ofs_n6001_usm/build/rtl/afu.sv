@@ -39,7 +39,7 @@ assign reset = pClk_reset;
 assign clk   = pClk;
 
 //local wires to connect between bsp_logic and kernel_wrapper - kernel control and memory-interface
-opencl_kernel_control_intf opencl_kernel_control();
+kernel_control_intf kernel_control();
 kernel_mem_intf kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]();
 
 // The width of the Avalon-MM user field is narrower on the AFU side
