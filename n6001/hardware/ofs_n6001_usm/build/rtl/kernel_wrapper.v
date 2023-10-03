@@ -18,17 +18,17 @@ import ofs_asp_pkg::*;
     input       reset_n,
     
     kernel_control_intf.kw kernel_control,
-    kernel_mem_intf.ker kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
+    kernel_mem_intf.ker kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,shim_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
-        shim_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
+    `ifdef INCLUDE_IO_PIPES
+        ,asp_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
+        asp_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
     `endif
 );
 
-kernel_mem_intf mem_avmm_bridge [BSP_NUM_LOCAL_MEM_BANKS-1:0] ();
+kernel_mem_intf mem_avmm_bridge [ASP_LOCALMEM_NUM_CHANNELS-1:0] ();
 kernel_control_intf kernel_cra_avmm_bridge ();
 
 always_comb begin
@@ -38,14 +38,14 @@ end
 //add pipeline stages to the memory interfaces
 genvar m;
 generate 
-    for (m = 0; m<BSP_NUM_LOCAL_MEM_BANKS; m=m+1) begin : mem_pipes
+    for (m = 0; m<ASP_LOCALMEM_NUM_CHANNELS; m=m+1) begin : mem_pipes
     
         //pipeline bridge from the kernel to board.qsys
         acl_avalon_mm_bridge_s10 #(
-            .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_DATA_WIDTH ),
+            .DATA_WIDTH                     ( ASP_LOCALMEM_AVMM_DATA_WIDTH ),
             .SYMBOL_WIDTH                   ( 8   ),
-            .HDL_ADDR_WIDTH                 ( OPENCL_QSYS_ADDR_WIDTH ),
-            .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH   ),
+            .HDL_ADDR_WIDTH                 ( ASP_LOCALMEM_AVMM_ADDR_WIDTH ),
+            .BURSTCOUNT_WIDTH               ( ASP_LOCALMEM_AVMM_BURSTCNT_WIDTH   ),
             .SYNCHRONIZE_RESET              ( 1   ),
             .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_MEM_PIPELINE_DISABLEWAITREQBUFFERING),
             .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_MEM_PIPELINE_STAGES_RDDATA)
@@ -80,19 +80,19 @@ generate
 endgenerate
 
 `ifdef INCLUDE_USM_SUPPORT
-    logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] svm_addr_shift;
+    logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] svm_addr_shift;
     
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (USM_AVMM_ADDR_WIDTH),
+        .DATA_WIDTH (USM_AVMM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (USM_AVMM_BURSTCOUNT_WIDTH)
     ) svm_avmm_bridge ();
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (USM_AVMM_ADDR_WIDTH),
+        .DATA_WIDTH (USM_AVMM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (USM_AVMM_BURSTCOUNT_WIDTH)
     ) svm_avmm_kernelsystem ();
     
     always_comb begin
@@ -100,10 +100,10 @@ endgenerate
     end
     
     acl_avalon_mm_bridge_s10 #(
-        .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_SVM_DATA_WIDTH ),
+        .DATA_WIDTH                     ( USM_AVMM_DATA_WIDTH ),
         .SYMBOL_WIDTH                   ( 8   ),
-        .HDL_ADDR_WIDTH                 ( OPENCL_SVM_QSYS_ADDR_WIDTH ),
-        .BURSTCOUNT_WIDTH               ( OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH),
+        .HDL_ADDR_WIDTH                 ( USM_AVMM_ADDR_WIDTH ),
+        .BURSTCOUNT_WIDTH               ( USM_AVMM_BURSTCOUNT_WIDTH),
         .SYNCHRONIZE_RESET              ( 1   ),
         .DISABLE_WAITREQUEST_BUFFERING  ( 1   ),
         .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
@@ -133,9 +133,9 @@ endgenerate
 
 //avmm pipeline for kernel cra
 acl_avalon_mm_bridge_s10 #(
-    .DATA_WIDTH                     ( OPENCL_BSP_KERNEL_CRA_DATA_WIDTH ),
+    .DATA_WIDTH                     ( KERNEL_CRA_DATA_WIDTH ),
     .SYMBOL_WIDTH                   ( 8   ),
-    .HDL_ADDR_WIDTH                 ( OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH  ),
+    .HDL_ADDR_WIDTH                 ( KERNEL_CRA_ADDR_WIDTH  ),
     .BURSTCOUNT_WIDTH               ( 1   ),
     .SYNCHRONIZE_RESET              ( 1   ),
     .DISABLE_WAITREQUEST_BUFFERING  ( KERNELWRAPPER_CRA_PIPELINE_DISABLEWAITREQBUFFERING),
@@ -253,13 +253,15 @@ kernel_system kernel_system_inst (
         .kernel_mem_byteenable      (svm_avmm_kernelsystem.byteenable)
     `endif //INCLUDE_USM_SUPPORT
     
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
-        .udp_out_data          (udp_avst_from_kernel[0].data),
-        .udp_out_ready         (udp_avst_from_kernel[0].ready),
-        .udp_in_valid          (udp_avst_to_kernel[0].valid),
-        .udp_in_data           (udp_avst_to_kernel[0].data),
-        .udp_in_ready          (udp_avst_to_kernel[0].ready)
+    `ifdef INCLUDE_IO_PIPES
+        `ifdef ASP_ENABLE_IOPIPE0
+            ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
+            .udp_out_data          (udp_avst_from_kernel[0].data),
+            .udp_out_ready         (udp_avst_from_kernel[0].ready),
+            .udp_in_valid          (udp_avst_to_kernel[0].valid),
+            .udp_in_data           (udp_avst_to_kernel[0].data),
+            .udp_in_ready          (udp_avst_to_kernel[0].ready)
+        `endif //ASP_ENABLE_IOPIPE0
         `ifdef ASP_ENABLE_IOPIPE1
             ,.udp_out_1_valid        (udp_avst_from_kernel[1].valid),
             .udp_out_1_data          (udp_avst_from_kernel[1].data),

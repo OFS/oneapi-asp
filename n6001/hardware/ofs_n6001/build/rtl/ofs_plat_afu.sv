@@ -46,7 +46,7 @@ module ofs_plat_afu
     // 64 bit read/write MMIO AFU sink
     ofs_plat_avalon_mem_if
       #(
-        `HOST_CHAN_AVALON_MMIO_PARAMS(64),
+        `HOST_CHAN_AVALON_MMIO_PARAMS(ASP_MMIO_DATA_WIDTH),
         .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
         )
         mmio64_to_afu();
@@ -77,12 +77,12 @@ module ofs_plat_afu
       #(
         `LOCAL_MEM_AVALON_MEM_PARAMS_DEFAULT
         )
-      local_mem_to_afu[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS]();
+      local_mem_to_afu[ASP_LOCALMEM_NUM_CHANNELS]();
 
     // Map each bank individually
     genvar b;
     generate
-        for (b = 0; b < local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS; b = b + 1)
+        for (b = 0; b < ASP_LOCALMEM_NUM_CHANNELS; b = b + 1)
         begin : mb
             ofs_plat_local_mem_as_avalon_mem
               #(
@@ -115,8 +115,7 @@ module ofs_plat_afu
         // This way, the AFU does not need to know about every available
         // device. By default, devices are tied off.
         .HOST_CHAN_IN_USE_MASK(1),
-        // All banks are used
-        .LOCAL_MEM_IN_USE_MASK(-1)
+        .LOCAL_MEM_IN_USE_MASK({ASP_LOCALMEM_NUM_CHANNELS{1'b1}})
         `ifdef INCLUDE_IO_PIPES
             // The argument to each parameter is a bit mask of channels used.
             // Passing "-1" indicates all available channels are in use.

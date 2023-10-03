@@ -19,24 +19,21 @@ import ofs_asp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
+    ofs_plat_avalon_mem_if.to_slave local_mem[ASP_LOCALMEM_NUM_CHANNELS],
     
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         ofs_plat_avalon_mem_if.to_sink uoe_csr_avmm,
     `endif
 
-   // OpenCL kernel signals
+   // kernel signals
     kernel_control_intf.bsp kernel_control,
-    kernel_mem_intf.bsp kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]
+    kernel_mem_intf.bsp kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]
 );
 
-logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4a_byte_address_bits;
-logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4b_byte_address_bits;
-logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4c_byte_address_bits;
-logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4d_byte_address_bits;
-logic [MMIO64_AVMM_ADDR_WIDTH-1:0] avmm_mmio64_address;
+logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] ddr4_byte_address_bits [ASP_LOCALMEM_NUM_CHANNELS];
+logic [ASP_MMIO_QSYS_ADDR_WIDTH-1:0] avmm_mmio64_address;
 logic wr_fence_flag,f2h_dma_wr_fence_flag;
-logic [BSP_NUM_INTERRUPT_LINES-1:0] bsp_irq;
+logic [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq;
 logic dma_irq_fpga2host, dma_irq_host2fpga;
 
 ofs_plat_avalon_mem_rdwr_if
@@ -103,7 +100,7 @@ board board_inst (
         .emif_ddr4a_readdatavalid   (local_mem[0].readdatavalid),
         .emif_ddr4a_burstcount      (local_mem[0].burstcount),
         .emif_ddr4a_writedata       (local_mem[0].writedata),
-        .emif_ddr4a_address         ({local_mem[0].address, ddr4a_byte_address_bits}),
+        .emif_ddr4a_address         ({local_mem[0].address, ddr4_byte_address_bits[0]}),
         .emif_ddr4a_write           (local_mem[0].write),
         .emif_ddr4a_read            (local_mem[0].read),
         .emif_ddr4a_byteenable      (local_mem[0].byteenable),
@@ -128,7 +125,7 @@ board board_inst (
         .emif_ddr4b_write           (local_mem[1].write),
         .emif_ddr4b_read            (local_mem[1].read),
         .emif_ddr4b_byteenable      (local_mem[1].byteenable),
-        .emif_ddr4b_address         ({local_mem[1].address, ddr4b_byte_address_bits}),
+        .emif_ddr4b_address         ({local_mem[1].address, ddr4_byte_address_bits[1]}),
         .emif_ddr4b_debugaccess     (),
         .kernel_ddr4b_waitrequest   (kernel_mem[1].waitrequest),
         .kernel_ddr4b_readdata      (kernel_mem[1].readdata),
@@ -150,7 +147,7 @@ board board_inst (
         .emif_ddr4c_write           (local_mem[2].write),
         .emif_ddr4c_read            (local_mem[2].read),
         .emif_ddr4c_byteenable      (local_mem[2].byteenable),
-        .emif_ddr4c_address         ({local_mem[2].address, ddr4c_byte_address_bits}),
+        .emif_ddr4c_address         ({local_mem[2].address, ddr4_byte_address_bits[2]}),
         .emif_ddr4c_debugaccess     (),
         .kernel_ddr4c_waitrequest   (kernel_mem[2].waitrequest),
         .kernel_ddr4c_readdata      (kernel_mem[2].readdata),
@@ -172,7 +169,7 @@ board board_inst (
         .emif_ddr4d_write           (local_mem[3].write),
         .emif_ddr4d_read            (local_mem[3].read),
         .emif_ddr4d_byteenable      (local_mem[3].byteenable),
-        .emif_ddr4d_address         ({local_mem[3].address, ddr4d_byte_address_bits}),
+        .emif_ddr4d_address         ({local_mem[3].address, ddr4_byte_address_bits[3]}),
         .emif_ddr4d_debugaccess     (),
         .kernel_ddr4d_waitrequest   (kernel_mem[3].waitrequest),
         .kernel_ddr4d_readdata      (kernel_mem[3].readdata),
@@ -192,7 +189,7 @@ board board_inst (
     .avmm_mmio64_readdatavalid           (mmio64_if.readdatavalid),
     .avmm_mmio64_burstcount              (mmio64_if.burstcount),
     .avmm_mmio64_writedata               (mmio64_if.writedata),
-    .avmm_mmio64_address                 , //manipulated below
+    .avmm_mmio64_address                 (avmm_mmio64_address[ASP_MMIO_QSYS_ADDR_WIDTH-1:0]), //manipulated below
     .avmm_mmio64_write                   (mmio64_if.write),
     .avmm_mmio64_read                    (mmio64_if.read),
     .avmm_mmio64_byteenable              (mmio64_if.byteenable),
@@ -208,7 +205,7 @@ board board_inst (
     .dma_csr_mmio64_read                    (mmio64_if_dmac.read),
     .dma_csr_mmio64_byteenable              (mmio64_if_dmac.byteenable),
     .dma_csr_mmio64_debugaccess             (),
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         //mmio64 signals for DMA controller
         .uoe_csr_mmio64_waitrequest             (uoe_csr_avmm.waitrequest),
         .uoe_csr_mmio64_readdata                (uoe_csr_avmm.readdata),
@@ -249,14 +246,14 @@ board board_inst (
 //  [2]    = (mmio64_if.byteenable == 8'hF0)
 //  [1:0]  = 2'b0
 always_comb begin
-    avmm_mmio64_address [MMIO64_AVMM_ADDR_WIDTH-1:3]    = mmio64_if.address;
+    avmm_mmio64_address [ASP_MMIO_ADDR_WIDTH-1:3]    = mmio64_if.address;
     avmm_mmio64_address [2]       = (mmio64_if.byteenable == 8'hF0) ? 1'b1 : 1'b0;
     avmm_mmio64_address [1:0]     = 2'b0;
 end
 
 genvar lm;
 generate
-    for (lm=0;lm<BSP_NUM_LOCAL_MEM_BANKS;lm++) begin : local_mem_stuff
+    for (lm=0;lm<ASP_LOCALMEM_NUM_CHANNELS;lm++) begin : local_mem_stuff
         assign local_mem[lm].user = 'b0;
         
         `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
@@ -268,7 +265,7 @@ generate
                 .kernel_avmm_waitreq    (kernel_mem[lm].waitrequest),
                 .kernel_avmm_wr         (kernel_mem[lm].write),
                 .kernel_avmm_burstcnt   (kernel_mem[lm].burstcount),
-                .kernel_avmm_address    (kernel_mem[lm].address>>OPENCL_MEMORY_BYTE_OFFSET),
+                .kernel_avmm_address    (kernel_mem[lm].address[ASP_LOCALMEM_AVMM_ADDR_WIDTH-1 : KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET]),
                 .kernel_avmm_wr_ack     (kernel_mem[lm].writeack),
                 
                 //AVMM channel up to PIM (AVMM-AXI conversion with write-ack)
@@ -289,15 +286,15 @@ endgenerate
 //set unused interrupt lines to 0
 genvar i;
 generate
-    for (i = BSP_AVMM_NUM_IRQ_USED; i < BSP_NUM_INTERRUPT_LINES ; i = i + 1) begin
-        assign bsp_irq[i] = 1'b0;
+    for (i = ASP_NUM_IRQ_USED; i < ASP_NUM_INTERRUPT_LINES ; i = i + 1) begin
+        assign asp_irq[i] = 1'b0;
     end
 endgenerate
 
 bsp_host_mem_if_mux bsp_host_mem_if_mux_inst (
     .clk,
     .reset,
-    .bsp_irq,
+    .asp_irq,
     .wr_fence_flag,
     .bsp_mem_if,
     .host_mem_if
@@ -350,19 +347,19 @@ dma_top dma_controller_inst (
         kernel_irq_sync <= {kernel_irq_sync[1:0], kernel_control.kernel_irq};
         if (reset) kernel_irq_sync <= '0;
     end
-    assign bsp_irq[BSP_KERNEL_IRQ_BIT] = kernel_irq_sync[2];
+    assign asp_irq[ASP_KERNEL_IRQ_BIT] = kernel_irq_sync[2];
 `else
-    assign bsp_irq[BSP_KERNEL_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_KERNEL_IRQ_BIT] = 'b0;
 `endif
 `ifdef USE_H2F_IRQ
-    assign bsp_irq[BSP_DMA_0_IRQ_BIT] = dma_irq_host2fpga;
+    assign asp_irq[ASP_DMA_0_IRQ_BIT] = dma_irq_host2fpga;
 `else
-    assign bsp_irq[BSP_DMA_0_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_DMA_0_IRQ_BIT] = 'b0;
 `endif
 `ifdef USE_F2H_IRQ
-    assign bsp_irq[BSP_DMA_1_IRQ_BIT] = dma_irq_fpga2host;
+    assign asp_irq[ASP_DMA_1_IRQ_BIT] = dma_irq_fpga2host;
 `else
-assign bsp_irq[BSP_DMA_1_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_DMA_1_IRQ_BIT] = 'b0;
 `endif
 
 `ifdef USE_WR_FENCE_FLAG
