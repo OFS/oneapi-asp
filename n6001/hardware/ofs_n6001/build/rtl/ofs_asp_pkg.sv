@@ -59,11 +59,11 @@ package ofs_asp_pkg;
     parameter SHIM_AVST_DATA_WIDTH = 64;
     
     //Interrupt parameters
-    parameter BSP_NUM_INTERRUPT_LINES = 4;
-    parameter BSP_AVMM_NUM_IRQ_USED = 3; //DMA_0, kernel, DMA_1
-    parameter BSP_DMA_0_IRQ_BIT    = 0;
-    parameter BSP_KERNEL_IRQ_BIT   = 1;
-    parameter BSP_DMA_1_IRQ_BIT    = 2;
+    parameter ASP_NUM_INTERRUPT_LINES = 4;
+    parameter ASP_AVMM_NUM_IRQ_USED = 3; //DMA_0, kernel, DMA_1
+    parameter ASP_DMA_0_IRQ_BIT    = 0;
+    parameter ASP_KERNEL_IRQ_BIT   = 1;
+    parameter ASP_DMA_1_IRQ_BIT    = 2;
     
     // parameters to differentiate between DMA-only and DMA+USM BSPs
     `ifdef INCLUDE_USM_SUPPORT

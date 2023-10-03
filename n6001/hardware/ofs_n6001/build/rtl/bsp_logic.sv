@@ -36,7 +36,7 @@ logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4c_byte_address_bits;
 logic [OPENCL_MEMORY_BYTE_OFFSET-1:0] ddr4d_byte_address_bits;
 logic [MMIO64_AVMM_ADDR_WIDTH-1:0] avmm_mmio64_address;
 logic wr_fence_flag,f2h_dma_wr_fence_flag;
-logic [BSP_NUM_INTERRUPT_LINES-1:0] bsp_irq;
+logic [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq;
 logic dma_irq_fpga2host, dma_irq_host2fpga;
 
 ofs_plat_avalon_mem_rdwr_if
@@ -289,15 +289,15 @@ endgenerate
 //set unused interrupt lines to 0
 genvar i;
 generate
-    for (i = BSP_AVMM_NUM_IRQ_USED; i < BSP_NUM_INTERRUPT_LINES ; i = i + 1) begin
-        assign bsp_irq[i] = 1'b0;
+    for (i = ASP_AVMM_NUM_IRQ_USED; i < ASP_NUM_INTERRUPT_LINES ; i = i + 1) begin
+        assign asp_irq[i] = 1'b0;
     end
 endgenerate
 
 bsp_host_mem_if_mux bsp_host_mem_if_mux_inst (
     .clk,
     .reset,
-    .bsp_irq,
+    .asp_irq,
     .wr_fence_flag,
     .bsp_mem_if,
     .host_mem_if
@@ -350,19 +350,19 @@ dma_top dma_controller_inst (
         kernel_irq_sync <= {kernel_irq_sync[1:0], kernel_control.kernel_irq};
         if (reset) kernel_irq_sync <= '0;
     end
-    assign bsp_irq[BSP_KERNEL_IRQ_BIT] = kernel_irq_sync[2];
+    assign asp_irq[ASP_KERNEL_IRQ_BIT] = kernel_irq_sync[2];
 `else
-    assign bsp_irq[BSP_KERNEL_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_KERNEL_IRQ_BIT] = 'b0;
 `endif
 `ifdef USE_H2F_IRQ
-    assign bsp_irq[BSP_DMA_0_IRQ_BIT] = dma_irq_host2fpga;
+    assign asp_irq[ASP_DMA_0_IRQ_BIT] = dma_irq_host2fpga;
 `else
-    assign bsp_irq[BSP_DMA_0_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_DMA_0_IRQ_BIT] = 'b0;
 `endif
 `ifdef USE_F2H_IRQ
-    assign bsp_irq[BSP_DMA_1_IRQ_BIT] = dma_irq_fpga2host;
+    assign asp_irq[ASP_DMA_1_IRQ_BIT] = dma_irq_fpga2host;
 `else
-assign bsp_irq[BSP_DMA_1_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_DMA_1_IRQ_BIT] = 'b0;
 `endif
 
 `ifdef USE_WR_FENCE_FLAG
