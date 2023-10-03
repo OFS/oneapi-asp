@@ -22,7 +22,7 @@ import ofs_asp_pkg::*;
     `ifdef INCLUDE_USM_SUPPORT
         , ofs_plat_avalon_mem_if.to_sink kernel_svm
     `endif
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         ,asp_avst_if.source    udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
         asp_avst_if.sink       udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]
     `endif
@@ -253,13 +253,15 @@ kernel_system kernel_system_inst (
         .kernel_mem_byteenable      (svm_avmm_kernelsystem.byteenable)
     `endif //INCLUDE_USM_SUPPORT
     
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
-        ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
-        .udp_out_data          (udp_avst_from_kernel[0].data),
-        .udp_out_ready         (udp_avst_from_kernel[0].ready),
-        .udp_in_valid          (udp_avst_to_kernel[0].valid),
-        .udp_in_data           (udp_avst_to_kernel[0].data),
-        .udp_in_ready          (udp_avst_to_kernel[0].ready)
+    `ifdef INCLUDE_IO_PIPES
+        `ifdef ASP_ENABLE_IOPIPE0
+            ,.udp_out_valid        (udp_avst_from_kernel[0].valid),
+            .udp_out_data          (udp_avst_from_kernel[0].data),
+            .udp_out_ready         (udp_avst_from_kernel[0].ready),
+            .udp_in_valid          (udp_avst_to_kernel[0].valid),
+            .udp_in_data           (udp_avst_to_kernel[0].data),
+            .udp_in_ready          (udp_avst_to_kernel[0].ready)
+        `endif //ASP_ENABLE_IOPIPE0
         `ifdef ASP_ENABLE_IOPIPE1
             ,.udp_out_1_valid        (udp_avst_from_kernel[1].valid),
             .udp_out_1_data          (udp_avst_from_kernel[1].data),

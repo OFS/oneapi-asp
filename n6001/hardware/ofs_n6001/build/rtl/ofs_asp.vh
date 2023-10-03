@@ -18,7 +18,7 @@
     //`define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
 
     //enable UDP offload engine and I/O channels
-    //`define INCLUDE_UDP_OFFLOAD_ENGINE 1
+    //`define INCLUDE_IO_PIPES 1
     //`define ASP_ENABLE_IOPIPE0 1
     //`define ASP_ENABLE_IOPIPE1 1
     //`define ASP_ENABLE_IOPIPE2 1

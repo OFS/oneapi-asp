@@ -18,7 +18,7 @@ import ofs_asp_pkg::*;
     // Local memory interface.
     ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
     
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         // Ethernet
         ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
     `endif
@@ -128,7 +128,7 @@ host_mem_if_vtp host_mem_if_vtp_inst (
     .mmio64_if_shim
 );
 
-`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+`ifdef INCLUDE_IO_PIPES
 //UDP/HSSI offload engine
     asp_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
     asp_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
@@ -166,7 +166,7 @@ bsp_logic bsp_logic_inst (
     .kernel_clk_reset       ( uClk_usrDiv2_reset ),
     .host_mem_if            ( host_mem_va_if_dma ),
     .mmio64_if              ( mmio64_if_shim ),
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         .uoe_csr_avmm,
     `endif
     .local_mem,
@@ -186,7 +186,7 @@ kernel_wrapper kernel_wrapper_inst (
         , .kernel_svm (kernel_svm_kclk)
     `endif
 
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         ,.udp_avst_from_kernel,
          .udp_avst_to_kernel
     `endif

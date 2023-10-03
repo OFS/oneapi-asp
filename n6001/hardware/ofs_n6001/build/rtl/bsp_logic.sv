@@ -21,7 +21,7 @@ import ofs_asp_pkg::*;
     // Local memory interface.
     ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
     
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         ofs_plat_avalon_mem_if.to_sink uoe_csr_avmm,
     `endif
 
@@ -208,7 +208,7 @@ board board_inst (
     .dma_csr_mmio64_read                    (mmio64_if_dmac.read),
     .dma_csr_mmio64_byteenable              (mmio64_if_dmac.byteenable),
     .dma_csr_mmio64_debugaccess             (),
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         //mmio64 signals for DMA controller
         .uoe_csr_mmio64_waitrequest             (uoe_csr_avmm.waitrequest),
         .uoe_csr_mmio64_readdata                (uoe_csr_avmm.readdata),
