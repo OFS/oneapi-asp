@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 //
 
-interface shim_avst_if #(
-    parameter DATA_WIDTH        = dc_bsp_pkg::SHIM_AVST_DATA_WIDTH
+interface asp_avst_if #(
+    parameter DATA_WIDTH        = ofs_asp_pkg::ASP_ETH_PKT_DATA_WIDTH
 );
     logic                           valid;
     logic                           ready;
@@ -17,4 +17,4 @@ interface shim_avst_if #(
         input  valid, data,
         output ready
     );
-endinterface : shim_avst_if
+endinterface : asp_avst_if

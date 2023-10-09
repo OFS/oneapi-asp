@@ -14,6 +14,11 @@ set_global_assignment -name QSYS_FILE "ddr_board.qsys"
 set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/dma/par/dma_controller_filelist.tcl"
 
 #--------------------
+# UDP Engine
+#--------------------
+set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/udp_offload_engine/par/udp_offload_engine_filelist.tcl"
+
+#--------------------
 # MPF VTP files
 #--------------------
 source "mpf_vtp.qsf"

@@ -2,22 +2,21 @@
 // SPDX-License-Identifier: MIT
 //
 
-//defining OpenCL kernel/cra connections
-interface opencl_kernel_control_intf #(
-    parameter CRA_RDDATA_WIDTH  = 64,
-    parameter CRA_WRDATA_WIDTH  = 64,
-    parameter CRA_ADDR_WIDTH    = 30,
-    parameter CRA_BYTE_EN_WIDTH = 8
+//defining OFS ASP kernel/cra connections
+interface kernel_control_intf #(
+    parameter CRA_DATA_WIDTH    = ofs_asp_pkg::KERNEL_CRA_DATA_WIDTH,
+    parameter CRA_ADDR_WIDTH    = ofs_asp_pkg::KERNEL_CRA_ADDR_WIDTH,
+    parameter CRA_BYTE_EN_WIDTH = ofs_asp_pkg::KERNEL_CRA_BYTEENABLE_WIDTH
 );
 
     logic kernel_reset_n;
     logic kernel_irq;
 
     logic                           kernel_cra_waitrequest;
-    logic [CRA_RDDATA_WIDTH-1:0]    kernel_cra_readdata;
+    logic [CRA_DATA_WIDTH-1:0]      kernel_cra_readdata;
     logic                           kernel_cra_readdatavalid;
     logic                           kernel_cra_burstcount;
-    logic [CRA_WRDATA_WIDTH-1:0]    kernel_cra_writedata;
+    logic [CRA_DATA_WIDTH-1:0]      kernel_cra_writedata;
     logic [CRA_ADDR_WIDTH-1:0]      kernel_cra_address;
     logic                           kernel_cra_write;
     logic                           kernel_cra_read;
@@ -43,13 +42,13 @@ interface opencl_kernel_control_intf #(
                 kernel_cra_byteenable
     );
 
-endinterface : opencl_kernel_control_intf
+endinterface : kernel_control_intf
 
 interface kernel_mem_intf #(
-    parameter ADDR_WIDTH        = dc_bsp_pkg::OPENCL_QSYS_ADDR_WIDTH,
-    parameter DATA_WIDTH        = dc_bsp_pkg::OPENCL_BSP_KERNEL_DATA_WIDTH,
-    parameter BURSTCOUNT_WIDTH  = dc_bsp_pkg::OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH,
-    parameter BYTEENABLE_WIDTH  = dc_bsp_pkg::OPENCL_BSP_KERNEL_BYTEENABLE_WIDTH
+    parameter ADDR_WIDTH        = ofs_asp_pkg::ASP_LOCALMEM_AVMM_ADDR_WIDTH,
+    parameter DATA_WIDTH        = ofs_asp_pkg::ASP_LOCALMEM_AVMM_DATA_WIDTH,
+    parameter BURSTCOUNT_WIDTH  = ofs_asp_pkg::ASP_LOCALMEM_QSYS_BURSTCNT_WIDTH,
+    parameter BYTEENABLE_WIDTH  = ofs_asp_pkg::ASP_LOCALMEM_AVMM_BYTEENABLE_WIDTH
 );
     logic                           waitrequest;
     logic [DATA_WIDTH-1:0]          readdata;

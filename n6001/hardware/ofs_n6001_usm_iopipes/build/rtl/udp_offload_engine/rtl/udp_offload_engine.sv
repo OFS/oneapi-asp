@@ -1,9 +1,9 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 //
-
+`ifdef INCLUDE_IO_PIPES
 module udp_offload_engine
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
     
@@ -12,10 +12,10 @@ import dc_bsp_pkg::*;
     input logic         kernel_resetn,
     
     // Avalon-ST interface from kernel
-    shim_avst_if.sink   udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
+    asp_avst_if.sink   udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0],
     
     // Avalon-ST interface to kernel
-    shim_avst_if.source udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0],
+    asp_avst_if.source udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0],
     
     // UDP offload engine CSR
     ofs_plat_avalon_mem_if.to_source uoe_csr_avmm
@@ -118,3 +118,4 @@ udp_oe_csr udp_oe_csr
 );
 
 endmodule : udp_offload_engine
+`endif
