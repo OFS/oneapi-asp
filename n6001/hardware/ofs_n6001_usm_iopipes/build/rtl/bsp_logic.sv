@@ -246,7 +246,7 @@ board board_inst (
 //  [2]    = (mmio64_if.byteenable == 8'hF0)
 //  [1:0]  = 2'b0
 always_comb begin
-    avmm_mmio64_address [ASP_MMIO_ADDR_WIDTH-1:3]    = mmio64_if.address;
+    avmm_mmio64_address [ASP_MMIO_QSYS_ADDR_WIDTH-1:3]    = mmio64_if.address;
     avmm_mmio64_address [2]       = (mmio64_if.byteenable == 8'hF0) ? 1'b1 : 1'b0;
     avmm_mmio64_address [1:0]     = 2'b0;
 end
