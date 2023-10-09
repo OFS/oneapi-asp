@@ -142,7 +142,7 @@ host_mem_if_vtp host_mem_if_vtp_inst (
     assign uoe_csr_avmm.clk     = clk;
     assign uoe_csr_avmm.reset_n = ~reset;
     
-    udp_offload_engine udp_offload_engine
+    udp_offload_engine udp_offload_engine_inst
     (
         //MAC interfaces
         .hssi_pipes,
