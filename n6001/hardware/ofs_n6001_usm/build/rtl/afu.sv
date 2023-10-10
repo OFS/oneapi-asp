@@ -32,12 +32,6 @@ import ofs_asp_pkg::*;
     input logic uClk_usrDiv2_reset
 );
 
-//ToDo: why is this dma_pkg here? afu.sv shouldn't care about dma parameters
-//import dma_pkg::*;
-
-
-
-
 logic reset, clk;
 assign reset = pClk_reset;
 assign clk   = pClk;
