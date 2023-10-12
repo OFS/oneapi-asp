@@ -13,7 +13,7 @@
 #  BUILD_DIR: directory used for building MMD
 #
 # Required environment variables
-#  INTELFPGAOCLSDKROOT: must be set by running init_opencl.sh script
+#  INTELFPGAOCLSDKROOT: must be set by running setvars.sh script
 #
 # Optional environment varialbes
 #  LIBOPAE_C_ROOT: path to OPAE installation
@@ -41,7 +41,7 @@ if [ -z "$LIBOPAE_C_ROOT" ]; then
 fi
 
 if [ ! -d "$INTELFPGAOCLSDKROOT" ]; then
-  echo "Error: must set INTELFPGAOCLSDKROOT using init_opencl.sh before building MMD"
+  echo "Error: must set INTELFPGAOCLSDKROOT using setvars.sh before building MMD"
   exit 1
 fi
 
