@@ -15,7 +15,7 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/../..")"
 device_name="$1"
 board_variant="$2"
 
-fpga_file="$BSP_ROOT/bringup/fpgas/$board_variant.fpga"
+fpga_file="$BSP_ROOT/bringup/binaries/$board_variant.fpga"
 aocx_file="$board_variant.aocx"
 
 if [ ! -f "$fpga_file" ]; then
