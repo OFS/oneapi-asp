@@ -16,7 +16,7 @@ set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/dma/par/dma_controlle
 #--------------------
 # UDP Engine
 #--------------------
-set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/udp_offload_engine/par/udp_offload_engine_filelist.tcl"
+#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/udp_offload_engine/par/udp_offload_engine_filelist.tcl"
 
 #--------------------
 # MPF VTP files
