@@ -30,12 +30,12 @@ module dma_top (
 
 import dma_pkg::*;
 
-opencl_shim_dma_ctrl_intf 
+dma_ctrl_intf 
     #(.DMA_DIR("H2F"),
       .SRC_ADDR_WIDTH(HOST_MEM_ADDR_WIDTH),
       .DST_ADDR_WIDTH(DEVICE_MEM_ADDR_WIDTH) )
     rd_ctrl ();
-opencl_shim_dma_ctrl_intf 
+dma_ctrl_intf 
     #(.DMA_DIR("F2H"),
       .SRC_ADDR_WIDTH(DEVICE_MEM_ADDR_WIDTH),
       .DST_ADDR_WIDTH(HOST_MEM_ADDR_WIDTH) )

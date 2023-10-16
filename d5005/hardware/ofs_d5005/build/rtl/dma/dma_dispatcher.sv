@@ -13,15 +13,15 @@ module dma_dispatcher (
     ofs_plat_avalon_mem_if.to_source mmio64_if,
     
     //dispatcher-to-controller if - host-to-FPGA (read)
-    opencl_shim_dma_ctrl_intf.disp rd_ctrl,
+    dma_ctrl_intf.disp rd_ctrl,
     
     //dispatcher-to-controller if - FPGA-to-host (write)
-    opencl_shim_dma_ctrl_intf.disp wr_ctrl
+    dma_ctrl_intf.disp wr_ctrl
 );
 
     import dma_pkg::*;
 
-    localparam reg_width = 64;
+    localparam reg_width = MMIO64_DATA_WIDTH;
     
     logic [reg_width-1:0] scratchpad_reg;
     logic [reg_width-1:0] dfh_header_data_reg;

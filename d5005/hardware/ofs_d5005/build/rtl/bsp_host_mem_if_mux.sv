@@ -16,12 +16,12 @@
 //  set to 1. 
 
 module bsp_host_mem_if_mux 
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     input clk,
     input reset,
 
-    input [BSP_NUM_INTERRUPT_LINES-1:0] bsp_irq,
+    input [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq,
     
     // Host memory (Avalon) (mux output)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
@@ -32,10 +32,10 @@ import dc_bsp_pkg::*;
     input wr_fence_flag
 );
 
-logic [BSP_NUM_INTERRUPT_LINES-1:0] bsp_irq_d;
-logic [BSP_NUM_INTERRUPT_LINES-1:0] irq_pending;
-logic [BSP_NUM_INTERRUPT_LINES-1:0] set_irq_pending;
-logic [BSP_NUM_INTERRUPT_LINES-1:0] clear_irq_pending;
+logic [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq_d;
+logic [ASP_NUM_INTERRUPT_LINES-1:0] irq_pending;
+logic [ASP_NUM_INTERRUPT_LINES-1:0] set_irq_pending;
+logic [ASP_NUM_INTERRUPT_LINES-1:0] clear_irq_pending;
 
 logic [9:0] burst_counter;
 logic load_burst_counter;
@@ -78,13 +78,13 @@ end
 //because it will take some time for sw to clear it.
 genvar i;
 generate
-    for (i=0; i<BSP_NUM_INTERRUPT_LINES; i++) begin : irq_handling
+    for (i=0; i<ASP_NUM_INTERRUPT_LINES; i++) begin : irq_handling
         
         always_ff @(posedge clk) begin
             if (rst_local)
-                bsp_irq_d[i] <= 'b0;
+                asp_irq_d[i] <= 'b0;
             else
-                bsp_irq_d[i] <= bsp_irq[i];
+                asp_irq_d[i] <= asp_irq[i];
         end
         
         always_ff @(posedge clk) begin
@@ -101,7 +101,7 @@ generate
         end
         
         //rising edge of the IRQ sets the pending flag
-        assign set_irq_pending[i] = bsp_irq[i] & ~bsp_irq_d[i];
+        assign set_irq_pending[i] = asp_irq[i] & ~asp_irq_d[i];
         
         //clear the pending flag once we've sent the IRQ data on wr_x interface
         assign clear_irq_pending[i] = send_irq_data & (pending_irq_id == i);
