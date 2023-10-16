@@ -4,9 +4,9 @@
 ## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# Scripts initialized OFS card with default aocx that ships with oneAPI-ASP. This
-# allows other OpenCL programs to access oneAPI-ASP functionality before loading
-# application specific aocx.
+# This script initializes the OFS card with a default image that ships with 
+# oneAPI-ASP. This allows other oneAPI programs to access oneAPI-ASP
+# functionality before loading an application specific image.
 ###############################################################################
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
@@ -15,14 +15,21 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/../..")"
 device_name="$1"
 board_variant="$2"
 
-aocx_file="$BSP_ROOT/bringup/aocxs/$board_variant.aocx"
-if [ ! -f "$aocx_file" ]; then
-  echo "Error: cannot find '$aocx_file' to initialize $board_variant"
+fpga_file="$BSP_ROOT/bringup/fpgas/$board_variant.fpga"
+aocx_file="$board_variant.aocx"
+
+if [ ! -f "$fpga_file" ]; then
+  echo "Error: cannot find '$fpga_file' to initialize $board_variant"
   exit 1
 fi
+
+EXTRACTION_BINARY=$(icpx --print-prog-name=clang-offload-extract)
+"$EXTRACTION_BINARY -o $aocx_file $fpga_file"
 
 "$BSP_ROOT/linux64/libexec/setup_permissions.sh"
 
 "$BSP_ROOT/linux64/libexec/program" "$device_name" "unused_param" "$aocx_file"
 return_val=$?
+
+rm $aocx_file
 exit $return_val
