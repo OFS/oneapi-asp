@@ -129,11 +129,11 @@ int scan_devices(const char *device_name) {
       o_list_stream << "\n";
       o_list_stream << std::left << std::setw(20) << dev_name << std::left
                     << std::setw(18) << "Uninitialized"
-                    << "OpenCL BSP not loaded. Must load BSP using command: \n"
+                    << "OneAPI ASP not loaded. Must load ASP using command: \n"
                     << std::left << std::setw(38) << " "
-                    << "'aocl program <device_name> <aocx_file>'\n"
+                    << "'aocl initialize <device_name> <board_variant>'\n"
                     << std::left << std::setw(38) << " "
-                    << "before running OpenCL programs using this device\n";
+                    << "before running OneAPI programs using this device\n";
     }
 
     // skip to next dev_name
@@ -259,11 +259,11 @@ int main(int argc, char *argv[]) {
 
   bsp_loaded = mmd_bsp_loaded(argv[1]);
   if (!bsp_loaded) {
-    printf("\nBSP not loaded for Programmable Accelerator Card %s\n", argv[1]);
+    printf("\nASP not loaded for Programmable Accelerator Card %s\n", argv[1]);
     printf("  * Run 'aocl diagnose' to determine device name for %s\n",
            argv[1]);
-    printf("  * Run 'aocl program <device_name> <aocx_file>' to initialize "
-           "BSP\n\n");
+    printf("  * Run 'aocl initialize <device_name> <board_variant>' to initialize "
+           "ASP\n\n");
     return DIAGNOSE_FAILED;
   }
 
