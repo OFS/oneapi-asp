@@ -8,3 +8,4 @@
 -F ./qsys_files/BBB_mpf_vtp/hw/rtl/mpf_vtp_sources.txt
 
 +incdir+./qsys_files
+./qsys_files/ofs_asp_pkg.sv

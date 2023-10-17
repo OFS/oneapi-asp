@@ -112,8 +112,8 @@ export OFS_ASP_ENV_ENABLE_ASE=1
 echo "export OFS_ASP_ENV_ENABLE_ASE=1"
 
 # shellcheck source=/dev/null
-echo "About to run init_opencl.sh"
+echo "About to run fpgavars.sh"
 echo "INTELFPGAOCLSDKROOT is $INTELFPGAOCLSDKROOT"
-source "$INTELFPGAOCLSDKROOT/init_opencl.sh"
+source "$INTELFPGAOCLSDKROOT/fpgavars.sh"
 
 echo "End of setup.sh"
