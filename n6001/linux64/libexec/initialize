@@ -4,8 +4,9 @@
 ## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# This script initializes the OFS card with a default image that ships with 
-# oneAPI-ASP. This allows other oneAPI programs to access oneAPI-ASP
+# This script initializes the OFS card with either a default image that ships 
+# with the oneAPI-ASP or with a custom image that is specified at the command
+# line. This allows other oneAPI programs to access oneAPI-ASP
 # functionality before loading an application specific image.
 ###############################################################################
 
