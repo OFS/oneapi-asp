@@ -4,7 +4,7 @@
 ## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# Compile the boadtest.aocx file and copy it to the default aocx location.
+# Compile the board_test.fpga file and copy it to the default binary location.
 # This script requies setup-bsp.py to execute successfully first to geneate
 # the required files in BSP HW folder.
 ###############################################################################
@@ -31,21 +31,21 @@ done
 
 # Check that board variant is configured
 BOARD=${BOARD:-all}
-QDB_FILES="$(find $BSP_ROOT/hardware -name d5005.qdb)"
+QDB_FILES="$(find $BSP_ROOT/hardware -name ofs_top.qdb)"
 if [ -z "$QDB_FILES" ]; then
-  echo "Error: cannot find required OFS FIM QDB files. Please set up the ASP first."
+  echo "Error: cannot find required OFS TOP QDB files. Please set up the ASP first."
   exit 1
 fi
 
 if [ "$BOARD" == "all" ] ; then
-    declare -a variant_list=("ofs_d5005" "ofs_d5005_usm")
+    declare -a variant_list=("ofs_n6001" "ofs_n6001_iopipes" "ofs_n6001_usm" "ofs_n6001_usm_iopipes")
 else
     declare -a variant_list=("$BOARD")
 fi
-echo "Generating default aocx for board variant(s): ${variant_list[@]}"
+echo "Generating default binaries for board variant(s): ${variant_list[@]}"
 
-# Using the same hello_world.cl file for the default source
-CL_FILE="bringup/source/hello_world/device/hello_world.cl"
+# Using the same board_test.file for the default source
+CPP_FILE="bringup/source/board_test/board_test.cpp"
 
 # Check that BSP flow is valid
 BSP_FLOW=${BSP_FLOW:-afu_flat}
@@ -61,22 +61,22 @@ cd "$BUILD_DIR" || exit
 for this_variant in "${variant_list[@]}"
 do
     echo "---------------------------------------------------------------"
-    echo "Starting default ${this_variant} aocx compile at: $(date)"
-    echo -e "Using OpenCL version:\n$(aoc -version)\n"
+    echo "Starting default ${this_variant} binary compile at: $(date)"
+    echo -e "Using oneAPI compiler version:\n$(icpx --version)\n"
     echo -e "Using Quartus version:\n$(quartus_sh --version)"
     echo "---------------------------------------------------------------"
-    this_cmd="aoc -board-package="$BSP_ROOT" -no-env-check -bsp-flow="$BSP_FLOW" -board="$this_variant" -v -o "$this_variant" "$BSP_ROOT/$CL_FILE""
+    this_cmd="icpx -fsycl -fintelfpga -Xshardware -Xsboard-package="$BSP_ROOT" -Xstarget="$this_variant" -Xsbsp-flow="$BSP_FLOW" -Xsno-interleaving=default "$BSP_ROOT/$CPP_FILE" -o "$this_variant".fpga"
     #display the build cmd we'll run
     echo "Running this command: ${this_cmd}"
     #run the command
     $this_cmd
-    echo "Finished aocx compile at: $(date)"
+    echo "Finished binary compile at: $(date)"
     
-    if [ -f "$BUILD_DIR/${this_variant}.aocx" ]; then
-        mkdir -p "$BSP_ROOT/bringup/aocxs"
-        cp "$BUILD_DIR/${this_variant}.aocx" "$BSP_ROOT/bringup/aocxs/${this_variant}.aocx"
+    if [ -f "$BUILD_DIR/${this_variant}.fpga" ]; then
+        mkdir -p "$BSP_ROOT/bringup/binaries"
+        cp "$BUILD_DIR/${this_variant}.fpga" "$BSP_ROOT/bringup/binaries/${this_variant}.fpga"
     else
-        echo "Error failed to generate default aocx"
+        echo "Error failed to generate default binary"
         exit 1
     fi
 done
