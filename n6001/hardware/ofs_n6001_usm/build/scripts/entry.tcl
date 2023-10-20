@@ -1,5 +1,11 @@
 # Copyright 2022 Intel Corporation
 # SPDX-License-Identifier: MIT
+set script_path [ file dirname [ file normalize [ info script ] ] ]
+
+#The path to the syn_top directory from the FIM-build was written to 
+#the syn_top_relpath.tcl file during the execution of setup-bsp.py.
+#We use it here to find the location to do the Quartus build.
+source $script_path/syn_top_relpath.tcl
 
 #Full compiles are not supported on Windows
 switch $tcl_platform(platform) {
@@ -15,9 +21,8 @@ switch $tcl_platform(platform) {
       set revision_name import
     }
     post_message "Compiling revision $revision_name"
-    set FIM_BOARD_PATH [glob  -directory fim_platform/build/syn/board/ -type d *]
-    post_message "FIM_BOARD_PATH is $FIM_BOARD_PATH"
-    if {[catch {qexec "bash $FIM_BOARD_PATH/syn_top/scripts/run.sh $revision_name"} result]} {
+    post_message "SYN_TOP_RELPATH is $SYN_TOP_RELPATH"
+    if {[catch {qexec "bash $SYN_TOP_RELPATH/scripts/run.sh $revision_name"} result]} {
         post_message -type error "OneAPI ASP build failed. Please see quartus_sh_compile.log for more information."
     }
   }
