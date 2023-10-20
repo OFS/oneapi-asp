@@ -43,7 +43,7 @@ echo "Running ASE for board variant: $BOARD, device: $OPTARG"
 if [ -f "$DESIGN_SRC" ]; then
     echo "Running ASE with design: $DESIGN_SRC"
     echo "aoc command is next"
-    aoc -v -no-env-check -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
+    aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
 elif [ -d "$DESIGN_SRC" ]; then
     echo "Running ASE with oneAPI design: $DESIGN_SRC"
     echo "pwd is  $PWD"
@@ -51,8 +51,7 @@ elif [ -d "$DESIGN_SRC" ]; then
     echo "pwd is $PWD"
     cd ${BOARD}
     echo "pwd is $PWD, cmake is next"
-    #cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DDEVICE_FLAG=${DEVICE} -DIS_BSP=1 -DUSER_HARDWARE_FLAGS="-Xsno-env-check"
-    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DIS_BSP=1 -DUSER_HARDWARE_FLAGS="-Xsno-env-check"
+    cmake "$DESIGN_SRC" -DFPGA_DEVICE=${OFS_ASP_ROOT}:${BOARD} -DIS_BSP=1
     echo "after cmake"
     make fpga
     echo "make fpga is done; break out the aocx file"
