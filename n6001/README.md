@@ -41,7 +41,7 @@ kernel system.
 * `ofs_n6001_iopipes`:  DMA-based ASP that supports local memory, host memory, and HSSI/IO Pipes interfaces for the 
 kernel system.
 
-* `ofs_n6001 _usm_iopipes`:  ASP that supports shared virtual memory between host and device. This 
+* `ofs_n6001_usm_iopipes`:  ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM iopipes variant with with the addition of the USM path between 
 the kernel-system and the host.
 
