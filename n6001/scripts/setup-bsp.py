@@ -220,6 +220,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     rm_glob(os.path.join(bsp_dir, PR_AFU_QPF_FILENAME))
     OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QPF_FILENAME + " ."
     run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
+    
+    print("\nsetup-bsp.py completed successfully for variant %s\n" % bsp)
 
 
 # Read environment variables required for script operations

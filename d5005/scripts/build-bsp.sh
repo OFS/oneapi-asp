@@ -160,4 +160,6 @@ if [ -n "$failed_bsps" ]; then
   # shellcheck disable=SC2086
   printf '    %s\n' $failed_bsps
   exit 1
+else
+  printf '\n\nbuild-bsp.sh (and sub-scripts) completed successfully\n\n'
 fi
