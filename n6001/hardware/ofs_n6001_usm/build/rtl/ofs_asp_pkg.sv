@@ -1,42 +1,47 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
-package dc_bsp_pkg;
+package ofs_asp_pkg;
 
-    //Each memory bank is 4GB. 512b/(8b/B)*(26'1)=4GB.
-    parameter OPENCL_DDR_ADDR_WIDTH = 26;
-    // SVM
-    parameter OPENCL_MEMORY_ADDR_WIDTH = 42;
-    //OpenCL can only access on a per-word basis. The data bus
-    //  to the EMIF is 512 bits (64 bytes), so we need to
-    //  zero-out the 6 lsbs.
-    parameter OPENCL_MEMORY_BYTE_OFFSET = 6;
-    //Add the EMIF address width to the byte-offset width to get the
-    //  address size for the QSYS components.
-    parameter OPENCL_QSYS_ADDR_WIDTH = OPENCL_DDR_ADDR_WIDTH + OPENCL_MEMORY_BYTE_OFFSET;
+    parameter BITS_PER_BYTE = 8;
 
-    // Offset for SVM
-    parameter OPENCL_SVM_QSYS_ADDR_WIDTH = OPENCL_MEMORY_ADDR_WIDTH + OPENCL_MEMORY_BYTE_OFFSET;
-
-    parameter OPENCL_BSP_KERNEL_SVM_DATA_WIDTH = 512;
-    parameter OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH = 5;
-    parameter OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX = 16;
-    parameter OPENCL_BSP_KERNEL_SVM_BYTEENABLE_WIDTH = 64;
-
-    parameter OPENCL_BSP_KERNEL_DATA_WIDTH = 512;
-    parameter OPENCL_BSP_KERNEL_BURSTCOUNT_WIDTH = 5;
-    parameter OPENCL_BSP_KERNEL_BYTEENABLE_WIDTH = 64;
-    parameter BSP_NUM_LOCAL_MEM_BANKS = 4;
-    parameter BSP_MAX_AVAIL_PLATFORM_LOCAL_MEM_BANKS = 4;
-
-    parameter OPENCL_BSP_KERNEL_CRA_DATA_WIDTH = 64;
-    parameter OPENCL_BSP_KERNEL_CRA_ADDR_WIDTH = 30;
-    parameter OPENCL_BSP_KERNEL_CRA_BURSTCOUNT_WIDTH = 5;
+    parameter HOSTMEM_DATA_WIDTH = ofs_plat_host_chan_pkg::DATA_WIDTH;
     
-    //width of ASP MMIO AVMM address as seen by board.qsys
-    parameter MMIO64_AVMM_ADDR_WIDTH = 18;
+    parameter ASP_MMIO_DATA_WIDTH = ofs_plat_host_chan_pkg::MMIO_DATA_WIDTH;
+    parameter ASP_MMIO_ADDR_WIDTH = ofs_plat_host_chan_pkg::MMIO_ADDR_WIDTH_BYTES;
+    parameter ASP_MMIO_QSYS_ADDR_WIDTH = 18;
+    
+    parameter ASP_LOCALMEM_NUM_CHANNELS     = local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS;
+    parameter ASP_LOCALMEM_AVMM_DATA_WIDTH  = local_mem_cfg_pkg::LOCAL_MEM_DATA_WIDTH;
+    parameter ASP_LOCALMEM_AVMM_ADDR_WIDTH  = local_mem_cfg_pkg::LOCAL_MEM_BYTE_ADDR_WIDTH;
+    parameter ASP_LOCALMEM_AVMM_BURSTCNT_WIDTH = local_mem_cfg_pkg::LOCAL_MEM_BURST_CNT_WIDTH;
+    parameter ASP_LOCALMEM_AVMM_BYTEENABLE_WIDTH = ASP_LOCALMEM_AVMM_DATA_WIDTH/8;
+    
+    //some parameters for QSYS/kernel-system
+    parameter ASP_LOCALMEM_QSYS_BURSTCNT_WIDTH = 5; //burstcount limit of 16
+
+    //The kernel-system can only access on a per-word basis. The data bus
+    //  to the EMIF is ASP_LOCALMEM_AVMM_DATA_WIDTH bits. Use clog2() to figure out
+    //  how many lsbs to zero-out or shift.
+    parameter KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET = $clog2(HOSTMEM_DATA_WIDTH/BITS_PER_BYTE);
+    
+    parameter KERNELSYSTEM_LOCALMEM_ADDR_WIDTH = ASP_LOCALMEM_AVMM_ADDR_WIDTH-KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET;
+    
+    // Host Memory
+    parameter HOSTMEM_WORD_ADDR_WIDTH = ofs_plat_host_chan_pkg::ADDR_WIDTH_LINES;
+    parameter HOSTMEM_BYTE_ADDR_WIDTH = ofs_plat_host_chan_pkg::ADDR_WIDTH_BYTES;
+
+    // Parameters for USM
+    parameter USM_AVMM_ADDR_WIDTH = HOSTMEM_WORD_ADDR_WIDTH + KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET;
+    parameter USM_AVMM_DATA_WIDTH = HOSTMEM_DATA_WIDTH;
+    parameter USM_AVMM_BURSTCOUNT_WIDTH = 5;
+    parameter USM_BURSTCOUNT_MAX = 16;
+
+    parameter KERNEL_CRA_DATA_WIDTH = ASP_MMIO_DATA_WIDTH;
+    parameter KERNEL_CRA_ADDR_WIDTH = 30;
+    parameter KERNEL_CRA_BYTEENABLE_WIDTH = KERNEL_CRA_DATA_WIDTH/8;
 
     //Some parameters for the kernel-wrapper's AVMM pipeline bridges
     // memory pipelines
@@ -54,16 +59,13 @@ package dc_bsp_pkg;
     parameter KERNELWRAPPER_SVM_PIPELINE_STAGES_CMD    = 1;
     //this wait-req needs to be reflected in both the board_spc.xml and ccb (cross-to-kernel) settings
     parameter KERNELWRAPPER_SVM_PIPELINE_DISABLEWAITREQBUFFERING = 1;
-
-    //Avalon Streaming data width - I/O Pipe connection to kernel-system
-    parameter SHIM_AVST_DATA_WIDTH = 64;
     
     //Interrupt parameters
-    parameter BSP_NUM_INTERRUPT_LINES = 4;
-    parameter BSP_AVMM_NUM_IRQ_USED = 3; //DMA_0, kernel, DMA_1
-    parameter BSP_DMA_0_IRQ_BIT    = 0;
-    parameter BSP_KERNEL_IRQ_BIT   = 1;
-    parameter BSP_DMA_1_IRQ_BIT    = 2;
+    parameter ASP_NUM_INTERRUPT_LINES = 4;
+    parameter ASP_NUM_IRQ_USED     = 3; //DMA_0, kernel, DMA_1
+    parameter ASP_DMA_0_IRQ_BIT    = 0;
+    parameter ASP_KERNEL_IRQ_BIT   = 1;
+    parameter ASP_DMA_1_IRQ_BIT    = 2;
     
     // parameters to differentiate between DMA-only and DMA+USM BSPs
     `ifdef INCLUDE_USM_SUPPORT
@@ -99,8 +101,9 @@ package dc_bsp_pkg;
     parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
     parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
     
-    
     //number of IO Channels/Pipes enabled in the ASP.
     parameter IO_PIPES_NUM_CHAN = 5'h00;
+    //Avalon Streaming data width - I/O Pipe connection to kernel-system
+    parameter ASP_ETH_PKT_DATA_WIDTH = ofs_fim_eth_if_pkg::ETH_PACKET_WIDTH;
     
-endpackage : dc_bsp_pkg
+endpackage : ofs_asp_pkg

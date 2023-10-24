@@ -1,32 +1,29 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-`ifndef opencl_bsp_vh
+`ifndef ofs_asp_vh
 
-    `define opencl_bsp_vh
+    `define ofs_asp_vh
 
     `define PAC_BSP_ENABLE_DDR4_BANK1 1
     `define PAC_BSP_ENABLE_DDR4_BANK2 1
     `define PAC_BSP_ENABLE_DDR4_BANK3 1
     `define PAC_BSP_ENABLE_DDR4_BANK4 1
-
-    //Use the MPF-VTP functionality in the host-memory DMA datapath.
-    `define USE_MPF_VTP 1
     
     //enable USM-support
-    //`define INCLUDE_USM_SUPPORT 1
-    //`define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
+    `define INCLUDE_USM_SUPPORT 1
+    `define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
 
     //enable UDP offload engine and I/O channels
-    `define INCLUDE_UDP_OFFLOAD_ENGINE 1
-    `define ASP_ENABLE_IOPIPE0 1
-    `define ASP_ENABLE_IOPIPE1 1
-    `define ASP_ENABLE_IOPIPE2 1
-    `define ASP_ENABLE_IOPIPE3 1
-    `define ASP_ENABLE_IOPIPE4 1
-    `define ASP_ENABLE_IOPIPE5 1
-    `define ASP_ENABLE_IOPIPE6 1
-    `define ASP_ENABLE_IOPIPE7 1
+    //`define INCLUDE_IO_PIPES 1
+    //`define ASP_ENABLE_IOPIPE0 1
+    //`define ASP_ENABLE_IOPIPE1 1
+    //`define ASP_ENABLE_IOPIPE2 1
+    //`define ASP_ENABLE_IOPIPE3 1
+    //`define ASP_ENABLE_IOPIPE4 1
+    //`define ASP_ENABLE_IOPIPE5 1
+    //`define ASP_ENABLE_IOPIPE6 1
+    //`define ASP_ENABLE_IOPIPE7 1
     //`define ASP_ENABLE_IOPIPE8 1
     //`define ASP_ENABLE_IOPIPE9 1
     //`define ASP_ENABLE_IOPIPE10 1

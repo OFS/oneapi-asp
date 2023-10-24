@@ -3,7 +3,7 @@
 //
 
 //DMA controller instance signals from Dispatcher
-interface opencl_shim_dma_ctrl_intf #(
+interface dma_ctrl_intf #(
     parameter SRC_ADDR_WIDTH        = 48,
     parameter DST_ADDR_WIDTH        = 48,
     parameter XFER_LENGTH_WIDTH     = 40,
@@ -11,7 +11,7 @@ interface opencl_shim_dma_ctrl_intf #(
     parameter DATABUF_USEDW_WIDTH   = 16,
     parameter DMA_DIR               = "NULL"
 );
-    localparam REGISTER_WIDTH = 64;
+    localparam REGISTER_WIDTH = dma_pkg::MMIO64_DATA_WIDTH;
     localparam CMDQ_DATA_WIDTH = SRC_ADDR_WIDTH + DST_ADDR_WIDTH + XFER_LENGTH_WIDTH;
 
     logic sclr;
@@ -23,7 +23,7 @@ interface opencl_shim_dma_ctrl_intf #(
     logic clear_irq;
     logic [REGISTER_WIDTH-1:0] host_mem_magicnumber_addr;
     logic f2h_wr_fence_flag;
-    logic [63:0] src_readdatavalid_counter, src_burst_cnt_counter, dst_write_counter;
+    logic [REGISTER_WIDTH-1:0] src_readdatavalid_counter, src_burst_cnt_counter, dst_write_counter;
     logic [15:0] magic_number_counter;
     
     //DMA command-queue status signals
@@ -79,7 +79,7 @@ interface opencl_shim_dma_ctrl_intf #(
                 magic_number_counter
     );
 
-endinterface : opencl_shim_dma_ctrl_intf
+endinterface : dma_ctrl_intf
 
 
 //an interface to split the word and byte bits

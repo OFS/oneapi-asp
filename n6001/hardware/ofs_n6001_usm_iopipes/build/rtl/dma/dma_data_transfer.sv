@@ -20,16 +20,16 @@ This module manages the data transfer of a single DMA channel - source to destin
 module dma_data_transfer #(
     parameter SRC_RD_BURSTCOUNT_MAX     = 'h4,
     parameter DST_WR_BURSTCOUNT_MAX     = 'h4,
-    parameter SRC_ADDR_WIDTH            = 48,
-    parameter DST_ADDR_WIDTH            = 48,
-    parameter XFER_LENGTH_WIDTH         = 40,
+    parameter SRC_ADDR_WIDTH            = 0,
+    parameter DST_ADDR_WIDTH            = 0,
+    parameter XFER_LENGTH_WIDTH         = 0,
     parameter DIR_FPGA_TO_HOST          = 1'b1
 ) (
     input clk,
     input reset,
 
     //CSR interface to Dispatcher
-    opencl_shim_dma_ctrl_intf.ctrl disp_ctrl_if,
+    dma_ctrl_intf.ctrl disp_ctrl_if,
     
     //data-source AVMM
     ofs_plat_avalon_mem_if.to_sink src_avmm,
@@ -60,7 +60,7 @@ module dma_data_transfer #(
     localparam WORD_COUNTER_SIZE = XFER_LENGTH_WIDTH-HOSTMEM_DATA_BYTES_PER_WORD_BITSHIFT;
     
     //pipeline stages for the src/dst/len information
-    opencl_shim_dma_ctrl_intf 
+    dma_ctrl_intf 
         #(.SRC_ADDR_WIDTH(SRC_ADDR_WIDTH),
           .DST_ADDR_WIDTH(DST_ADDR_WIDTH) )
           cmdq_dout(), cmdq_dout_0();
