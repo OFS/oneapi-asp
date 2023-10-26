@@ -379,9 +379,9 @@ int main(int argc, char *argv[]) {
   printf("Throughput = %.2f MB/s\n", (read_topspeed + write_topspeed) / 2);
 
   if (result)
-    printf("\n DIAGNOSTIC_PASSED\n");
+    printf("\nDIAGNOSTIC_PASSED\n");
   else
-    printf("\n DIAGNOSTIC_FAILED\n");
+    printf("\nDIAGNOSTIC_FAILED\n");
 
   acl_util_aligned_free(buf);
   acl_util_aligned_free(output);
