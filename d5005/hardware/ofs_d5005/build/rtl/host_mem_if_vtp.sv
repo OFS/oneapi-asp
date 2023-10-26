@@ -3,7 +3,7 @@
 //
 
 `include "ofs_plat_if.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 module host_mem_if_vtp
   (
@@ -21,7 +21,7 @@ module host_mem_if_vtp
     ofs_plat_avalon_mem_if.to_sink mmio64_if_shim
 );
 
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 
 // The width of the Avalon-MM user field is narrower on the AFU side
 // of VTP, since VTP uses a bit to flag VTP page table traffic.

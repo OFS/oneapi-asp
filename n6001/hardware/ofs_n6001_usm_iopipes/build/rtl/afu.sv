@@ -3,11 +3,11 @@
 //
 
 `include "ofs_plat_if.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 
 module afu
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
   (
     // Host memory (Avalon)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
@@ -16,9 +16,9 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS],
+    ofs_plat_avalon_mem_if.to_slave local_mem[ASP_LOCALMEM_NUM_CHANNELS],
     
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         // Ethernet
         ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
     `endif
@@ -32,15 +32,13 @@ import dc_bsp_pkg::*;
     input logic uClk_usrDiv2_reset
 );
 
-import dma_pkg::*;
-
 logic reset, clk;
 assign reset = pClk_reset;
 assign clk   = pClk;
 
 //local wires to connect between bsp_logic and kernel_wrapper - kernel control and memory-interface
-opencl_kernel_control_intf opencl_kernel_control();
-kernel_mem_intf kernel_mem[BSP_NUM_LOCAL_MEM_BANKS]();
+kernel_control_intf kernel_control();
+kernel_mem_intf kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]();
 
 // The width of the Avalon-MM user field is narrower on the AFU side
 // of VTP, since VTP uses a bit to flag VTP page table traffic.
@@ -85,9 +83,9 @@ assign mmio64_if_shim.instance_number = mmio64_if.instance_number;
     //cross kernel_svm from kernel-clock domain into host-clock domain
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (USM_AVMM_ADDR_WIDTH),
+        .DATA_WIDTH (USM_AVMM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (USM_AVMM_BURSTCOUNT_WIDTH)
     ) kernel_svm_kclk ();
     assign kernel_svm_kclk.clk = uClk_usrDiv2;
     assign kernel_svm_kclk.reset_n = ~uClk_usrDiv2_reset;
@@ -95,9 +93,9 @@ assign mmio64_if_shim.instance_number = mmio64_if.instance_number;
     //shared Avalon-MM rd/wr interface from the kernel-system
     ofs_plat_avalon_mem_if
     # (
-        .ADDR_WIDTH (dc_bsp_pkg::OPENCL_SVM_QSYS_ADDR_WIDTH),
-        .DATA_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_DATA_WIDTH),
-        .BURST_CNT_WIDTH (dc_bsp_pkg::OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH)
+        .ADDR_WIDTH (USM_AVMM_ADDR_WIDTH),
+        .DATA_WIDTH (USM_AVMM_DATA_WIDTH),
+        .BURST_CNT_WIDTH (USM_AVMM_BURSTCOUNT_WIDTH)
     ) kernel_svm ();
     assign kernel_svm.clk = host_mem_if.clk;
     assign kernel_svm.reset_n = host_mem_if.reset_n;
@@ -128,24 +126,24 @@ host_mem_if_vtp host_mem_if_vtp_inst (
     .mmio64_if_shim
 );
 
-`ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+`ifdef INCLUDE_IO_PIPES
 //UDP/HSSI offload engine
-    shim_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
-    shim_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    asp_avst_if udp_avst_from_kernel[IO_PIPES_NUM_CHAN-1:0]();
+    asp_avst_if udp_avst_to_kernel[IO_PIPES_NUM_CHAN-1:0]();
     ofs_plat_avalon_mem_if #(
         `OFS_PLAT_AVALON_MEM_IF_REPLICATE_PARAMS(mmio64_if)
     ) uoe_csr_avmm();
     assign uoe_csr_avmm.clk     = clk;
     assign uoe_csr_avmm.reset_n = ~reset;
     
-    udp_offload_engine udp_offload_engine
+    udp_offload_engine udp_offload_engine_inst
     (
         //MAC interfaces
         .hssi_pipes,
     
         // kernel clock and reset
         .kernel_clk(uClk_usrDiv2),
-        .kernel_resetn(opencl_kernel_control.kernel_reset_n),
+        .kernel_resetn(kernel_control.kernel_reset_n),
     
         // from kernel
         .udp_avst_from_kernel,
@@ -166,12 +164,12 @@ bsp_logic bsp_logic_inst (
     .kernel_clk_reset       ( uClk_usrDiv2_reset ),
     .host_mem_if            ( host_mem_va_if_dma ),
     .mmio64_if              ( mmio64_if_shim ),
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         .uoe_csr_avmm,
     `endif
     .local_mem,
     
-    .opencl_kernel_control,
+    .kernel_control,
     .kernel_mem
 );
 
@@ -180,13 +178,13 @@ kernel_wrapper kernel_wrapper_inst (
     .clk2x      (uClk_usr),
     .reset_n    (!uClk_usrDiv2_reset),
     
-    .opencl_kernel_control,
+    .kernel_control,
     .kernel_mem
     `ifdef INCLUDE_USM_SUPPORT
         , .kernel_svm (kernel_svm_kclk)
     `endif
 
-    `ifdef INCLUDE_UDP_OFFLOAD_ENGINE
+    `ifdef INCLUDE_IO_PIPES
         ,.udp_avst_from_kernel,
          .udp_avst_to_kernel
     `endif

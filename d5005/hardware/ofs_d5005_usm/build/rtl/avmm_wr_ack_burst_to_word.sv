@@ -9,7 +9,7 @@
 `include "ofs_plat_if.vh"
 
 module avmm_wr_ack_burst_to_word
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 import local_mem_cfg_pkg::*;
 #(
     parameter AVMM_ADDR_WIDTH=LOCAL_MEM_ADDR_WIDTH,

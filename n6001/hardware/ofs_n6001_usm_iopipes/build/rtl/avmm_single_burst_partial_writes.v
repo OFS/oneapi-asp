@@ -4,7 +4,7 @@
 
 `include "platform_if.vh"
 `include "fpga_defines.vh"
-`include "opencl_bsp.vh"
+`include "ofs_asp.vh"
 
 // avmm_single_burst_partial_writes
 // Split an AVMM interface's partial writes into a single partial-write and 
@@ -12,7 +12,7 @@
 //  (start and/or end), as well as initial bursts of 1.
 
 module avmm_single_burst_partial_writes  
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
     input       clk,
     input       reset_n,
@@ -21,36 +21,36 @@ import dc_bsp_pkg::*;
     ofs_plat_avalon_mem_if.to_sink to_avmm_sink
 );
 
-localparam AVMM_BUFFER_WIDTH =  OPENCL_SVM_QSYS_ADDR_WIDTH +
-                                OPENCL_BSP_KERNEL_SVM_DATA_WIDTH +
-                                OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH +
+localparam AVMM_BUFFER_WIDTH =  USM_AVMM_ADDR_WIDTH +
+                                USM_AVMM_DATA_WIDTH +
+                                USM_AVMM_BURSTCOUNT_WIDTH +
                                 1 + //write req
                                 1 + //read req
-                                (OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8); //byteenable size
+                                (USM_AVMM_DATA_WIDTH/8); //byteenable size
 localparam AVMM_BUFFER_DEPTH = 1024;
 localparam AVMM_BUFFER_SKID_SPACE = 64;
 localparam AVMM_BUFFER_ALMFULL_VALUE = AVMM_BUFFER_DEPTH - AVMM_BUFFER_SKID_SPACE;
 
 typedef struct packed {
     logic read, write;
-    logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] address;
-    logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
-    logic [(OPENCL_BSP_KERNEL_SVM_DATA_WIDTH/8)-1:0] byteenable;
-    logic [OPENCL_BSP_KERNEL_SVM_DATA_WIDTH-1:0] writedata;
+    logic [USM_AVMM_ADDR_WIDTH-1:0] address;
+    logic [USM_AVMM_BURSTCOUNT_WIDTH-1:0] burstcount;
+    logic [(USM_AVMM_DATA_WIDTH/8)-1:0] byteenable;
+    logic [USM_AVMM_DATA_WIDTH-1:0] writedata;
 } avmm_cmd_t;
 avmm_cmd_t avmm_cmd_buf_in, avmm_cmd_buf_out;
 
 typedef struct packed {
-    logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] burstcount;
+    logic [USM_AVMM_BURSTCOUNT_WIDTH-1:0] burstcount;
     logic valid;
     logic read;
     logic write;
 } avmm_burstcnt_t;
-localparam USM_BCNT_DWIDTH = OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH + 1 + 1 + 1;
+localparam USM_BCNT_DWIDTH = USM_AVMM_BURSTCOUNT_WIDTH + 1 + 1 + 1;
 avmm_burstcnt_t [1:0] burstcnt_data;
 avmm_burstcnt_t usm_burstcnt_dout;
-logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] current_bcnt;
-logic [OPENCL_SVM_QSYS_ADDR_WIDTH-1:0] prev_address_plus1;
+logic [USM_AVMM_BURSTCOUNT_WIDTH-1:0] current_bcnt;
+logic [USM_AVMM_ADDR_WIDTH-1:0] prev_address_plus1;
 localparam BCNT_WDOG_WIDTH = 10;
 logic [BCNT_WDOG_WIDTH-1:0] burstcnt_wdog;
 logic burstcnt_buffer_full, burstcnt_buffer_almfull, burstcnt_buffer_empty;
@@ -60,7 +60,7 @@ typedef enum {  ST_SET_BCNT,
                 XXX } usm_bcnt_st_e;
 usm_bcnt_st_e usm_bcnt_cs, usm_bcnt_ns;
 logic usm_bcnt_st_is_setbcnt, usm_bcnt_st_is_do_wr_burst;
-logic [OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_WIDTH-1:0] usm_avmm_fifo_rd_remaining;
+logic [USM_AVMM_BURSTCOUNT_WIDTH-1:0] usm_avmm_fifo_rd_remaining;
 logic usm_avmm_fifo_rd, usm_bcnt_fifo_rd;
 logic [7:0] svm_addr_cnt;
 
@@ -224,7 +224,7 @@ always_ff @(posedge clk) begin
                     burstcnt_data[0].read <= 1'b0;
                     current_bcnt <= 'h1;
                 //not a partial write and not a full burst, so keep adding to burstcount
-                end else if (current_bcnt < OPENCL_BSP_KERNEL_SVM_BURSTCOUNT_MAX) begin
+                end else if (current_bcnt < USM_BURSTCOUNT_MAX) begin
                     current_bcnt <= current_bcnt + 'h1;
                 //full burst, so send burst and start again
                 end else begin

@@ -14,13 +14,13 @@ module simple_tx
   ofs_fim_hssi_ss_tx_axis_if.client   eth_tx_axis,
 
   // from kernel
-  shim_avst_if.sink   udp_avst_from_kernel,
+  asp_avst_if.sink   udp_avst_from_kernel,
 
   // from RX of UDP offload engine for ARP response
   input logic         arp_trigger
 );
 
-  import dc_bsp_pkg::*;
+  import ofs_asp_pkg::*;
   import udp_oe_pkg::*;
   
   // The packets should be as follows:
@@ -65,7 +65,7 @@ module simple_tx
   logic [15:0] payload_counter;
   
   // clock crosser for kernel IO pipe signals (from kernel clock to Ethernet MAC TX clock)
-  shim_avst_if dcff_avst_ethclk();
+  asp_avst_if dcff_avst_ethclk();
 
   logic        wr_full,wr_almost_full;
   logic        rd_empty;  

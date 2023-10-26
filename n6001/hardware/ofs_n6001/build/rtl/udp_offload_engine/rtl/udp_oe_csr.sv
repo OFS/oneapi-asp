@@ -3,7 +3,7 @@
 //
 
 module udp_oe_csr
-import dc_bsp_pkg::*;
+import ofs_asp_pkg::*;
 (
   ofs_plat_avalon_mem_if.to_source uoe_csr_avmm,
   

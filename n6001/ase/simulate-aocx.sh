@@ -100,7 +100,7 @@ cp -prf vlog_files_base.list vlog_files.list
 
 # Put package files first
 {
-  (find ./qsys_files | grep -v ./qsys_files/BBB_ | grep _pkg.sv)
+  (find ./qsys_files | grep -v ./qsys_files/BBB_ | grep _pkg.sv | grep -v ofs_asp_pkg.sv)
   (find ./qsys_files | grep -v ./qsys_files/BBB_ | grep _interfaces.sv)
   (find ./qsys_files | grep -v ./qsys_files/BBB_ | grep -v _pkg.sv | grep -v _interfaces.sv) 
 } >> ./vlog_files.list
