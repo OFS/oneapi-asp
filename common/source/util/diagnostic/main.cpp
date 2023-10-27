@@ -136,6 +136,23 @@ int scan_devices(const char *device_name) {
                     << "before running OneAPI programs using this device\n";
     }
 
+    if(handle == -1) {
+      if(!first_row_printed) {
+        o_list_stream << "\n";
+        o_list_stream << std::left << std::setw(20) << "Physical Dev Name"
+                    << std::left << std::setw(18) << "Status"
+                    << "Information\n";
+        first_row_printed = 1;
+      } 
+
+      o_list_stream << "\n";
+      o_list_stream << std::left << std::setw(20) << dev_name << std::left
+                    << std::setw(18) << "Uninitialized"
+                    << "PR slot function not configured\n"
+                    << std::left << std::setw(38) << " "
+                    << "Need to follow instructions to bind vfio-pci driver to PR slot function\n";
+    }
+
     // skip to next dev_name
     if (handle < 0) {
       continue;
@@ -218,9 +235,9 @@ int main(int argc, char *argv[]) {
   // preliminary information about all or just the one specified
   if ((!probe && device_name == NULL) || (probe && device_name != NULL)) {
     if (scan_devices(device_name) == 0) {
-      printf("\nDIAGNOSTIC_PASSED\n");
+      printf("\nBSP DIAGNOSTIC_PASSED\n");
     } else {
-      printf("\nDIAGNOSTIC_FAILED\n");
+      printf("\nBSP DIAGNOSTIC_FAILED\n");
       return DIAGNOSE_FAILED;
     }
     return 0;
@@ -362,9 +379,9 @@ int main(int argc, char *argv[]) {
   printf("Throughput = %.2f MB/s\n", (read_topspeed + write_topspeed) / 2);
 
   if (result)
-    printf("\nDIAGNOSTIC_PASSED\n");
+    printf("\nBSP DIAGNOSTIC_PASSED\n");
   else
-    printf("\nDIAGNOSTIC_FAILED\n");
+    printf("\nBSP DIAGNOSTIC_FAILED\n");
 
   acl_util_aligned_free(buf);
   acl_util_aligned_free(output);
