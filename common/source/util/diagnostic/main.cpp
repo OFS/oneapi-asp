@@ -235,9 +235,9 @@ int main(int argc, char *argv[]) {
   // preliminary information about all or just the one specified
   if ((!probe && device_name == NULL) || (probe && device_name != NULL)) {
     if (scan_devices(device_name) == 0) {
-      printf("\nDIAGNOSTIC_PASSED\n");
+      printf("\nBSP DIAGNOSTIC_PASSED\n");
     } else {
-      printf("\nDIAGNOSTIC_FAILED\n");
+      printf("\nBSP DIAGNOSTIC_FAILED\n");
       return DIAGNOSE_FAILED;
     }
     return 0;
@@ -379,9 +379,9 @@ int main(int argc, char *argv[]) {
   printf("Throughput = %.2f MB/s\n", (read_topspeed + write_topspeed) / 2);
 
   if (result)
-    printf("\nDIAGNOSTIC_PASSED\n");
+    printf("\nBSP DIAGNOSTIC_PASSED\n");
   else
-    printf("\nDIAGNOSTIC_FAILED\n");
+    printf("\nBSP DIAGNOSTIC_FAILED\n");
 
   acl_util_aligned_free(buf);
   acl_util_aligned_free(output);
