@@ -4,7 +4,7 @@
 ## SPDX-License-Identifier: MIT
 
 ###############################################################################
-# Compile the board_test.fpga file and copy it to the default binary location.
+# Compile the simple-add-buffers.fpga file and copy it to the default binary location.
 # This script requies setup-bsp.py to execute successfully first to geneate
 # the required files in BSP HW folder.
 ###############################################################################
@@ -44,8 +44,8 @@ else
 fi
 echo "Generating default binaries for board variant(s): ${variant_list[@]}"
 
-# Using the same board_test.file for the default source
-CPP_FILE="bringup/source/board_test/board_test.cpp"
+# Using the simple-add-buffers.cpp design for the default source
+CPP_FILE="bringup/source/simple-add-buffers/simple-add-buffers.cpp"
 
 # Check that BSP flow is valid
 BSP_FLOW=${BSP_FLOW:-afu_flat}
