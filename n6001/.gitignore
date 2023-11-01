@@ -19,6 +19,11 @@ linux64/include
 linux64/libexec/diagnose
 linux64/libexec/program
 
+# FIM build files
+pr_build_template
+hardware/*/blue_bits
+hardware/*/fim_platform
+
 # Hardware files that are copied from FIM build
 hardware/*/afu_opencl_kernel.qsf
 hardware/*/bsp_dir_filelist.txt
