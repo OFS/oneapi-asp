@@ -23,8 +23,6 @@ linux64/libexec/program
 pr_build_template
 hardware/*/blue_bits
 hardware/*/fim_platform
-
-# Hardware files that are copied from FIM build
 hardware/*/afu_opencl_kernel.qsf
 hardware/*/bsp_dir_filelist.txt
 hardware/*/build/afu_base.qsf
@@ -52,6 +50,8 @@ hardware/*/build/scripts/report_timing.tcl
 hardware/*/build/scripts/user_clock_defs.tcl
 hardware/*/build/scripts/user_clock_freqs_compute.tcl
 hardware/*/build/scripts/user_clocks.sdc
+hardware/*/build/scripts/syn_top_relpath.tcl
+hardware/*/build/ofs_pr_afu.qsf
 hardware/*/build/tools/
 hardware/*/build/src/
 hardware/*/build/syn/
