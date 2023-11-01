@@ -51,7 +51,7 @@ hardware/*/build/scripts/user_clock_defs.tcl
 hardware/*/build/scripts/user_clock_freqs_compute.tcl
 hardware/*/build/scripts/user_clocks.sdc
 hardware/*/build/scripts/syn_top_relpath.tcl
-hardware/*/build/ofs_pr_afu.qsf
+hardware/*/ofs_pr_afu.qsf
 hardware/*/build/tools/
 hardware/*/build/src/
 hardware/*/build/syn/
