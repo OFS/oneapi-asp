@@ -19,13 +19,7 @@ linux64/include
 linux64/libexec/diagnose
 linux64/libexec/program
 
-# Generated BSP file
-opencl-bsp.tar.gz
-
-# Generated default aocx files
-bringup/aocxs/
-
-# Hardware files that are copied from IOFS build for pac_s10
+# Hardware files that are copied from FIM build
 hardware/*/afu_opencl_kernel.qsf
 hardware/*/bsp_dir_filelist.txt
 hardware/*/build/afu_base.qsf
@@ -48,7 +42,6 @@ hardware/*/build/build_env_db.txt
 hardware/*/build/ofs_pr_afu_sources.tcl
 hardware/*/build/output_files/
 hardware/*/build/platform/
-hardware/*/build/quartus.ini
 hardware/*/build/ofs_partial_reconfig/
 hardware/*/build/scripts/report_timing.tcl
 hardware/*/build/scripts/user_clock_defs.tcl
