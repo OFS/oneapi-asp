@@ -50,7 +50,7 @@ EOF
 
   lock_limit=$(ulimit -l)
   if [ $lock_limit != "unlimited" ]; then
-    echo "** NOTE:changes to max locked memory setting only take effet with new login session"
+    echo "** NOTE:changes to max locked memory setting only take effect with new login session"
   fi
 }
 
