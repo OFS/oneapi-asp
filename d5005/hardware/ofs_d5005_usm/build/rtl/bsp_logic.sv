@@ -93,7 +93,7 @@ board board_inst (
     .kernel_irq_irq                     (kernel_control.kernel_irq),                                //   kernel_irq.irq
     .kernel_reset_reset_n               (kernel_control.kernel_reset_n),                            // kernel_reset.reset_n
     
-    `ifdef ASP_ENABLE_DDR4_BANK_0
+    `ifdef PAC_BSP_ENABLE_DDR4_BANK1
         .emif_ddr4a_clk_clk         (local_mem[0].clk),
         .emif_ddr4a_waitrequest     (local_mem[0].waitrequest),
         .emif_ddr4a_readdata        (local_mem[0].readdata),
@@ -115,7 +115,7 @@ board board_inst (
         .kernel_ddr4a_read          (kernel_mem[0].read),
         .kernel_ddr4a_byteenable    (kernel_mem[0].byteenable),
     `endif
-    `ifdef ASP_ENABLE_DDR4_BANK_1
+    `ifdef PAC_BSP_ENABLE_DDR4_BANK2
         .emif_ddr4b_clk_clk         (local_mem[1].clk),
         .emif_ddr4b_waitrequest     (local_mem[1].waitrequest),
         .emif_ddr4b_readdata        (local_mem[1].readdata),
@@ -137,7 +137,7 @@ board board_inst (
         .kernel_ddr4b_read          (kernel_mem[1].read),
         .kernel_ddr4b_byteenable    (kernel_mem[1].byteenable),
     `endif
-    `ifdef ASP_ENABLE_DDR4_BANK_2
+    `ifdef PAC_BSP_ENABLE_DDR4_BANK3
         .emif_ddr4c_clk_clk         (local_mem[2].clk),
         .emif_ddr4c_waitrequest     (local_mem[2].waitrequest),
         .emif_ddr4c_readdata        (local_mem[2].readdata),
@@ -159,7 +159,7 @@ board board_inst (
         .kernel_ddr4c_read          (kernel_mem[2].read),
         .kernel_ddr4c_byteenable    (kernel_mem[2].byteenable),
     `endif
-    `ifdef ASP_ENABLE_DDR4_BANK_3
+    `ifdef PAC_BSP_ENABLE_DDR4_BANK4
         .emif_ddr4d_clk_clk         (local_mem[3].clk),
         .emif_ddr4d_waitrequest     (local_mem[3].waitrequest),
         .emif_ddr4d_readdata        (local_mem[3].readdata),
