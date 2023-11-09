@@ -102,11 +102,7 @@ package ofs_asp_pkg;
     parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
     
     //number of IO Channels/Pipes enabled in the ASP.
-    `ifdef INCLUDE_IO_PIPES
-        parameter IO_PIPES_NUM_CHAN = `OFS_FIM_IP_CFG_HSSI_SS_NUM_ETH_PORTS;
-    `else
-        parameter IO_PIPES_NUM_CHAN = 0;
-    `endif
+    parameter IO_PIPES_NUM_CHAN = 5'h00;
     //Avalon Streaming data width - I/O Pipe connection to kernel-system
     parameter ASP_ETH_PKT_DATA_WIDTH = ofs_fim_eth_if_pkg::ETH_PACKET_WIDTH;
     
