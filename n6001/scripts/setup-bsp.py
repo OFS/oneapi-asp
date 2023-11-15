@@ -174,6 +174,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #find the Quartus-build folder expected by the FIM
     #use syn_top for now, but it might change depending on FIM board/variant/etc
     QUARTUS_SYN_DIR=get_dir_path("syn_top",bsp_dir)
+    if verbose:
+        print("QUARTUS_SYN_DIR is %s" % (QUARTUS_SYN_DIR))
     ASP_BASE_DIR_ABS=bsp_dir
     
     QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_qsf_dir)
@@ -205,8 +207,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     ASP_BUILD_DIR_SYMLINK_CMD="cd " + QUARTUS_SYN_DIR + " && ln -sf " + ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR + "/* ."
     run_cmd(ASP_BUILD_DIR_SYMLINK_CMD)
     
-    PR_AFU_QPF_FILENAME=os.path.basename(glob.glob(bsp_dir + '/*.qpf')[0])
-    PR_AFU_QSF_FILENAME=os.path.basename(glob.glob(bsp_dir + '/*pr_afu.qsf')[0])
+    PR_AFU_QPF_FILENAME=os.path.basename(glob.glob(QUARTUS_SYN_DIR + "/*.qpf")[0])
+    PR_AFU_QSF_FILENAME=os.path.basename(glob.glob(QUARTUS_SYN_DIR + "/*pr_afu.qsf")[0])
     if verbose:
         print("PR_AFU_QPF_FILENAME is %s" % PR_AFU_QPF_FILENAME)
     if verbose:
