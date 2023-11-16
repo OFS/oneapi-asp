@@ -174,6 +174,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     #find the Quartus-build folder expected by the FIM
     #use syn_top for now, but it might change depending on FIM board/variant/etc
     QUARTUS_SYN_DIR=get_dir_path("syn_top",bsp_dir)
+    if verbose:
+        print("QUARTUS_SYN_DIR is %s" % (QUARTUS_SYN_DIR))
     ASP_BASE_DIR_ABS=bsp_dir
     
     QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_qsf_dir)
@@ -202,23 +204,22 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     
     #symlink the contents of bsp_dir/build into syn_top
     BSP_BUILD_DIR_FILES=os.path.join(bsp_qsf_dir, '*')
-    ASP_BUILD_DIR_SYMLINK_CMD="cd " + QUARTUS_SYN_DIR + " && ln -s " + ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR + "/* ."
+    ASP_BUILD_DIR_SYMLINK_CMD="cd " + QUARTUS_SYN_DIR + " && ln -sf " + ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR + "/* ."
     run_cmd(ASP_BUILD_DIR_SYMLINK_CMD)
     
-    #symlink the (i)ofs_top.qpf and (i)ofs_pr_afu.qsf file to bsp_dir
-    if "n6001" in bsp:
-        PR_AFU_QSF_FILENAME="ofs_pr_afu.qsf"
-        PR_AFU_QPF_FILENAME="ofs_top.qpf"
-    else:
-        PR_AFU_QSF_FILENAME="iofs_pr_afu.qsf"
-        PR_AFU_QPF_FILENAME="d5005.qpf"
-        
-    rm_glob(os.path.join(bsp_dir, PR_AFU_QSF_FILENAME))
-    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QSF_FILENAME + " ."
+    PR_AFU_QPF_FILENAME=os.path.basename(glob.glob(QUARTUS_SYN_DIR + "/*.qpf")[0])
+    PR_AFU_QSF_FILENAME=os.path.basename(glob.glob(QUARTUS_SYN_DIR + "/*pr_afu.qsf")[0])
+    if verbose:
+        print("PR_AFU_QPF_FILENAME is %s" % PR_AFU_QPF_FILENAME)
+    if verbose:
+        print("PR_AFU_QSF_FILENAME is %s" % PR_AFU_QSF_FILENAME)
+    
+    rm_glob(os.path.join(bsp_dir, PR_AFU_QSF_FILENAME)) 
+    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -sf " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QSF_FILENAME + " ."
     run_cmd(OFS_PR_AFU_QSF_SYMLINK_CMD)
 
     rm_glob(os.path.join(bsp_dir, PR_AFU_QPF_FILENAME))
-    OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -s " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QPF_FILENAME + " ."
+    OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -sf " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QPF_FILENAME + " ."
     run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
     
     print("\nsetup-bsp.py completed successfully for variant %s\n" % bsp)
