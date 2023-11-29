@@ -112,7 +112,7 @@ module dma_data_transfer #(
             rd_state_cur_is_flushrddatapipe;
     logic flush_pipeline_counter_done;
     wr_state_e wr_state_cur, wr_state_nxt;
-    logic wr_state_cur_is_idle, wr_state_cur_is_wait_for_first_write, wr_state_cur_is_write, 
+    logic wr_state_cur_is_idle, wr_state_cur_is_wait_for_write_burst_data, wr_state_cur_is_write, 
           wr_state_cur_is_a_write_data_state, wr_state_cur_is_write_magic_num, 
           wr_state_nxt_is_write_magic_num, wr_state_is_write_magic_num;
     logic this_is_last_dst_write,this_is_last_dst_write_plus1_reg,this_is_last_dst_write_reg;
@@ -734,7 +734,7 @@ module dma_data_transfer #(
         endcase
     end
     assign databuf_has_enough_data_for_this_burst = (disp_ctrl_if.databuf_status.usedw >= DST_WR_BURSTCOUNT_MAX) |
-                                                    (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining)
+                                                    (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining);
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
         wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
