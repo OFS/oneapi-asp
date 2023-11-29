@@ -67,26 +67,7 @@ To package generated ASP into tarball run: `scripts/create-tarball.sh`
 
 ## Kernel Compilation Options
 
-* Default Kernels - hello_world.cl (for non-USM) , hello_world.cl (for USM).
-  Use script - scripts/build-default-aocx.sh.
-  Generated aocx will be in $OFS_ASP_ROOT/build/bringup folder.
+* Default Design - simple-add-buffers.cpp.
+  Use script - scripts/build-default-binaries.sh.
+  Generated binary will be in $OFS_ASP_ROOT/build/bringup folder.
   Host code will be in $OFS_ASP_ROOT/bringup/source folder
-
-* Flat: This flow compiles both the ASP and the kernel - the entire
-  partial reconfiguration (PR) region - without any additional floorplan
-  constraints (beyond the existing static region (SR) / PR region constraints).
-  This will execute a new place-and-route of the entire PR region - the
-  ASP's synthesis/placement/routing is not locked-down when using this flow.
-  Timing violations in the fixed-clock domains (DDR, ASP/PCIe) are possible
-  when using this flow.
-  
-Example compilation command: <br>
-  `$OFS_ASP_ROOT/$ aoc -v -board=ofs_n6001
-  <path to example designs>/example_designs/hello_world/device/hello_world.cl`
-  
-  If timing violations in static clock domains (not the kernel clock) are persistent
-  across multiple seeds, users can try enabling the 
-  USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION define in opencl_bsp.vh - it will move all clock 
-  crossings in the PR region closer to the SR-PR boundary (the PIM will manage 
-  clock crossings). This may help resolve timing violations; however, the maximum achievable
-  kernel clock Fmax may be reduced.
