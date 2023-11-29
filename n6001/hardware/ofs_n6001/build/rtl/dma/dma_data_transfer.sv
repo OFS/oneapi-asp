@@ -140,6 +140,8 @@ module dma_data_transfer #(
     logic [DST_ADDR_WIDTH-1:0] dst_avmm_address;
     localparam DST_AVMM_BURSTCOUNT_BITS = $clog2(DST_WR_BURSTCOUNT_MAX);
     logic [DST_AVMM_BURSTCOUNT_BITS:0] dst_avmm_burstcount;
+    logic databuf_has_enough_data_for_this_burst;
+    logic successful_dst_int_write;
     
     logic rst;
     assign rst = reset | disp_ctrl_if.sclr;
@@ -698,35 +700,46 @@ module dma_data_transfer #(
         if (rst_local)    wr_state_cur <= WIDLE;
     end
         
+//new wr-fsm logic
+
     always_comb begin
         wr_state_nxt = WXXX;
         case (wr_state_cur)
-            WIDLE:  if (latch_this_cmd)         wr_state_nxt = WAIT_FOR_FIRST_WRITE;
+            WIDLE:  if (latch_this_cmd)         wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
                     else                        wr_state_nxt = WIDLE;
-            WAIT_FOR_FIRST_WRITE:
-                    if (dst_avmm_int.write & !dst_avmm_int.waitrequest) begin
-                        //more than just this first write to make
-                        if (wr_xfer_remaining_next) 
-                                                wr_state_nxt = WRITE;
-                        //only 1 word to write: if F2H write the magic number; else go back to write-idle
-                        else if (DIR_FPGA_TO_HOST)
-                                                wr_state_nxt = WRITE_MAGIC_NUM;
-                        else
-                                                wr_state_nxt = WIDLE;
-                    end else                    wr_state_nxt = WAIT_FOR_FIRST_WRITE;
-            WRITE:  if ((wr_xfer_remaining_next=='b0) && dst_avmm_int.write && !dst_avmm_int.waitrequest) begin
-                        if (DIR_FPGA_TO_HOST)   wr_state_nxt = WRITE_MAGIC_NUM;
-                        else                    wr_state_nxt = WIDLE;
-                    end else                    wr_state_nxt = WRITE;
-            WRITE_MAGIC_NUM: if (dst_avmm_int.write && !dst_avmm_int.waitrequest) wr_state_nxt = WIDLE;
+            WAIT_FOR_WRITE_BURST_DATA:
+                    //if we have enough data for a complete burst (either a max burst or the only/final burst)
+                    if (databuf_has_enough_data_for_this_burst)
+                                                wr_state_nxt = WRITE_COMPLETE_BURST;
+                    //else we don't have enough data to send the entire burst; so we wait for more read-responses
+                    else
+                                                wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
+            WRITE_COMPLETE_BURST:
+                    //if end of this burst, check what to do next based on databuf.usedw and wr_xfer_remaining
+                    if (dst_avmm_int.burstcount == 'h1 && successful_dst_int_write) begin
+                        //if we done sending data? Go back to idle or send magic-number
+                        if (!wr_xfer_remaining)
+                                                wr_state_nxt = DIR_FPGA_TO_HOST ? WRITE_MAGIC_NUM : WIDLE;
+                        //elif there will be more data to send, but do we have enough in the databuf to send the 
+                        //  next complete burst?
+                        else if (databuf_has_enough_data_for_this_burst)
+                                                wr_state_nxt = WRITE_COMPLETE_BURST;
+                        //else we don't have enough data for the next complete burst, so we need to wait
+                        else                    wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
+                    end
+                    //else we are mid-burst, stay here until we're done
+                    else                        wr_state_nxt = WRITE_COMPLETE_BURST;
+            WRITE_MAGIC_NUM: if (successful_dst_int_write) wr_state_nxt = WIDLE;
                     else                        wr_state_nxt = WRITE_MAGIC_NUM;
         endcase
     end
+    assign databuf_has_enough_data_for_this_burst = (disp_ctrl_if.databuf_status.usedw >= DST_WR_BURSTCOUNT_MAX) |
+                                                    (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining)
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
-        wr_state_cur_is_wait_for_first_write = wr_state_cur == WAIT_FOR_FIRST_WRITE;
-        wr_state_cur_is_write                = wr_state_cur == WRITE;
-        wr_state_cur_is_a_write_data_state   = wr_state_cur_is_wait_for_first_write | wr_state_cur_is_write;
+        wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
+        wr_state_cur_is_write                = wr_state_cur == WRITE_COMPLETE_BURST;
+        wr_state_cur_is_a_write_data_state   = wr_state_cur_is_wait_for_write_burst_data | wr_state_cur_is_write;
         wr_state_cur_is_write_magic_num      = wr_state_cur == WRITE_MAGIC_NUM;
         wr_state_nxt_is_write_magic_num      = wr_state_nxt == WRITE_MAGIC_NUM;
         wr_state_is_write_magic_num          = wr_state_cur_is_write_magic_num | wr_state_nxt_is_write_magic_num;
@@ -744,10 +757,11 @@ module dma_data_transfer #(
     //
     // pop data from databuffer; write it to the destination memory
     //
-    assign databuffer_rdack = dst_avmm_int.write && !dst_avmm_int.waitrequest && !wr_state_cur_is_write_magic_num;
+    //pop data from the databuf when we've written it out of the block (and waitreq isn't asserted)
+    assign databuffer_rdack = successful_dst_int_write && !wr_state_cur_is_write_magic_num;
     
     always_comb begin
-        dst_avmm_int.write      = ! databuffer_empty | wr_state_cur_is_write_magic_num;
+        dst_avmm_int.write      = wr_state_cur_is_write | wr_state_cur_is_write_magic_num;
         dst_avmm_int.writedata  = wr_state_cur_is_write_magic_num ? MAGIC_NUMBER : databuffer_q;
         dst_avmm_int.byteenable = dst_avmm_byteenable;
         dst_avmm_int.address    = dst_avmm_address;
@@ -755,6 +769,10 @@ module dma_data_transfer #(
         //tie off read-related signals since this interface will never issue any reads from the destination.
         dst_avmm_int.read       = 'b0;
     end
+    
+    //common signals
+    //destination write and not waitreq
+    assign successful_dst_int_write = dst_avmm_int.write && !dst_avmm_int.waitrequest;
     
     assign this_write_is_partial = ! (&dst_avmm_byteenable);
     
@@ -775,15 +793,22 @@ module dma_data_transfer #(
         if (rst_local) dst_write_cntr <= 'b0;
     end
     assign disp_ctrl_if.dst_write_counter = dst_write_cntr;
-    assign dst_write_cntr_wire = (dst_avmm_int.write && !dst_avmm_int.waitrequest) ? 
+    assign dst_write_cntr_wire = successful_dst_int_write ? 
                                     dst_write_cntr_plus1 :
                                     dst_write_cntr;
-    assign this_is_last_dst_write = (dst_avmm_int.write && !dst_avmm_int.waitrequest) ? 
+    assign this_is_last_dst_write = successful_dst_int_write ? 
                                     this_is_last_dst_write_plus1_reg :
                                     this_is_last_dst_write_reg;
     
+    always_ff (posedge clk) begin
+        if (latch_this_cmd)
+            this_is_first_burst <= 1'b1;
+        else if (wr_state_cur_is_write && dst_avmm_int.burstcount == 'h1 && successful_dst_int_write)
+            this_is_first_burst <= 1'b0;
+    end
+    
     always_comb begin
-        if (wr_state_cur_is_wait_for_first_write)
+        if (this_is_first_burst)
             dst_avmm_byteenable = first_dst_byteenable_value;
         else if (this_is_last_dst_write)
             dst_avmm_byteenable = last_dst_byteenable_value;
@@ -799,12 +824,12 @@ module dma_data_transfer #(
             dst_avmm_address <= cmdq_dout.cmd.dst_start_addr;
         else if (wr_state_is_write_magic_num)
             dst_avmm_address <= disp_ctrl_if.host_mem_magicnumber_addr;
-        else if (wr_state_cur_is_a_write_data_state & dst_avmm_int.write & !dst_avmm_int.waitrequest)
+        else if (wr_state_cur_is_a_write_data_state & successful_dst_int_write)
             dst_avmm_address <= dst_avmm_address + HOSTMEM_DATA_BYTES_PER_WORD;
         else
             dst_avmm_address <= dst_avmm_address;
     end
-    
+
     //wr-burst-count
 `ifdef DMA_DO_SINGLE_BURST_PARTIAL_WRITES
     //the PIM doesn't completely support AVMM bursts when doing partial writes. A partial write
@@ -829,7 +854,7 @@ module dma_data_transfer #(
             end else //more than a max burst still to send
                 dst_avmm_burstcount <= DST_WR_BURSTCOUNT_MAX;
         //subsequent burstcount values
-        end else if (dst_avmm_int.write && !dst_avmm_int.waitrequest) begin
+        end else if (successful_dst_int_write) begin
             //magic number is always just a single word write
             if (wr_state_nxt_is_write_magic_num | wr_state_cur_is_write_magic_num)
                 dst_avmm_burstcount <= 'h1;
@@ -858,7 +883,7 @@ module dma_data_transfer #(
             else
                 dst_avmm_burstcount <= DST_WR_BURSTCOUNT_MAX;
         //subsequent burstcount values
-        end else if (dst_avmm_int.write && !dst_avmm_int.waitrequest) begin
+        end else if (successful_dst_int_write) begin
             if (wr_state_nxt_is_write_magic_num | wr_state_cur_is_write_magic_num)
                 dst_avmm_burstcount <= 'h1;
             //end of a burst
@@ -887,7 +912,7 @@ module dma_data_transfer #(
         if (latch_this_cmd)
             wr_xfer_remaining <= write_xfer_cnt_in_words_reg;
         //after a valid write, reduce the counter by the 
-        else if (dst_avmm_int.write && !dst_avmm_int.waitrequest && 
+        else if (successful_dst_int_write && 
                 (wr_xfer_remaining_hi_bits || wr_xfer_remaining[1:0]) )
             wr_xfer_remaining <= wr_xfer_remaining_next;
     end
@@ -941,7 +966,7 @@ module dma_data_transfer #(
     //only generate wr-fence signals for FPGA-to-HOST path.
     generate
         if (DIR_FPGA_TO_HOST == 1'b1) begin
-            assign disp_ctrl_if.f2h_wr_fence_flag = wr_state_cur_is_write_magic_num && dst_avmm_int.write && !dst_avmm_int.waitrequest;
+            assign disp_ctrl_if.f2h_wr_fence_flag = wr_state_cur_is_write_magic_num && successful_dst_int_write;
         end
         if (DIR_FPGA_TO_HOST == 1'b0) begin
             assign disp_ctrl_if.f2h_wr_fence_flag = 'b0;
@@ -952,7 +977,7 @@ module dma_data_transfer #(
 `endif
     logic [15:0] magic_number_counter;
     always_ff @(posedge clk) begin
-        if (wr_state_cur_is_write_magic_num && dst_avmm_int.write && !dst_avmm_int.waitrequest)
+        if (wr_state_cur_is_write_magic_num && successful_dst_int_write)
             magic_number_counter <= magic_number_counter + 1'b1;
         if (rst_local) magic_number_counter <= 'b0;
     end
