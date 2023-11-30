@@ -142,6 +142,7 @@ module dma_data_transfer #(
     logic [DST_AVMM_BURSTCOUNT_BITS:0] dst_avmm_burstcount;
     logic databuf_has_enough_data_for_this_burst;
     logic successful_dst_int_write;
+    logic this_is_first_burst;
     
     logic rst;
     assign rst = reset | disp_ctrl_if.sclr;
@@ -604,6 +605,7 @@ module dma_data_transfer #(
 
     logic [src_avmm_int.DATA_WIDTH_-1:0] databuffer_q;
     logic databuffer_rdack, databuffer_empty;
+    logic [$clog2(RDDATA_BUFFER_DEPTH)-1:0] local_databuf_usedw;
     scfifo
     #(
 `ifdef PLATFORM_INTENDED_DEVICE_FAMILY
@@ -623,7 +625,7 @@ module dma_data_transfer #(
       data_buffer_shifted
        (
         .clock(clk),
-        .sclr(rst_local),
+        .sclr(rst_local | latch_this_cmd),
 
         .data(shifted_write_data_bytes),
         .wrreq(databuffer_wr_req),
@@ -718,7 +720,7 @@ module dma_data_transfer #(
                     //if end of this burst, check what to do next based on databuf.usedw and wr_xfer_remaining
                     if (dst_avmm_int.burstcount == 'h1 && successful_dst_int_write) begin
                         //if we done sending data? Go back to idle or send magic-number
-                        if (!wr_xfer_remaining)
+                        if (!wr_xfer_remaining_next)
                                                 wr_state_nxt = DIR_FPGA_TO_HOST ? WRITE_MAGIC_NUM : WIDLE;
                         //elif there will be more data to send, but do we have enough in the databuf to send the 
                         //  next complete burst?
@@ -733,8 +735,10 @@ module dma_data_transfer #(
                     else                        wr_state_nxt = WRITE_MAGIC_NUM;
         endcase
     end
-    assign databuf_has_enough_data_for_this_burst = (disp_ctrl_if.databuf_status.usedw >= DST_WR_BURSTCOUNT_MAX) |
-                                                    (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining);
+    //assign databuf_has_enough_data_for_this_burst = (disp_ctrl_if.databuf_status.usedw >= DST_WR_BURSTCOUNT_MAX) |
+    //                                                (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining);
+    assign databuf_has_enough_data_for_this_burst = (local_databuf_usedw >= DST_WR_BURSTCOUNT_MAX) |
+                                                    (local_databuf_usedw == wr_xfer_remaining);
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
         wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
@@ -745,6 +749,29 @@ module dma_data_transfer #(
         wr_state_is_write_magic_num          = wr_state_cur_is_write_magic_num | wr_state_nxt_is_write_magic_num;
     end
     assign disp_ctrl_if.controller_busy_wr = !wr_state_cur_is_idle;
+    
+    //track the data-buffer usedw separate from the FF's counter, taking current-clock push/pop activity into account
+    logic databuffer_wr_req_d;
+    always_ff @(posedge clk) begin
+        //fifo should be empty at the start of a new command
+        if (latch_this_cmd)
+            local_databuf_usedw <= 'b0;
+        //if we get both a push and a pop on the same cycle, don't change the counter
+        else if (databuffer_wr_req_d & databuffer_rdack)
+            local_databuf_usedw <= local_databuf_usedw;
+        //if just a push into the databuf fifo, increment the counter
+        else if (databuffer_wr_req_d)
+            local_databuf_usedw <= local_databuf_usedw + 'b1;
+        //if just a pop from the databuf fifo, decrement the counter
+        else if (databuffer_rdack)
+            local_databuf_usedw <= local_databuf_usedw - 'b1;
+        if (rst_local) local_databuf_usedw <= 'b0;
+    end
+    //delay databuffer_wr_req by a clock so we don't pop too eagerly
+    always_ff @(posedge clk) begin
+        if (rst_local) databuffer_wr_req_d <= 'b0;
+        else           databuffer_wr_req_d <= databuffer_wr_req;
+    end
     
     //we should never get into the write-magic-num state if DIR_FPGA_TO_HOST is '0'.
     // synthesis translate_off
@@ -800,7 +827,7 @@ module dma_data_transfer #(
                                     this_is_last_dst_write_plus1_reg :
                                     this_is_last_dst_write_reg;
     
-    always_ff (posedge clk) begin
+    always_ff @(posedge clk) begin
         if (latch_this_cmd)
             this_is_first_burst <= 1'b1;
         else if (wr_state_cur_is_write && dst_avmm_int.burstcount == 'h1 && successful_dst_int_write)
@@ -952,7 +979,6 @@ module dma_data_transfer #(
     // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
     // driven by the bridge.
     always_comb begin
-        //drive with the value from the kernel-system by default
         dst_avmm.write = dst_avmm_write;
         dst_avmm.read  = dst_avmm_read;
         //drive with the modified version during simulation
