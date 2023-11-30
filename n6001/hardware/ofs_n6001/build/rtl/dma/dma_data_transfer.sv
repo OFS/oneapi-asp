@@ -751,26 +751,26 @@ module dma_data_transfer #(
     assign disp_ctrl_if.controller_busy_wr = !wr_state_cur_is_idle;
     
     //track the data-buffer usedw separate from the FF's counter, taking current-clock push/pop activity into account
-    logic databuffer_wr_req_d;
+    logic [3:0] databuffer_wr_req_d;
     always_ff @(posedge clk) begin
         //fifo should be empty at the start of a new command
         if (latch_this_cmd)
             local_databuf_usedw <= 'b0;
         //if we get both a push and a pop on the same cycle, don't change the counter
-        else if (databuffer_wr_req_d & databuffer_rdack)
+        else if (databuffer_wr_req_d[3] & databuffer_rdack)
             local_databuf_usedw <= local_databuf_usedw;
         //if just a push into the databuf fifo, increment the counter
-        else if (databuffer_wr_req_d)
+        else if (databuffer_wr_req_d[3])
             local_databuf_usedw <= local_databuf_usedw + 'b1;
         //if just a pop from the databuf fifo, decrement the counter
         else if (databuffer_rdack)
             local_databuf_usedw <= local_databuf_usedw - 'b1;
         if (rst_local) local_databuf_usedw <= 'b0;
     end
-    //delay databuffer_wr_req by a clock so we don't pop too eagerly
+    //delay databuffer_wr_req so we don't pop too eagerly
     always_ff @(posedge clk) begin
         if (rst_local) databuffer_wr_req_d <= 'b0;
-        else           databuffer_wr_req_d <= databuffer_wr_req;
+        else           databuffer_wr_req_d <= {databuffer_wr_req_d[2:0],databuffer_wr_req};
     end
     
     //we should never get into the write-magic-num state if DIR_FPGA_TO_HOST is '0'.
