@@ -114,7 +114,8 @@ module dma_data_transfer #(
     wr_state_e wr_state_cur, wr_state_nxt;
     logic wr_state_cur_is_idle, wr_state_cur_is_wait_for_write_burst_data, wr_state_cur_is_write, 
           wr_state_cur_is_a_write_data_state, wr_state_cur_is_write_magic_num, 
-          wr_state_nxt_is_write_magic_num, wr_state_is_write_magic_num;
+          wr_state_nxt_is_write_magic_num, wr_state_is_write_magic_num, 
+          wr_state_nxt_is_wait_for_write_burst_data;
     logic this_is_last_dst_write,this_is_last_dst_write_plus1_reg,this_is_last_dst_write_reg;
     logic rd_reqs_complete,rd_reqs_complete_reg,rd_reqs_complete_wire;
     logic [AVMM_BURSTCOUNT_BITS-1:0] src_burst_cnt, next_src_burst_cnt;
@@ -696,14 +697,12 @@ module dma_data_transfer #(
     end
     
     //
-    //FSM handling the write-logic (pop data from FIFO, push to AVMM pipeline bridge, send to destination)
+    //FSM handling the write-logic (pop data from FIFO, push to AVMM pipeline bridge)
     always_ff @(posedge clk) begin
         wr_state_cur <= wr_state_nxt;
         if (rst_local)    wr_state_cur <= WIDLE;
     end
         
-//new wr-fsm logic
-
     always_comb begin
         wr_state_nxt = WXXX;
         case (wr_state_cur)
@@ -742,6 +741,7 @@ module dma_data_transfer #(
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
         wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
+        wr_state_nxt_is_wait_for_write_burst_data = wr_state_nxt == WAIT_FOR_WRITE_BURST_DATA;
         wr_state_cur_is_write                = wr_state_cur == WRITE_COMPLETE_BURST;
         wr_state_cur_is_a_write_data_state   = wr_state_cur_is_wait_for_write_burst_data | wr_state_cur_is_write;
         wr_state_cur_is_write_magic_num      = wr_state_cur == WRITE_MAGIC_NUM;
@@ -785,7 +785,8 @@ module dma_data_transfer #(
     // pop data from databuffer; write it to the destination memory
     //
     //pop data from the databuf when we've written it out of the block (and waitreq isn't asserted)
-    assign databuffer_rdack = successful_dst_int_write && !wr_state_cur_is_write_magic_num;
+    assign databuffer_rdack = successful_dst_int_write && !wr_state_cur_is_write_magic_num
+                              && !wr_state_nxt_is_wait_for_write_burst_data;
     
     always_comb begin
         dst_avmm_int.write      = wr_state_cur_is_write | wr_state_cur_is_write_magic_num;
