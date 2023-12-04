@@ -190,4 +190,271 @@ kernel_wrapper kernel_wrapper_inst (
     `endif
 );
 
+// for hang debug with signaltap
+reg [31:0] kernel_mem0_rd_counter /* synthesis preserve */;
+reg [31:0] kernel_mem0_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] kernel_mem0_rdresp_counter /* synthesis preserve */;
+reg [31:0] kernel_mem0_wr_counter /* synthesis preserve */;
+reg [31:0] local_mem0_rd_counter /* synthesis preserve */;
+reg [31:0] local_mem0_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] local_mem0_rdresp_counter /* synthesis preserve */;
+reg [31:0] local_mem0_wr_counter /* synthesis preserve */;
+reg [31:0] kernel_mem1_rd_counter /* synthesis preserve */;
+reg [31:0] kernel_mem1_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] kernel_mem1_rdresp_counter /* synthesis preserve */;
+reg [31:0] kernel_mem1_wr_counter /* synthesis preserve */;
+reg [31:0] local_mem1_rd_counter /* synthesis preserve */;
+reg [31:0] local_mem1_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] local_mem1_rdresp_counter /* synthesis preserve */;
+reg [31:0] local_mem1_wr_counter /* synthesis preserve */;
+reg [31:0] kernel_mem2_rd_counter /* synthesis preserve */;
+reg [31:0] kernel_mem2_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] kernel_mem2_rdresp_counter /* synthesis preserve */;
+reg [31:0] kernel_mem2_wr_counter /* synthesis preserve */;
+reg [31:0] local_mem2_rd_counter /* synthesis preserve */;
+reg [31:0] local_mem2_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] local_mem2_rdresp_counter /* synthesis preserve */;
+reg [31:0] local_mem2_wr_counter /* synthesis preserve */;
+reg [31:0] kernel_mem3_rd_counter /* synthesis preserve */;
+reg [31:0] kernel_mem3_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] kernel_mem3_rdresp_counter /* synthesis preserve */;
+reg [31:0] kernel_mem3_wr_counter /* synthesis preserve */;
+reg [31:0] local_mem3_rd_counter /* synthesis preserve */;
+reg [31:0] local_mem3_rdlinereq_counter /* synthesis preserve */;
+reg [31:0] local_mem3_rdresp_counter /* synthesis preserve */;
+reg [31:0] local_mem3_wr_counter /* synthesis preserve */;
+always @(posedge host_mem_if.clk) begin
+  if (kernel_mem[0].read & !kernel_mem[0].waitrequest) 
+  begin
+    kernel_mem0_rd_counter <= kernel_mem0_rd_counter + 1;
+    kernel_mem0_rdlinereq_counter <= kernel_mem0_rdlinereq_counter + kernel_mem[0].burstcount;
+  end
+
+  if (kernel_mem[0].readdatavalid)
+  begin
+    kernel_mem0_rdresp_counter <= kernel_mem0_rdresp_counter + 1;
+  end
+
+  if (kernel_mem[0].write & !kernel_mem[0].waitrequest) 
+  begin
+    kernel_mem0_wr_counter <= kernel_mem0_wr_counter + 1;
+  end
+
+  if (local_mem[0].read & !local_mem[0].waitrequest) 
+  begin
+    local_mem0_rd_counter <= local_mem0_rd_counter + 1;
+    local_mem0_rdlinereq_counter <= local_mem0_rdlinereq_counter + local_mem[0].burstcount;
+  end
+
+  if (local_mem[0].readdatavalid)
+  begin
+    local_mem0_rdresp_counter <= local_mem0_rdresp_counter + 1;
+  end
+
+  if (local_mem[0].write & !local_mem[0].waitrequest) 
+  begin
+    local_mem0_wr_counter <= local_mem0_wr_counter + 1;
+  end
+
+  if (kernel_mem[1].read & !kernel_mem[1].waitrequest) 
+  begin
+    kernel_mem1_rd_counter <= kernel_mem1_rd_counter + 1;
+    kernel_mem1_rdlinereq_counter <= kernel_mem1_rdlinereq_counter + kernel_mem[1].burstcount;
+  end
+
+  if (kernel_mem[1].readdatavalid)
+  begin
+    kernel_mem1_rdresp_counter <= kernel_mem1_rdresp_counter + 1;
+  end
+
+  if (kernel_mem[1].write & !kernel_mem[1].waitrequest) 
+  begin
+    kernel_mem1_wr_counter <= kernel_mem1_wr_counter + 1;
+  end
+
+  if (local_mem[1].read & !local_mem[1].waitrequest) 
+  begin
+    local_mem1_rd_counter <= local_mem1_rd_counter + 1;
+    local_mem1_rdlinereq_counter <= local_mem1_rdlinereq_counter + local_mem[1].burstcount;
+  end
+
+  if (local_mem[1].readdatavalid)
+  begin
+    local_mem1_rdresp_counter <= local_mem1_rdresp_counter + 1;
+  end
+
+  if (local_mem[1].write & !local_mem[1].waitrequest) 
+  begin
+    local_mem1_wr_counter <= local_mem1_wr_counter + 1;
+  end
+
+  if (kernel_mem[2].read & !kernel_mem[2].waitrequest) 
+  begin
+    kernel_mem2_rd_counter <= kernel_mem2_rd_counter + 1;
+    kernel_mem2_rdlinereq_counter <= kernel_mem2_rdlinereq_counter + kernel_mem[2].burstcount;
+  end
+
+  if (kernel_mem[2].readdatavalid)
+  begin
+    kernel_mem2_rdresp_counter <= kernel_mem2_rdresp_counter + 1;
+  end
+
+  if (kernel_mem[2].write & !kernel_mem[2].waitrequest) 
+  begin
+    kernel_mem2_wr_counter <= kernel_mem2_wr_counter + 1;
+  end
+
+  if (local_mem[2].read & !local_mem[2].waitrequest) 
+  begin
+    local_mem2_rd_counter <= local_mem2_rd_counter + 1;
+    local_mem2_rdlinereq_counter <= local_mem2_rdlinereq_counter + local_mem[2].burstcount;
+  end
+
+  if (local_mem[2].readdatavalid)
+  begin
+    local_mem2_rdresp_counter <= local_mem2_rdresp_counter + 1;
+  end
+
+  if (local_mem[2].write & !local_mem[2].waitrequest) 
+  begin
+    local_mem2_wr_counter <= local_mem2_wr_counter + 1;
+  end
+
+  if (kernel_mem[3].read & !kernel_mem[3].waitrequest) 
+  begin
+    kernel_mem3_rd_counter <= kernel_mem3_rd_counter + 1;
+    kernel_mem3_rdlinereq_counter <= kernel_mem3_rdlinereq_counter + kernel_mem[3].burstcount;
+  end
+
+  if (kernel_mem[3].readdatavalid)
+  begin
+    kernel_mem3_rdresp_counter <= kernel_mem3_rdresp_counter + 1;
+  end
+
+  if (kernel_mem[3].write & !kernel_mem[3].waitrequest) 
+  begin
+    kernel_mem3_wr_counter <= kernel_mem3_wr_counter + 1;
+  end
+
+  if (local_mem[3].read & !local_mem[3].waitrequest) 
+  begin
+    local_mem3_rd_counter <= local_mem3_rd_counter + 1;
+    local_mem3_rdlinereq_counter <= local_mem3_rdlinereq_counter + local_mem[3].burstcount;
+  end
+
+  if (local_mem[3].readdatavalid)
+  begin
+    local_mem3_rdresp_counter <= local_mem3_rdresp_counter + 1;
+  end
+
+  if (local_mem[3].write & !local_mem[3].waitrequest) 
+  begin
+    local_mem3_wr_counter <= local_mem3_wr_counter + 1;
+  end
+
+  if (!host_mem_if.reset_n)
+  begin
+    kernel_mem0_rd_counter        <= 0;
+    kernel_mem0_rdlinereq_counter <= 0;
+    kernel_mem0_rdresp_counter    <= 0;
+    kernel_mem0_wr_counter        <= 0;
+    local_mem0_rd_counter         <= 0;
+    local_mem0_rdlinereq_counter  <= 0;
+    local_mem0_rdresp_counter     <= 0;
+    local_mem0_wr_counter         <= 0;
+    kernel_mem1_rd_counter        <= 0;
+    kernel_mem1_rdlinereq_counter <= 0;
+    kernel_mem1_rdresp_counter    <= 0;
+    kernel_mem1_wr_counter        <= 0;
+    local_mem1_rd_counter         <= 0;
+    local_mem1_rdlinereq_counter  <= 0;
+    local_mem1_rdresp_counter     <= 0;
+    local_mem1_wr_counter         <= 0;
+    kernel_mem2_rd_counter        <= 0;
+    kernel_mem2_rdlinereq_counter <= 0;
+    kernel_mem2_rdresp_counter    <= 0;
+    kernel_mem2_wr_counter        <= 0;
+    local_mem2_rd_counter         <= 0;
+    local_mem2_rdlinereq_counter  <= 0;
+    local_mem2_rdresp_counter     <= 0;
+    local_mem2_wr_counter         <= 0;
+    kernel_mem3_rd_counter        <= 0;
+    kernel_mem3_rdlinereq_counter <= 0;
+    kernel_mem3_rdresp_counter    <= 0;
+    kernel_mem3_wr_counter        <= 0;
+    local_mem3_rd_counter         <= 0;
+    local_mem3_rdlinereq_counter  <= 0;
+    local_mem3_rdresp_counter     <= 0;
+    local_mem3_wr_counter         <= 0;
+  end
+end
+
+
+// for hang debug with signaltap
+reg [13:0] counter /* synthesis preserve */;
+always @(posedge host_mem_if.clk) begin
+  if (!host_mem_if_wr_sop) 
+  begin
+    counter <= counter + 1;
+  end
+
+  if (host_mem_if_wr_sop)
+  begin
+    counter <= 0;
+  end
+end
+
+logic [5:0] host_mem_if_wr_bursts_rem;
+logic host_mem_if_wr_sop;
+assign host_mem_if_wr_sop = (host_mem_if_wr_bursts_rem == 0);
+
+// Track burst count
+always @(posedge host_mem_if.clk)
+begin
+  if (host_mem_if.wr_write && !host_mem_if.wr_waitrequest)
+  begin
+    // Track write bursts in order to print "sop"
+    if (host_mem_if_wr_bursts_rem == 0)
+    begin
+      host_mem_if_wr_bursts_rem <= host_mem_if.wr_burstcount - 1;
+    end
+    else
+    begin
+      host_mem_if_wr_bursts_rem <= host_mem_if_wr_bursts_rem - 1;
+    end
+  end
+
+  if (!host_mem_if.reset_n)
+  begin
+    host_mem_if_wr_bursts_rem <= 0;
+  end
+end
+
+logic [5:0] host_mem_va_if_dma_wr_bursts_rem;
+logic host_mem_va_if_dma_wr_sop;
+assign host_mem_va_if_dma_wr_sop = (host_mem_va_if_dma_wr_bursts_rem == 0);
+
+// Track burst count
+always_ff @(posedge host_mem_va_if_dma.clk)
+begin
+  if (host_mem_va_if_dma.wr_write && !host_mem_va_if_dma.wr_waitrequest)
+  begin
+    // Track write bursts in order to print "sop"
+    if (host_mem_va_if_dma_wr_bursts_rem == 0)
+    begin
+      host_mem_va_if_dma_wr_bursts_rem <= host_mem_va_if_dma.wr_burstcount - 1;
+    end
+    else
+    begin
+      host_mem_va_if_dma_wr_bursts_rem <= host_mem_va_if_dma_wr_bursts_rem - 1;
+    end
+  end
+
+  if (!host_mem_va_if_dma.reset_n)
+  begin
+    host_mem_va_if_dma_wr_bursts_rem <= 0;
+  end
+end
+ 
+
 endmodule : afu
