@@ -143,7 +143,7 @@ module dma_data_transfer #(
     logic [DST_AVMM_BURSTCOUNT_BITS:0] dst_avmm_burstcount;
     logic databuf_has_enough_data_for_this_burst;
     logic successful_dst_int_write;
-    logic this_is_first_burst;
+    logic this_is_first_burst_word;
     
     logic rst;
     assign rst = reset | disp_ctrl_if.sclr;
@@ -606,7 +606,7 @@ module dma_data_transfer #(
 
     logic [src_avmm_int.DATA_WIDTH_-1:0] databuffer_q;
     logic databuffer_rdack, databuffer_empty;
-    logic [$clog2(RDDATA_BUFFER_DEPTH)-1:0] local_databuf_usedw;
+    logic [$clog2(RDDATA_BUFFER_DEPTH)-1:0] local_databuf_usedw,local_databuf_usedw_next;
     scfifo
     #(
 `ifdef PLATFORM_INTENDED_DEVICE_FAMILY
@@ -736,8 +736,15 @@ module dma_data_transfer #(
     end
     //assign databuf_has_enough_data_for_this_burst = (disp_ctrl_if.databuf_status.usedw >= DST_WR_BURSTCOUNT_MAX) |
     //                                                (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining);
-    assign databuf_has_enough_data_for_this_burst = (local_databuf_usedw >= DST_WR_BURSTCOUNT_MAX) |
-                                                    (local_databuf_usedw == wr_xfer_remaining);
+    //We only want to write data when we have enough for a full burst (even if 'full' means 1 or less than
+    // a maximal burst due to protocol translation limitations elsewhere). 
+    //So, assert a signal when: - databuf usedw is greater than the maximal-burstcount OR
+    //                          - databuf usedw is equal to the number of remaining writes OR
+    //                          - F2H direction and the final write-word is partial and databuf usedw
+    //                              is equal to 
+    assign databuf_has_enough_data_for_this_burst = (local_databuf_usedw_next >= DST_WR_BURSTCOUNT_MAX) |
+                                                    (local_databuf_usedw_next == wr_xfer_remaining) |
+                                                    (DIR_FPGA_TO_HOST & (local_databuf_usedw_next >= 'h1) & first_dst_write_is_partial & this_is_first_burst_word);
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
         wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
@@ -753,19 +760,25 @@ module dma_data_transfer #(
     //track the data-buffer usedw separate from the FF's counter, taking current-clock push/pop activity into account
     logic [3:0] databuffer_wr_req_d;
     always_ff @(posedge clk) begin
-        //fifo should be empty at the start of a new command
-        if (latch_this_cmd)
+        if (rst_local)
             local_databuf_usedw <= 'b0;
+        else if (latch_this_cmd)
+            local_databuf_usedw <= 'b0;
+        else
+            local_databuf_usedw <= local_databuf_usedw_next;
+    end
+    always_comb begin
         //if we get both a push and a pop on the same cycle, don't change the counter
-        else if (databuffer_wr_req_d[3] & databuffer_rdack)
-            local_databuf_usedw <= local_databuf_usedw;
+        if (databuffer_wr_req_d[3] & databuffer_rdack)
+            local_databuf_usedw_next = local_databuf_usedw;
         //if just a push into the databuf fifo, increment the counter
         else if (databuffer_wr_req_d[3])
-            local_databuf_usedw <= local_databuf_usedw + 'b1;
+            local_databuf_usedw_next = local_databuf_usedw + 'b1;
         //if just a pop from the databuf fifo, decrement the counter
         else if (databuffer_rdack)
-            local_databuf_usedw <= local_databuf_usedw - 'b1;
-        if (rst_local) local_databuf_usedw <= 'b0;
+            local_databuf_usedw_next = local_databuf_usedw - 'b1;
+        else
+            local_databuf_usedw_next = local_databuf_usedw;
     end
     //delay databuffer_wr_req so we don't pop too eagerly
     always_ff @(posedge clk) begin
@@ -785,8 +798,8 @@ module dma_data_transfer #(
     // pop data from databuffer; write it to the destination memory
     //
     //pop data from the databuf when we've written it out of the block (and waitreq isn't asserted)
-    assign databuffer_rdack = successful_dst_int_write && !wr_state_cur_is_write_magic_num
-                              && !wr_state_nxt_is_wait_for_write_burst_data;
+    assign databuffer_rdack = successful_dst_int_write && !wr_state_cur_is_write_magic_num;
+                              //&& !wr_state_nxt_is_wait_for_write_burst_data;
     
     always_comb begin
         dst_avmm_int.write      = wr_state_cur_is_write | wr_state_cur_is_write_magic_num;
@@ -830,13 +843,16 @@ module dma_data_transfer #(
     
     always_ff @(posedge clk) begin
         if (latch_this_cmd)
-            this_is_first_burst <= 1'b1;
-        else if (wr_state_cur_is_write && dst_avmm_int.burstcount == 'h1 && successful_dst_int_write)
-            this_is_first_burst <= 1'b0;
+            this_is_first_burst_word <= 1'b1;
+        else if (DIR_FPGA_TO_HOST & wr_state_cur_is_write && 
+                 dst_avmm_int.burstcount == 'h1 && successful_dst_int_write)
+            this_is_first_burst_word <= 1'b0;
+        else if (!DIR_FPGA_TO_HOST & wr_state_cur_is_write && successful_dst_int_write)
+            this_is_first_burst_word <= 1'b0;
     end
     
     always_comb begin
-        if (this_is_first_burst)
+        if (this_is_first_burst_word)
             dst_avmm_byteenable = first_dst_byteenable_value;
         else if (this_is_last_dst_write)
             dst_avmm_byteenable = last_dst_byteenable_value;
