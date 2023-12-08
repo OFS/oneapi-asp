@@ -742,8 +742,8 @@ module dma_data_transfer #(
     assign databuf_has_enough_data_for_this_burst = (local_databuf_usedw >= DST_WR_BURSTCOUNT_MAX) |
                                                     (local_databuf_usedw == wr_xfer_remaining) |
                                                     (DIR_FPGA_TO_HOST & (local_databuf_usedw >= 'h1) & first_dst_write_is_partial & this_is_first_burst_word);
-    assign databuf_has_enough_data_for_next_burst = (local_databuf_usedw >= DST_WR_BURSTCOUNT_MAX) |
-                                                    (local_databuf_usedw == wr_xfer_remaining);
+    assign databuf_has_enough_data_for_next_burst = (local_databuf_usedw_next >= DST_WR_BURSTCOUNT_MAX) |
+                                                    (local_databuf_usedw_next == wr_xfer_remaining);
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
         wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
