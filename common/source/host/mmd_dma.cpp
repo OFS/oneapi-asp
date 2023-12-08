@@ -8,6 +8,10 @@
 #include <chrono>
 #include <iostream>
 #include <unordered_map>
+#include <cstddef>
+#include <iomanip>
+#include <numeric>
+#include <vector>
 
 #include "mmd_device.h"
 #include "mmd_dma.h"
@@ -249,9 +253,9 @@ void mmd_dma::read_register(uint64_t offset, const char* name)
   uint64_t regval = 0;
   res = fpgaReadMMIO64(m_fpga_handle, mmio_num, dma_csr_base + offset, &regval);
   if(res != FPGA_OK) {
-    printf("TID : %ld DMA ---- %s Error reading %s\n", transaction_id, op_mode, name);
+    fprintf(stderr,"TID : %ld DMA ---- %s Error reading %s\n", transaction_id, op_mode, name);
   } else {
-    printf("TID : %ld DMA ---- %s DMA status: %s\t 0x%lx\n",transaction_id, op_mode, name, regval);
+    fprintf(stderr,"TID : %ld DMA ---- %s DMA status: %s\t 0x%lx\n",transaction_id, op_mode, name, regval);
   }
 }
 
@@ -367,14 +371,51 @@ int mmd_dma::send_descriptors(uint64_t dma_src_addr, uint64_t dma_dst_addr, uint
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
       DEBUG_LOG("DEBUG LOG : TID : %ld DMA ---- %s Waiting for Magic Number to be written to host memory , which confirms completion of %s\n",transaction_id, op_mode, op_mode);
     }
+    auto wait_fpga_write_start_timestamp = std::chrono::high_resolution_clock::now();
+    auto wait_fpga_write_current_timestamp = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = wait_fpga_write_current_timestamp - wait_fpga_write_start_timestamp;
+    int wait_times=0;
     while (*fpga_write_addr != FPGA_DMA_WF_MAGIC_NO) {
-#if 0
-      printf("\n");
-      read_status_registers();
-      sleep(1);
+#if 1
+      if (wait_times == 1000000) {
+        printf("\n");
+        fprintf(stderr, "F2H DMA transfer still waiting for magic number after %d wait_times\n",wait_times);
+        fprintf(stderr,"F2H dma_len: 0x%lx\n", dma_len);
+        read_status_registers();
+        fprintf(stderr, "TID : %ld DMA ---- %s Print some mpf stats\n",transaction_id, op_mode);
+        mpf_vtp_stats vtp_stats;
+        mpfVtpGetStats(mpf_handle, &vtp_stats);
+        printf("TID : %ld DMA ---- %s #   VTP failed:            %ld\n", transaction_id, op_mode, vtp_stats.numFailedTranslations);
+        if (vtp_stats.numFailedTranslations)
+        {
+            printf("TID : %ld DMA ---- %s #   VTP failed addr:       0x%lx\n", transaction_id, op_mode, (uint64_t)vtp_stats.ptWalkLastVAddr);
+        }
+        printf("TID : %ld DMA ---- %s #   VTP PT walk cycles:    %ld\n", transaction_id, op_mode, vtp_stats.numPTWalkBusyCycles);
+        printf("TID : %ld DMA ---- %s #   VTP L2 4KB hit / miss: %ld / %ld\n",
+            transaction_id, op_mode, vtp_stats.numTLBHits4KB, vtp_stats.numTLBMisses4KB);
+        printf("TID : %ld DMA ---- %s #   VTP L2 2MB hit / miss: %ld / %ld\n",
+            transaction_id, op_mode, vtp_stats.numTLBHits2MB, vtp_stats.numTLBMisses2MB);
+        printf("\n");
+        return -1;
+      }
 #endif
       std::this_thread::yield();
+      wait_times++;
+      wait_fpga_write_current_timestamp = std::chrono::high_resolution_clock::now();
+      diff = wait_fpga_write_current_timestamp - wait_fpga_write_start_timestamp;
+      //if (diff > )
     }
+
+    //if (wait_times > 1000) {
+    //    fprintf(stderr,"\n");
+    //    fprintf(stderr, "F2H DMA transfer complete after %d wait_times\n",wait_times);
+    //    fprintf(stderr,"F2H dma_len: 0x%lx\n", dma_len);
+    //    read_status_registers();
+    //    fprintf(stderr,"\n");
+    //}
+    //fprintf(stderr, "F2H DMA transfer magic number write received after %d wait_times\n",wait_times);
+    //std::cout << "diff is " << diff '\n';
+    //std::cout << "Diff " << std::setw(9) << diff << '\n';
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
       DEBUG_LOG("DEBUG LOG : TID : %ld DMA ---- %s Magic Number written to host memory , which confirms completion of %s\n",transaction_id, op_mode, op_mode);
     }

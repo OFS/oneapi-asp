@@ -155,7 +155,7 @@ Device::Device(uint64_t obj_id)
       // We've found our Port..
       port_token = tokens[i];
 
-      res = fpgaOpen(port_token, &port_handle, 0);
+      res = fpgaOpen(port_token, &port_handle, FPGA_OPEN_SHARED);
       if (res != FPGA_OK) {
         throw std::runtime_error(std::string("Error opening Port: ") +
                                  std::string(fpgaErrStr(res)));
@@ -218,7 +218,7 @@ Device::Device(uint64_t obj_id)
   }
 
   if (mmio_token) {
-      res = fpgaOpen(mmio_token, &mmio_handle, 0);
+      res = fpgaOpen(mmio_token, &mmio_handle, FPGA_OPEN_SHARED);
       if (res != FPGA_OK) {
         throw std::runtime_error(std::string("Couldn't open mmio_token: ") +
                                  std::string(fpgaErrStr(res)));
@@ -775,7 +775,7 @@ int Device::program_bitstream(uint8_t *data, size_t data_size) {
                                  std::string(fpgaErrStr(res)));
     }
 
-    res = fpgaOpen(mmio_token, &mmio_handle, 0);
+    res = fpgaOpen(mmio_token, &mmio_handle, FPGA_OPEN_SHARED);
     if (res != FPGA_OK) {
       throw std::runtime_error(std::string("Couldn't open mmio_token: ") +
                                std::string(fpgaErrStr(res)));
