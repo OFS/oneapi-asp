@@ -141,7 +141,7 @@ module dma_data_transfer #(
     logic [DST_ADDR_WIDTH-1:0] dst_avmm_address;
     localparam DST_AVMM_BURSTCOUNT_BITS = $clog2(DST_WR_BURSTCOUNT_MAX);
     logic [DST_AVMM_BURSTCOUNT_BITS:0] dst_avmm_burstcount;
-    logic databuf_has_enough_data_for_this_burst;
+    logic databuf_has_enough_data_for_this_burst,databuf_has_enough_data_for_next_burst;
     logic successful_dst_int_write;
     logic this_is_first_burst_word;
     
@@ -652,12 +652,12 @@ module dma_data_transfer #(
     
     //FIFO overflow detection. Sticky bit until sw resets it.
     always_ff @(posedge clk) begin
-        if (disp_ctrl_if.databuf_status.full && src_avmm_int_readdatavalid) disp_ctrl_if.databuf_status.overflow <= 'b1;
-        if (rst_local)                                                        disp_ctrl_if.databuf_status.overflow <= 'b0;
+        if (disp_ctrl_if.databuf_status.full && databuffer_wr_req) disp_ctrl_if.databuf_status.overflow <= 'b1;
+        if (rst_local)                                             disp_ctrl_if.databuf_status.overflow <= 'b0;
     end
     always_ff @(posedge clk) begin
-        if (disp_ctrl_if.databuf_status.empty && databuffer_rdack)      disp_ctrl_if.databuf_status.underflow <= 'b1;
-        if (rst_local)                                                        disp_ctrl_if.databuf_status.underflow <= 'b0;
+        if (disp_ctrl_if.databuf_status.empty && databuffer_rdack) disp_ctrl_if.databuf_status.underflow <= 'b1;
+        if (rst_local)                                             disp_ctrl_if.databuf_status.underflow <= 'b0;
     end
     
     assign disp_ctrl_if.databuf_status.empty = databuffer_empty;
@@ -723,7 +723,7 @@ module dma_data_transfer #(
                                                 wr_state_nxt = DIR_FPGA_TO_HOST ? WRITE_MAGIC_NUM : WIDLE;
                         //elif there will be more data to send, but do we have enough in the databuf to send the 
                         //  next complete burst?
-                        else if (databuf_has_enough_data_for_this_burst)
+                        else if (databuf_has_enough_data_for_next_burst)
                                                 wr_state_nxt = WRITE_COMPLETE_BURST;
                         //else we don't have enough data for the next complete burst, so we need to wait
                         else                    wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
@@ -734,17 +734,16 @@ module dma_data_transfer #(
                     else                        wr_state_nxt = WRITE_MAGIC_NUM;
         endcase
     end
-    //assign databuf_has_enough_data_for_this_burst = (disp_ctrl_if.databuf_status.usedw >= DST_WR_BURSTCOUNT_MAX) |
-    //                                                (disp_ctrl_if.databuf_status.usedw == wr_xfer_remaining);
     //We only want to write data when we have enough for a full burst (even if 'full' means 1 or less than
     // a maximal burst due to protocol translation limitations elsewhere). 
     //So, assert a signal when: - databuf usedw is greater than the maximal-burstcount OR
     //                          - databuf usedw is equal to the number of remaining writes OR
-    //                          - F2H direction and the final write-word is partial and databuf usedw
-    //                              is equal to 
-    assign databuf_has_enough_data_for_this_burst = (local_databuf_usedw_next >= DST_WR_BURSTCOUNT_MAX) |
-                                                    (local_databuf_usedw_next == wr_xfer_remaining) |
-                                                    (DIR_FPGA_TO_HOST & (local_databuf_usedw_next >= 'h1) & first_dst_write_is_partial & this_is_first_burst_word);
+    //                          - F2H direction and the first write-word is partial and databuf usedw == 1
+    assign databuf_has_enough_data_for_this_burst = (local_databuf_usedw >= DST_WR_BURSTCOUNT_MAX) |
+                                                    (local_databuf_usedw == wr_xfer_remaining) |
+                                                    (DIR_FPGA_TO_HOST & (local_databuf_usedw >= 'h1) & first_dst_write_is_partial & this_is_first_burst_word);
+    assign databuf_has_enough_data_for_next_burst = (local_databuf_usedw >= DST_WR_BURSTCOUNT_MAX) |
+                                                    (local_databuf_usedw == wr_xfer_remaining);
     always_comb begin
         wr_state_cur_is_idle                 = wr_state_cur == WIDLE;
         wr_state_cur_is_wait_for_write_burst_data = wr_state_cur == WAIT_FOR_WRITE_BURST_DATA;
