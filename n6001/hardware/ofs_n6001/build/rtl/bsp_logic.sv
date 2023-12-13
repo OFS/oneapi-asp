@@ -340,62 +340,6 @@ dma_top dma_controller_inst (
     .dma_irq_host2fpga
 );
 
-// for hang debug with signaltap
-reg [31:0] dma_host_mem_rd_counter /* synthesis preserve */;
-reg [31:0] dma_host_mem_rdlinereq_counter /* synthesis preserve */;
-reg [31:0] dma_host_mem_rdresp_counter /* synthesis preserve */;
-reg [31:0] dma_host_mem_wr_counter /* synthesis preserve */;
-reg [31:0] dma_local_mem_rd_counter /* synthesis preserve */;
-reg [31:0] dma_local_mem_rdlinereq_counter /* synthesis preserve */; 
-reg [31:0] dma_local_mem_rdresp_counter /* synthesis preserve */;
-reg [31:0] dma_local_mem_wr_counter /* synthesis preserve */;
-always @(posedge host_mem_if.clk) begin
-  if (host_mem_rd_avmm_if.read & !host_mem_rd_avmm_if.waitrequest) 
-  begin
-    dma_host_mem_rd_counter <= dma_host_mem_rd_counter + 1;
-    dma_host_mem_rdlinereq_counter <= dma_host_mem_rdlinereq_counter + host_mem_rd_avmm_if.burstcount;
-  end
-
-  if (host_mem_rd_avmm_if.readdatavalid)
-  begin
-    dma_host_mem_rdresp_counter <= dma_host_mem_rdresp_counter + 1;
-  end
-
-  if (host_mem_wr_avmm_if.write & !host_mem_wr_avmm_if.waitrequest) 
-  begin
-    dma_host_mem_wr_counter <= dma_host_mem_wr_counter + 1;
-  end
-
-  if (local_mem_rd_avmm_if.read & !local_mem_rd_avmm_if.waitrequest) 
-  begin
-    dma_local_mem_rd_counter <= dma_local_mem_rd_counter + 1;
-    dma_local_mem_rdlinereq_counter <= dma_local_mem_rdlinereq_counter + local_mem_rd_avmm_if.burstcount;
-  end
-
-  if (local_mem_rd_avmm_if.readdatavalid)
-  begin
-    dma_local_mem_rdresp_counter <= dma_local_mem_rdresp_counter + 1;
-  end
-
-  if (local_mem_wr_avmm_if.write & !local_mem_wr_avmm_if.waitrequest) 
-  begin
-    dma_local_mem_wr_counter <= dma_local_mem_wr_counter + 1;
-  end
-
-  if (!host_mem_if.reset_n)
-  begin
-    dma_host_mem_rd_counter         <= 0;
-    dma_host_mem_rdlinereq_counter  <= 0;
-    dma_host_mem_rdresp_counter     <= 0;
-    dma_host_mem_wr_counter         <= 0;
-    dma_local_mem_rd_counter        <= 0;
-    dma_local_mem_rdlinereq_counter <= 0;
-    dma_local_mem_rdresp_counter    <= 0;
-    dma_local_mem_wr_counter        <= 0;
-  end
-end
-
-
 `ifdef USE_KERNEL_IRQ
     logic [2:0] kernel_irq_sync;
     //sync the kernel interrupt into the host-clock domain
