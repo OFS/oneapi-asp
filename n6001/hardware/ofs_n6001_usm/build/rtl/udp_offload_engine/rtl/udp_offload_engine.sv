@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 //
 
-`ifdef 0
 module udp_offload_engine
 import ofs_asp_pkg::*;
 (
@@ -119,4 +118,3 @@ udp_oe_csr udp_oe_csr
 );
 
 endmodule : udp_offload_engine
-`endif
