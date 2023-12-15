@@ -110,7 +110,7 @@ proc compose { } {
 
     add_instance version_id_0 version_id 10.0
     set_instance_parameter_value version_id_0 {WIDTH} {32}
-    set_instance_parameter_value version_id_0 {VERSION_ID} {-1598029823}
+    set_instance_parameter_value version_id_0 {VERSION_ID} {-1598029822}
 
     add_instance reset_controller_sw altera_reset_controller 17.1
     set_instance_parameter_value reset_controller_sw {NUM_RESET_INPUTS} {2}
