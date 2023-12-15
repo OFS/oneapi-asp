@@ -6,8 +6,8 @@
 package dma_controller_wr_fsm_pkg;
 
     typedef enum {  WIDLE,
-                    WAIT_FOR_FIRST_WRITE,
-                    WRITE,
+                    WAIT_FOR_WRITE_BURST_DATA,
+                    WRITE_COMPLETE_BURST,
                     WRITE_MAGIC_NUM,
                     WXXX } wr_state_e;
 
