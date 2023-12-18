@@ -415,12 +415,12 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;boundary&gt;
         &lt;interfaces&gt;
             &lt;interface&gt;
-                &lt;name&gt;slave_clk&lt;/name&gt;
+                &lt;name&gt;agent_clk&lt;/name&gt;
                 &lt;type&gt;clock&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_clk&lt;/name&gt;
+                        &lt;name&gt;agent_clk&lt;/name&gt;
                         &lt;role&gt;clk&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -449,12 +449,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;master_clk&lt;/name&gt;
+                &lt;name&gt;host_clk&lt;/name&gt;
                 &lt;type&gt;clock&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_clk&lt;/name&gt;
+                        &lt;name&gt;host_clk&lt;/name&gt;
                         &lt;role&gt;clk&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -483,12 +483,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;master_reset&lt;/name&gt;
+                &lt;name&gt;host_reset&lt;/name&gt;
                 &lt;type&gt;reset&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_reset&lt;/name&gt;
+                        &lt;name&gt;host_reset&lt;/name&gt;
                         &lt;role&gt;reset&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -504,7 +504,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;parameterValueMap&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedClock&lt;/key&gt;
-                            &lt;value&gt;master_clk&lt;/value&gt;
+                            &lt;value&gt;host_clk&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;synchronousEdges&lt;/key&gt;
@@ -514,12 +514,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;slave&lt;/name&gt;
+                &lt;name&gt;agent&lt;/name&gt;
                 &lt;type&gt;avalon&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_address&lt;/name&gt;
+                        &lt;name&gt;agent_address&lt;/name&gt;
                         &lt;role&gt;address&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;33&lt;/width&gt;
@@ -528,7 +528,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_byteenable&lt;/name&gt;
+                        &lt;name&gt;agent_byteenable&lt;/name&gt;
                         &lt;role&gt;byteenable&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;64&lt;/width&gt;
@@ -537,7 +537,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_read&lt;/name&gt;
+                        &lt;name&gt;agent_read&lt;/name&gt;
                         &lt;role&gt;read&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -546,7 +546,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_write&lt;/name&gt;
+                        &lt;name&gt;agent_write&lt;/name&gt;
                         &lt;role&gt;write&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -555,7 +555,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_writedata&lt;/name&gt;
+                        &lt;name&gt;agent_writedata&lt;/name&gt;
                         &lt;role&gt;writedata&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -564,7 +564,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_burstcount&lt;/name&gt;
+                        &lt;name&gt;agent_burstcount&lt;/name&gt;
                         &lt;role&gt;burstcount&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;5&lt;/width&gt;
@@ -573,7 +573,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_waitrequest&lt;/name&gt;
+                        &lt;name&gt;agent_waitrequest&lt;/name&gt;
                         &lt;role&gt;waitrequest&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -582,7 +582,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_readdata&lt;/name&gt;
+                        &lt;name&gt;agent_readdata&lt;/name&gt;
                         &lt;role&gt;readdata&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -591,7 +591,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_readdatavalid&lt;/name&gt;
+                        &lt;name&gt;agent_readdatavalid&lt;/name&gt;
                         &lt;role&gt;readdatavalid&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -644,11 +644,11 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedClock&lt;/key&gt;
-                            &lt;value&gt;slave_clk&lt;/value&gt;
+                            &lt;value&gt;agent_clk&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedReset&lt;/key&gt;
-                            &lt;value&gt;master_reset&lt;/value&gt;
+                            &lt;value&gt;host_reset&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -660,7 +660,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                            &lt;value&gt;ddr4_cross_to_host.master&lt;/value&gt;
+                            &lt;value&gt;ddr4_cross_to_host.host&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -790,12 +790,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;master&lt;/name&gt;
+                &lt;name&gt;host&lt;/name&gt;
                 &lt;type&gt;avalon&lt;/type&gt;
                 &lt;isStart&gt;true&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_address&lt;/name&gt;
+                        &lt;name&gt;host_address&lt;/name&gt;
                         &lt;role&gt;address&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;33&lt;/width&gt;
@@ -804,7 +804,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_byteenable&lt;/name&gt;
+                        &lt;name&gt;host_byteenable&lt;/name&gt;
                         &lt;role&gt;byteenable&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;64&lt;/width&gt;
@@ -813,7 +813,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_read&lt;/name&gt;
+                        &lt;name&gt;host_read&lt;/name&gt;
                         &lt;role&gt;read&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -822,7 +822,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_write&lt;/name&gt;
+                        &lt;name&gt;host_write&lt;/name&gt;
                         &lt;role&gt;write&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -831,7 +831,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_writedata&lt;/name&gt;
+                        &lt;name&gt;host_writedata&lt;/name&gt;
                         &lt;role&gt;writedata&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -840,7 +840,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_burstcount&lt;/name&gt;
+                        &lt;name&gt;host_burstcount&lt;/name&gt;
                         &lt;role&gt;burstcount&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;5&lt;/width&gt;
@@ -849,7 +849,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_waitrequest&lt;/name&gt;
+                        &lt;name&gt;host_waitrequest&lt;/name&gt;
                         &lt;role&gt;waitrequest&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -858,7 +858,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_readdata&lt;/name&gt;
+                        &lt;name&gt;host_readdata&lt;/name&gt;
                         &lt;role&gt;readdata&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -867,7 +867,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_readdatavalid&lt;/name&gt;
+                        &lt;name&gt;host_readdatavalid&lt;/name&gt;
                         &lt;role&gt;readdatavalid&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -898,11 +898,11 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedClock&lt;/key&gt;
-                            &lt;value&gt;master_clk&lt;/value&gt;
+                            &lt;value&gt;host_clk&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedReset&lt;/key&gt;
-                            &lt;value&gt;master_reset&lt;/value&gt;
+                            &lt;value&gt;host_reset&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -1032,9 +1032,9 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;systemInfos&gt;
         &lt;connPtSystemInfos&gt;
             &lt;entry&gt;
-                &lt;key&gt;slave&lt;/key&gt;
+                &lt;key&gt;agent&lt;/key&gt;
                 &lt;value&gt;
-                    &lt;connectionPointName&gt;slave&lt;/connectionPointName&gt;
+                    &lt;connectionPointName&gt;agent&lt;/connectionPointName&gt;
                     &lt;suppliedSystemInfos&gt;
                         &lt;entry&gt;
                             &lt;key&gt;ADDRESS_MAP&lt;/key&gt;
@@ -1059,12 +1059,12 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:value>&lt;boundaryDefinition&gt;
     &lt;interfaces&gt;
         &lt;interface&gt;
-            &lt;name&gt;slave_clk&lt;/name&gt;
+            &lt;name&gt;agent_clk&lt;/name&gt;
             &lt;type&gt;clock&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_clk&lt;/name&gt;
+                    &lt;name&gt;agent_clk&lt;/name&gt;
                     &lt;role&gt;clk&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1093,12 +1093,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master_clk&lt;/name&gt;
+            &lt;name&gt;host_clk&lt;/name&gt;
             &lt;type&gt;clock&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_clk&lt;/name&gt;
+                    &lt;name&gt;host_clk&lt;/name&gt;
                     &lt;role&gt;clk&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1127,12 +1127,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master_reset&lt;/name&gt;
+            &lt;name&gt;host_reset&lt;/name&gt;
             &lt;type&gt;reset&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_reset&lt;/name&gt;
+                    &lt;name&gt;host_reset&lt;/name&gt;
                     &lt;role&gt;reset&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1148,7 +1148,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;parameterValueMap&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;master_clk&lt;/value&gt;
+                        &lt;value&gt;host_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;synchronousEdges&lt;/key&gt;
@@ -1158,12 +1158,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;slave&lt;/name&gt;
+            &lt;name&gt;agent&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_address&lt;/name&gt;
+                    &lt;name&gt;agent_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;33&lt;/width&gt;
@@ -1172,7 +1172,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_byteenable&lt;/name&gt;
+                    &lt;name&gt;agent_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;64&lt;/width&gt;
@@ -1181,7 +1181,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_read&lt;/name&gt;
+                    &lt;name&gt;agent_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1190,7 +1190,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_write&lt;/name&gt;
+                    &lt;name&gt;agent_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1199,7 +1199,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_writedata&lt;/name&gt;
+                    &lt;name&gt;agent_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1208,7 +1208,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_burstcount&lt;/name&gt;
+                    &lt;name&gt;agent_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;5&lt;/width&gt;
@@ -1217,7 +1217,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_waitrequest&lt;/name&gt;
+                    &lt;name&gt;agent_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1226,7 +1226,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_readdata&lt;/name&gt;
+                    &lt;name&gt;agent_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1235,7 +1235,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;agent_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1288,11 +1288,11 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;slave_clk&lt;/value&gt;
+                        &lt;value&gt;agent_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedReset&lt;/key&gt;
-                        &lt;value&gt;master_reset&lt;/value&gt;
+                        &lt;value&gt;host_reset&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -1304,7 +1304,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                        &lt;value&gt;ddr4_cross_to_host.master&lt;/value&gt;
+                        &lt;value&gt;ddr4_cross_to_host.host&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -1434,12 +1434,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master&lt;/name&gt;
+            &lt;name&gt;host&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_address&lt;/name&gt;
+                    &lt;name&gt;host_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;33&lt;/width&gt;
@@ -1448,7 +1448,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_byteenable&lt;/name&gt;
+                    &lt;name&gt;host_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;64&lt;/width&gt;
@@ -1457,7 +1457,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_read&lt;/name&gt;
+                    &lt;name&gt;host_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1466,7 +1466,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_write&lt;/name&gt;
+                    &lt;name&gt;host_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1475,7 +1475,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_writedata&lt;/name&gt;
+                    &lt;name&gt;host_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1484,7 +1484,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_burstcount&lt;/name&gt;
+                    &lt;name&gt;host_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;5&lt;/width&gt;
@@ -1493,7 +1493,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_waitrequest&lt;/name&gt;
+                    &lt;name&gt;host_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1502,7 +1502,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_readdata&lt;/name&gt;
+                    &lt;name&gt;host_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1511,7 +1511,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;host_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1542,11 +1542,11 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;master_clk&lt;/value&gt;
+                        &lt;value&gt;host_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedReset&lt;/key&gt;
-                        &lt;value&gt;master_reset&lt;/value&gt;
+                        &lt;value&gt;host_reset&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -1762,12 +1762,12 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;boundary&gt;
         &lt;interfaces&gt;
             &lt;interface&gt;
-                &lt;name&gt;slave_clk&lt;/name&gt;
+                &lt;name&gt;agent_clk&lt;/name&gt;
                 &lt;type&gt;clock&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_clk&lt;/name&gt;
+                        &lt;name&gt;agent_clk&lt;/name&gt;
                         &lt;role&gt;clk&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1796,12 +1796,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;master_clk&lt;/name&gt;
+                &lt;name&gt;host_clk&lt;/name&gt;
                 &lt;type&gt;clock&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_clk&lt;/name&gt;
+                        &lt;name&gt;host_clk&lt;/name&gt;
                         &lt;role&gt;clk&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1830,12 +1830,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;master_reset&lt;/name&gt;
+                &lt;name&gt;host_reset&lt;/name&gt;
                 &lt;type&gt;reset&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_reset&lt;/name&gt;
+                        &lt;name&gt;host_reset&lt;/name&gt;
                         &lt;role&gt;reset&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1851,7 +1851,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;parameterValueMap&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedClock&lt;/key&gt;
-                            &lt;value&gt;master_clk&lt;/value&gt;
+                            &lt;value&gt;host_clk&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;synchronousEdges&lt;/key&gt;
@@ -1861,12 +1861,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;slave&lt;/name&gt;
+                &lt;name&gt;agent&lt;/name&gt;
                 &lt;type&gt;avalon&lt;/type&gt;
                 &lt;isStart&gt;false&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_address&lt;/name&gt;
+                        &lt;name&gt;agent_address&lt;/name&gt;
                         &lt;role&gt;address&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;33&lt;/width&gt;
@@ -1875,7 +1875,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_byteenable&lt;/name&gt;
+                        &lt;name&gt;agent_byteenable&lt;/name&gt;
                         &lt;role&gt;byteenable&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;64&lt;/width&gt;
@@ -1884,7 +1884,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_read&lt;/name&gt;
+                        &lt;name&gt;agent_read&lt;/name&gt;
                         &lt;role&gt;read&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1893,7 +1893,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_write&lt;/name&gt;
+                        &lt;name&gt;agent_write&lt;/name&gt;
                         &lt;role&gt;write&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1902,7 +1902,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_writedata&lt;/name&gt;
+                        &lt;name&gt;agent_writedata&lt;/name&gt;
                         &lt;role&gt;writedata&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -1911,7 +1911,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_burstcount&lt;/name&gt;
+                        &lt;name&gt;agent_burstcount&lt;/name&gt;
                         &lt;role&gt;burstcount&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;5&lt;/width&gt;
@@ -1920,7 +1920,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_waitrequest&lt;/name&gt;
+                        &lt;name&gt;agent_waitrequest&lt;/name&gt;
                         &lt;role&gt;waitrequest&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1929,7 +1929,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_readdata&lt;/name&gt;
+                        &lt;name&gt;agent_readdata&lt;/name&gt;
                         &lt;role&gt;readdata&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -1938,7 +1938,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;slave_readdatavalid&lt;/name&gt;
+                        &lt;name&gt;agent_readdatavalid&lt;/name&gt;
                         &lt;role&gt;readdatavalid&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -1991,11 +1991,11 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedClock&lt;/key&gt;
-                            &lt;value&gt;slave_clk&lt;/value&gt;
+                            &lt;value&gt;agent_clk&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedReset&lt;/key&gt;
-                            &lt;value&gt;master_reset&lt;/value&gt;
+                            &lt;value&gt;host_reset&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -2007,7 +2007,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                            &lt;value&gt;ddr4_cross_to_kernel.master&lt;/value&gt;
+                            &lt;value&gt;ddr4_cross_to_kernel.host&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -2137,12 +2137,12 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;/parameters&gt;
             &lt;/interface&gt;
             &lt;interface&gt;
-                &lt;name&gt;master&lt;/name&gt;
+                &lt;name&gt;host&lt;/name&gt;
                 &lt;type&gt;avalon&lt;/type&gt;
                 &lt;isStart&gt;true&lt;/isStart&gt;
                 &lt;ports&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_address&lt;/name&gt;
+                        &lt;name&gt;host_address&lt;/name&gt;
                         &lt;role&gt;address&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;33&lt;/width&gt;
@@ -2151,7 +2151,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_byteenable&lt;/name&gt;
+                        &lt;name&gt;host_byteenable&lt;/name&gt;
                         &lt;role&gt;byteenable&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;64&lt;/width&gt;
@@ -2160,7 +2160,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_read&lt;/name&gt;
+                        &lt;name&gt;host_read&lt;/name&gt;
                         &lt;role&gt;read&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -2169,7 +2169,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_write&lt;/name&gt;
+                        &lt;name&gt;host_write&lt;/name&gt;
                         &lt;role&gt;write&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -2178,7 +2178,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_writedata&lt;/name&gt;
+                        &lt;name&gt;host_writedata&lt;/name&gt;
                         &lt;role&gt;writedata&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -2187,7 +2187,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_burstcount&lt;/name&gt;
+                        &lt;name&gt;host_burstcount&lt;/name&gt;
                         &lt;role&gt;burstcount&lt;/role&gt;
                         &lt;direction&gt;Output&lt;/direction&gt;
                         &lt;width&gt;5&lt;/width&gt;
@@ -2196,7 +2196,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_waitrequest&lt;/name&gt;
+                        &lt;name&gt;host_waitrequest&lt;/name&gt;
                         &lt;role&gt;waitrequest&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -2205,7 +2205,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_readdata&lt;/name&gt;
+                        &lt;name&gt;host_readdata&lt;/name&gt;
                         &lt;role&gt;readdata&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;512&lt;/width&gt;
@@ -2214,7 +2214,7 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                     &lt;/port&gt;
                     &lt;port&gt;
-                        &lt;name&gt;master_readdatavalid&lt;/name&gt;
+                        &lt;name&gt;host_readdatavalid&lt;/name&gt;
                         &lt;role&gt;readdatavalid&lt;/role&gt;
                         &lt;direction&gt;Input&lt;/direction&gt;
                         &lt;width&gt;1&lt;/width&gt;
@@ -2245,11 +2245,11 @@ https://fpgasoftware.intel.com/eula.-->
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedClock&lt;/key&gt;
-                            &lt;value&gt;master_clk&lt;/value&gt;
+                            &lt;value&gt;host_clk&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;associatedReset&lt;/key&gt;
-                            &lt;value&gt;master_reset&lt;/value&gt;
+                            &lt;value&gt;host_reset&lt;/value&gt;
                         &lt;/entry&gt;
                         &lt;entry&gt;
                             &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -2379,9 +2379,9 @@ https://fpgasoftware.intel.com/eula.-->
     &lt;systemInfos&gt;
         &lt;connPtSystemInfos&gt;
             &lt;entry&gt;
-                &lt;key&gt;slave&lt;/key&gt;
+                &lt;key&gt;agent&lt;/key&gt;
                 &lt;value&gt;
-                    &lt;connectionPointName&gt;slave&lt;/connectionPointName&gt;
+                    &lt;connectionPointName&gt;agent&lt;/connectionPointName&gt;
                     &lt;suppliedSystemInfos&gt;
                         &lt;entry&gt;
                             &lt;key&gt;ADDRESS_MAP&lt;/key&gt;
@@ -2406,12 +2406,12 @@ https://fpgasoftware.intel.com/eula.-->
               <ipxact:value>&lt;boundaryDefinition&gt;
     &lt;interfaces&gt;
         &lt;interface&gt;
-            &lt;name&gt;slave_clk&lt;/name&gt;
+            &lt;name&gt;agent_clk&lt;/name&gt;
             &lt;type&gt;clock&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_clk&lt;/name&gt;
+                    &lt;name&gt;agent_clk&lt;/name&gt;
                     &lt;role&gt;clk&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2440,12 +2440,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master_clk&lt;/name&gt;
+            &lt;name&gt;host_clk&lt;/name&gt;
             &lt;type&gt;clock&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_clk&lt;/name&gt;
+                    &lt;name&gt;host_clk&lt;/name&gt;
                     &lt;role&gt;clk&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2474,12 +2474,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master_reset&lt;/name&gt;
+            &lt;name&gt;host_reset&lt;/name&gt;
             &lt;type&gt;reset&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_reset&lt;/name&gt;
+                    &lt;name&gt;host_reset&lt;/name&gt;
                     &lt;role&gt;reset&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2495,7 +2495,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;parameterValueMap&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;master_clk&lt;/value&gt;
+                        &lt;value&gt;host_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;synchronousEdges&lt;/key&gt;
@@ -2505,12 +2505,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;slave&lt;/name&gt;
+            &lt;name&gt;agent&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_address&lt;/name&gt;
+                    &lt;name&gt;agent_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;33&lt;/width&gt;
@@ -2519,7 +2519,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_byteenable&lt;/name&gt;
+                    &lt;name&gt;agent_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;64&lt;/width&gt;
@@ -2528,7 +2528,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_read&lt;/name&gt;
+                    &lt;name&gt;agent_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2537,7 +2537,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_write&lt;/name&gt;
+                    &lt;name&gt;agent_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2546,7 +2546,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_writedata&lt;/name&gt;
+                    &lt;name&gt;agent_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -2555,7 +2555,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_burstcount&lt;/name&gt;
+                    &lt;name&gt;agent_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;5&lt;/width&gt;
@@ -2564,7 +2564,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_waitrequest&lt;/name&gt;
+                    &lt;name&gt;agent_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2573,7 +2573,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_readdata&lt;/name&gt;
+                    &lt;name&gt;agent_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -2582,7 +2582,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;agent_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2635,11 +2635,11 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;slave_clk&lt;/value&gt;
+                        &lt;value&gt;agent_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedReset&lt;/key&gt;
-                        &lt;value&gt;master_reset&lt;/value&gt;
+                        &lt;value&gt;host_reset&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -2651,7 +2651,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                        &lt;value&gt;ddr4_cross_to_kernel.master&lt;/value&gt;
+                        &lt;value&gt;ddr4_cross_to_kernel.host&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -2781,12 +2781,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master&lt;/name&gt;
+            &lt;name&gt;host&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_address&lt;/name&gt;
+                    &lt;name&gt;host_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;33&lt;/width&gt;
@@ -2795,7 +2795,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_byteenable&lt;/name&gt;
+                    &lt;name&gt;host_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;64&lt;/width&gt;
@@ -2804,7 +2804,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_read&lt;/name&gt;
+                    &lt;name&gt;host_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2813,7 +2813,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_write&lt;/name&gt;
+                    &lt;name&gt;host_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2822,7 +2822,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_writedata&lt;/name&gt;
+                    &lt;name&gt;host_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -2831,7 +2831,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_burstcount&lt;/name&gt;
+                    &lt;name&gt;host_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;5&lt;/width&gt;
@@ -2840,7 +2840,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_waitrequest&lt;/name&gt;
+                    &lt;name&gt;host_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2849,7 +2849,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_readdata&lt;/name&gt;
+                    &lt;name&gt;host_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -2858,7 +2858,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;host_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -2889,11 +2889,11 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;master_clk&lt;/value&gt;
+                        &lt;value&gt;host_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedReset&lt;/key&gt;
-                        &lt;value&gt;master_reset&lt;/value&gt;
+                        &lt;value&gt;host_reset&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -11174,7 +11174,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_pipe_to_kernel.m0" altera:end="ddr4_cross_to_kernel.slave">
+      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_pipe_to_kernel.m0" altera:end="ddr4_cross_to_kernel.agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -11194,7 +11194,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_pipe_to_bankdiv_0.m0" altera:end="ddr4_cross_to_host.slave">
+      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_pipe_to_bankdiv_0.m0" altera:end="ddr4_cross_to_host.agent">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -11214,7 +11214,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_cross_to_kernel.master" altera:end="ddr4_emif_pipe.s0">
+      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_cross_to_kernel.host" altera:end="ddr4_emif_pipe.s0">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -11234,7 +11234,7 @@ https://fpgasoftware.intel.com/eula.-->
         <altera:connection_parameter altera:parameter_name="qsys_mm.syncResets" altera:parameter_value="TRUE"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="qsys_mm.widthAdapterImplementation" altera:parameter_value="GENERIC_CONVERTER"></altera:connection_parameter>
       </altera:connection>
-      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_cross_to_host.master" altera:end="ddr4_emif_pipe.s0">
+      <altera:connection altera:kind="avalon" altera:version="22.3" altera:start="ddr4_cross_to_host.host" altera:end="ddr4_emif_pipe.s0">
         <altera:connection_parameter altera:parameter_name="arbitrationPriority" altera:parameter_value="1"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="baseAddress" altera:parameter_value="0x0000"></altera:connection_parameter>
         <altera:connection_parameter altera:parameter_name="defaultConnection" altera:parameter_value="false"></altera:connection_parameter>
@@ -11260,12 +11260,12 @@ https://fpgasoftware.intel.com/eula.-->
       <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="global_reset.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="ddr4_pipe_to_bankdiv_1.clk"></altera:connection>
       <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="ddr4_pipe_to_bankdiv_2.clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_kernel.master_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_host.master_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="kernel_clk.out_clk" altera:end="ddr4_cross_to_kernel.slave_clk"></altera:connection>
-      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="ddr4_cross_to_host.slave_clk"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_kernel.master_reset"></altera:connection>
-      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_host.master_reset"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_kernel.host_clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="ddr_clk.out_clk" altera:end="ddr4_cross_to_host.host_clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="kernel_clk.out_clk" altera:end="ddr4_cross_to_kernel.agent_clk"></altera:connection>
+      <altera:connection altera:kind="clock" altera:version="22.3" altera:start="host_clk.out_clk" altera:end="ddr4_cross_to_host.agent_clk"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_kernel.host_reset"></altera:connection>
+      <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_cross_to_host.host_reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_emif_pipe.reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_pipe_to_kernel.reset"></altera:connection>
       <altera:connection altera:kind="reset" altera:version="22.3" altera:start="global_reset.out_reset" altera:end="ddr4_pipe_to_bankdiv_0.reset"></altera:connection>
@@ -11298,16 +11298,16 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_kernel.master</ipxact:name>
+            <ipxact:name>ddr4_cross_to_kernel.host</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
             <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_kernel.master">
+              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_kernel.host">
                 <ipxact:baseAddress>0x0000_0000_0000_0000</ipxact:baseAddress>
               </ipxact:addressSpaceRef>
             </ipxact:master>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_host.slave</ipxact:name>
+            <ipxact:name>ddr4_cross_to_host.agent</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
@@ -11328,7 +11328,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_host.slave</ipxact:name>
+            <ipxact:name>ddr4_cross_to_host.agent</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
@@ -11353,7 +11353,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_host.slave</ipxact:name>
+            <ipxact:name>ddr4_cross_to_host.agent</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
@@ -11370,7 +11370,7 @@ https://fpgasoftware.intel.com/eula.-->
             </ipxact:master>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_kernel.slave</ipxact:name>
+            <ipxact:name>ddr4_cross_to_kernel.agent</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
@@ -11396,10 +11396,10 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
           </ipxact:busInterface>
           <ipxact:busInterface>
-            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
+            <ipxact:name>ddr4_cross_to_host.host</ipxact:name>
             <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
             <ipxact:master>
-              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_host.master">
+              <ipxact:addressSpaceRef addressSpaceRef="ddr4_cross_to_host.host">
                 <ipxact:baseAddress>0x0000_0000_0000_0000</ipxact:baseAddress>
               </ipxact:addressSpaceRef>
             </ipxact:master>
@@ -11407,7 +11407,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:busInterfaces>
         <ipxact:addressSpaces>
           <ipxact:addressSpace>
-            <ipxact:name>ddr4_cross_to_kernel.master</ipxact:name>
+            <ipxact:name>ddr4_cross_to_kernel.host</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
                 <ipxact:name>ddr4_emif_pipe.s0</ipxact:name>
@@ -11420,7 +11420,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:name>ddr4_pipe_to_bankdiv_0.m0</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
-                <ipxact:name>ddr4_cross_to_host.slave</ipxact:name>
+                <ipxact:name>ddr4_cross_to_host.agent</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
@@ -11440,7 +11440,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
               <ipxact:segment>
-                <ipxact:name>ddr4_cross_to_host.slave via ddr4_pipe_to_bankdiv_0</ipxact:name>
+                <ipxact:name>ddr4_cross_to_host.agent via ddr4_pipe_to_bankdiv_0</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
@@ -11465,7 +11465,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
               <ipxact:segment>
-                <ipxact:name>ddr4_cross_to_host.slave via ddr4_pipe_to_bankdiv_1.ddr4_pipe_to_bankdiv_0</ipxact:name>
+                <ipxact:name>ddr4_cross_to_host.agent via ddr4_pipe_to_bankdiv_1.ddr4_pipe_to_bankdiv_0</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
@@ -11480,7 +11480,7 @@ https://fpgasoftware.intel.com/eula.-->
             <ipxact:name>ddr4_pipe_to_kernel.m0</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
-                <ipxact:name>ddr4_cross_to_kernel.slave</ipxact:name>
+                <ipxact:name>ddr4_cross_to_kernel.agent</ipxact:name>
                 <ipxact:addressOffset>0x0000_0000_0000_0000</ipxact:addressOffset>
                 <ipxact:range>0x0000_0002_0000_0000</ipxact:range>
               </ipxact:segment>
@@ -11492,7 +11492,7 @@ https://fpgasoftware.intel.com/eula.-->
             </ipxact:segments>
           </ipxact:addressSpace>
           <ipxact:addressSpace>
-            <ipxact:name>ddr4_cross_to_host.master</ipxact:name>
+            <ipxact:name>ddr4_cross_to_host.host</ipxact:name>
             <ipxact:segments>
               <ipxact:segment>
                 <ipxact:name>ddr4_emif_pipe.s0</ipxact:name>

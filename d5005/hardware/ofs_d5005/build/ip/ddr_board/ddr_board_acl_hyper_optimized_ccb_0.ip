@@ -19,7 +19,7 @@ https://fpgasoftware.intel.com/eula.-->
   <ipxact:version>1.0</ipxact:version>
   <ipxact:busInterfaces>
     <ipxact:busInterface>
-      <ipxact:name>slave_clk</ipxact:name>
+      <ipxact:name>agent_clk</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -30,7 +30,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>clk</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_clk</ipxact:name>
+                <ipxact:name>agent_clk</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -56,7 +56,7 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </ipxact:busInterface>
     <ipxact:busInterface>
-      <ipxact:name>master_clk</ipxact:name>
+      <ipxact:name>host_clk</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="clock" version="22.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -67,7 +67,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>clk</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_clk</ipxact:name>
+                <ipxact:name>host_clk</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -93,7 +93,7 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </ipxact:busInterface>
     <ipxact:busInterface>
-      <ipxact:name>master_reset</ipxact:name>
+      <ipxact:name>host_reset</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="reset" version="22.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -104,7 +104,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>reset</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_reset</ipxact:name>
+                <ipxact:name>host_reset</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -115,7 +115,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="associatedClock" type="string">
           <ipxact:name>associatedClock</ipxact:name>
           <ipxact:displayName>Associated clock</ipxact:displayName>
-          <ipxact:value>master_clk</ipxact:value>
+          <ipxact:value>host_clk</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="synchronousEdges" type="string">
           <ipxact:name>synchronousEdges</ipxact:name>
@@ -125,7 +125,7 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </ipxact:busInterface>
     <ipxact:busInterface>
-      <ipxact:name>slave</ipxact:name>
+      <ipxact:name>agent</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -136,7 +136,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>address</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_address</ipxact:name>
+                <ipxact:name>agent_address</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -144,7 +144,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>byteenable</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_byteenable</ipxact:name>
+                <ipxact:name>agent_byteenable</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -152,7 +152,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>read</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_read</ipxact:name>
+                <ipxact:name>agent_read</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -160,7 +160,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>write</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_write</ipxact:name>
+                <ipxact:name>agent_write</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -168,7 +168,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>writedata</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_writedata</ipxact:name>
+                <ipxact:name>agent_writedata</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -176,7 +176,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>burstcount</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_burstcount</ipxact:name>
+                <ipxact:name>agent_burstcount</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -184,7 +184,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>waitrequest</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_waitrequest</ipxact:name>
+                <ipxact:name>agent_waitrequest</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -192,7 +192,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>readdata</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_readdata</ipxact:name>
+                <ipxact:name>agent_readdata</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -200,7 +200,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>readdatavalid</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>slave_readdatavalid</ipxact:name>
+                <ipxact:name>agent_readdatavalid</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -236,12 +236,12 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="associatedClock" type="string">
           <ipxact:name>associatedClock</ipxact:name>
           <ipxact:displayName>Associated clock</ipxact:displayName>
-          <ipxact:value>slave_clk</ipxact:value>
+          <ipxact:value>agent_clk</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="associatedReset" type="string">
           <ipxact:name>associatedReset</ipxact:name>
           <ipxact:displayName>Associated reset</ipxact:displayName>
-          <ipxact:value>master_reset</ipxact:value>
+          <ipxact:value>host_reset</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="bitsPerSymbol" type="int">
           <ipxact:name>bitsPerSymbol</ipxact:name>
@@ -256,7 +256,7 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="bridgesToMaster" type="string">
           <ipxact:name>bridgesToMaster</ipxact:name>
           <ipxact:displayName>Bridges to host</ipxact:displayName>
-          <ipxact:value>ddr_board_acl_hyper_optimized_ccb_0.master</ipxact:value>
+          <ipxact:value>ddr_board_acl_hyper_optimized_ccb_0.host</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="burstOnBurstBoundariesOnly" type="bit">
           <ipxact:name>burstOnBurstBoundariesOnly</ipxact:name>
@@ -438,7 +438,7 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:vendorExtensions>
     </ipxact:busInterface>
     <ipxact:busInterface>
-      <ipxact:name>master</ipxact:name>
+      <ipxact:name>host</ipxact:name>
       <ipxact:busType vendor="intel" library="intel" name="avalon" version="22.3"></ipxact:busType>
       <ipxact:abstractionTypes>
         <ipxact:abstractionType>
@@ -449,7 +449,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>address</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_address</ipxact:name>
+                <ipxact:name>host_address</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -457,7 +457,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>byteenable</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_byteenable</ipxact:name>
+                <ipxact:name>host_byteenable</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -465,7 +465,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>read</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_read</ipxact:name>
+                <ipxact:name>host_read</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -473,7 +473,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>write</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_write</ipxact:name>
+                <ipxact:name>host_write</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -481,7 +481,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>writedata</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_writedata</ipxact:name>
+                <ipxact:name>host_writedata</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -489,7 +489,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>burstcount</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_burstcount</ipxact:name>
+                <ipxact:name>host_burstcount</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -497,7 +497,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>waitrequest</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_waitrequest</ipxact:name>
+                <ipxact:name>host_waitrequest</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -505,7 +505,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>readdata</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_readdata</ipxact:name>
+                <ipxact:name>host_readdata</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
             <ipxact:portMap>
@@ -513,7 +513,7 @@ https://fpgasoftware.intel.com/eula.-->
                 <ipxact:name>readdatavalid</ipxact:name>
               </ipxact:logicalPort>
               <ipxact:physicalPort>
-                <ipxact:name>master_readdatavalid</ipxact:name>
+                <ipxact:name>host_readdatavalid</ipxact:name>
               </ipxact:physicalPort>
             </ipxact:portMap>
           </ipxact:portMaps>
@@ -544,12 +544,12 @@ https://fpgasoftware.intel.com/eula.-->
         <ipxact:parameter parameterId="associatedClock" type="string">
           <ipxact:name>associatedClock</ipxact:name>
           <ipxact:displayName>Associated clock</ipxact:displayName>
-          <ipxact:value>master_clk</ipxact:value>
+          <ipxact:value>host_clk</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="associatedReset" type="string">
           <ipxact:name>associatedReset</ipxact:name>
           <ipxact:displayName>Associated reset</ipxact:displayName>
-          <ipxact:value>master_reset</ipxact:value>
+          <ipxact:value>host_reset</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="bitsPerSymbol" type="int">
           <ipxact:name>bitsPerSymbol</ipxact:name>
@@ -714,7 +714,7 @@ https://fpgasoftware.intel.com/eula.-->
     </ipxact:instantiations>
     <ipxact:ports>
       <ipxact:port>
-        <ipxact:name>slave_clk</ipxact:name>
+        <ipxact:name>agent_clk</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -727,7 +727,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_clk</ipxact:name>
+        <ipxact:name>host_clk</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -740,7 +740,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_reset</ipxact:name>
+        <ipxact:name>host_reset</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -753,7 +753,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_address</ipxact:name>
+        <ipxact:name>agent_address</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors>
@@ -771,7 +771,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_byteenable</ipxact:name>
+        <ipxact:name>agent_byteenable</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors>
@@ -789,7 +789,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_read</ipxact:name>
+        <ipxact:name>agent_read</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -802,7 +802,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_write</ipxact:name>
+        <ipxact:name>agent_write</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -815,7 +815,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_writedata</ipxact:name>
+        <ipxact:name>agent_writedata</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors>
@@ -833,7 +833,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_burstcount</ipxact:name>
+        <ipxact:name>agent_burstcount</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors>
@@ -851,7 +851,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_waitrequest</ipxact:name>
+        <ipxact:name>agent_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -864,7 +864,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_readdata</ipxact:name>
+        <ipxact:name>agent_readdata</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -882,7 +882,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>slave_readdatavalid</ipxact:name>
+        <ipxact:name>agent_readdatavalid</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -895,7 +895,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_address</ipxact:name>
+        <ipxact:name>host_address</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -913,7 +913,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_byteenable</ipxact:name>
+        <ipxact:name>host_byteenable</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -931,7 +931,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_read</ipxact:name>
+        <ipxact:name>host_read</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -944,7 +944,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_write</ipxact:name>
+        <ipxact:name>host_write</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -957,7 +957,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_writedata</ipxact:name>
+        <ipxact:name>host_writedata</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -975,7 +975,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_burstcount</ipxact:name>
+        <ipxact:name>host_burstcount</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>out</ipxact:direction>
           <ipxact:vectors>
@@ -993,7 +993,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_waitrequest</ipxact:name>
+        <ipxact:name>host_waitrequest</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1006,7 +1006,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_readdata</ipxact:name>
+        <ipxact:name>host_readdata</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors>
@@ -1024,7 +1024,7 @@ https://fpgasoftware.intel.com/eula.-->
         </ipxact:wire>
       </ipxact:port>
       <ipxact:port>
-        <ipxact:name>master_readdatavalid</ipxact:name>
+        <ipxact:name>host_readdatavalid</ipxact:name>
         <ipxact:wire>
           <ipxact:direction>in</ipxact:direction>
           <ipxact:vectors></ipxact:vectors>
@@ -1082,14 +1082,14 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:displayName>Fast to slow mode, or same clock ratio mode</ipxact:displayName>
           <ipxact:value>false</ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="SLAVE_PORT_WAITREQUEST_ALLOWANCE" type="int">
-          <ipxact:name>SLAVE_PORT_WAITREQUEST_ALLOWANCE</ipxact:name>
-          <ipxact:displayName>Slave port waitrequest allowance</ipxact:displayName>
+        <ipxact:parameter parameterId="AGENT_PORT_WAITREQUEST_ALLOWANCE" type="int">
+          <ipxact:name>AGENT_PORT_WAITREQUEST_ALLOWANCE</ipxact:name>
+          <ipxact:displayName>Agent port waitrequest allowance</ipxact:displayName>
           <ipxact:value>6</ipxact:value>
         </ipxact:parameter>
-        <ipxact:parameter parameterId="MASTER_PORT_WAITREQUEST_ALLOWANCE" type="int">
-          <ipxact:name>MASTER_PORT_WAITREQUEST_ALLOWANCE</ipxact:name>
-          <ipxact:displayName>Master port waitrequest allowance</ipxact:displayName>
+        <ipxact:parameter parameterId="HOST_PORT_WAITREQUEST_ALLOWANCE" type="int">
+          <ipxact:name>HOST_PORT_WAITREQUEST_ALLOWANCE</ipxact:name>
+          <ipxact:displayName>Host port waitrequest allowance</ipxact:displayName>
           <ipxact:value>0</ipxact:value>
         </ipxact:parameter>
         <ipxact:parameter parameterId="SYMBOL_W" type="int">
@@ -1156,12 +1156,12 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:value>&lt;boundaryDefinition&gt;
     &lt;interfaces&gt;
         &lt;interface&gt;
-            &lt;name&gt;slave_clk&lt;/name&gt;
+            &lt;name&gt;agent_clk&lt;/name&gt;
             &lt;type&gt;clock&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_clk&lt;/name&gt;
+                    &lt;name&gt;agent_clk&lt;/name&gt;
                     &lt;role&gt;clk&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1190,12 +1190,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master_clk&lt;/name&gt;
+            &lt;name&gt;host_clk&lt;/name&gt;
             &lt;type&gt;clock&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_clk&lt;/name&gt;
+                    &lt;name&gt;host_clk&lt;/name&gt;
                     &lt;role&gt;clk&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1224,12 +1224,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master_reset&lt;/name&gt;
+            &lt;name&gt;host_reset&lt;/name&gt;
             &lt;type&gt;reset&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_reset&lt;/name&gt;
+                    &lt;name&gt;host_reset&lt;/name&gt;
                     &lt;role&gt;reset&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1245,7 +1245,7 @@ https://fpgasoftware.intel.com/eula.-->
                 &lt;parameterValueMap&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;master_clk&lt;/value&gt;
+                        &lt;value&gt;host_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;synchronousEdges&lt;/key&gt;
@@ -1255,12 +1255,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;slave&lt;/name&gt;
+            &lt;name&gt;agent&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;false&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_address&lt;/name&gt;
+                    &lt;name&gt;agent_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;33&lt;/width&gt;
@@ -1269,7 +1269,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_byteenable&lt;/name&gt;
+                    &lt;name&gt;agent_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;64&lt;/width&gt;
@@ -1278,7 +1278,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_read&lt;/name&gt;
+                    &lt;name&gt;agent_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1287,7 +1287,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_write&lt;/name&gt;
+                    &lt;name&gt;agent_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1296,7 +1296,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_writedata&lt;/name&gt;
+                    &lt;name&gt;agent_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1305,7 +1305,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_burstcount&lt;/name&gt;
+                    &lt;name&gt;agent_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;5&lt;/width&gt;
@@ -1314,7 +1314,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_waitrequest&lt;/name&gt;
+                    &lt;name&gt;agent_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1323,7 +1323,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_readdata&lt;/name&gt;
+                    &lt;name&gt;agent_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1332,7 +1332,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;slave_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;agent_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1385,11 +1385,11 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;slave_clk&lt;/value&gt;
+                        &lt;value&gt;agent_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedReset&lt;/key&gt;
-                        &lt;value&gt;master_reset&lt;/value&gt;
+                        &lt;value&gt;host_reset&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -1401,7 +1401,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bridgesToMaster&lt;/key&gt;
-                        &lt;value&gt;ddr_board_acl_hyper_optimized_ccb_0.master&lt;/value&gt;
+                        &lt;value&gt;ddr_board_acl_hyper_optimized_ccb_0.host&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;burstOnBurstBoundariesOnly&lt;/key&gt;
@@ -1531,12 +1531,12 @@ https://fpgasoftware.intel.com/eula.-->
             &lt;/parameters&gt;
         &lt;/interface&gt;
         &lt;interface&gt;
-            &lt;name&gt;master&lt;/name&gt;
+            &lt;name&gt;host&lt;/name&gt;
             &lt;type&gt;avalon&lt;/type&gt;
             &lt;isStart&gt;true&lt;/isStart&gt;
             &lt;ports&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_address&lt;/name&gt;
+                    &lt;name&gt;host_address&lt;/name&gt;
                     &lt;role&gt;address&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;33&lt;/width&gt;
@@ -1545,7 +1545,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_byteenable&lt;/name&gt;
+                    &lt;name&gt;host_byteenable&lt;/name&gt;
                     &lt;role&gt;byteenable&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;64&lt;/width&gt;
@@ -1554,7 +1554,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_read&lt;/name&gt;
+                    &lt;name&gt;host_read&lt;/name&gt;
                     &lt;role&gt;read&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1563,7 +1563,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_write&lt;/name&gt;
+                    &lt;name&gt;host_write&lt;/name&gt;
                     &lt;role&gt;write&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1572,7 +1572,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_writedata&lt;/name&gt;
+                    &lt;name&gt;host_writedata&lt;/name&gt;
                     &lt;role&gt;writedata&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1581,7 +1581,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_burstcount&lt;/name&gt;
+                    &lt;name&gt;host_burstcount&lt;/name&gt;
                     &lt;role&gt;burstcount&lt;/role&gt;
                     &lt;direction&gt;Output&lt;/direction&gt;
                     &lt;width&gt;5&lt;/width&gt;
@@ -1590,7 +1590,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_waitrequest&lt;/name&gt;
+                    &lt;name&gt;host_waitrequest&lt;/name&gt;
                     &lt;role&gt;waitrequest&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1599,7 +1599,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_readdata&lt;/name&gt;
+                    &lt;name&gt;host_readdata&lt;/name&gt;
                     &lt;role&gt;readdata&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;512&lt;/width&gt;
@@ -1608,7 +1608,7 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;terminationValue&gt;0&lt;/terminationValue&gt;
                 &lt;/port&gt;
                 &lt;port&gt;
-                    &lt;name&gt;master_readdatavalid&lt;/name&gt;
+                    &lt;name&gt;host_readdatavalid&lt;/name&gt;
                     &lt;role&gt;readdatavalid&lt;/role&gt;
                     &lt;direction&gt;Input&lt;/direction&gt;
                     &lt;width&gt;1&lt;/width&gt;
@@ -1639,11 +1639,11 @@ https://fpgasoftware.intel.com/eula.-->
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedClock&lt;/key&gt;
-                        &lt;value&gt;master_clk&lt;/value&gt;
+                        &lt;value&gt;host_clk&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;associatedReset&lt;/key&gt;
-                        &lt;value&gt;master_reset&lt;/value&gt;
+                        &lt;value&gt;host_reset&lt;/value&gt;
                     &lt;/entry&gt;
                     &lt;entry&gt;
                         &lt;key&gt;bitsPerSymbol&lt;/key&gt;
@@ -1769,9 +1769,9 @@ https://fpgasoftware.intel.com/eula.-->
           <ipxact:value>&lt;systemInfosDefinition&gt;
     &lt;connPtSystemInfos&gt;
         &lt;entry&gt;
-            &lt;key&gt;slave&lt;/key&gt;
+            &lt;key&gt;agent&lt;/key&gt;
             &lt;value&gt;
-                &lt;connectionPointName&gt;slave&lt;/connectionPointName&gt;
+                &lt;connectionPointName&gt;agent&lt;/connectionPointName&gt;
                 &lt;suppliedSystemInfos/&gt;
                 &lt;consumedSystemInfos&gt;
                     &lt;entry&gt;
@@ -1797,36 +1797,36 @@ https://fpgasoftware.intel.com/eula.-->
       </ipxact:parameters>
     </altera:altera_system_parameters>
     <altera:altera_interface_boundary>
-      <altera:interface_mapping altera:name="master" altera:internal="acl_hyper_optimized_ccb_0.master" altera:type="avalon" altera:dir="start">
-        <altera:port_mapping altera:name="master_address" altera:internal="master_address"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_burstcount" altera:internal="master_burstcount"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_byteenable" altera:internal="master_byteenable"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_read" altera:internal="master_read"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_readdata" altera:internal="master_readdata"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_readdatavalid" altera:internal="master_readdatavalid"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_waitrequest" altera:internal="master_waitrequest"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_write" altera:internal="master_write"></altera:port_mapping>
-        <altera:port_mapping altera:name="master_writedata" altera:internal="master_writedata"></altera:port_mapping>
+      <altera:interface_mapping altera:name="host" altera:internal="acl_hyper_optimized_ccb_0.host" altera:type="avalon" altera:dir="start">
+        <altera:port_mapping altera:name="host_address" altera:internal="host_address"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_burstcount" altera:internal="host_burstcount"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_byteenable" altera:internal="host_byteenable"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_read" altera:internal="host_read"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_readdata" altera:internal="host_readdata"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_readdatavalid" altera:internal="host_readdatavalid"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_waitrequest" altera:internal="host_waitrequest"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_write" altera:internal="host_write"></altera:port_mapping>
+        <altera:port_mapping altera:name="host_writedata" altera:internal="host_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="master_clk" altera:internal="acl_hyper_optimized_ccb_0.master_clk" altera:type="clock" altera:dir="end">
-        <altera:port_mapping altera:name="master_clk" altera:internal="master_clk"></altera:port_mapping>
+      <altera:interface_mapping altera:name="host_clk" altera:internal="acl_hyper_optimized_ccb_0.host_clk" altera:type="clock" altera:dir="end">
+        <altera:port_mapping altera:name="host_clk" altera:internal="host_clk"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="master_reset" altera:internal="acl_hyper_optimized_ccb_0.master_reset" altera:type="reset" altera:dir="end">
-        <altera:port_mapping altera:name="master_reset" altera:internal="master_reset"></altera:port_mapping>
+      <altera:interface_mapping altera:name="host_reset" altera:internal="acl_hyper_optimized_ccb_0.host_reset" altera:type="reset" altera:dir="end">
+        <altera:port_mapping altera:name="host_reset" altera:internal="host_reset"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="slave" altera:internal="acl_hyper_optimized_ccb_0.slave" altera:type="avalon" altera:dir="end">
-        <altera:port_mapping altera:name="slave_address" altera:internal="slave_address"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_burstcount" altera:internal="slave_burstcount"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_byteenable" altera:internal="slave_byteenable"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_read" altera:internal="slave_read"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_readdata" altera:internal="slave_readdata"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_readdatavalid" altera:internal="slave_readdatavalid"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_waitrequest" altera:internal="slave_waitrequest"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_write" altera:internal="slave_write"></altera:port_mapping>
-        <altera:port_mapping altera:name="slave_writedata" altera:internal="slave_writedata"></altera:port_mapping>
+      <altera:interface_mapping altera:name="agent" altera:internal="acl_hyper_optimized_ccb_0.agent" altera:type="avalon" altera:dir="end">
+        <altera:port_mapping altera:name="agent_address" altera:internal="agent_address"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_burstcount" altera:internal="agent_burstcount"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_byteenable" altera:internal="agent_byteenable"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_read" altera:internal="agent_read"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_readdata" altera:internal="agent_readdata"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_readdatavalid" altera:internal="agent_readdatavalid"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_waitrequest" altera:internal="agent_waitrequest"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_write" altera:internal="agent_write"></altera:port_mapping>
+        <altera:port_mapping altera:name="agent_writedata" altera:internal="agent_writedata"></altera:port_mapping>
       </altera:interface_mapping>
-      <altera:interface_mapping altera:name="slave_clk" altera:internal="acl_hyper_optimized_ccb_0.slave_clk" altera:type="clock" altera:dir="end">
-        <altera:port_mapping altera:name="slave_clk" altera:internal="slave_clk"></altera:port_mapping>
+      <altera:interface_mapping altera:name="agent_clk" altera:internal="acl_hyper_optimized_ccb_0.agent_clk" altera:type="clock" altera:dir="end">
+        <altera:port_mapping altera:name="agent_clk" altera:internal="agent_clk"></altera:port_mapping>
       </altera:interface_mapping>
     </altera:altera_interface_boundary>
     <altera:altera_has_warnings>false</altera:altera_has_warnings>

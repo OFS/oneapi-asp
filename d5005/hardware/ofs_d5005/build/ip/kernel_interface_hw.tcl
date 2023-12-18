@@ -1,19 +1,3 @@
-# (c) 1992-2020 Intel Corporation.                            
-# Intel, the Intel logo, Intel, MegaCore, NIOS II, Quartus and TalkBack words    
-# and logos are trademarks of Intel Corporation or its subsidiaries in the U.S.  
-# and/or other countries. Other marks and brands may be claimed as the property  
-# of others. See Trademarks on intel.com for full list of Intel trademarks or    
-# the Trademarks & Brands Names Database (if Intel) or See www.Intel.com/legal (if Altera) 
-# Your use of Intel Corporation's design tools, logic functions and other        
-# software and tools, and its AMPP partner logic functions, and any output       
-# files any of the foregoing (including device programming or simulation         
-# files), and any associated documentation or information are expressly subject  
-# to the terms and conditions of the Altera Program License Subscription         
-# Agreement, Intel MegaCore Function License Agreement, or other applicable      
-# license agreement, including, without limitation, that your use is for the     
-# sole purpose of programming logic devices manufactured by Intel and sold by    
-# Intel or its authorized distributors.  Please refer to the applicable          
-# agreement for further details.                                                 
 package require -exact qsys 17.0
 
 # module properties
@@ -38,11 +22,6 @@ set_parameter_property NUM_GLOBAL_MEMS DEFAULT_VALUE 1
 set_parameter_property NUM_GLOBAL_MEMS DISPLAY_NAME "Number of global memory systems"
 set_parameter_property NUM_GLOBAL_MEMS AFFECTS_ELABORATION true
 
-add_parameter ENABLE_ROM_RECONFIGURE INTEGER 1
-set_parameter_property ENABLE_ROM_RECONFIGURE DEFAULT_VALUE 1
-set_parameter_property ENABLE_ROM_RECONFIGURE DISPLAY_NAME "Enable sys description rom PR"
-#set_parameter_property ENABLE_ROM_RECONFIGURE AFFECTS_ELABORATION false
-set_parameter_property ENABLE_ROM_RECONFIGURE VISIBLE false
 # | 
 # +-----------------------------------
 
@@ -56,7 +35,6 @@ proc get_config_addr { i } {
 
 proc compose { } {
     set num_global_mems [ get_parameter_value NUM_GLOBAL_MEMS ]
-    set rom_reconfigure_en [get_parameter_value ENABLE_ROM_RECONFIGURE]
 
     if { $num_global_mems > 6 } {
       send_message -error "Can't have more than 6 global memories"
@@ -82,8 +60,8 @@ proc compose { } {
     set_instance_parameter_value clock_crosser {BYTEENABLE_WIDTH} {8}
     set_instance_parameter_value clock_crosser {CMD_DCFIFO_MIN_DEPTH} {8}
     set_instance_parameter_value clock_crosser {RSP_DCFIFO_MIN_DEPTH} {8}
-    set_instance_parameter_value clock_crosser {SLAVE_STALL_LATENCY} {0}
-    set_instance_parameter_value clock_crosser {MASTER_STALL_LATENCY} {1}
+    set_instance_parameter_value clock_crosser {AGENT_STALL_LATENCY} {0}
+    set_instance_parameter_value clock_crosser {HOST_STALL_LATENCY} {1}
     set_instance_parameter_value clock_crosser {USE_WRITE_ACK} {0}
 
     add_instance address_span_extender_0 altera_address_span_extender 17.1
@@ -132,13 +110,7 @@ proc compose { } {
 
     add_instance version_id_0 version_id 10.0
     set_instance_parameter_value version_id_0 {WIDTH} {32}
-    
-    # For non-PR: legacy support
-    if {$rom_reconfigure_en == 1} {
-      set_instance_parameter_value version_id_0 {VERSION_ID} {-1598029822}
-    } else {
-      set_instance_parameter_value version_id_0 {VERSION_ID} {-1598029823}
-    }
+    set_instance_parameter_value version_id_0 {VERSION_ID} {-1598029822}
 
     add_instance reset_controller_sw altera_reset_controller 17.1
     set_instance_parameter_value reset_controller_sw {NUM_RESET_INPUTS} {2}
@@ -180,38 +152,16 @@ proc compose { } {
     set_instance_parameter_value reset_bridge_1 {SYNCHRONOUS_EDGES} {deassert}
     set_instance_parameter_value reset_bridge_1 {NUM_RESET_OUTPUTS} {1}
     
-    # For non-PR: legacy support
-    if {$rom_reconfigure_en != 1} {
-      add_instance sys_description_rom altera_avalon_onchip_memory2 17.1
-      set_instance_parameter_value sys_description_rom {allowInSystemMemoryContentEditor} {0}
-      set_instance_parameter_value sys_description_rom {blockType} {AUTO}
-      set_instance_parameter_value sys_description_rom {dataWidth} {64}
-      set_instance_parameter_value sys_description_rom {dualPort} {0}
-      set_instance_parameter_value sys_description_rom {initMemContent} {1}
-      set_instance_parameter_value sys_description_rom {initializationFileName} {sys_description}
-      set_instance_parameter_value sys_description_rom {instanceID} {NONE}
-      set_instance_parameter_value sys_description_rom {memorySize} {4096.0}
-      set_instance_parameter_value sys_description_rom {readDuringWriteMode} {DONT_CARE}
-      set_instance_parameter_value sys_description_rom {simAllowMRAMContentsFile} {0}
-      set_instance_parameter_value sys_description_rom {simMemInitOnlyFilename} {0}
-      set_instance_parameter_value sys_description_rom {singleClockOperation} {0}
-      set_instance_parameter_value sys_description_rom {slave1Latency} {2}
-      set_instance_parameter_value sys_description_rom {slave2Latency} {1}
-      set_instance_parameter_value sys_description_rom {useNonDefaultInitFile} {1}
-      set_instance_parameter_value sys_description_rom {useShallowMemBlocks} {0}
-      set_instance_parameter_value sys_description_rom {writable} {0}
-      set_instance_parameter_value sys_description_rom {ecc_enabled} {0}
-    }
     # connections and connection parameters
-    add_connection clock_crosser.master kernel_cra.s0 avalon
-    set_connection_parameter_value clock_crosser.master/kernel_cra.s0 arbitrationPriority {1}
-    set_connection_parameter_value clock_crosser.master/kernel_cra.s0 baseAddress {0x0000}
-    set_connection_parameter_value clock_crosser.master/kernel_cra.s0 defaultConnection {0}
+    add_connection clock_crosser.host kernel_cra.s0 avalon
+    set_connection_parameter_value clock_crosser.host/kernel_cra.s0 arbitrationPriority {1}
+    set_connection_parameter_value clock_crosser.host/kernel_cra.s0 baseAddress {0x0000}
+    set_connection_parameter_value clock_crosser.host/kernel_cra.s0 defaultConnection {0}
 
-    add_connection address_span_extender_0.expanded_master clock_crosser.slave avalon
-    set_connection_parameter_value address_span_extender_0.expanded_master/clock_crosser.slave arbitrationPriority {1}
-    set_connection_parameter_value address_span_extender_0.expanded_master/clock_crosser.slave baseAddress {0x0000}
-    set_connection_parameter_value address_span_extender_0.expanded_master/clock_crosser.slave defaultConnection {0}
+    add_connection address_span_extender_0.expanded_master clock_crosser.agent avalon
+    set_connection_parameter_value address_span_extender_0.expanded_master/clock_crosser.agent arbitrationPriority {1}
+    set_connection_parameter_value address_span_extender_0.expanded_master/clock_crosser.agent baseAddress {0x0000}
+    set_connection_parameter_value address_span_extender_0.expanded_master/clock_crosser.agent defaultConnection {0}
 
     add_connection ctrl.m0 address_span_extender_0.windowed_slave avalon
     set_connection_parameter_value ctrl.m0/address_span_extender_0.windowed_slave arbitrationPriority {1}
@@ -222,14 +172,6 @@ proc compose { } {
     set_connection_parameter_value ctrl.m0/address_span_extender_0.cntl arbitrationPriority {1}
     set_connection_parameter_value ctrl.m0/address_span_extender_0.cntl baseAddress {0x0020}
     set_connection_parameter_value ctrl.m0/address_span_extender_0.cntl defaultConnection {0}
-
-    # For non-PR: legacy support
-    if {$rom_reconfigure_en != 1} {
-      add_connection ctrl.m0 sys_description_rom.s1 avalon
-      set_connection_parameter_value ctrl.m0/sys_description_rom.s1 arbitrationPriority {1}
-      set_connection_parameter_value ctrl.m0/sys_description_rom.s1 baseAddress {0x2000}
-      set_connection_parameter_value ctrl.m0/sys_description_rom.s1 defaultConnection {0}
-    }
 
     add_connection ctrl.m0 sw_reset.s avalon
     set_connection_parameter_value ctrl.m0/sw_reset.s arbitrationPriority {1}
@@ -250,26 +192,16 @@ proc compose { } {
 
     add_connection clk_reset.clk ctrl.clk clock
 
-    # For non-PR: legacy support
-    if {$rom_reconfigure_en != 1} {
-      add_connection clk_reset.clk sys_description_rom.clk1 clock
-    }
-
     # hook up clock crosser clocks
-    add_connection kernel_clk.out_clk clock_crosser.master_clk clock
-    add_connection reset_bridge_0.out_reset clock_crosser.master_reset reset
-    add_connection clk_reset.clk clock_crosser.slave_clk clock
+    add_connection kernel_clk.out_clk clock_crosser.host_clk clock
+    add_connection reset_bridge_0.out_reset clock_crosser.host_reset reset
+    add_connection clk_reset.clk clock_crosser.agent_clk clock
 
     add_connection clk_reset.clk sw_reset.clk clock
 
     add_connection clk_reset.clk_reset ctrl.reset reset
 
     add_connection clk_reset.clk_reset address_span_extender_0.reset reset
-
-    # For non-PR: legacy support
-    if {$rom_reconfigure_en != 1} {
-      add_connection clk_reset.clk_reset sys_description_rom.reset1 reset
-    }
 
     add_connection clk_reset.clk_reset sw_reset.clk_reset reset
 
@@ -364,9 +296,6 @@ proc upgrade {ip_name ip_version old_params param_map } {
    return
   }
   
-  if {$ip_version < 15.1} {
-    set_parameter_value ENABLE_ROM_RECONFIGURE 0
-  }
   foreach {param_name param_value} $old_params {
     for {set i 1 } { $i < [llength $param_map] } { incr i } {
       set data [lindex $param_map $i]
