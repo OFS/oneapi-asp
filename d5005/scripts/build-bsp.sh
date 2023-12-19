@@ -34,9 +34,13 @@ BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 # Board variants to generate
 if [ "$#" -eq 0 ]; then
   # Generate all board_variants in hardware/ subdirectory if none specified on command line
+  # except the common directory
   BOARD_VARIANTS=()
   for dir in $BSP_ROOT/hardware/*/ ; do
-    BOARD_VARIANTS+=($(basename $dir))    
+    BOARD_VARIANT_NAME=$(basename $dir)
+    if [ "$BOARD_VARIANT_NAME" != "common" ]; then	  
+      BOARD_VARIANTS+=($BOARD_VARIANT_NAME)  
+    fi  
   done
 else
   BOARD_VARIANTS=("$@")
