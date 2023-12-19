@@ -124,9 +124,14 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
 
     bsp_dir = os.path.join(bsp_root,"hardware",bsp)
     bsp_qsf_dir = os.path.join(bsp_dir, 'build')
+    common_dir = os.path.join(bsp_root,"hardware","common","*")
 
-    print("bsp_dir is %s\n" % bsp_dir)
-    
+    print("bsp_dir is %s" % bsp_dir)
+    print("common_dir is %s\n" % common_dir)
+
+    #copy common files to board variant subdirectory 
+    copy_glob(common_dir, bsp_dir)
+
     #preserve the pr-build-template folder
     delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
     copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
