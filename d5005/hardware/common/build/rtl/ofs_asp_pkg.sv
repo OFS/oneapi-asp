@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 `include "ofs_asp.vh"
-`include "ofs_ip_cfg_hssi_ss.vh"
 
 package ofs_asp_pkg;
 
