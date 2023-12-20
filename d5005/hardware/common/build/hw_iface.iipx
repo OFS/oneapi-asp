@@ -107,27 +107,6 @@
   <tag2 key="TCL_PACKAGE_VERSION" value="13.0" />
  </component>
  <component
-   name="acl_hyper_optimized_ccb"
-   file="${INTELFPGAOCLSDKROOT}/ip/platform/acl_hyper_optimized_ccb/acl_hyper_optimized_ccb_hw.tcl"
-   displayName="AVMM S10 Clock Crossing Bridge"
-   version="1.0"
-   description=""
-   tags="CONNECTION_TYPES=avalon,clock,reset /// INTERNAL_COMPONENT=false"
-   categories=""
-   factory="TclModuleFactory">
-  <tag2 key="ALLOW_GREYBOX_GENERATION" value="false" />
-  <tag2 key="COMPONENT_EDITABLE" value="false" />
-  <tag2 key="ELABORATION_CALLBACK" value="elaborate" />
-  <tag2
-     key="FILESETS_TOP_LEVEL_NAMES"
-     value="QUARTUS_SYNTH:ccb,SIM_VERILOG:ccb" />
-  <tag2 key="INSTANTIATE_IN_SYSTEM_MODULE" value="true" />
-  <tag2 key="OPAQUE_ADDRESS_MAP" value="true" />
-  <tag2 key="REPORT_HIERARCHY" value="false" />
-  <tag2 key="SUPPORTED_FILE_SETS" value="QUARTUS_SYNTH,SIM_VERILOG" />
-  <tag2 key="TCL_PACKAGE_VERSION" value="17.0" />
- </component>
- <component     
    name="acl_snoop_adapter"
    file="${INTELFPGAOCLSDKROOT}/ip/platform/export/snoop_adapter_hw.tcl"
    displayName="Avalon Snoop Adapter"
