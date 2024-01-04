@@ -12,13 +12,13 @@ set_module_property COMPOSITION_CALLBACK compose
 # +-----------------------------------
 # | parameters
 # |
-add_parameter AFU_ID_H STD_LOGIC_VECTOR {0x3a00972e7aac41de}
-set_parameter_property AFU_ID_H DEFAULT_VALUE {0x3a00972e7aac41de}
+add_parameter AFU_ID_H STD_LOGIC_VECTOR {0xbb664b904f0346e6}
+set_parameter_property AFU_ID_H DEFAULT_VALUE {0xbb664b904f0346e6}
 set_parameter_property AFU_ID_H DISPLAY_NAME "AFU ID H"
 set_parameter_property AFU_ID_H AFFECTS_ELABORATION true
  
-add_parameter AFU_ID_L STD_LOGIC_VECTOR {0xbbd13901124e8cda}
-set_parameter_property AFU_ID_L DEFAULT_VALUE {0xbbd13901124e8cda}
+add_parameter AFU_ID_L STD_LOGIC_VECTOR {0xbc04db601b45b75d}
+set_parameter_property AFU_ID_L DEFAULT_VALUE {0xbc04db601b45b75d}
 set_parameter_property AFU_ID_L DISPLAY_NAME "AFU ID L"
 set_parameter_property AFU_ID_L AFFECTS_ELABORATION true
  
