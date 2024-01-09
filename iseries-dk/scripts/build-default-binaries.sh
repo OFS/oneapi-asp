@@ -38,7 +38,7 @@ if [ -z "$QDB_FILES" ]; then
 fi
 
 if [ "$BOARD" == "all" ] ; then
-    declare -a variant_list=("ofs_n6001" "ofs_n6001_iopipes" "ofs_n6001_usm" "ofs_n6001_usm_iopipes")
+    declare -a variant_list=("iseries-dk" "iseries-dk_usm")
 else
     declare -a variant_list=("$BOARD")
 fi
