@@ -24,6 +24,6 @@ switch $tcl_platform(platform) {
     post_message "SYN_TOP_RELPATH is $SYN_TOP_RELPATH"
     if {[catch {qexec "bash $SYN_TOP_RELPATH/scripts/run.sh $revision_name"} result]} {
         post_message -type error "OneAPI ASP build failed. Please see quartus_sh_compile.log for more information."
+    }
   }
-}
 }

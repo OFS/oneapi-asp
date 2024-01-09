@@ -113,9 +113,13 @@ do
     fi
 done
 
-qsys-generate -syn --quartus-project=$Q_REVISION --rev=$BSP_FLOW board.qsys
-## adding board.qsys and corresponding .ip parameterization files to opencl_bsp_ip.qsf
-qsys-archive --quartus-project=$Q_REVISION --rev=$BSP_FLOW --add-to-project board.qsys
+# use ip-deploy to create board.ip file from toplevel Platform Designer
+# project board_hw.tcl
+ip-deploy --component-name=board 
+
+# use qsys-generate to create RTL from toplevel Platform Designer
+# board.ip file
+qsys-generate -syn --quartus-project=ofs_top --rev=afu_flat board.ip
 
 # compile project
 # =====================

@@ -4,9 +4,7 @@
 #--------------------
 # IPs
 #--------------------
-set_global_assignment -name QSYS_FILE "board.qsys"
-set_global_assignment -name QSYS_FILE "ddr_channel.qsys"
-set_global_assignment -name QSYS_FILE "ddr_board.qsys"
+set_global_assignment -name IP_FILE "board.ip"
 
 #--------------------
 # DMA controller
@@ -16,7 +14,7 @@ set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/dma/par/dma_controlle
 #--------------------
 # UDP Engine
 #--------------------
-#set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/udp_offload_engine/par/udp_offload_engine_filelist.tcl"
+set_global_assignment -name SOURCE_TCL_SCRIPT_FILE  "./rtl/udp_offload_engine/par/udp_offload_engine_filelist.tcl"
 
 #--------------------
 # MPF VTP files
