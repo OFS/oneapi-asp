@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+ <path path="hw_iface.iipx" />
+ <path path="sw_iface.iipx" />
+</library>
