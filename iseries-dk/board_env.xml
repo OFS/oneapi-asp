@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<board_env version="2023.1" name="iseries-dk">
+  <hardware dir="hardware" default="iseries-dk"></hardware>
+  <platform name="linux64">
+    <mmdlib>libopae-c.so,%b/linux64/lib/libMPF.so,%b/linux64/lib/libintel_opae_mmd.so</mmdlib>
+    <linkflags>-L%a/linux64/lib -L%b/linux64/lib </linkflags>
+    <linklibs> -lintel_opae_mmd -lrt -lMPF</linklibs>
+    <utilbindir>%b/linux64/libexec</utilbindir>
+  </platform>
+
+</board_env>
