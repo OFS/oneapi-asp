@@ -34,6 +34,8 @@ COMMON_PATH="$(readlink -e "$SCRIPT_DIR_PATH/../../common")"
 
 # Copy common files into ASP platform directory
 cp -r "$COMMON_PATH/ase/" "$BSP_ROOT/"
+cp -r "$COMMON_PATH/bringup/" "$BSP_ROOT/"
+cp -r "$COMMON_PATH/linux64/" "$BSP_ROOT/"
 
 # Board variants to generate
 if [ "$#" -eq 0 ]; then
