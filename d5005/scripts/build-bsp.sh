@@ -19,6 +19,7 @@
 #
 #   SCRIPT_DIR_PATH: path to location of script
 #   BSP_ROOT: path to root of BSP repository
+#   COMMON_PATH: path to directory containing common files for all platforms
 #   OFS_PLATFORM_AFU_BBB: path to ofs-platform-afu-bbb repository
 ###############################################################################
 
@@ -36,6 +37,8 @@ COMMON_PATH="$(readlink -e "$SCRIPT_DIR_PATH/../../common")"
 cp -r "$COMMON_PATH/ase/" "$BSP_ROOT/"
 cp -r "$COMMON_PATH/bringup/" "$BSP_ROOT/"
 cp -r "$COMMON_PATH/linux64/" "$BSP_ROOT/"
+cp -r "$COMMON_PATH/scripts/" "$BSP_ROOT/"
+cp -r "$COMMON_PATH/hardware/" "$BSP_ROOT/"
 
 # Board variants to generate
 if [ "$#" -eq 0 ]; then

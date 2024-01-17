@@ -2,9 +2,9 @@
 
 ## Overview
 This repository contains files necessary to generate ASP for the OFS D5005
-reference platform.  The hardware currently relies on platforms that 
-implement the OFS PCIe TLP format using AXI-S interfaces, and the software 
-uses OPAE SDK interfaces.
+reference platform. The hardware currently relies on platforms that implement 
+the OFS PCIe TLP format using AXI-S interfaces, and the software uses OPAE SDK 
+interfaces.
 
 ## Repo Structure
 
@@ -54,7 +54,7 @@ Need to set **OFS_ASP_ROOT** to point to oneapi-asp/d5005.
 
 To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
-To generate ASP software only run: `scripts/build_mmd.sh`
+To generate MMD software only run: `scripts/build_mmd.sh`
 
 To package generated ASP into tarball run: `scripts/create-tarball.sh`
 
