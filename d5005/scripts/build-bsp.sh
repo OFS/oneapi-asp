@@ -30,6 +30,10 @@ fi
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
 BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
+COMMON_PATH="$(readlink -e "$SCRIPT_DIR_PATH/../../common")"
+
+# Copy common files into ASP platform directory
+cp -r "$COMMON_PATH/ase/" "$BSP_ROOT/"
 
 # Board variants to generate
 if [ "$#" -eq 0 ]; then
