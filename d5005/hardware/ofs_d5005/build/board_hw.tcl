@@ -5,7 +5,7 @@ set_module_property NAME {board}
 set_module_property DISPLAY_NAME {oneAPI ASP board IP}
 set_module_property VERSION {23.2}
 set_module_property GROUP {oneAPI ASP Components}
-set_module_property DESCRIPTION {toplevel instantiation of oneAPI shim IP}
+set_module_property DESCRIPTION {toplevel instantiation of oneAPI ASP IP}
 set_module_property AUTHOR {OFS}
 set_module_property COMPOSITION_CALLBACK compose
 

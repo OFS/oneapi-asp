@@ -15,7 +15,7 @@ software on a target system and to load a ASP.  The files are stored in two
 separate git submodules that each use git-lfs to store their contents.
 
 * hardware: contains files used by the OneAPI compiler to integrate the 
-generated kernel code with platform specific code.  Contains distinct shim 
+generated kernel code with platform specific code.  Contains distinct board variant 
 targets with distinct functionalities (ex. USM and non-USM variants targeting
 the same board platform).
 
