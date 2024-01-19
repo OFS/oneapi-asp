@@ -61,7 +61,7 @@ cp -rf "$ASP_ROOT"/ase/base/* .
 mkdir -p dummy_sources
 touch dummy_sources/dummy_rtl_file.sv
 touch dummy_sources/dummy_vhd_file.vhd
-cp -rf "$ASP_ROOT/hardware/${board_name}/build/opencl_afu.json" dummy_sources/
+cp -rf "$ASP_ROOT/hardware/${board_name}/build/oneapi_afu.json" dummy_sources/
 ls -1 dummy_sources/* > dummy_sources.txt
 
 ################################################################################
