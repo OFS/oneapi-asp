@@ -63,10 +63,10 @@ generate
         //do tx-rx loopback or pass-through to hssi-ss
         
         //toggle the tx-tready signal to mimic the real HSSI-SS
-        //kills throughput, but this is only used with the BSP-loopback logic (below),
+        //kills throughput, but this is only used with the ASP-loopback logic (below),
         //so it isn't actually doing anything real, anyhow. This helps stress the 
         //simple_rx/tx modules and their state machines. It is optimized away when we
-        //don't use intra-bsp-loopback.
+        //don't use intra-asp-loopback.
         logic [1:0] freeze_cntr;
         always_ff @(posedge kernel_clk) begin
             if (!kernel_resetn) begin
@@ -78,7 +78,7 @@ generate
 
         always_comb begin 
             //if connecting the kernel's tx-to-rx (loopback)
-            if (ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK) begin
+            if (ENABLE_INTRAASP_HSSI_TXRX_LOOPBACK) begin
                 eth_tx_axis_int[ch].tready = freeze_cntr == 'h0 ? 'b0 : 'b1;
                 eth_tx_axis_int[ch].clk    = kernel_clk;
                 eth_tx_axis_int[ch].rst_n  = kernel_resetn;

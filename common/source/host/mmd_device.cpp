@@ -42,7 +42,7 @@ Device::Device(uint64_t obj_id)
     : fpga_obj_id(obj_id), kernel_interrupt_thread(NULL), event_update(NULL),
       event_update_user_data(NULL), enable_set_numa(false),
       fme_sysfs_temp_initialized(false), bus(0), device(0), function(0),
-      afu_initialized(false), bsp_initialized(false), mmio_is_mapped(false),
+      afu_initialized(false), asp_initialized(false), mmio_is_mapped(false),
       port_handle(NULL), filter(NULL), port_token(NULL),
       mmio_token(NULL), mmio_handle(NULL),
       filter_fme(NULL), fme_token(NULL), guid(), ddr_offset(0), mpf_mmio_offset(0),
@@ -239,7 +239,7 @@ Device::Device(uint64_t obj_id)
 
   fpgaDestroyProperties(&props);
 
-  // TODO: Better encapsulation of how BSP variant is related to the DDR offset
+  // TODO: Better encapsulation of how ASP variant is related to the DDR offset
   // value.
   if (uuid_parse(SVM_ASP_AFU_ID, svm_guid) < 0) {
     LOG_ERR("Error parsing guid '%s'\n", SVM_ASP_AFU_ID);
@@ -267,7 +267,7 @@ Device::Device(uint64_t obj_id)
   initialize_fme_sysfs();
 
   mpf_handle = nullptr;
-  mmd_dev_name = get_board_name(BSP_NAME, obj_id);
+  mmd_dev_name = get_board_name(ASP_NAME, obj_id);
   afu_initialized = true;
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Done constructing Device object\n");
@@ -282,7 +282,7 @@ bool Device::parse_board_name(const char *board_name_str,
   if(std::getenv("MMD_ENABLE_DEBUG")){
     DEBUG_LOG("DEBUG LOG : Parsing board name\n");
   }
-  std::string prefix(BSP_NAME);
+  std::string prefix(ASP_NAME);
   std::string board_name(board_name_str);
 
   obj_id = 0;
@@ -353,9 +353,9 @@ void Device::initialize_fme_sysfs() {
   }
 }
 
-/** find_dma_dfh_offsets() function is used in Device::initialize_bsp() 
- *  We need to reinitialize DMA after we initialize bsp 
- *  because we fpgaReset() as part of initializing BSP
+/** find_dma_dfh_offsets() function is used in Device::initialize_asp() 
+ *  We need to reinitialize DMA after we initialize asp 
+ *  because we fpgaReset() as part of initializing ASP
  *  find_dma_dfh_offsets() helps us find the appropriate DFH offsets
  */ 
 bool Device::find_dma_dfh_offsets() {
@@ -407,7 +407,7 @@ bool Device::find_iopipes_dfh_offsets() {
     }
   } else {
     if(std::getenv("MMD_ENABLE_DEBUG")){  
-      DEBUG_LOG("DEBUG LOG : IO Pipes feature not enabled, IO Pipes not instantiated in BSP\n");
+      DEBUG_LOG("DEBUG LOG : IO Pipes feature not enabled, IO Pipes not instantiated in ASP\n");
     }
     return false;
   }
@@ -417,16 +417,16 @@ bool Device::find_iopipes_dfh_offsets() {
   return true;
 }
 
-/** initialize_bsp() function is used in aocl_mmd_open() API
+/** initialize_asp() function is used in aocl_mmd_open() API
  *  It resets AFC and reinitializes DMA, Kernel Interrupts if in use 
  */ 
-bool Device::initialize_bsp() {
+bool Device::initialize_asp() {
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Initializing BSP ... \n");
+    DEBUG_LOG("DEBUG LOG : Initializing ASP ... \n");
   }
-  if (bsp_initialized) {
+  if (asp_initialized) {
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : BSP already initialized \n");
+      DEBUG_LOG("DEBUG LOG : ASP already initialized \n");
     }
     return true;
   }
@@ -614,11 +614,11 @@ bool Device::initialize_bsp() {
     return false;
   }
 
-  bsp_initialized = true;
+  asp_initialized = true;
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : BSP Initialized ! \n");
+    DEBUG_LOG("DEBUG LOG : ASP Initialized ! \n");
   }
-  return bsp_initialized;
+  return asp_initialized;
 }
 
 /** Device Class Destructor implementation
@@ -871,10 +871,10 @@ int Device::yield() {
   }
 }
 
-/** bsp_loaded() function which checks if bsp is loaded on board
+/** asp_loaded() function which checks if asp is loaded on board
  *  it is used in aocl_mmd_open() API
  */
-bool Device::bsp_loaded() {
+bool Device::asp_loaded() {
 
   fpga_guid pci_guid;
   fpga_guid svm_guid;
@@ -926,12 +926,12 @@ bool Device::bsp_loaded() {
   if (uuid_compare(pci_guid, afu_guid) == 0 ||
       uuid_compare(svm_guid, afu_guid) == 0) {
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : bsp loaded : true \n");
+      DEBUG_LOG("DEBUG LOG : asp loaded : true \n");
     } 
     return true;
   } else {
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : bsp loaded : false \n");
+      DEBUG_LOG("DEBUG LOG : asp loaded : false \n");
     }
     return false;
   }
@@ -1149,7 +1149,7 @@ int Device::read_mmio(void *host_addr, size_t mmio_addr, size_t size) {
     DEBUG_LOG("DEBUG LOG : Device::read_mmio start: host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr, mmio_addr, size );
   }
 
-  // HACK: need extra delay for opencl sw reset
+  // HACK: need extra delay for oneapi sw reset
   if (mmio_addr == KERNEL_SW_RESET_BASE)
     OPENCL_SW_RESET_DELAY();
 
@@ -1217,7 +1217,7 @@ int Device::write_mmio(const void *host_addr, size_t mmio_addr,
     DEBUG_LOG("DEBUG LOG : Device::write_mmio start: host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr, mmio_addr, size );
   }
 
-  // HACK: need extra delay for opencl sw reset
+  // HACK: need extra delay for oneapi sw reset
   if (mmio_addr == KERNEL_SW_RESET_BASE)
     OPENCL_SW_RESET_DELAY();
 

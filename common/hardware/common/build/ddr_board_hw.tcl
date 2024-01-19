@@ -230,12 +230,12 @@ proc compose { } {
   }
 
   if { $snoop_port_enable == true } {    
-    add_interface acl_bsp_snoop avalon_streaming start 
-    set_interface_property acl_bsp_snoop EXPORT_OF memory_bank_divider.acl_bsp_snoop
+    add_interface acl_asp_snoop avalon_streaming start 
+    set_interface_property acl_asp_snoop EXPORT_OF memory_bank_divider.acl_asp_snoop
   }
   
-  add_interface acl_bsp_memorg_host conduit end
-  set_interface_property acl_bsp_memorg_host EXPORT_OF memory_bank_divider.acl_bsp_memorg_host
+  add_interface acl_asp_memorg_host conduit end
+  set_interface_property acl_asp_memorg_host EXPORT_OF memory_bank_divider.acl_asp_memorg_host
   add_interface dma_localmem_rd avalon slave
   set_interface_property dma_localmem_rd EXPORT_OF dma_localmem_rd_pipe.s0
   add_interface dma_localmem_wr avalon slave

@@ -45,14 +45,14 @@ the software.
 
 The hardware folder contains code that implements the ASP modules, but it needs
 copies of the OFS FIM pr-release-template files to work with a specific platform. 
-The setup_bsp.py script copies the required files from the FIM pr-release-template
+The setup_asp.py script copies the required files from the FIM pr-release-template
 and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
 Need to set **OFS_ASP_ROOT** to point to oneapi-asp/d5005.
 
-To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
+To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-asp.sh`.
 
 To generate MMD software only run: `scripts/build_mmd.sh`
 

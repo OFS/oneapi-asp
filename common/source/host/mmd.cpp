@@ -86,7 +86,7 @@ public:
   int get_or_create_device(const char *board_name, int *handle,
                            Device **device);
 
-  /** Return obj id based on BSP name.*/
+  /** Return obj id based on ASP name.*/
   uint64_t id_from_name(const char *board_name);
 
   /** Return MMD handle based on obj id. Returned value is negative if board
@@ -200,7 +200,7 @@ int DeviceMapManager::get_or_create_device(const char *board_name, int *handle,
   return DeviceMapManager::SUCCESS;
 }
 
-/** Return obj id based on BSP name.*/
+/** Return obj id based on ASP name.*/
 uint64_t DeviceMapManager::id_from_name(const char *board_name) {
   uint64_t obj_id = 0;
   if (Device::parse_board_name(board_name, obj_id)) {
@@ -288,7 +288,7 @@ void DeviceMapManager::close_device_if_exists(int handle) {
 // Local function definition
 static int program_aocx(int handle, void *data, size_t data_size);
 
-/** Interface for programing green bitstream(BSP + OneAPI Kernel) on device */
+/** Interface for programing green bitstream(ASP + OneAPI Kernel) on device */
 int mmd_device_reprogram(const char *device_name, void *data,
                               size_t data_size) {
   if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -307,8 +307,8 @@ int mmd_device_reprogram(const char *device_name, void *data,
   }
 }
 
-/** Interface for checking if AFU has BSP loaded */
-bool mmd_bsp_loaded(const char *name) {
+/** Interface for checking if AFU has ASP loaded */
+bool mmd_asp_loaded(const char *name) {
   uint64_t obj_id = device_manager.id_from_name(name);
   if (!obj_id) {
     if(std::getenv("MMD_ENABLE_DEBUG")){
@@ -322,40 +322,40 @@ bool mmd_bsp_loaded(const char *name) {
     Device *dev = device_manager.device_from_handle(handle);
     if(dev) {
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : BSP loaded for handle : %d \n", handle);
+        DEBUG_LOG("DEBUG LOG : ASP loaded for handle : %d \n", handle);
       }
-      return dev->bsp_loaded();
+      return dev->asp_loaded();
     } else {
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : BSP not loaded for handle : %d \n", handle);
+        DEBUG_LOG("DEBUG LOG : ASP not loaded for handle : %d \n", handle);
       }
       return false;
     }
   } else {
-    bool bsp_loaded = false;
+    bool asp_loaded = false;
     try {
       Device dev(obj_id);
-      bsp_loaded = dev.bsp_loaded();
+      asp_loaded = dev.asp_loaded();
     } catch (std::runtime_error &e) {
       LOG_ERR("%s\n", e.what());
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : BSP not loaded for handle : %d , %s\n", handle, e.what());
+        DEBUG_LOG("DEBUG LOG : ASP not loaded for handle : %d , %s\n", handle, e.what());
       }
       return false;
     }
 
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : BSP loaded : %d (0 - not loaded , 1 - loaded) for handle : %d \n", bsp_loaded, handle);
+      DEBUG_LOG("DEBUG LOG : ASP loaded : %d (0 - not loaded , 1 - loaded) for handle : %d \n", asp_loaded, handle);
     }
-    return bsp_loaded;
+    return asp_loaded;
   }
 }
 
 /** Function called as part of aocl_mmd_get_offline_info() 
  *  to determine number of baords in system
  */
-static unsigned int get_offline_num_acl_boards(const char *bsp_uuid) {
-  bool bsp_only = true; // TODO: looks like this is alway true now, verify then
+static unsigned int get_offline_num_acl_boards(const char *asp_uuid) {
+  bool asp_only = true; // TODO: looks like this is alway true now, verify then
                         // remove check.
   fpga_guid guid;
   fpga_result res = FPGA_OK;
@@ -363,8 +363,8 @@ static unsigned int get_offline_num_acl_boards(const char *bsp_uuid) {
   bool ret_err = false;
   fpga_properties filter = NULL;
 
-  if (uuid_parse(bsp_uuid, guid) < 0) {
-    LOG_ERR("Error parsing guid '%s'\n", bsp_uuid);
+  if (uuid_parse(asp_uuid, guid) < 0) {
+    LOG_ERR("Error parsing guid '%s'\n", asp_uuid);
     ret_err = true;
     goto out;
   }
@@ -376,7 +376,7 @@ static unsigned int get_offline_num_acl_boards(const char *bsp_uuid) {
     goto out;
   }
 
-  if (bsp_only) {
+  if (asp_only) {
     res = fpgaPropertiesSetGUID(filter, guid);
     if (res != FPGA_OK) {
       LOG_ERR("Error setting GUID: %s\n", fpgaErrStr(res));
@@ -483,7 +483,7 @@ fpga_result build_board_names(std::vector<fpga_token> &toks, std::string &boards
       uint64_t obj_id = 0;
       fpgaPropertiesGetObjectID(props, &obj_id);
 
-      boards.append(Device::get_board_name(BSP_NAME, obj_id));
+      boards.append(Device::get_board_name(ASP_NAME, obj_id));
       boards.append(";");
     }
 
@@ -504,7 +504,7 @@ fpga_result build_board_names(std::vector<fpga_token> &toks, std::string &boards
 /** Function called as part of aocl_mmd_get_offline_info()
  *  to determine names of boards in the system 
  */
-static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
+static bool get_offline_board_names(std::string &boards, bool asp_only = true) {
   fpga_guid pci_guid;
   fpga_guid svm_guid;
   fpga_result res = FPGA_OK;
@@ -522,7 +522,7 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
     }  
   }
 
-  if (bsp_only) {
+  if (asp_only) {
     if (uuid_parse(PCI_ASP_AFU_ID, pci_guid) < 0) {
       if(std::getenv("MMD_ENABLE_DEBUG")){ 
         DEBUG_LOG("Error parsing pci guid '%s'\n", pci_guid);
@@ -537,7 +537,7 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
       return false;
     }
 
-    std::vector<fpga_token> bsp_tokens;
+    std::vector<fpga_token> asp_tokens;
 
     for (auto &t : dfl_tokens) {
       fpga_properties dfl_props = nullptr;
@@ -602,7 +602,7 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
 
       res = fpgaEnumerate(filter, filters, nullptr, 0, &num_tokens);
       if ((res == FPGA_OK) && (num_tokens > 0)) {
-        bsp_tokens.push_back(t);
+        asp_tokens.push_back(t);
       }
 
       fpgaDestroyProperties(&dfl_props);
@@ -612,7 +612,7 @@ static bool get_offline_board_names(std::string &boards, bool bsp_only = true) {
       fpgaDestroyProperties(&filter[3]);
     }
 
-    build_board_names(bsp_tokens, boards);
+    build_board_names(asp_tokens, boards);
 
   } else {
 
@@ -1363,19 +1363,19 @@ int AOCL_MMD_CALL aocl_mmd_open(const char *name) {
   }
 
   assert(dev);
-  if (dev->bsp_loaded()) {
-    if (!dev->initialize_bsp()) {
-      LOG_ERR("Error initializing bsp\n");
+  if (dev->asp_loaded()) {
+    if (!dev->initialize_asp()) {
+      LOG_ERR("Error initializing asp\n");
       if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : Error while aocl_mmd_open, Error initializing bsp for board : %s\n", name );
+        DEBUG_LOG("DEBUG LOG : Error while aocl_mmd_open, Error initializing asp for board : %s\n", name );
       }
-      return MMD_BSP_INIT_FAILED;
+      return MMD_ASP_INIT_FAILED;
     }
   } else {
     if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Error while aocl_mmd_open, bsp not loaded for board : %s\n", name );
+      DEBUG_LOG("DEBUG LOG : Error while aocl_mmd_open, asp not loaded for board : %s\n", name );
     }
-    return MMD_BSP_NOT_LOADED;
+    return MMD_ASP_NOT_LOADED;
   }
   DEBUG_PRINT("end of aocl_mmd_open \n");
   if(std::getenv("MMD_PROGRAM_DEBUG") || std::getenv("MMD_DMA_DEBUG") || std::getenv("MMD_ENABLE_DEBUG")){
@@ -1761,7 +1761,7 @@ AOCL_MMD_CALL void *aocl_mmd_shared_alloc(int handle, size_t size,
  *  @param  handle Device that will have access to this memory
  *  @param shared_ptr Pointer allocated by aocl_mmd_shared_alloc()
  *  @param size In bytes, the size of the migration. Must be of multiple of a
- *  page boundary that the BSP supports.
+ *  page boundary that the ASP supports.
  *  @param destination The destination of migration
  *  @return The error code defined by AOCL_MMD_ERROR*
 */

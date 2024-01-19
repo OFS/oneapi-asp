@@ -5,7 +5,7 @@
 `include "ofs_plat_if.vh"
 
 //This module will multiplex the host_mem_if's write-channel between the write
-//  DMA module and the BSP's IRQs.
+//  DMA module and the ASP's IRQs.
 //An IRQ is generated 
 //An out-of-band AVMM signal, wr_user, is used to indicate an interrupt to the
 //  PIM. Setting the appropriate bit (
@@ -15,7 +15,7 @@
 //  wr_address[1:0] bits. wr_write must be set and wr_burstcount needs to be
 //  set to 1. 
 
-module bsp_host_mem_if_mux 
+module asp_host_mem_if_mux 
 import ofs_asp_pkg::*;
 (
     input clk,
@@ -27,7 +27,7 @@ import ofs_asp_pkg::*;
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
     
     // AVMM from DMA channels in board.qsys
-    ofs_plat_avalon_mem_rdwr_if.to_source bsp_mem_if,
+    ofs_plat_avalon_mem_rdwr_if.to_source asp_mem_if,
     
     input wr_fence_flag
 );
@@ -57,20 +57,20 @@ always_ff @(posedge clk) begin
     end
 end
 
-//The bsp_mem_if/host_mem_if signals are directly connected with no manipulation.
+//The asp_mem_if/host_mem_if signals are directly connected with no manipulation.
 always_comb begin
-    //from host to BSP - to_master
-    bsp_mem_if.rd_waitrequest       = host_mem_if.rd_waitrequest;
-    bsp_mem_if.rd_readdata          = host_mem_if.rd_readdata;
-    bsp_mem_if.rd_readdatavalid     = host_mem_if.rd_readdatavalid;
-    bsp_mem_if.rd_response          = host_mem_if.rd_response;
-    bsp_mem_if.rd_readresponseuser  = host_mem_if.rd_readresponseuser;
+    //from host to ASP - to_master
+    asp_mem_if.rd_waitrequest       = host_mem_if.rd_waitrequest;
+    asp_mem_if.rd_readdata          = host_mem_if.rd_readdata;
+    asp_mem_if.rd_readdatavalid     = host_mem_if.rd_readdatavalid;
+    asp_mem_if.rd_response          = host_mem_if.rd_response;
+    asp_mem_if.rd_readresponseuser  = host_mem_if.rd_readresponseuser;
     
-    //from BSP to host - to_slave
-    host_mem_if.rd_address          = bsp_mem_if.rd_address;
-    host_mem_if.rd_read             = bsp_mem_if.rd_read;
-    host_mem_if.rd_burstcount       = bsp_mem_if.rd_burstcount;
-    host_mem_if.rd_byteenable       = bsp_mem_if.rd_byteenable;
+    //from ASP to host - to_slave
+    host_mem_if.rd_address          = asp_mem_if.rd_address;
+    host_mem_if.rd_read             = asp_mem_if.rd_read;
+    host_mem_if.rd_burstcount       = asp_mem_if.rd_burstcount;
+    host_mem_if.rd_byteenable       = asp_mem_if.rd_byteenable;
     host_mem_if.rd_user             = '0; //unused
 end
 
@@ -117,15 +117,15 @@ assign send_irq_data = |irq_pending & (burst_counter == 'b0) & !host_mem_if.wr_w
 
 //wr_waitrequest is a combination of the waitrequest signal from the host/PIM and
 //  the IRQ-write and wr-fence.
-assign bsp_mem_if.wr_waitrequest = host_mem_if.wr_waitrequest | send_irq_data | send_wr_fence;
+assign asp_mem_if.wr_waitrequest = host_mem_if.wr_waitrequest | send_irq_data | send_wr_fence;
 
-//switch the wr_x signals between IRQ, wr-fence, and bsp_mem_if based on the send_irq_data and send_wr_fence signals
+//switch the wr_x signals between IRQ, wr-fence, and asp_mem_if based on the send_irq_data and send_wr_fence signals
 always_comb begin
-    host_mem_if.wr_burstcount   = send_irq_data ? 1                    : bsp_mem_if.wr_burstcount;
-    host_mem_if.wr_writedata    = send_irq_data ? '0                   : bsp_mem_if.wr_writedata;
-    host_mem_if.wr_address      = send_irq_data ? {'0, pending_irq_id} : bsp_mem_if.wr_address;
-    host_mem_if.wr_write        = send_irq_data ? 1'b1                 : bsp_mem_if.wr_write;
-    host_mem_if.wr_byteenable   = send_irq_data ? ~'0                  : bsp_mem_if.wr_byteenable;
+    host_mem_if.wr_burstcount   = send_irq_data ? 1                    : asp_mem_if.wr_burstcount;
+    host_mem_if.wr_writedata    = send_irq_data ? '0                   : asp_mem_if.wr_writedata;
+    host_mem_if.wr_address      = send_irq_data ? {'0, pending_irq_id} : asp_mem_if.wr_address;
+    host_mem_if.wr_write        = send_irq_data ? 1'b1                 : asp_mem_if.wr_write;
+    host_mem_if.wr_byteenable   = send_irq_data ? ~'0                  : asp_mem_if.wr_byteenable;
     
     host_mem_if.wr_user     = '0;
     if (send_irq_data) begin
@@ -136,14 +136,14 @@ always_comb begin
 end
 
 //need to track the wr_write bursts to ensure we don't send an IRQ in the middle of a burst
-assign load_burst_counter = (burst_counter == 'b0) & (bsp_mem_if.wr_write) & !send_irq_data;
-assign enable_burst_counter = (burst_counter != 'b0) & (bsp_mem_if.wr_write) & !host_mem_if.wr_waitrequest;
+assign load_burst_counter = (burst_counter == 'b0) & (asp_mem_if.wr_write) & !send_irq_data;
+assign enable_burst_counter = (burst_counter != 'b0) & (asp_mem_if.wr_write) & !host_mem_if.wr_waitrequest;
 
 always_ff @(posedge clk) begin
     if (rst_local)
         burst_counter <= 'b0;
     else if (load_burst_counter)
-        burst_counter <= bsp_mem_if.wr_burstcount - 1'b1;
+        burst_counter <= asp_mem_if.wr_burstcount - 1'b1;
     else if (enable_burst_counter && (burst_counter != '0))
         burst_counter <= burst_counter - 1'b1;
 end
@@ -151,11 +151,11 @@ end
 //write-fence logic
 // when we get a write-fence signal from the DMA block we need to issue a write-fence event
 // in the wr_user field, and then send a write of the magic number as issued by the DMA block.
-assign send_wr_fence = !(|irq_pending) & bsp_mem_if.wr_write & 
+assign send_wr_fence = !(|irq_pending) & asp_mem_if.wr_write & 
                         wr_fence_flag & !send_magic_number_dly & 
                         !send_wr_fence_d & !host_mem_if.wr_waitrequest;
 assign send_magic_number = !(|irq_pending) & !send_wr_fence & send_magic_number_dly & 
-                            !host_mem_if.wr_waitrequest & bsp_mem_if.wr_write;
+                            !host_mem_if.wr_waitrequest & asp_mem_if.wr_write;
 
 always_ff @(posedge clk) begin
     if (rst_local)
@@ -173,4 +173,4 @@ always_ff @(posedge clk) begin
 end
 
 
-endmodule : bsp_host_mem_if_mux
+endmodule : asp_host_mem_if_mux

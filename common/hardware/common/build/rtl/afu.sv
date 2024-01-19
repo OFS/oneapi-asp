@@ -36,7 +36,7 @@ logic reset, clk;
 assign reset = pClk_reset;
 assign clk   = pClk;
 
-//local wires to connect between bsp_logic and kernel_wrapper - kernel control and memory-interface
+//local wires to connect between asp_logic and kernel_wrapper - kernel control and memory-interface
 kernel_control_intf kernel_control();
 kernel_mem_intf kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]();
 
@@ -57,7 +57,7 @@ assign host_mem_va_if_dma.clk = host_mem_if.clk;
 assign host_mem_va_if_dma.reset_n = host_mem_if.reset_n;
 assign host_mem_va_if_dma.instance_number = host_mem_if.instance_number;
 
-// mmio64-if for the BSP
+// mmio64-if for the ASP
 ofs_plat_avalon_mem_if
 #(
     `OFS_PLAT_AVALON_MEM_IF_REPLICATE_PARAMS(mmio64_if)
@@ -157,7 +157,7 @@ host_mem_if_vtp host_mem_if_vtp_inst (
 `endif
 
 
-bsp_logic bsp_logic_inst (
+asp_logic asp_logic_inst (
     .clk                    ( pClk ),
     .reset,
     .kernel_clk             ( uClk_usrDiv2 ),

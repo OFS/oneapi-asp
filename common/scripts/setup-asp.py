@@ -3,7 +3,7 @@
 ## Copyright 2022 Intel Corporation
 ## SPDX-License-Identifier: MIT
 
-# setup_bsp.py
+# setup_asp.py
 # description:
 #   This script imports the out-of-tree build template from a base FIM
 #   build.
@@ -105,8 +105,8 @@ def rm_glob(src, verbose=False):
         #print ("Removed: %s" % i)
 
         
-# main work function for setting up bsp
-def setup_bsp(bsp_root, env_vars, bsp, verbose):
+# main work function for setting up asp
+def setup_asp(asp_root, env_vars, asp, verbose):
 
     libopae_c_root_dir = env_vars["LIBOPAE_C_ROOT"]
     packager_bin = get_packager_bin(libopae_c_root_dir)
@@ -122,36 +122,36 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     print ("deliverable_hwlib_dir: %s" % deliverable_hwlib_dir)
     print ("intel_fpga_bbb_dir: %s" % intel_fpga_bbb_dir)
 
-    bsp_dir = os.path.join(bsp_root,"hardware",bsp)
-    bsp_qsf_dir = os.path.join(bsp_dir, 'build')
-    common_dir = os.path.join(bsp_root,"hardware","common","*")
+    asp_dir = os.path.join(asp_root,"hardware",asp)
+    asp_qsf_dir = os.path.join(asp_dir, 'build')
+    common_dir = os.path.join(asp_root,"hardware","common","*")
 
-    print("bsp_dir is %s" % bsp_dir)
+    print("asp_dir is %s" % asp_dir)
     print("common_dir is %s\n" % common_dir)
 
     #copy common files to board variant subdirectory 
-    copy_glob(common_dir, bsp_dir)
+    copy_glob(common_dir, asp_dir)
 
     #preserve the pr-build-template folder
-    delete_and_mkdir(os.path.join(bsp_dir, '../../pr_build_template'))
-    copy_glob(deliverable_dir, os.path.join(bsp_dir, '../../'),verbose)
+    delete_and_mkdir(os.path.join(asp_dir, '../../pr_build_template'))
+    copy_glob(deliverable_dir, os.path.join(asp_dir, '../../'),verbose)
     
     #preserve the blue_bits folder from $OPAE_PLATFORM_ROOT/hw/
-    delete_and_mkdir(os.path.join(bsp_dir, 'blue_bits'))
-    copy_glob(deliverable_bluebits_dir, bsp_dir, verbose)
+    delete_and_mkdir(os.path.join(asp_dir, 'blue_bits'))
+    copy_glob(deliverable_bluebits_dir, asp_dir, verbose)
     
     # copy the FIM FME information text files
-    copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), bsp_qsf_dir, verbose)
+    copy_glob(os.path.join(deliverable_hwlib_dir, 'fme*.txt'), asp_qsf_dir, verbose)
     
     # copy the required IP files from the intel-fpga-bbb repo (for use in VTP/MPF)
-    bsp_ip_dir = os.path.join(bsp_qsf_dir, 'ip')
-    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_mpf_vtp"), bsp_ip_dir, verbose)
-    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_cci_mpf"), bsp_ip_dir, verbose)
+    asp_ip_dir = os.path.join(asp_qsf_dir, 'ip')
+    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_mpf_vtp"), asp_ip_dir, verbose)
+    copy_glob(os.path.join(intel_fpga_bbb_dir,"BBB_cci_mpf"), asp_ip_dir, verbose)
 
-    # add packager to opencl bsp to make bsp easier to use
-    bsp_tools_dir = os.path.join(bsp_qsf_dir, 'tools')
-    delete_and_mkdir(bsp_tools_dir)
-    shutil.copy2(packager_bin, bsp_tools_dir)
+    # add packager to oneapi asp to make asp easier to use
+    asp_tools_dir = os.path.join(asp_qsf_dir, 'tools')
+    delete_and_mkdir(asp_tools_dir)
+    shutil.copy2(packager_bin, asp_tools_dir)
 
     # run the opae script 'afu-synth-setup' to create the PIM
     cmd_afu_synth_setup_opae_PATH_update = ("PATH=" + env_vars["LIBOPAE_C_ROOT"] + "/bin:${PATH}")
@@ -164,8 +164,8 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     cmd_afu_synth_setup_filelist = ("--sources " + filelist_path)
     cmd_afu_synth_setup_lib_arb = ("--lib " + deliverable_hwlib_dir)
     cmd_afu_synth_setup_force_arg = "--force"
-    cmd_afu_synth_setup_platform_dst = os.path.join(bsp_dir,'fim_platform')
-    full_afu_synth_setup_cmd = ("cd " + bsp_qsf_dir + " && " +  
+    cmd_afu_synth_setup_platform_dst = os.path.join(asp_dir,'fim_platform')
+    full_afu_synth_setup_cmd = ("cd " + asp_qsf_dir + " && " +  
                                 cmd_afu_synth_setup_opae_PATH_update + " " +
                                 cmd_afu_synth_setup_opae_platform_db_path + " " +
                                 cmd_afu_synth_setup_script + " " +
@@ -178,37 +178,37 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
 
     #find the Quartus-build folder expected by the FIM
     #use syn_top for now, but it might change depending on FIM board/variant/etc
-    QUARTUS_SYN_DIR=get_dir_path("syn_top",bsp_dir)
+    QUARTUS_SYN_DIR=get_dir_path("syn_top",asp_dir)
     if verbose:
         print("QUARTUS_SYN_DIR is %s" % (QUARTUS_SYN_DIR))
-    ASP_BASE_DIR_ABS=bsp_dir
+    ASP_BASE_DIR_ABS=asp_dir
     
-    QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_qsf_dir)
+    QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,asp_qsf_dir)
     if verbose:
         print("QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_ASP_BUILD_DIR) )
     
-    QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,bsp_dir)
+    QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR=os.path.relpath(QUARTUS_SYN_DIR,asp_dir)
     if verbose:
         print("QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR %s" % (QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR) )
     
-    ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(bsp_qsf_dir,QUARTUS_SYN_DIR)
+    ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(asp_qsf_dir,QUARTUS_SYN_DIR)
     if verbose:
         print("ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
     
-    KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(bsp_dir,QUARTUS_SYN_DIR)
+    KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR=os.path.relpath(asp_dir,QUARTUS_SYN_DIR)
     if verbose:
         print("KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR %s" % (KERNEL_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR) )
     
-    BUILD_SCRIPTS_DIR=os.path.join(bsp_qsf_dir,'scripts')
+    BUILD_SCRIPTS_DIR=os.path.join(asp_qsf_dir,'scripts')
     SYNTOP_TCL_POINTER=os.path.join(BUILD_SCRIPTS_DIR,'syn_top_relpath.tcl')
     SYNTOP_FILE_LINES = []
-    SYNTOP_FILE_LINES.append("#Generated by setup-bsp.py, used in entry.tcl.\n")
+    SYNTOP_FILE_LINES.append("#Generated by setup-asp.py, used in entry.tcl.\n")
     SYNTOP_FILE_LINES.append("global SYN_TOP_RELPATH\n")
     SYNTOP_FILE_LINES.append("set SYN_TOP_RELPATH %s\n" % QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR)
     create_text_file(SYNTOP_TCL_POINTER, SYNTOP_FILE_LINES)
     
-    #symlink the contents of bsp_dir/build into syn_top
-    BSP_BUILD_DIR_FILES=os.path.join(bsp_qsf_dir, '*')
+    #symlink the contents of asp_dir/build into syn_top
+    ASP_BUILD_DIR_FILES=os.path.join(asp_qsf_dir, '*')
     ASP_BUILD_DIR_SYMLINK_CMD="cd " + QUARTUS_SYN_DIR + " && ln -sf " + ASP_BUILD_DIR_RELATIVE_TO_QUARTUS_BUILD_DIR + "/* ."
     run_cmd(ASP_BUILD_DIR_SYMLINK_CMD)
     
@@ -219,15 +219,15 @@ def setup_bsp(bsp_root, env_vars, bsp, verbose):
     if verbose:
         print("PR_AFU_QSF_FILENAME is %s" % PR_AFU_QSF_FILENAME)
     
-    rm_glob(os.path.join(bsp_dir, PR_AFU_QSF_FILENAME)) 
-    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + bsp_dir + " && ln -sf " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QSF_FILENAME + " ."
+    rm_glob(os.path.join(asp_dir, PR_AFU_QSF_FILENAME)) 
+    OFS_PR_AFU_QSF_SYMLINK_CMD="cd " + asp_dir + " && ln -sf " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QSF_FILENAME + " ."
     run_cmd(OFS_PR_AFU_QSF_SYMLINK_CMD)
 
-    rm_glob(os.path.join(bsp_dir, PR_AFU_QPF_FILENAME))
-    OFS_TOP_QPF_SYMLINK_CMD="cd " + bsp_dir + " && ln -sf " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QPF_FILENAME + " ."
+    rm_glob(os.path.join(asp_dir, PR_AFU_QPF_FILENAME))
+    OFS_TOP_QPF_SYMLINK_CMD="cd " + asp_dir + " && ln -sf " + QUARTUS_BUILD_DIR_RELATIVE_TO_KERNEL_BUILD_DIR + "/" + PR_AFU_QPF_FILENAME + " ."
     run_cmd(OFS_TOP_QPF_SYMLINK_CMD)
     
-    print("\nsetup-bsp.py completed successfully for variant %s\n" % bsp)
+    print("\nsetup-asp.py completed successfully for variant %s\n" % asp)
 
 
 # Read environment variables required for script operations
@@ -252,7 +252,7 @@ def create_text_file(dst, lines):
             f.write(line)
     
 
-# process command line and setup bsp flow
+# process command line and setup asp flow
 def main():
     parser = argparse.ArgumentParser(description="Generate board variant")
     parser.add_argument("board_name", help="Name of board to configure")
@@ -261,8 +261,8 @@ def main():
     args = parser.parse_args()
 
     env_vars = get_required_env_vars()
-    bsp_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    setup_bsp(bsp_root, env_vars, args.board_name, args.verbose)
+    asp_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    setup_asp(asp_root, env_vars, args.board_name, args.verbose)
 
 if __name__ == '__main__':
     main()

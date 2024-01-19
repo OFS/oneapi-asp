@@ -12,29 +12,29 @@ echo "This is the OFS OneAPI ASP run.sh script."
 KERNEL_BUILD_PWD=`pwd`
 echo "run.sh KERNEL_BUILD_PWD is $KERNEL_BUILD_PWD"
 
-BSP_BUILD_PWD="$KERNEL_BUILD_PWD/../"
-echo "run.sh BSP_BUILD_PWD is $BSP_BUILD_PWD"
+ASP_BUILD_PWD="$KERNEL_BUILD_PWD/../"
+echo "run.sh ASP_BUILD_PWD is $ASP_BUILD_PWD"
 
-# set BSP flow
+# set ASP flow
 if [ $# -eq 0 ]
 then
-    BSP_FLOW="afu_flat"
+    ASP_FLOW="afu_flat"
 else
-    BSP_FLOW="$1"
+    ASP_FLOW="$1"
 fi
-echo "Compiling '$BSP_FLOW' bsp-flow"
+echo "Compiling '$ASP_FLOW' asp-flow"
 
 SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
-echo "OFS BSP run.sh script path: $SCRIPT_PATH"
+echo "OFS ASP run.sh script path: $SCRIPT_PATH"
 SCRIPT_DIR_PATH="$(dirname "$SCRIPT_PATH")"
 
-#if flow-type is 'flat_kclk' uncomment USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION in opencl_bsp.vh
-if [ ${BSP_FLOW} = "afu_flat_kclk" ]; then
+#if flow-type is 'flat_kclk' uncomment USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION in ofs_asp.vh
+if [ ${ASP_FLOW} = "afu_flat_kclk" ]; then
     echo "Enabling the USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION define in the Shim RTL..."
-    SHIM_HEADER_FILE_NAME="${SCRIPT_DIR_PATH}/../rtl/opencl_bsp.vh"
+    SHIM_HEADER_FILE_NAME="${SCRIPT_DIR_PATH}/../rtl/ofs_asp.vh"
     echo "Modifying the header file ${SHIM_HEADER_FILE_NAME} to uncomment the define and include it in the design."
     sed -i -e 's/\/\/`define USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION/`define USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION/' "$SHIM_HEADER_FILE_NAME"
-    BSP_FLOW="afu_flat"
+    ASP_FLOW="afu_flat"
 fi
 
 cd "$SCRIPT_DIR_PATH/.." || exit
@@ -43,17 +43,17 @@ echo "run.sh AFU_BUILD_PWD is $AFU_BUILD_PWD"
 
 if [ -n "$PACKAGER_BIN" ]; then
   echo "Selected explicitly configured PACKAGER_BIN=\"$PACKAGER_BIN\""
-elif [ -z "$OFS_ASP_ENV_USE_BSP_PACKAGER" ] && PACKAGER_BIN="$(command -v packager)"; then
+elif [ -z "$OFS_ASP_ENV_USE_ASP_PACKAGER" ] && PACKAGER_BIN="$(command -v packager)"; then
   echo "Detected PACKAGER_BIN=\"$PACKAGER_BIN\" from \$PATH search"
 else
-  echo "Attempting fallback to BSP copy of packager"
+  echo "Attempting fallback to ASP copy of packager"
   if [ -f ./tools/packager ]; then
     chmod +x ./tools/packager
     PACKAGER_BIN=$(readlink -f ./tools/packager)
     PYTHONPATH=`find $OFS_ASP_ROOT -path *install*site-packages`
     echo "PYTHONPATH is $PYTHONPATH"
   else
-    echo "Error cannot find BSP copy of packager"
+    echo "Error cannot find ASP copy of packager"
     exit 1
   fi
 fi
@@ -66,7 +66,7 @@ fi
 ##make sure bbs files exist
 if [[ ! $(find . -name d5005.qdb -print -quit) ]]
 then
-    echo "ERROR: BSP is not setup"
+    echo "ERROR: ASP is not setup"
     exit 1
 fi
 
@@ -92,12 +92,12 @@ else
     done < "${BUILD_ENV_DB_FILE}"
 fi
 
-RELATIVE_BSP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $BSP_BUILD_PWD`
+RELATIVE_ASP_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $ASP_BUILD_PWD`
 RELATIVE_KERNEL_BUILD_PATH_TO_HERE=`realpath --relative-to=$AFU_BUILD_PWD $KERNEL_BUILD_PWD`
 #create new 'afu_flat' revision based on the one used to compile the kernel
-cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/$Q_PR_REVISION.qsf ./$BSP_FLOW.qsf
+cp -f ${RELATIVE_KERNEL_BUILD_PATH_TO_HERE}/$Q_PR_REVISION.qsf ./$ASP_FLOW.qsf
 #add ASP/afu_flat-specific stuff to the qsf file
-echo "source afu_ip.qsf" >> ./$BSP_FLOW.qsf
+echo "source afu_ip.qsf" >> ./$ASP_FLOW.qsf
 
 #symlink the compiled kernel files to here from their origin (except the )
 MYLIST=`ls --ignore=fim_platform --ignore=build $RELATIVE_KERNEL_BUILD_PATH_TO_HERE`
@@ -130,12 +130,12 @@ if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     exit $?
 fi
 
-echo "Starting: quartus_sh --flow compile $Q_REVISION -c $BSP_FLOW"
-quartus_sh --flow compile $Q_REVISION -c $BSP_FLOW
+echo "Starting: quartus_sh --flow compile $Q_REVISION -c $ASP_FLOW"
+quartus_sh --flow compile $Q_REVISION -c $ASP_FLOW
 
 rm -rf fpga.bin
 
-generated_gbs="${BSP_FLOW}"."${Q_PR_PARTITION_NAME}".gbs
+generated_gbs="${ASP_FLOW}"."${Q_PR_PARTITION_NAME}".gbs
 if [ ! -f ./output_files/"${generated_gbs}" ]; then
     echo "run.sh ERROR: can't find ./output_files/${generated_gbs}"
     exit 1
@@ -147,15 +147,15 @@ aocl binedit fpga.bin add .acl.gbs.gz "./${generated_gbs}.gz"
 
 echo "run.sh: done zipping up the gbs into gbs.gz, and creating fpga.bin"
 
-if [ -f "${BSP_FLOW}.failing_clocks.rpt" ]; then
-    aocl binedit fpga.bin add .failing_clocks.rpt "./${BSP_FLOW}.failing_clocks.rpt"
-    cp "./${BSP_FLOW}.failing_clocks.rpt" ../
+if [ -f "${ASP_FLOW}.failing_clocks.rpt" ]; then
+    aocl binedit fpga.bin add .failing_clocks.rpt "./${ASP_FLOW}.failing_clocks.rpt"
+    cp "./${ASP_FLOW}.failing_clocks.rpt" ../
     echo "run.sh: done appending failing clocks report to fpga.bin"
 fi
 
-if [ -f "${BSP_FLOW}.failing_paths.rpt" ]; then
-    aocl binedit fpga.bin add .failing_paths.rpt "./${BSP_FLOW}.failing_paths.rpt"
-    cp "./${BSP_FLOW}.failing_paths.rpt" ../
+if [ -f "${ASP_FLOW}.failing_paths.rpt" ]; then
+    aocl binedit fpga.bin add .failing_paths.rpt "./${ASP_FLOW}.failing_paths.rpt"
+    cp "./${ASP_FLOW}.failing_paths.rpt" ../
     echo "run.sh: done appending failing paths report to fpga.bin"
 fi
 
@@ -165,7 +165,7 @@ if [ ! -f fpga.bin ]; then
 fi
 
 echo "run.sh: generate acl_quartus_report.txt"
-quartus_sh -t scripts/gen-asp-quartus-report.tcl "${Q_REVISION}" "${BSP_FLOW}"
+quartus_sh -t scripts/gen-asp-quartus-report.tcl "${Q_REVISION}" "${ASP_FLOW}"
 
 #copy fpga.bin to parent directory so aoc flow can find it
 cp fpga.bin $RELATIVE_KERNEL_BUILD_PATH_TO_HERE/

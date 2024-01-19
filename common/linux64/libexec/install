@@ -3,11 +3,11 @@
 ## Copyright 2022 Intel Corporation
 ## SPDX-License-Identifier: MIT
 
-if [ -n "$OFS_BSP_ENV_DEBUG_INSTALL_SCRIPT" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_INSTALL_SCRIPT" ]; then
   set -x
 fi
 
-BSP_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
+ASP_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
 
 ###############################################################################
 # Check return code and exit with error message if not 0
@@ -38,7 +38,7 @@ error() {
 # Call script to configure permissions needed for using OFS card
 ###############################################################################
 configure_permission() {
-  /usr/bin/env bash "$BSP_ROOT/linux64/libexec/setup_permissions.sh"
+  /usr/bin/env bash "$ASP_ROOT/linux64/libexec/setup_permissions.sh"
   check_res $? "Error: 'setup_permissions.sh' script failed"
 }
 
@@ -47,7 +47,7 @@ configure_permission() {
 # Main script logic
 ###############################################################################
 
-if [ -z "$OFS_BSP_ENV_NO_PERMISSIONS_INSTALL" ]; then
+if [ -z "$OFS_ASP_ENV_NO_PERMISSIONS_INSTALL" ]; then
   configure_permission
 fi
 

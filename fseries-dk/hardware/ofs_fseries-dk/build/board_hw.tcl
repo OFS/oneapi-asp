@@ -212,7 +212,7 @@ proc compose { } {
   add_connection board_irq_ctrl.interrupt_receiver kernel_interface.kernel_irq_to_host irq
 
   # Conduits
-  add_connection kernel_interface.acl_bsp_memorg_host0x018 ddr_board.acl_bsp_memorg_host conduit
+  add_connection kernel_interface.acl_asp_memorg_host0x018 ddr_board.acl_asp_memorg_host conduit
 
   # Data
   add_connection pipe_stage_host_ctrl.m0 pipe_stage_dma_csr.s0 avalon
@@ -305,7 +305,7 @@ proc compose { } {
 
   if { $snoop_port_enable == true } {
     add_interface acl_internal_snoop avalon_streaming start
-    set_interface_property acl_internal_snoop EXPORT_OF ddr_board.acl_bsp_snoop
+    set_interface_property acl_internal_snoop EXPORT_OF ddr_board.acl_asp_snoop
   }
 
   for { set i 0} { $i < $number_of_memory_banks } {incr i} {

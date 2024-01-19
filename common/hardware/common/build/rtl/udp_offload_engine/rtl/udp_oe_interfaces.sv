@@ -21,7 +21,7 @@ interface udp_oe_ctrl_if;
     logic            csr_rst;
     
     typedef struct packed {
-        logic   intrabsp_txrx_loopback;
+        logic   intraasp_txrx_loopback;
     } t_misc_ctrl;
     t_misc_ctrl misc_ctrl;
 

@@ -3,7 +3,7 @@ for a specific OFS build.
 
 The scripts are structured as follows:
 
-- build-bsp.sh:
+- build-asp.sh:
   This script is the entry point for generating the oneAPI-ASP. It compiles required
   software and clones required repositories (if needed) using other scripts
   in this directory.
@@ -13,7 +13,7 @@ The scripts are structured as follows:
   consuming large disk space in $ASP_ROOT/hardware/<board_variant_name_for_non_usm>/build/output_files
   and $ASP_ROOT/hardware/<board_variant_name_for_usm>/build/output_files, thus saving disk space.
 
-- build-bsp-sw.sh
+- build-asp-sw.sh
   This script calls other scripts to build OPAE from source (if needed) and builds the
   MMD if it is not already compiled and installed in the oneAPI-ASP repo.
 
@@ -26,17 +26,17 @@ The scripts are structured as follows:
   This script builds the MMD and installs it in the linux64 directory in the
   oneAPI-ASP.  The MMD build is packaged when creating tarball for distribution.
 
-- setup-bsp.py
+- setup-asp.py
   This script copies files from the OFS FIM pr-template-release source location to 
   the oneAPI-ASP hardware/<variant>/build/ folder and updates a variety of Quartus 
   setting files.
 
 - build-default-binaries.sh
-  This script requires build-bsp.sh to have completed successfully to generate
+  This script requires build-asp.sh to have completed successfully to generate
   oneAPI-ASP. It uses the oneAPI-ASP to compile a simple adder kernel that is used 
   as the default binary file for the 'aocl initialize' command.
 
 - create-tarball.sh
   This script packages the files needed for oneAPI-ASP, including the default aocx,
-  and puts them in a single opencl-bsp.tar.gz file that can be used to
+  and puts them in a single oneapi-asp.tar.gz file that can be used to
   redistribute the oneAPI-ASP.

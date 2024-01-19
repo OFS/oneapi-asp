@@ -27,7 +27,7 @@
    version="1.0"
    description=""
    tags="CONNECTION_TYPES=avalon,clock,interrupt,reset /// INTERNAL_COMPONENT=false"
-   categories="Stratix10 BSP Components"
+   categories="Stratix10 ASP Components"
    factory="TclModuleFactory">
   <tag2 key="ALLOW_GREYBOX_GENERATION" value="false" />
   <tag2 key="ANALYZE_HDL" value="auto" />

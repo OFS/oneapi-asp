@@ -32,7 +32,7 @@ fi
 
 
 ASE_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
-BSP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
+ASP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
 
 if [ "$#" -lt 2 ]; then
   echo "Usage: $0 <aocx file> <board name>"
@@ -54,14 +54,14 @@ aocl binedit "$aocx_file" get .acl.fpga.bin $fpga_bin_path
 tar -xf $fpga_bin_path
 
 cp -r "$ASE_SRC_PATH"/* .
-cp -rf "$BSP_ROOT"/ase/base/* .
+cp -rf "$ASP_ROOT"/ase/base/* .
 
 # Construct dummy sources which we will feed to generate_ase_environment to
 # build a simulation tree.
 mkdir -p dummy_sources
 touch dummy_sources/dummy_rtl_file.sv
 touch dummy_sources/dummy_vhd_file.vhd
-cp -rf "$BSP_ROOT/hardware/${board_name}/build/opencl_afu.json" dummy_sources/
+cp -rf "$ASP_ROOT/hardware/${board_name}/build/opencl_afu.json" dummy_sources/
 ls -1 dummy_sources/* > dummy_sources.txt
 
 ################################################################################

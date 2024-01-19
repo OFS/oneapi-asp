@@ -19,11 +19,11 @@ PLATFORM_NAME="$(basename $ASP_ROOT)"
 
 cd "$ASP_ROOT" || exit
 
-bsp_files=("README.md" "scripts" "source" "hardware" "linux64" "board_env.xml" "pr_build_template")
+asp_files=("README.md" "scripts" "source" "hardware" "linux64" "board_env.xml" "pr_build_template")
 
-for i in "${!bsp_files[@]}"; do
-  if [ ! -e "${bsp_files[i]}" ]; then
-    unset 'bsp_files[i]'
+for i in "${!asp_files[@]}"; do
+  if [ ! -e "${asp_files[i]}" ]; then
+    unset 'asp_files[i]'
   fi
 done
 
@@ -34,7 +34,7 @@ fi
 
 mkdir $ASP_ROOT/oneapi-asp-$PLATFORM_NAME
 
-cp -rf "${bsp_files[@]}" $ASP_ROOT/oneapi-asp-$PLATFORM_NAME/
+cp -rf "${asp_files[@]}" $ASP_ROOT/oneapi-asp-$PLATFORM_NAME/
 
 if [ -d "build/opae/install" ]; then
     mkdir -p $ASP_ROOT/oneapi-asp-$PLATFORM_NAME/build/opae && cp -rf build/opae/install $ASP_ROOT/oneapi-asp-$PLATFORM_NAME/build/opae/

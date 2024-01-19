@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 ASE_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
-BSP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
+ASP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
 
 if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
@@ -43,7 +43,7 @@ echo "Running ASE for board variant: $BOARD, device: $OPTARG"
 if [ -f "$DESIGN_SRC" ]; then
     echo "Running ASE with design: $DESIGN_SRC"
     echo "aoc command is next"
-    aoc -v -board-package="$BSP_ROOT" -board="$BOARD" "$DESIGN_SRC"
+    aoc -v -board-package="$ASP_ROOT" -board="$BOARD" "$DESIGN_SRC"
 elif [ -d "$DESIGN_SRC" ]; then
     echo "Running ASE with oneAPI design: $DESIGN_SRC"
     echo "pwd is  $PWD"

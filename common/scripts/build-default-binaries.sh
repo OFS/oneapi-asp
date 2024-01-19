@@ -5,7 +5,7 @@
 
 ###############################################################################
 # Compile the simple-add-buffers.fpga file and copy it to the default binary 
-# location. This script requires setup-bsp.py to execute successfully first to 
+# location. This script requires setup-asp.py to execute successfully first to 
 # generate the required files in ASP HW folder.
 ###############################################################################
 
@@ -24,14 +24,14 @@ while getopts ":b:f:h" arg; do
     ;;
     f) ASP_FLOW="$OPTARG"
     ;;
-    *) echo -e "usage: $0 [-b board-type] [-f bsp-flow]\n"
+    *) echo -e "usage: $0 [-b board-type] [-f asp-flow]\n"
        exit 1 ;;
   esac
 done
 
 # Check that board variant is configured
 BOARD=${BOARD:-all}
-QDB_FILES="$(find $ASP_ROOT/hardware -name ofs_top.qdb)"
+QDB_FILES="$(find $ASP_ROOT/hardware -name *.qdb)"
 if [ -z "$QDB_FILES" ]; then
   echo "Error: cannot find required OFS TOP QDB files. Please set up the ASP first."
   exit 1
@@ -56,7 +56,7 @@ CPP_FILE="bringup/source/simple-add-buffers/simple-add-buffers.cpp"
 # Check that ASP flow is valid
 ASP_FLOW=${ASP_FLOW:-afu_flat}
 if [[ ! "$ASP_FLOW" =~ afu_flat|afu_flat_kclk ]]; then
-  echo "Invalid bsp-flow specified: $ASP_FLOW"
+  echo "Invalid asp-flow specified: $ASP_FLOW"
   exit 1
 fi
 echo "Using build flow: '$ASP_FLOW'"

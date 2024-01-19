@@ -4,7 +4,7 @@
 `include "ofs_plat_if.vh"
 `include "ofs_asp.vh"
 
-module bsp_logic
+module asp_logic
 import ofs_asp_pkg::*;
 (
     input           logic             clk,
@@ -26,8 +26,8 @@ import ofs_asp_pkg::*;
     `endif
 
    // kernel signals
-    kernel_control_intf.bsp kernel_control,
-    kernel_mem_intf.bsp kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]
+    kernel_control_intf.asp kernel_control,
+    kernel_mem_intf.asp kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]
 );
 
 logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] ddr4_byte_address_bits [ASP_LOCALMEM_NUM_CHANNELS];
@@ -40,7 +40,7 @@ ofs_plat_avalon_mem_rdwr_if
   #(
     `OFS_PLAT_AVALON_MEM_RDWR_IF_REPLICATE_PARAMS(host_mem_if)
     )
-    bsp_mem_if();
+    asp_mem_if();
     
 // mmio64-if for the DMA controller
 ofs_plat_avalon_mem_if
@@ -291,33 +291,33 @@ generate
     end
 endgenerate
 
-bsp_host_mem_if_mux bsp_host_mem_if_mux_inst (
+asp_host_mem_if_mux asp_host_mem_if_mux_inst (
     .clk,
     .reset,
     .asp_irq,
     .wr_fence_flag,
-    .bsp_mem_if,
+    .asp_mem_if,
     .host_mem_if
 );
 
 //combine separate avmm interfaces into a single rd/wr interface
 always_comb begin
-    host_mem_wr_avmm_if.waitrequest     = bsp_mem_if.wr_waitrequest;
-    bsp_mem_if.wr_writedata             = host_mem_wr_avmm_if.writedata;
-    bsp_mem_if.wr_write                 = host_mem_wr_avmm_if.write;
-    bsp_mem_if.wr_address               = 'b0;
-    bsp_mem_if.wr_address               = host_mem_wr_avmm_if.address >> 6;
-    bsp_mem_if.wr_burstcount            = host_mem_wr_avmm_if.burstcount;
-    bsp_mem_if.wr_byteenable            = host_mem_wr_avmm_if.byteenable;
+    host_mem_wr_avmm_if.waitrequest     = asp_mem_if.wr_waitrequest;
+    asp_mem_if.wr_writedata             = host_mem_wr_avmm_if.writedata;
+    asp_mem_if.wr_write                 = host_mem_wr_avmm_if.write;
+    asp_mem_if.wr_address               = 'b0;
+    asp_mem_if.wr_address               = host_mem_wr_avmm_if.address >> 6;
+    asp_mem_if.wr_burstcount            = host_mem_wr_avmm_if.burstcount;
+    asp_mem_if.wr_byteenable            = host_mem_wr_avmm_if.byteenable;
     
-    host_mem_rd_avmm_if.waitrequest     = bsp_mem_if.rd_waitrequest;
-    host_mem_rd_avmm_if.readdata        = bsp_mem_if.rd_readdata;
-    host_mem_rd_avmm_if.readdatavalid   = bsp_mem_if.rd_readdatavalid;
-    bsp_mem_if.rd_address               = 'b0;
-    bsp_mem_if.rd_address               = host_mem_rd_avmm_if.address >> 6;
-    bsp_mem_if.rd_burstcount            = host_mem_rd_avmm_if.burstcount;
-    bsp_mem_if.rd_read                  = host_mem_rd_avmm_if.read;
-    bsp_mem_if.rd_byteenable            = host_mem_rd_avmm_if.byteenable;
+    host_mem_rd_avmm_if.waitrequest     = asp_mem_if.rd_waitrequest;
+    host_mem_rd_avmm_if.readdata        = asp_mem_if.rd_readdata;
+    host_mem_rd_avmm_if.readdatavalid   = asp_mem_if.rd_readdatavalid;
+    asp_mem_if.rd_address               = 'b0;
+    asp_mem_if.rd_address               = host_mem_rd_avmm_if.address >> 6;
+    asp_mem_if.rd_burstcount            = host_mem_rd_avmm_if.burstcount;
+    asp_mem_if.rd_read                  = host_mem_rd_avmm_if.read;
+    asp_mem_if.rd_byteenable            = host_mem_rd_avmm_if.byteenable;
 end
 
 // DMA-top module
@@ -368,4 +368,4 @@ dma_top dma_controller_inst (
     assign wr_fence_flag = 'b0;
 `endif
 
-endmodule : bsp_logic
+endmodule : asp_logic

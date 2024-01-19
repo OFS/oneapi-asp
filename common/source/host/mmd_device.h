@@ -42,9 +42,9 @@
 #define MMD_INVALID_PARAM -1
 
 // Our diagnostic script relies on handle values < -1 to determine when
-// a valid device is present but a functioning BSP is not loaded.
-#define MMD_BSP_NOT_LOADED -2
-#define MMD_BSP_INIT_FAILED -3
+// a valid device is present but a functioning ASP is not loaded.
+#define MMD_ASP_NOT_LOADED -2
+#define MMD_ASP_INIT_FAILED -3
 
 // Delay settings
 // TODO: Figure out why these delays are needed and
@@ -64,7 +64,7 @@
 
 #define NULL_DFH_BBB_GUID "da1182b1-b344-4e23-90fe-6aab12a0132f"
 
-#define BSP_NAME "ofs_"
+#define ASP_NAME "ofs_"
 
 #define SVM_MMD_MPF 0x24000
 
@@ -102,7 +102,7 @@ enum {
   AOCL_MMD_MEMORY = 0x100000      /* Data interface to device memory */
 };
 
-enum AfuStatu { MMD_INVALID_ID = 0, MMD_BSP, MMD_AFU };
+enum AfuStatu { MMD_INVALID_ID = 0, MMD_ASP, MMD_AFU };
 
 class Device final {
 public:
@@ -122,12 +122,12 @@ public:
   float get_temperature();
 
   int program_bitstream(uint8_t *data, size_t data_size);
-  bool initialize_bsp();
+  bool initialize_asp();
   void set_kernel_interrupt(aocl_mmd_interrupt_handler_fn fn, void *user_data);
   void set_status_handler(aocl_mmd_status_handler_fn fn, void *user_data);
   int yield();
   void event_update_fn(aocl_mmd_op_t op, int status);
-  bool bsp_loaded();
+  bool asp_loaded();
 
   int read_block(aocl_mmd_op_t op, int mmd_interface, void *host_addr,
                  size_t dev_addr, size_t size);
@@ -177,7 +177,7 @@ private:
   uint8_t function;
 
   bool afu_initialized;
-  bool bsp_initialized;
+  bool asp_initialized;
   bool mmio_is_mapped;
 
   mpf_handle_t mpf_handle;

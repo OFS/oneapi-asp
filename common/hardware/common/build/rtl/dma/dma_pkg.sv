@@ -53,13 +53,13 @@ package dma_pkg;
     //
     // Dispatcher register addresses
     //misc/DFH regs
-    parameter REG_BSP_GEN_BASE_ADDR         = 'h00;
-    parameter DFH_HEADER_ADDR               = REG_BSP_GEN_BASE_ADDR + 'h00;
-    parameter ID_LO_ADDR                    = REG_BSP_GEN_BASE_ADDR + 'h01;
-    parameter ID_HI_ADDR                    = REG_BSP_GEN_BASE_ADDR + 'h02;
-    parameter DFH_NEXT_AFU_OFFSET_ADDR      = REG_BSP_GEN_BASE_ADDR + 'h03;
-    parameter SCRATCHPAD_ADDR               = REG_BSP_GEN_BASE_ADDR + 'h05;
-    parameter MAGICNUMBER_HOSTMEM_WR_ADDR   = REG_BSP_GEN_BASE_ADDR + 'h06;
+    parameter REG_ASP_GEN_BASE_ADDR         = 'h00;
+    parameter DFH_HEADER_ADDR               = REG_ASP_GEN_BASE_ADDR + 'h00;
+    parameter ID_LO_ADDR                    = REG_ASP_GEN_BASE_ADDR + 'h01;
+    parameter ID_HI_ADDR                    = REG_ASP_GEN_BASE_ADDR + 'h02;
+    parameter DFH_NEXT_AFU_OFFSET_ADDR      = REG_ASP_GEN_BASE_ADDR + 'h03;
+    parameter SCRATCHPAD_ADDR               = REG_ASP_GEN_BASE_ADDR + 'h05;
+    parameter MAGICNUMBER_HOSTMEM_WR_ADDR   = REG_ASP_GEN_BASE_ADDR + 'h06;
     
     //general data-transfer control registers
     parameter REG_HOSTRD_BASE_ADDR          = 'h10;
