@@ -10,8 +10,8 @@ The scripts are structured as follows:
 
 - dedup-hardware.sh
   Users can use this script after building the oneAPI-ASP. It hardlinks identical files 
-  consuming large disk space in $BSP_ROOT/hardware/<board_variant_name_for_non_usm>/build/output_files
-  and $BSP_ROOT/hardware/<board_variant_name_for_usm>/build/output_files, thus saving disk space.
+  consuming large disk space in $ASP_ROOT/hardware/<board_variant_name_for_non_usm>/build/output_files
+  and $ASP_ROOT/hardware/<board_variant_name_for_usm>/build/output_files, thus saving disk space.
 
 - build-bsp-sw.sh
   This script calls other scripts to build OPAE from source (if needed) and builds the
@@ -31,10 +31,10 @@ The scripts are structured as follows:
   the oneAPI-ASP hardware/<variant>/build/ folder and updates a variety of Quartus 
   setting files.
 
-- build-default-aocx.sh
+- build-default-binaries.sh
   This script requires build-bsp.sh to have completed successfully to generate
-  oneAPI-ASP. It uses the oneAPI-ASP to compile the boardtest kernel that is used 
-  as the default aocx file for the 'aocl initialize' command.
+  oneAPI-ASP. It uses the oneAPI-ASP to compile a simple adder kernel that is used 
+  as the default binary file for the 'aocl initialize' command.
 
 - create-tarball.sh
   This script packages the files needed for oneAPI-ASP, including the default aocx,

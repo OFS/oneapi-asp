@@ -21,10 +21,10 @@ if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
 fi
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
-BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
+ASP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 #clone and build json-c
-JSONC_BUILD_PREFIX="$BSP_ROOT/build/json-c"
+JSONC_BUILD_PREFIX="$ASP_ROOT/build/json-c"
 JSONC_BUILD_DIR="$JSONC_BUILD_PREFIX/build"
 JSONC_INSTALL_DIR="$JSONC_BUILD_PREFIX/install"
 # default json-c repo address
@@ -65,7 +65,7 @@ export C_INCLUDE_PATH=$C_INCLUDE_PATH:$OFS_ASP_ENV_FIND_ROOT/include
 
 #done with json-c; now build OPAE
 
-OPAESDK_BUILD_PREFIX="$BSP_ROOT/build/opae"
+OPAESDK_BUILD_PREFIX="$ASP_ROOT/build/opae"
 OPAESDK_BUILD_DIR="$OPAESDK_BUILD_PREFIX/build"
 OPAESDK_INSTALL_DIR="$OPAESDK_BUILD_PREFIX/install"
 
@@ -112,7 +112,7 @@ make install
 if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
     echo "ASE is enabled - clone and build opae-sim"
     #clone and build opae-sim
-    OPAESIM_BUILD_PREFIX="$BSP_ROOT/build/opae-sim"
+    OPAESIM_BUILD_PREFIX="$ASP_ROOT/build/opae-sim"
     OPAESIM_BUILD_DIR="$OPAESIM_BUILD_PREFIX/build"
     OPAESIM_INSTALL_DIR="$OPAESIM_BUILD_PREFIX/install"
     # default opae-sim repo address
