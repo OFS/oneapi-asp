@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<board version="22.4" name="ofs_n6001_iopipes">
+<board version="22.4" name="ofs_iseries_dk_iopipes">
 
   <compile name="afu_flat" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
@@ -31,10 +31,10 @@
   <!-- DDR4-2400 -->
   <!-- max-bandwidth: (interface freq) * 2 (bits per clock) * (num interfaces) * (data bytes per interface) -->
   <global_mem name="DDR" max_bandwidth="76800" interleaved_bytes="4096" config_addr="0x018">
-    <interface name="board" port="kernel_ddr4a" type="agent" width="512" maxburst="16" address="0x000000000" size="0x100000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_ddr4b" type="agent" width="512" maxburst="16" address="0x100000000" size="0x100000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_ddr4c" type="agent" width="512" maxburst="16" address="0x200000000" size="0x100000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_ddr4d" type="agent" width="512" maxburst="16" address="0x300000000" size="0x100000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_ddr4a" type="agent" width="512" maxburst="16" address="0x000000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_ddr4b" type="agent" width="512" maxburst="16" address="0x200000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_ddr4c" type="agent" width="512" maxburst="16" address="0x400000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_ddr4d" type="agent" width="512" maxburst="16" address="0x600000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
   </global_mem>
     
   <host>
