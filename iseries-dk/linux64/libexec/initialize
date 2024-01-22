@@ -1,0 +1,52 @@
+#! /bin/bash
+
+## Copyright 2022 Intel Corporation
+## SPDX-License-Identifier: MIT
+
+###############################################################################
+# This script initializes the OFS card with either a default image that ships 
+# with the oneAPI-ASP or with a custom image that is specified at the command
+# line. This allows other oneAPI programs to access oneAPI-ASP
+# functionality before loading an application specific image.
+###############################################################################
+
+SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
+BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/../..")"
+BOARD_VARIANTS_ROOT="$BSP_ROOT/hardware"
+
+device_name="$1"
+board_variant_or_binary="$2"
+
+# board is being initialized with ASP provided binary
+for dirs in $BOARD_VARIANTS_ROOT/*/ ; do
+  board_variant=$(basename $dirs)
+  if [ "$board_variant" = "$board_variant_or_binary" ]; then
+    echo "Initializing with default ASP binary $board_variant.fpga"
+    fpga_file="$BSP_ROOT/bringup/binaries/$board_variant.fpga"
+    aocx_file="$board_variant.aocx"
+  fi	
+done
+
+# board is being initialized with custom binary
+if [ "$fpga_file" = "" ]; then
+  echo "Initializing with custom binary $board_variant_or_binary"
+  fpga_file="$board_variant_or_binary"
+  aocx_file=${fpga_file%.*}.aocx
+fi
+
+if [ ! -f "$fpga_file" ]; then
+  echo "Error: cannot find '$fpga_file' to initialize"
+  exit 1
+fi
+
+EXTRACTION_BINARY=$(icpx --print-prog-name=clang-offload-extract)
+eval "$EXTRACTION_BINARY --output $aocx_file $fpga_file"
+eval "mv $aocx_file.0 $aocx_file"
+
+"$BSP_ROOT/linux64/libexec/setup_permissions.sh"
+
+"$BSP_ROOT/linux64/libexec/program" "$device_name" "unused_param" "$aocx_file"
+return_val=$?
+
+rm $aocx_file
+exit $return_val
