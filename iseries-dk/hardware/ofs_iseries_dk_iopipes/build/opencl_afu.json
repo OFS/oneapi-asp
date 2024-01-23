@@ -11,7 +11,7 @@
       "accelerator-clusters":
          [
             {
-               "name": "ofs_n6001",
+               "name": "ofs_iseries_dk",
                "total-contexts": 1,
                "accelerator-type-uuid": "51ED2F4A-FEA2-4261-A595-918500575509"
             }

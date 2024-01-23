@@ -11,7 +11,7 @@
       "accelerator-clusters":
          [
             {
-               "name": "ofs_n6001_usm",
+               "name": "ofs_iseries_dk_usm",
                "total-contexts": 1,
                "accelerator-type-uuid": "5D9FEF7B-C491-4DCE-95FC-F979F6F061BE"
             }

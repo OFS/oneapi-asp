@@ -5,7 +5,7 @@
 
 ###############################################################################
 # Script to generate the tarball used for distributing the OneAPI ASP.  Creates
-# tarball with directory prefix oneapi-asp-n6001 and includes files for hardware
+# tarball with directory prefix ofs_iseries_dk and includes files for hardware
 # targets, MMD, and the default aocx in bringup directory.
 ###############################################################################
 
@@ -26,25 +26,25 @@ for i in "${!bsp_files[@]}"; do
   fi
 done
 
-if [ -d "$BSP_ROOT/oneapi-asp-n6001" ]; then
-    echo "$BSP_ROOT/oneapi-asp-n6001 exists; Removing it first"
-    rm -rf $BSP_ROOT/oneapi-asp-n6001
+if [ -d "$BSP_ROOT/oneapi-asp-iseries_dk" ]; then
+    echo "$BSP_ROOT/oneapi-asp-iseries_dk exists; Removing it first"
+    rm -rf $BSP_ROOT/oneapi-asp-iseries_dk
 fi
 
-mkdir $BSP_ROOT/oneapi-asp-n6001
+mkdir $BSP_ROOT/oneapi-asp-iseries_dk
 
-cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-n6001/
+cp -rf "${bsp_files[@]}" $BSP_ROOT/oneapi-asp-iseries_dk/
 
 if [ -d "build/opae/install" ]; then
-    mkdir -p $BSP_ROOT/oneapi-asp-n6001/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-n6001/build/opae/
+    mkdir -p $BSP_ROOT/oneapi-asp-iseries_dk/build/opae && cp -rf build/opae/install $BSP_ROOT/oneapi-asp-iseries_dk/build/opae/
 fi
 if [ -d "build/json-c/install" ]; then
-    mkdir -p $BSP_ROOT/oneapi-asp-n6001/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-n6001/build/json-c/
+    mkdir -p $BSP_ROOT/oneapi-asp-iseries_dk/build/json-c && cp -rf build/json-c/install $BSP_ROOT/oneapi-asp-iseries_dk/build/json-c/
 fi
 if [ -n "$(find ./bringup/ -name *.aocx)" ]; then
-    mkdir -p $BSP_ROOT/oneapi-asp-n6001/bringup/aocxs && cp -f bringup/aocxs/*.aocx $BSP_ROOT/oneapi-asp-n6001/bringup/aocxs/
+    mkdir -p $BSP_ROOT/oneapi-asp-iseries_dk/bringup/aocxs && cp -f bringup/aocxs/*.aocx $BSP_ROOT/oneapi-asp-iseries_dk/bringup/aocxs/
 fi
 
-tar czf oneapi-asp-n6001.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-n6001
+tar czf oneapi-asp-iseries_dk.tar.gz --owner=0 --group=0 --no-same-owner --no-same-permissions oneapi-asp-iseries_dk
 
-rm -rf "$BSP_ROOT/oneapi-asp-n6001"
+rm -rf "$BSP_ROOT/oneapi-asp-iseries_dk"

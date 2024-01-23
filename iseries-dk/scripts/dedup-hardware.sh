@@ -18,21 +18,21 @@ if command -v /usr/sbin/hardlink; then
   /usr/sbin/hardlink "$BSP_ROOT/hardware"
 
 # If hardlink not installed then check files that are known to consume large
-# amount of disk space and see if they are the same in the ofs_n6001
-# and ofs_n6001_usm directories. If so replace the ofs_n6001_usm copy with
-# a hard link to version of the file in ofs_n6001 directory
+# amount of disk space and see if they are the same in the ofs_iseries_dk
+# and ofs_iseries_dk_usm directories. If so replace the ofs_iseries_dk_usm copy with
+# a hard link to version of the file in ofs_iseries_dk directory
 else
-  echo "Deduplicating large files in hardware ofs_n6001 and ofs_n6001_usm direcotry"
+  echo "Deduplicating large files in hardware ofs_iseries_dk and ofs_iseries_dk_usm direcotry"
   dups=("build/output_files/ofs_fim.green_region.pmsf"
         "build/output_files/ofs_fim.static.msf"
         "build/output_files/ofs_fim.sof"
         "build/ofs_fim.qdb")
 
   for f in "${dups[@]}"; do
-    if [[ -e "$BSP_ROOT/hardware/ofs_n6001/$f" && 
-          -e "$BSP_ROOT/hardware/ofs_n6001_usm/$f" ]];
+    if [[ -e "$BSP_ROOT/hardware/ofs_iseries_dk/$f" && 
+          -e "$BSP_ROOT/hardware/ofs_iseries_dk_usm/$f" ]];
     then
-      ln -f "$BSP_ROOT/hardware/ofs_n6001/$f" "$BSP_ROOT/hardware/ofs_n6001_usm/$f"
+      ln -f "$BSP_ROOT/hardware/ofs_iseries_dk/$f" "$BSP_ROOT/hardware/ofs_iseries_dk_usm/$f"
     fi
   done
 fi
