@@ -1,7 +1,7 @@
 # Copyright 2022 Intel Corporation
 # SPDX-License-Identifier: MIT
 
-set_global_assignment -name SOURCE_TCL_SCRIPT_FILE bsp_design_files.tcl
+set_global_assignment -name SOURCE_TCL_SCRIPT_FILE asp_design_files.tcl
 
 #add the MPF/VTP components
 set_global_assignment -name VERILOG_MACRO "MPF_PLATFORM_DCP_PCIE=1"

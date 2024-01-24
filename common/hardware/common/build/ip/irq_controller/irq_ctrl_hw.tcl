@@ -23,7 +23,7 @@ package require -exact qsys 12.1
 # module irq_ctrl
 # 
 set_module_property NAME irq_ctrl
-set_module_property GROUP "Stratix10 BSP Components"
+set_module_property GROUP "Stratix10 ASP Components"
 set_module_property VERSION 1.0
 set_module_property INTERNAL false
 set_module_property OPAQUE_ADDRESS_MAP true

@@ -67,7 +67,7 @@ package ofs_asp_pkg;
     parameter ASP_KERNEL_IRQ_BIT   = 1;
     parameter ASP_DMA_1_IRQ_BIT    = 2;
     
-    // parameters to differentiate between DMA-only and DMA+USM BSPs
+    // parameters to differentiate between DMA-only and DMA+USM ASPs
     `ifdef INCLUDE_USM_SUPPORT
         parameter NUM_VTP_PORTS = 4;
     `else

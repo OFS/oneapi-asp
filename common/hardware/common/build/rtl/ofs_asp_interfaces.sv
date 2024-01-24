@@ -33,8 +33,8 @@ interface kernel_control_intf #(
                 kernel_cra_readdatavalid
     );
     
-    //bsp_interface module
-    modport bsp (
+    //asp_interface module
+    modport asp (
         input   kernel_irq, kernel_cra_waitrequest, kernel_cra_readdata,
                 kernel_cra_readdatavalid,
         output  kernel_reset_n, kernel_cra_burstcount, kernel_cra_writedata, 
@@ -62,7 +62,7 @@ interface kernel_mem_intf #(
     logic [BYTEENABLE_WIDTH-1:0]    byteenable;
     logic                           writeack;
     
-    modport bsp (
+    modport asp (
         input  read, write, writedata, address, burstcount,
                byteenable,
         output readdata, readdatavalid, waitrequest, writeack

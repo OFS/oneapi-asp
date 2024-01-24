@@ -11,8 +11,8 @@ if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
 fi
 
 ASE_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
-BSP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
-SCRIPT_DIR_PATH="$BSP_ROOT/scripts"
+ASP_ROOT="$(readlink -e "$ASE_DIR_PATH/..")"
+SCRIPT_DIR_PATH="$ASP_ROOT/scripts"
 
 if [[ "$0" -ef "${BASH_SOURCE[0]}" ]]; then
   echo "Error: must source this script"
@@ -26,8 +26,8 @@ if [ -z "$INTELFPGAOCLSDKROOT" ]; then
 fi
 
 if [ -z "$AOCL_BOARD_PACKAGE_ROOT" ]; then
-  export AOCL_BOARD_PACKAGE_ROOT="$BSP_ROOT"
-elif [ "$(readlink -f  "$AOCL_BOARD_PACKAGE_ROOT")" != "$BSP_ROOT" ]; then
+  export AOCL_BOARD_PACKAGE_ROOT="$ASP_ROOT"
+elif [ "$(readlink -f  "$AOCL_BOARD_PACKAGE_ROOT")" != "$ASP_ROOT" ]; then
   echo "Error: AOCL_BOARD_PACKAGE_ROOT does not point to this repository"
 fi
 
@@ -51,14 +51,14 @@ function set_libopae_c_root() {
   if [ -z "$LIBOPAE_C_ROOT" ]; then
     if /sbin/ldconfig -p | grep libopae-c.so.2 -q && afu_synth=$(command -v afu_synth_setup); then
       LIBOPAE_C_ROOT="$(dirname "$(dirname "$afu_synth")")"
-    elif [ -d "$BSP_ROOT/build/opae/install" ]
+    elif [ -d "$ASP_ROOT/build/opae/install" ]
     then
-      echo "libopae-c-root exists : $BSP_ROOT/build/opae/install "
-      LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
+      echo "libopae-c-root exists : $ASP_ROOT/build/opae/install "
+      LIBOPAE_C_ROOT="$ASP_ROOT/build/opae/install"
     else
         echo "libopae-c-root doesn't exist, running build-opae.sh"
       "$SCRIPT_DIR_PATH/build-opae.sh" || exit
-      LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
+      LIBOPAE_C_ROOT="$ASP_ROOT/build/opae/install"
     fi
   fi
   export LIBOPAE_C_ROOT
@@ -73,22 +73,22 @@ if ! command -v vcs; then
 fi
 
 export OFS_ASP_ENV_ENABLE_ASE=1
-if [ ! -f "$BSP_ROOT/hardware/ofs_*/*.qpf" ]; then
-  echo "The qpf file doesn't exist, so we need to run build-bsp.sh"
-  "$BSP_ROOT/scripts/build-bsp.sh"
+if [ ! -f "$ASP_ROOT/hardware/ofs_*/*.qpf" ]; then
+  echo "The qpf file doesn't exist, so we need to run build-asp.sh"
+  "$ASP_ROOT/scripts/build-asp.sh"
   set_libopae_c_root
 else
-  echo "BSP setup already complete (delete hardware setup files to regenerate)"
+  echo "ASP setup already complete (delete hardware setup files to regenerate)"
   # Build the MMD or use existing MMD if files already exist
-  if [ ! -f "$BSP_ROOT/linux64/lib/libintel_opae_mmd.so" ]; then
-    echo "mmd not built yet, run build-bsp-sw.sh"
-    "$SCRIPT_DIR_PATH/build-bsp-sw.sh" || exit
+  if [ ! -f "$ASP_ROOT/linux64/lib/libintel_opae_mmd.so" ]; then
+    echo "mmd not built yet, run build-asp-sw.sh"
+    "$SCRIPT_DIR_PATH/build-asp-sw.sh" || exit
     set_libopae_c_root
   else
-    ldd "$BSP_ROOT/linux64/lib/libintel_opae_mmd.so" | grep -q libopae-c-ase
+    ldd "$ASP_ROOT/linux64/lib/libintel_opae_mmd.so" | grep -q libopae-c-ase
     ASE_NOT_LINKED="$?"
     if [ "$ASE_NOT_LINKED" == 1 ]; then
-      "$SCRIPT_DIR_PATH/build-bsp-sw.sh" || exit
+      "$SCRIPT_DIR_PATH/build-asp-sw.sh" || exit
       set_libopae_c_root
     else
       echo "INFO: existing MMD compiled for ASE"

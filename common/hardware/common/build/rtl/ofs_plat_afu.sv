@@ -86,7 +86,7 @@ module ofs_plat_afu
         begin : mb
             ofs_plat_local_mem_as_avalon_mem
               #(
-                // EMIF closs crossings occur in the BSP Qsys-system
+                // EMIF closs crossings occur in the ASP Qsys-system
                 .ADD_CLOCK_CROSSING(USE_PIM_CDC_LOCALMEM),
                 .ADD_TIMING_REG_STAGES(3)
                 )
@@ -141,10 +141,10 @@ module ofs_plat_afu
     // ====================================================================
 
     //set pClk depending on if we are using PIM for PCIe/host-channel CDC
-    logic pclk_bsp,pclk_bsp_reset;
-    assign pclk_bsp = USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
+    logic pclk_asp,pclk_asp_reset;
+    assign pclk_asp = USE_PIM_CDC_HOSTCHAN ? plat_ifc.clocks.uClk_usrDiv2.clk :
                                                          plat_ifc.clocks.pClk.clk;
-    assign pclk_bsp_reset = USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
+    assign pclk_asp_reset = USE_PIM_CDC_HOSTCHAN ? ~plat_ifc.clocks.uClk_usrDiv2.reset_n :
                                                                ~plat_ifc.clocks.pClk.reset_n;
 
     afu afu_inst
@@ -156,8 +156,8 @@ module ofs_plat_afu
             .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),
         `endif
        
-        .pClk(pclk_bsp),
-        .pClk_reset(pclk_bsp_reset),
+        .pClk(pclk_asp),
+        .pClk_reset(pclk_asp_reset),
 
         .uClk_usr(plat_ifc.clocks.uClk_usr.clk),
         .uClk_usr_reset(~plat_ifc.clocks.uClk_usr.reset_n),

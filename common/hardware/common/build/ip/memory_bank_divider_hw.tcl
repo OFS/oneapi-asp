@@ -188,8 +188,8 @@ proc compose {} {
   set_interface_property kernel_clk EXPORT_OF kernel_clk.clk_in
   add_interface kernel_reset reset sink
   set_interface_property kernel_reset EXPORT_OF kernel_clk.clk_in_reset
-  add_interface acl_bsp_snoop avalon_streaming source
-  set_interface_property acl_bsp_snoop EXPORT_OF acl_snoop_adapter.snoop
+  add_interface acl_asp_snoop avalon_streaming source
+  set_interface_property acl_asp_snoop EXPORT_OF acl_snoop_adapter.snoop
 
   # manipulate parameters in here
   set width [get_parameter_value DATA_WIDTH]
@@ -263,8 +263,8 @@ proc compose {} {
 
     add_connection clk.clk_reset pipe_stage_presplitter.reset
 
-    add_interface acl_bsp_memorg_host conduit end
-    set_interface_property acl_bsp_memorg_host EXPORT_OF mem_splitter.mode
+    add_interface acl_asp_memorg_host conduit end
+    set_interface_property acl_asp_memorg_host EXPORT_OF mem_splitter.mode
 
     export_bank $separate_rw_ports 1 mem_splitter bank1 $width $bank_awidth $burst_width $pending_reads $pipeline_outputs
        

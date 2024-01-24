@@ -8,7 +8,7 @@
 #
 # Global variables
 #  SCRIPT_DIR_PATH: path to location of script
-#  BSP_ROOT: path to root of ASP repo
+#  ASP_ROOT: path to root of ASP repo
 #  BUILD_TYPE: type of build (i.e. release or debug)
 #  BUILD_DIR: directory used for building MMD
 #
@@ -21,23 +21,23 @@
 ###############################################################################
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
-BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
+ASP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/..")"
 
 # Copying source files from common
 #copy_delete_list=(cmake CMakeLists.txt CODING_STYLE.txt host include util)
 #for item in "${copy_delete_list[@]}"
 #  do
 #	echo $item
-#     cp -r -n "$BSP_ROOT/../common/source/$item" "$BSP_ROOT/source/$item"
+#     cp -r -n "$ASP_ROOT/../common/source/$item" "$ASP_ROOT/source/$item"
 #  done
-#cp -r -n $BSP_ROOT../common/source/* source/.
+#cp -r -n $ASP_ROOT../common/source/* source/.
 
 if [ -n "$OFS_ASP_ENV_DEBUG_SCRIPTS" ]; then
   set -x
 fi
 
 if [ -z "$LIBOPAE_C_ROOT" ]; then
-  export LIBOPAE_C_ROOT="$BSP_ROOT/build/opae/install"
+  export LIBOPAE_C_ROOT="$ASP_ROOT/build/opae/install"
 fi
 
 if [ ! -d "$INTELFPGAOCLSDKROOT" ]; then
@@ -45,11 +45,11 @@ if [ ! -d "$INTELFPGAOCLSDKROOT" ]; then
   exit 1
 fi
 
-if [ -e "$BSP_ROOT/../.gitmodules" ]; then
-  (cd "$BSP_ROOT/.." && git submodule update --init common/source/extra/intel-fpga-bbb)
+if [ -e "$ASP_ROOT/../.gitmodules" ]; then
+  (cd "$ASP_ROOT/.." && git submodule update --init common/source/extra/intel-fpga-bbb)
 fi
 
-BUILD_PREFIX="$BSP_ROOT/build"
+BUILD_PREFIX="$ASP_ROOT/build"
 BUILD_TYPE=${OFS_ASP_ENV_MMD_BUILD_TYPE:-"release"}
 SET_ASE="OFF"
 if [ -n "$OFS_ASP_ENV_ENABLE_ASE" ]; then
@@ -72,6 +72,6 @@ CMAKE_ASP_AFU_ID_ARG="-DASP_AFU_ID=N6001"
 
 export CC=${CC:-$(which gcc)}
 export CXX=${CXX:-$(which g++)}
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BSP_ROOT/build/json-c/install/lib64
-cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DOPENCL_ASE_SIM="$SET_ASE" -DCMAKE_INSTALL_PREFIX="$BSP_ROOT/linux64" "$CMAKE_OPAE_ARG" "$CMAKE_ASP_AFU_ID_ARG" "$BSP_ROOT/../common/source" || exit
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ASP_ROOT/build/json-c/install/lib64
+cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DOPENCL_ASE_SIM="$SET_ASE" -DCMAKE_INSTALL_PREFIX="$ASP_ROOT/linux64" "$CMAKE_OPAE_ARG" "$CMAKE_ASP_AFU_ID_ARG" "$ASP_ROOT/../common/source" || exit
 make install

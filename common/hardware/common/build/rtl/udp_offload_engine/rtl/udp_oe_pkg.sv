@@ -64,8 +64,8 @@ package udp_oe_pkg;
     // RX DCFIFO parameters
     parameter RX_DCFIFO_DEPTH = 2048;
     
-    //allow intra-BSP loopback?
-    parameter ENABLE_INTRABSP_HSSI_TXRX_LOOPBACK = 0;
+    //allow intra-ASP loopback?
+    parameter ENABLE_INTRAASP_HSSI_TXRX_LOOPBACK = 0;
     
     //
     // Dispatcher register addresses

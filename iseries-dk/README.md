@@ -15,7 +15,7 @@ software on a target system and to load a ASP.  The files are stored in two
 separate git submodules that each use git-lfs to store their contents.
 
 * hardware: contains files used by the OneAPI compiler to integrate the 
-generated kernel code with platform specific code.  Contains distinct shim 
+generated kernel code with platform specific code.  Contains distinct board variant 
 targets with distinct functionalities (ex. USM and non-USM variants targeting
 the same board platform).
 
@@ -31,11 +31,11 @@ running tests
 
 The `hardware` folder contains subdirectories with the 2 different oneAPI-ASP variants:
 
-* `iseries-dk_usm`: ASP that supports shared virtual memory between host and device. This 
+* `ofs_iseries-dk_usm`: ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM variant with the addition of the USM path between 
 the kernel-system and the host.
 
-* `iseries-dk`:  DMA-based ASP that supports local memory and host memory interfaces for the 
+* `ofs_iseries-dk`:  DMA-based ASP that supports local memory and host memory interfaces for the 
 kernel system.
 
 ## Generating ASP
@@ -45,14 +45,14 @@ the software.
 
 The hardware folder contains code that implements the ASP modules, but it needs
 copies of the OFS FIM pr-release-template files to work with a specific platform. 
-The setup_bsp.py script copies the required files from the FIM pr-release-template
+The setup_asp.py script copies the required files from the FIM pr-release-template
 and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
 Need to set **OFS_ASP_ROOT** to point to oneapi-asp/iseries-dk.
 
-To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
+To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-asp.sh`.
 
 To generate MMD software only run: `scripts/build_mmd.sh`
 

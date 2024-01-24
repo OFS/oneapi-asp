@@ -11,8 +11,8 @@
 ###############################################################################
 
 SCRIPT_DIR_PATH="$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")"
-BSP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/../..")"
-BOARD_VARIANTS_ROOT="$BSP_ROOT/hardware"
+ASP_ROOT="$(readlink -e "$SCRIPT_DIR_PATH/../..")"
+BOARD_VARIANTS_ROOT="$ASP_ROOT/hardware"
 
 device_name="$1"
 board_variant_or_binary="$2"
@@ -22,7 +22,7 @@ for dirs in $BOARD_VARIANTS_ROOT/*/ ; do
   board_variant=$(basename $dirs)
   if [ "$board_variant" = "$board_variant_or_binary" ]; then
     echo "Initializing with default ASP binary $board_variant.fpga"
-    fpga_file="$BSP_ROOT/bringup/binaries/$board_variant.fpga"
+    fpga_file="$ASP_ROOT/bringup/binaries/$board_variant.fpga"
     aocx_file="$board_variant.aocx"
   fi	
 done
@@ -43,9 +43,9 @@ EXTRACTION_BINARY=$(icpx --print-prog-name=clang-offload-extract)
 eval "$EXTRACTION_BINARY --output $aocx_file $fpga_file"
 eval "mv $aocx_file.0 $aocx_file"
 
-"$BSP_ROOT/linux64/libexec/setup_permissions.sh"
+"$ASP_ROOT/linux64/libexec/setup_permissions.sh"
 
-"$BSP_ROOT/linux64/libexec/program" "$device_name" "unused_param" "$aocx_file"
+"$ASP_ROOT/linux64/libexec/program" "$device_name" "unused_param" "$aocx_file"
 return_val=$?
 
 rm $aocx_file

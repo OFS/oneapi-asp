@@ -7,7 +7,7 @@
 # Script removes packages and configuration settings added during install
 ###############################################################################
 
-if [ -n "$OFS_BSP_ENV_DEBUG_UNINSTALL_SCRIPT" ]; then
+if [ -n "$OFS_ASP_ENV_DEBUG_UNINSTALL_SCRIPT" ]; then
   set -x
 fi
 

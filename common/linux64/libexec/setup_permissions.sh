@@ -93,12 +93,12 @@ EOF
 # However, there is additional optimization that allows user to pre-pin memory
 # using hugepages.  The default setting in this script configures 2048 2M
 # hugepages.  This means 4G of host memory is allocated for hugepages.
-# This can be changed by configuring OFS_BSP_ENV_NUM_HUGEPAGES before running
+# This can be changed by configuring OFS_ASP_ENV_NUM_HUGEPAGES before running
 # this script.
 ################################################################################
 set_hugepages()
 {
-  NUM_HUGE_PAGES=${OFS_BSP_ENV_NUM_HUGEPAGES:-1024}
+  NUM_HUGE_PAGES=${OFS_ASP_ENV_NUM_HUGEPAGES:-1024}
   echo "Configuring system with $NUM_HUGE_PAGES 2M hugepages"
   sudo sh -c "cat > /etc/sysctl.d/intel-fpga-opencl-sysctl.conf" << EOF
 vm.nr_hugepages = $NUM_HUGE_PAGES

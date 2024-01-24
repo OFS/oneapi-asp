@@ -263,10 +263,10 @@ proc compose { } {
       set suffix [get_config_addr $i]
       ## These will be useful if we can dynamically switch addressing in kernel
       ## interconnect. For now hide them.
-      #add_interface acl_bsp_memorg_kernel$suffix conduit end
-      #set_interface_property acl_bsp_memorg_kernel$suffix EXPORT_OF mem_org_mode$i.mem_organization_kernel
-      add_interface acl_bsp_memorg_host$suffix conduit end
-      set_interface_property acl_bsp_memorg_host$suffix EXPORT_OF mem_org_mode$i.mem_organization_host
+      #add_interface acl_asp_memorg_kernel$suffix conduit end
+      #set_interface_property acl_asp_memorg_kernel$suffix EXPORT_OF mem_org_mode$i.mem_organization_kernel
+      add_interface acl_asp_memorg_host$suffix conduit end
+      set_interface_property acl_asp_memorg_host$suffix EXPORT_OF mem_org_mode$i.mem_organization_host
     }
     add_interface kernel_irq_from_kernel interrupt receiver
     set_interface_property kernel_irq_from_kernel EXPORT_OF irq_bridge_0.receiver_irq

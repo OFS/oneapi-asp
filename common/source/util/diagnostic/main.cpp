@@ -61,7 +61,7 @@ bool diagnose = 1;
 
 bool mmd_dma_setup_check();
 bool mmd_check_fme_driver_for_pr();
-bool mmd_bsp_loaded(const char *name);
+bool mmd_asp_loaded(const char *name);
 extern int mmd_get_offline_board_names(size_t param_value_size,
                                             void *param_value,
                                             size_t *param_size_ret);
@@ -124,7 +124,7 @@ int scan_devices(const char *device_name) {
     num_active_boards++;
 
     // when handle < -1 a DCP device exists but is not configured with OpenCL
-    // BSP
+    // ASP
     if (handle < -1) {
       o_list_stream << "\n";
       o_list_stream << std::left << std::setw(20) << dev_name << std::left
@@ -235,9 +235,9 @@ int main(int argc, char *argv[]) {
   // preliminary information about all or just the one specified
   if ((!probe && device_name == NULL) || (probe && device_name != NULL)) {
     if (scan_devices(device_name) == 0) {
-      printf("\nBSP DIAGNOSTIC_PASSED\n");
+      printf("\nASP DIAGNOSTIC_PASSED\n");
     } else {
-      printf("\nBSP DIAGNOSTIC_FAILED\n");
+      printf("\nASP DIAGNOSTIC_FAILED\n");
       return DIAGNOSE_FAILED;
     }
     return 0;
@@ -250,7 +250,7 @@ int main(int argc, char *argv[]) {
   mmd_get_offline_board_names(sizeof(boards_name), boards_name, NULL);
   char *dev_name;
   bool device_exists = false;
-  bool bsp_loaded = false;
+  bool asp_loaded = false;
   char *boards = boards_name;
   for (dev_name = strtok_r(boards_name, ";", &boards); dev_name != NULL;
        dev_name = strtok_r(NULL, ";", &boards)) {
@@ -274,8 +274,8 @@ int main(int argc, char *argv[]) {
     return DIAGNOSE_FAILED;
   }
 
-  bsp_loaded = mmd_bsp_loaded(argv[1]);
-  if (!bsp_loaded) {
+  asp_loaded = mmd_asp_loaded(argv[1]);
+  if (!asp_loaded) {
     printf("\nASP not loaded for Programmable Accelerator Card %s\n", argv[1]);
     printf("  * Run 'aocl diagnose' to determine device name for %s\n",
            argv[1]);
@@ -379,9 +379,9 @@ int main(int argc, char *argv[]) {
   printf("Throughput = %.2f MB/s\n", (read_topspeed + write_topspeed) / 2);
 
   if (result)
-    printf("\nBSP DIAGNOSTIC_PASSED\n");
+    printf("\nASP DIAGNOSTIC_PASSED\n");
   else
-    printf("\nBSP DIAGNOSTIC_FAILED\n");
+    printf("\nASP DIAGNOSTIC_FAILED\n");
 
   acl_util_aligned_free(buf);
   acl_util_aligned_free(output);

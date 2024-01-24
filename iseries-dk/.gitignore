@@ -23,8 +23,7 @@ linux64/libexec/program
 pr_build_template
 hardware/*/blue_bits
 hardware/*/fim_platform
-hardware/*/afu_opencl_kernel.qsf
-hardware/*/bsp_dir_filelist.txt
+hardware/*/asp_dir_filelist.txt
 hardware/*/build/afu_base.qsf
 hardware/*/build/afu_flat.qsf
 hardware/*/build/afu_import.qsf

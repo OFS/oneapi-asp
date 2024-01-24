@@ -15,7 +15,7 @@ software on a target system and to load a ASP.  The files are stored in two
 separate git submodules that each use git-lfs to store their contents.
 
 * hardware: contains files used by the OneAPI compiler to integrate the 
-generated kernel code with platform specific code.  Contains distinct shim 
+generated kernel code with platform specific code.  Contains distinct board variant 
 targets with distinct functionalities (ex. USM and non-USM variants targeting
 the same board platform).
 
@@ -52,14 +52,14 @@ the software.
 
 The hardware folder contains code that implements the ASP modules, but it needs
 copies of the OFS FIM pr-release-template files to work with a specific platform. 
-The setup_bsp.py script copies the required files from the FIM pr-release-template
+The setup_asp.py script copies the required files from the FIM pr-release-template
 and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
 Need to set **OFS_ASP_ROOT** to point to oneapi-asp/n6001.
 
-To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
+To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-asp.sh`.
 
 To generate MMD software only run: `scripts/build_mmd.sh`
 

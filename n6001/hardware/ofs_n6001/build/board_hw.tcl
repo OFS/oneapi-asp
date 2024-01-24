@@ -5,7 +5,7 @@ set_module_property NAME {board}
 set_module_property DISPLAY_NAME {oneAPI ASP board IP}
 set_module_property VERSION {23.2}
 set_module_property GROUP {oneAPI ASP Components}
-set_module_property DESCRIPTION {toplevel instantiation of oneAPI shim IP}
+set_module_property DESCRIPTION {toplevel instantiation of oneAPI ASP IP}
 set_module_property AUTHOR {OFS}
 set_module_property COMPOSITION_CALLBACK compose
 
@@ -212,7 +212,7 @@ proc compose { } {
   add_connection board_irq_ctrl.interrupt_receiver kernel_interface.kernel_irq_to_host irq
 
   # Conduits
-  add_connection kernel_interface.acl_bsp_memorg_host0x018 ddr_board.acl_bsp_memorg_host conduit
+  add_connection kernel_interface.acl_asp_memorg_host0x018 ddr_board.acl_asp_memorg_host conduit
 
   # Data
   add_connection pipe_stage_host_ctrl.m0 pipe_stage_dma_csr.s0 avalon
@@ -305,7 +305,7 @@ proc compose { } {
 
   if { $snoop_port_enable == true } {
     add_interface acl_internal_snoop avalon_streaming start
-    set_interface_property acl_internal_snoop EXPORT_OF ddr_board.acl_bsp_snoop
+    set_interface_property acl_internal_snoop EXPORT_OF ddr_board.acl_asp_snoop
   }
 
   for { set i 0} { $i < $number_of_memory_banks } {incr i} {

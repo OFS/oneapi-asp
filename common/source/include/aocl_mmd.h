@@ -180,7 +180,7 @@ typedef enum {
    AOCL_MMD_CONCURRENT_READS = 9,       /* # of parallel reads; 1 is serial*/
    AOCL_MMD_CONCURRENT_WRITES = 10,     /* # of parallel writes; 1 is serial*/
    AOCL_MMD_CONCURRENT_READS_OR_WRITES = 11, /* total # of concurrent operations read + writes*/
-   AOCL_MMD_MIN_HOST_MEMORY_ALIGNMENT = 12,  /* Min alignment that the BSP supports for host allocations (size_t) */
+   AOCL_MMD_MIN_HOST_MEMORY_ALIGNMENT = 12,  /* Min alignment that the ASP supports for host allocations (size_t) */
    AOCL_MMD_HOST_MEM_CAPABILITIES = 13,      /* Capabilities of aocl_mmd_host_alloc() (unsigned int)*/
    AOCL_MMD_SHARED_MEM_CAPABILITIES = 14,    /* Capabilities of aocl_mmd_shared_alloc (unsigned int)*/
    AOCL_MMD_DEVICE_MEM_CAPABILITIES = 15,    /* Capabilities of aocl_mmd_device_alloc (unsigned int)*/
@@ -477,13 +477,13 @@ AOCL_MMD_CALL int aocl_mmd_program( int handle, void * user_data, size_t size, a
 typedef enum {
   /**
    *  Specifies the name of a global memory that can be found in the
-   *  board_spec.xml file for the BSP. Allocations will be allocated to this
+   *  board_spec.xml file for the ASP. Allocations will be allocated to this
    *  global memory interface.
    */
   AOCL_MMD_MEM_PROPERTIES_GLOBAL_MEMORY=1,
   /**
    *  Specifies the index of a bank inside the global memory interface that can be found in
-   *  the board_spec.xml file for the BSP. Allocations will be allocated to this
+   *  the board_spec.xml file for the ASP. Allocations will be allocated to this
    *  memory bank. It is invalid to specify this property without also specifying
    *  AOCL_MMD_GLOBAL_MEMORY_INTERFACE.
    */
@@ -600,7 +600,7 @@ typedef enum {
  *  @param  handle Device that will have access to this memory
  *  @param shared_ptr Pointer allocated by aocl_mmd_shared_alloc()
  *  @param size In bytes, the size of the migration. Must be of multiple of a
- *   page boundary that the BSP supports.
+ *   page boundary that the ASP supports.
  *  @param destination The destination of migration
  *  @return The error code defined by AOCL_MMD_ERROR*
  */
