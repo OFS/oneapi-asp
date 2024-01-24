@@ -19,7 +19,7 @@ fi
 this_design="$1"
 this_design="$(readlink -f "$1")"
 board_name="$2"
-if echo "${board_name}" | grep -qw "ofs_iseries_dk"; then
+if echo "${board_name}" | grep -qw "ofs_fseries_dk"; then
     device="Agilex7"
 else
     device="S10"

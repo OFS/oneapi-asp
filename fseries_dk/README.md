@@ -1,7 +1,7 @@
 # OneAPI-ASP 
 
 ## Overview
-This repository contains files necessary to generate ASP for the I-Series
+This repository contains files necessary to generate ASP for the F-Series
 development kit. The hardware currently relies on platforms that implement 
 the OFS PCIe TLP format using AXI-S interfaces, and the software uses OPAE SDK 
 interfaces.
@@ -31,17 +31,17 @@ running tests
 
 The `hardware` folder contains subdirectories with the 2 different oneAPI-ASP variants:
 
-* `ofs_iseries_dk_usm`: ASP that supports shared virtual memory between host and device. This 
+* `ofs_fseries_dk_usm`: ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM variant with the addition of the USM path between 
 the kernel-system and the host.
 
-* `ofs_iseries_dk`:  DMA-based ASP that supports local memory and host memory interfaces for the 
+* `ofs_fseries_dk`:  DMA-based ASP that supports local memory and host memory interfaces for the 
 kernel system.
 
-* `ofs_iseries_dk_iopipes`:  DMA-based ASP that supports local memory, host memory, and HSSI/IO Pipes interfaces for the 
+* `ofs_fseries_dk_iopipes`:  DMA-based ASP that supports local memory, host memory, and HSSI/IO Pipes interfaces for the 
 kernel system.
 
-* `ofs_iseries_dk_usm_iopipes`:  ASP that supports shared virtual memory between host and device. This 
+* `ofs_fseries_dk_usm_iopipes`:  ASP that supports shared virtual memory between host and device. This 
 variant is the same as the non-USM iopipes variant with with the addition of the USM path between 
 the kernel-system and the host.
 
@@ -57,7 +57,7 @@ and updates the project qsf files appropriately.
 
 Need to set **OPAE_PLATFORM_ROOT** to point to pr_build_template in FIM build area.
 
-Need to set **OFS_ASP_ROOT** to point to oneapi-asp/iseries_dk.
+Need to set **OFS_ASP_ROOT** to point to oneapi-asp/fseries_dk.
 
 To generate ASP hardware and software, acquire the appropriate resources (mentioned above) and run: `scripts/build-bsp.sh`.
 
