@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<board version="22.4" name="ofs_iseries_dk_usm">
+<board version="22.4" name="ofs_fseries_dk">
 
   <compile name="afu_flat" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
@@ -21,22 +21,18 @@
 
   <device device_model="agfb014r24a3e3vr0_dm.xml">
     <used_resources>
-      <alms num="351138"/>
-      <ffs num="1269922"/>
+      <alms num="344709"/>
+      <ffs num="1249098"/>
       <dsps num="2284"/>
-      <rams num="4198"/>
+      <rams num="4148"/>
     </used_resources>
   </device>
 
-  <global_mem name="host" max_bandwidth="30000" interleaved_bytes="1024" config_addr="0x018" allocation_type="host, shared">
-    <interface name="board" port="kernel_mem" type="agent" width="512" maxburst="16" address="0x000000000" size="0x1000000000000" latency="800" waitrequest_allowance="7"/>
-  </global_mem>
-  
   <!-- DDR4-2400 -->
   <!-- max-bandwidth: (interface freq) * 2 (bits per clock) * (num interfaces) * (data bytes per interface) -->
-  <global_mem name="device" max_bandwidth="76800" interleaved_bytes="4096" config_addr="0x018" allocation_type="device" default="1">
-    <interface name="board" port="kernel_ddr4a" type="agent" width="512" maxburst="16" address="0x1000000000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_ddr4b" type="agent" width="512" maxburst="16" address="0x1000200000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+  <global_mem name="DDR" max_bandwidth="76800" interleaved_bytes="4096" config_addr="0x018">
+    <interface name="board" port="kernel_ddr4a" type="agent" width="512" maxburst="16" address="0x000000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_ddr4b" type="agent" width="512" maxburst="16" address="0x200000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
   </global_mem>
     
   <host>
