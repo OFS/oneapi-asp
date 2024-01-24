@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<board version="22.4" name="ofs_iseries_dk_usm_iopipes">
+
+  <compile name="afu_flat" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
+    <generate cmd="echo"/>
+    <synthesize cmd="quartus_sh -t build/scripts/entry.tcl afu_flat"/>
+    <auto_migrate platform_type="none" >
+      <include fixes=""/>
+      <exclude fixes=""/>
+    </auto_migrate>
+  </compile>
+  
+  <compile name="afu_flat_kclk" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
+    <generate cmd="echo"/>
+    <synthesize cmd="quartus_sh -t build/scripts/entry.tcl afu_flat_kclk"/>
+    <auto_migrate platform_type="none" >
+      <include fixes=""/>
+      <exclude fixes=""/>
+    </auto_migrate>
+  </compile>
+
+  <device device_model="agfb014r24a3e3vr0_dm.xml">
+    <used_resources>
+      <alms num="351138"/>
+      <ffs num="1269922"/>
+      <dsps num="2284"/>
+      <rams num="4198"/>
+    </used_resources>
+  </device>
+
+  <global_mem name="host" max_bandwidth="30000" interleaved_bytes="1024" config_addr="0x018" allocation_type="host, shared">
+    <interface name="board" port="kernel_mem" type="agent" width="512" maxburst="16" address="0x000000000" size="0x1000000000000" latency="800" waitrequest_allowance="7"/>
+  </global_mem>
+  
+  <!-- DDR4-2400 -->
+  <!-- max-bandwidth: (interface freq) * 2 (bits per clock) * (num interfaces) * (data bytes per interface) -->
+  <global_mem name="device" max_bandwidth="76800" interleaved_bytes="4096" config_addr="0x018" allocation_type="device" default="1">
+    <interface name="board" port="kernel_ddr4a" type="agent" width="512" maxburst="16" address="0x1000000000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_ddr4b" type="agent" width="512" maxburst="16" address="0x1000200000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+  </global_mem>
+    
+  <host>
+    <kernel_config start="0x00000000" size="0x0100000"/>
+  </host>
+
+  <interfaces>
+    <interface name="board" port="kernel_cra" type="host" width="64" misc="0" waitrequest_allowance="5"/>
+    <interface name="board" port="kernel_irq" type="irq" width="1"/>
+    <kernel_clk_reset clk="board.kernel_clk" clk2x="board.kernel_clk2x" reset="board.kernel_reset"/>
+  </interfaces>
+
+  <channels>
+    <interface name="board" port="udp_out" type="streamsink"   width="64" chan_id="udp_out"/>
+    <interface name="board" port="udp_in"  type="streamsource" width="64" chan_id="udp_in"/>
+    <interface name="board" port="udp_out_1" type="streamsink"   width="64" chan_id="udp_out_1"/>
+    <interface name="board" port="udp_in_1"  type="streamsource" width="64" chan_id="udp_in_1"/> 
+    <interface name="board" port="udp_out_2" type="streamsink"   width="64" chan_id="udp_out_2"/>
+    <interface name="board" port="udp_in_2"  type="streamsource" width="64" chan_id="udp_in_2"/> 
+    <interface name="board" port="udp_out_3" type="streamsink"   width="64" chan_id="udp_out_3"/>
+    <interface name="board" port="udp_in_3"  type="streamsource" width="64" chan_id="udp_in_3"/> 
+    <interface name="board" port="udp_out_4" type="streamsink"   width="64" chan_id="udp_out_4"/>
+    <interface name="board" port="udp_in_4"  type="streamsource" width="64" chan_id="udp_in_4"/> 
+    <interface name="board" port="udp_out_5" type="streamsink"   width="64" chan_id="udp_out_5"/>
+    <interface name="board" port="udp_in_5"  type="streamsource" width="64" chan_id="udp_in_5"/> 
+    <interface name="board" port="udp_out_6" type="streamsink"   width="64" chan_id="udp_out_6"/>
+    <interface name="board" port="udp_in_6"  type="streamsource" width="64" chan_id="udp_in_6"/> 
+    <interface name="board" port="udp_out_7" type="streamsink"   width="64" chan_id="udp_out_7"/>
+    <interface name="board" port="udp_in_7"  type="streamsource" width="64" chan_id="udp_in_7"/> 
+    <!-- <interface name="board" port="udp_out_8" type="streamsink"   width="64" chan_id="udp_out_8"/>   -->
+    <!-- <interface name="board" port="udp_in_8"  type="streamsource" width="64" chan_id="udp_in_8"/>    -->
+    <!-- <interface name="board" port="udp_out_9" type="streamsink"   width="64" chan_id="udp_out_9"/>   -->
+    <!-- <interface name="board" port="udp_in_9"  type="streamsource" width="64" chan_id="udp_in_9"/>    -->
+    <!-- <interface name="board" port="udp_out_10" type="streamsink"   width="64" chan_id="udp_out_10"/> -->
+    <!-- <interface name="board" port="udp_in_10"  type="streamsource" width="64" chan_id="udp_in_10"/>  -->
+    <!-- <interface name="board" port="udp_out_11" type="streamsink"   width="64" chan_id="udp_out_11"/> -->
+    <!-- <interface name="board" port="udp_in_11"  type="streamsource" width="64" chan_id="udp_in_11"/>  -->
+    <!-- <interface name="board" port="udp_out_12" type="streamsink"   width="64" chan_id="udp_out_12"/> -->
+    <!-- <interface name="board" port="udp_in_12"  type="streamsource" width="64" chan_id="udp_in_12"/>  -->
+    <!-- <interface name="board" port="udp_out_13" type="streamsink"   width="64" chan_id="udp_out_13"/> -->
+    <!-- <interface name="board" port="udp_in_13"  type="streamsource" width="64" chan_id="udp_in_13"/>  -->
+    <!-- <interface name="board" port="udp_out_14" type="streamsink"   width="64" chan_id="udp_out_14"/> -->
+    <!-- <interface name="board" port="udp_in_14"  type="streamsource" width="64" chan_id="udp_in_14"/>  -->
+    <!-- <interface name="board" port="udp_out_15" type="streamsink"   width="64" chan_id="udp_out_15"/> -->
+    <!-- <interface name="board" port="udp_in_15"  type="streamsource" width="64" chan_id="udp_in_15"/>  -->
+  </channels>
+</board>
