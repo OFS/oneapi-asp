@@ -22,7 +22,7 @@ if command -v /usr/sbin/hardlink; then
 # and ofs_fseries_dk_usm directories. If so replace the ofs_fseries_dk_usm copy with
 # a hard link to version of the file in ofs_fseries_dk directory
 else
-  echo "Deduplicating large files in hardware ofs_fseries_dk and ofs_fseries_dk_usm direcotry"
+  echo "Deduplicating large files in hardware ofs_fseries_dk and ofs_fseries_dk_usm directory"
   dups=("build/output_files/ofs_fim.green_region.pmsf"
         "build/output_files/ofs_fim.static.msf"
         "build/output_files/ofs_fim.sof"
