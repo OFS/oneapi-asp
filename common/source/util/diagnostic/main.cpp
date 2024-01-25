@@ -338,7 +338,8 @@ int main(int argc, char *argv[]) {
   printf("\nAs a reference:\n");
   printf("PCIe Gen1 peak speed: 250MB/s/lane\n");
   printf("PCIe Gen2 peak speed: 500MB/s/lane\n");
-  printf("PCIe Gen3 peak speed: 985MB/s/lane\n");
+  printf("PCIe Gen3 peak speed: 1GB/s/lane\n");
+  printf("PCIe Gen4 peak speed: 2GB/s/lane\n");
 
   printf("\n");
   printf("Writing %d KBs with block size (in bytes) below:\n", maxbytes / 1024);
