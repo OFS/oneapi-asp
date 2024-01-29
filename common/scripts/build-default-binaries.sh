@@ -71,7 +71,7 @@ do
     echo -e "Using oneAPI compiler version:\n$(icpx --version)\n"
     echo -e "Using Quartus version:\n$(quartus_sh --version)"
     echo "---------------------------------------------------------------"
-    this_cmd="icpx -fsycl -fintelfpga -Xshardware -Xsboard-package="$ASP_ROOT" -Xstarget="$this_variant" -Xsbsp-flow="$ASP_FLOW" -Xsno-interleaving=default "$ASP_ROOT/$CPP_FILE" -o "$this_variant".fpga"
+    this_cmd="icpx -fsycl -fintelfpga -Xshardware -Xstarget="$ASP_ROOT":"$this_variant" -Xsbsp-flow="$ASP_FLOW" -Xsno-interleaving=default "$ASP_ROOT/$CPP_FILE" -o "$this_variant".fpga"
     #display the build cmd we'll run
     echo "Running this command: ${this_cmd}"
     #run the command
