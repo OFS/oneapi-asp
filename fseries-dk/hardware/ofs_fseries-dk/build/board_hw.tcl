@@ -27,8 +27,8 @@ set_parameter_property IOPIPE_SUPPORT DEFAULT_VALUE false
 set_parameter_property IOPIPE_SUPPORT DISPLAY_NAME "IO Pipe Support"
 set_parameter_property IOPIPE_SUPPORT AFFECTS_ELABORATION true
  
-add_parameter NUMBER_OF_MEMORY_BANKS INTEGER 4
-set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE 4
+add_parameter NUMBER_OF_MEMORY_BANKS INTEGER 2
+set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE 2
 set_parameter_property NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Memory Banks"
 set_parameter_property NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
 
