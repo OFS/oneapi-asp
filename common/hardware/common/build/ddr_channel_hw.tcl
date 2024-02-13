@@ -53,7 +53,7 @@ proc compose { } {
   set_instance_parameter_value ddr4_emif_pipe {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_emif_pipe {ADDRESS_UNITS} {SYMBOLS}
   set_instance_parameter_value ddr4_emif_pipe {MAX_BURST_SIZE} {16}
-  set_instance_parameter_value ddr4_emif_pipe {MAX_PENDING_RESPONSES} {64}
+  set_instance_parameter_value ddr4_emif_pipe {MAX_PENDING_RESPONSES} {16}
   set_instance_parameter_value ddr4_emif_pipe {LINEWRAPBURSTS} {0}
   set_instance_parameter_value ddr4_emif_pipe {SYNCHRONIZE_RESET} {1}
   set_instance_parameter_value ddr4_emif_pipe {DISABLE_WAITREQUEST_BUFFERING} {0}
