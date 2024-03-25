@@ -12,38 +12,40 @@ set_module_property COMPOSITION_CALLBACK compose
 # +-----------------------------------
 # | parameters
 # |
-add_parameter AFU_ID_H STD_LOGIC_VECTOR {0x51ed2f4afea24261}
-set_parameter_property AFU_ID_H DEFAULT_VALUE {0x51ed2f4afea24261}
+source parameters.tcl
+
+add_parameter AFU_ID_H STD_LOGIC_VECTOR $p_AFU_ID_H
+set_parameter_property AFU_ID_H DEFAULT_VALUE $p_AFU_ID_H
 set_parameter_property AFU_ID_H DISPLAY_NAME "AFU ID H"
 set_parameter_property AFU_ID_H AFFECTS_ELABORATION true
  
-add_parameter AFU_ID_L STD_LOGIC_VECTOR {0xa595918500575509}
-set_parameter_property AFU_ID_L DEFAULT_VALUE {0xa595918500575509}
+add_parameter AFU_ID_L STD_LOGIC_VECTOR $p_AFU_ID_L
+set_parameter_property AFU_ID_L DEFAULT_VALUE $p_AFU_ID_L
 set_parameter_property AFU_ID_L DISPLAY_NAME "AFU ID L"
 set_parameter_property AFU_ID_L AFFECTS_ELABORATION true
  
-add_parameter IOPIPE_SUPPORT BOOLEAN false
-set_parameter_property IOPIPE_SUPPORT DEFAULT_VALUE false
+add_parameter IOPIPE_SUPPORT BOOLEAN $p_IOPIPE_SUPPORT
+set_parameter_property IOPIPE_SUPPORT DEFAULT_VALUE $p_IOPIPE_SUPPORT
 set_parameter_property IOPIPE_SUPPORT DISPLAY_NAME "IO Pipe Support"
 set_parameter_property IOPIPE_SUPPORT AFFECTS_ELABORATION true
  
-add_parameter NUMBER_OF_MEMORY_BANKS INTEGER 4
-set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE 4
+add_parameter NUMBER_OF_MEMORY_BANKS INTEGER $p_NUMBER_OF_MEMORY_BANKS
+set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_NUMBER_OF_MEMORY_BANKS
 set_parameter_property NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Memory Banks"
 set_parameter_property NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
 
-add_parameter MEMORY_BANK_ADDRESS_WIDTH INTEGER 33
-set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE 33
+add_parameter MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEMORY_BANK_ADDRESS_WIDTH
+set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEMORY_BANK_ADDRESS_WIDTH
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
 
-add_parameter SNOOP_PORT_ENABLE BOOLEAN false
-set_parameter_property SNOOP_PORT_ENABLE DEFAULT_VALUE false
+add_parameter SNOOP_PORT_ENABLE BOOLEAN $p_SNOOP_PORT_ENABLE
+set_parameter_property SNOOP_PORT_ENABLE DEFAULT_VALUE $p_SNOOP_PORT_ENABLE
 set_parameter_property SNOOP_PORT_ENABLE DISPLAY_NAME "Enable Snoop Port"
 set_parameter_property SNOOP_PORT_ENABLE AFFECTS_ELABORATION true
 
-add_parameter MBD_TO_MEMORY_PIPE_STAGES INTEGER 0
-set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE 0
+add_parameter MBD_TO_MEMORY_PIPE_STAGES INTEGER $p_MBD_TO_MEMORY_PIPE_STAGES
+set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE $p_MBD_TO_MEMORY_PIPE_STAGES
 set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "MBD to Memory Pipeline Stages"
 set_parameter_property MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
 # | 
