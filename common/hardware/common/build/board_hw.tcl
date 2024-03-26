@@ -39,6 +39,21 @@ set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEMORY_BANK_AD
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
 
+add_parameter DATA_WIDTH INTEGER $p_DATA_WIDTH
+set_parameter_property DATA_WIDTH DEFAULT_VALUE $p_DATA_WIDTH
+set_parameter_property DATA_WIDTH DISPLAY_NAME "Data Width"
+set_parameter_property DATA_WIDTH AFFECTS_ELABORATION true
+
+add_parameter MAX_BURST_SIZE INTEGER $p_MAX_BURST_SIZE
+set_parameter_property MAX_BURST_SIZE DEFAULT_VALUE $p_MAX_BURST_SIZE
+set_parameter_property MAX_BURST_SIZE DISPLAY_NAME "Maximum Burst Size"
+set_parameter_property MAX_BURST_SIZE AFFECTS_ELABORATION true
+
+add_parameter KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER $p_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE $p_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Kernel to global memory waitrequest allowance"
+set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
+
 add_parameter SNOOP_PORT_ENABLE BOOLEAN $p_SNOOP_PORT_ENABLE
 set_parameter_property SNOOP_PORT_ENABLE DEFAULT_VALUE $p_SNOOP_PORT_ENABLE
 set_parameter_property SNOOP_PORT_ENABLE DISPLAY_NAME "Enable Snoop Port"
@@ -53,13 +68,20 @@ set_parameter_property MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
 
 proc compose { } {
   # Get parameters
-  set afu_id_h                  [ get_parameter_value AFU_ID_H ]
-  set afu_id_l                  [ get_parameter_value AFU_ID_L ]
-  set iopipe_support            [ get_parameter_value IOPIPE_SUPPORT ]
-  set number_of_memory_banks    [ get_parameter_value NUMBER_OF_MEMORY_BANKS ]
-  set memory_bank_address_width [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
-  set snoop_port_enable         [ get_parameter_value SNOOP_PORT_ENABLE ]
-  set mbd_to_memory_pipe_stages [ get_parameter_value MBD_TO_MEMORY_PIPE_STAGES ]
+  set afu_id_h                               [ get_parameter_value AFU_ID_H ]
+  set afu_id_l                               [ get_parameter_value AFU_ID_L ]
+  set iopipe_support                         [ get_parameter_value IOPIPE_SUPPORT ]
+  set number_of_memory_banks                 [ get_parameter_value NUMBER_OF_MEMORY_BANKS ]
+  set memory_bank_address_width              [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
+  set data_width                             [ get_parameter_value DATA_WIDTH ]
+  set max_burst_size                         [ get_parameter_value MAX_BURST_SIZE ]
+  set kernel_globalmem_waitrequest_allowance [ get_parameter_value KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE ]
+  set snoop_port_enable                      [ get_parameter_value SNOOP_PORT_ENABLE ]
+  set mbd_to_memory_pipe_stages              [ get_parameter_value MBD_TO_MEMORY_PIPE_STAGES ]
+
+  # Compute parameters
+  set symbol_width 8
+  set csr_data_width 64
 
   # Instances and instance parameters
   add_instance clk_200 altera_clock_bridge 19.2.0
@@ -82,8 +104,8 @@ proc compose { } {
   set_instance_parameter_value global_reset_in {NUM_RESET_OUTPUTS} {1}
 
   add_instance pipe_stage_dma_csr acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value pipe_stage_dma_csr {DATA_WIDTH} {64}
-  set_instance_parameter_value pipe_stage_dma_csr {SYMBOL_WIDTH} {8}
+  set_instance_parameter_value pipe_stage_dma_csr {DATA_WIDTH} $csr_data_width
+  set_instance_parameter_value pipe_stage_dma_csr {SYMBOL_WIDTH} $symbol_width
   set_instance_parameter_value pipe_stage_dma_csr {ADDRESS_WIDTH} {11}
   set_instance_parameter_value pipe_stage_dma_csr {ADDRESS_UNITS} {SYMBOLS}
   set_instance_parameter_value pipe_stage_dma_csr {MAX_BURST_SIZE} {1}
@@ -96,8 +118,8 @@ proc compose { } {
  
   if { $iopipe_support == true } {
     add_instance pipe_stage_uoe_csr acl_avalon_mm_bridge_s10 16.930
-    set_instance_parameter_value pipe_stage_uoe_csr {DATA_WIDTH} {64}
-    set_instance_parameter_value pipe_stage_uoe_csr {SYMBOL_WIDTH} {8}
+    set_instance_parameter_value pipe_stage_uoe_csr {DATA_WIDTH} $csr_data_width
+    set_instance_parameter_value pipe_stage_uoe_csr {SYMBOL_WIDTH} $symbol_width
     set_instance_parameter_value pipe_stage_uoe_csr {ADDRESS_WIDTH} {11}
     set_instance_parameter_value pipe_stage_uoe_csr {ADDRESS_UNITS} {SYMBOLS}
     set_instance_parameter_value pipe_stage_uoe_csr {MAX_BURST_SIZE} {1}
@@ -110,8 +132,8 @@ proc compose { } {
   }
 
   add_instance pipe_stage_host_ctrl acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value pipe_stage_host_ctrl {DATA_WIDTH} {64}
-  set_instance_parameter_value pipe_stage_host_ctrl {SYMBOL_WIDTH} {8}
+  set_instance_parameter_value pipe_stage_host_ctrl {DATA_WIDTH} $csr_data_width
+  set_instance_parameter_value pipe_stage_host_ctrl {SYMBOL_WIDTH} $symbol_width
   set_instance_parameter_value pipe_stage_host_ctrl {ADDRESS_WIDTH} {18}
   set_instance_parameter_value pipe_stage_host_ctrl {ADDRESS_UNITS} {SYMBOLS}
   set_instance_parameter_value pipe_stage_host_ctrl {MAX_BURST_SIZE} {1}
@@ -126,8 +148,8 @@ proc compose { } {
   set_instance_parameter_value kernel_interface {NUM_GLOBAL_MEMS} {1}
 
   add_instance board_kernel_cra_pipe acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value board_kernel_cra_pipe {DATA_WIDTH} {64}
-  set_instance_parameter_value board_kernel_cra_pipe {SYMBOL_WIDTH} {8}
+  set_instance_parameter_value board_kernel_cra_pipe {DATA_WIDTH} $csr_data_width
+  set_instance_parameter_value board_kernel_cra_pipe {SYMBOL_WIDTH} $symbol_width
   set_instance_parameter_value board_kernel_cra_pipe {ADDRESS_WIDTH} {30}
   set_instance_parameter_value board_kernel_cra_pipe {ADDRESS_UNITS} {SYMBOLS}
   set_instance_parameter_value board_kernel_cra_pipe {MAX_BURST_SIZE} {1}
@@ -165,6 +187,9 @@ proc compose { } {
   add_instance ddr_board ddr_board 23.2
   set_instance_parameter_value ddr_board {NUMBER_OF_MEMORY_BANKS} $number_of_memory_banks
   set_instance_parameter_value ddr_board {MEMORY_BANK_ADDRESS_WIDTH} $memory_bank_address_width
+  set_instance_parameter_value ddr_board {DATA_WIDTH} $data_width
+  set_instance_parameter_value ddr_board {MAX_BURST_SIZE} $max_burst_size
+  set_instance_parameter_value ddr_board {KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE} $kernel_globalmem_waitrequest_allowance
   set_instance_parameter_value ddr_board {SNOOP_PORT_ENABLE} $snoop_port_enable
   set_instance_parameter_value ddr_board {MBD_TO_MEMORY_PIPE_STAGES} $mbd_to_memory_pipe_stages
 

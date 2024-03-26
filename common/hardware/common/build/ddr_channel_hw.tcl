@@ -17,6 +17,21 @@ set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE 32
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
 
+add_parameter DATA_WIDTH INTEGER 512
+set_parameter_property DATA_WIDTH DEFAULT_VALUE 512
+set_parameter_property DATA_WIDTH DISPLAY_NAME "Data Width"
+set_parameter_property DATA_WIDTH AFFECTS_ELABORATION true
+
+add_parameter MAX_BURST_SIZE INTEGER 16
+set_parameter_property MAX_BURST_SIZE DEFAULT_VALUE 16
+set_parameter_property MAX_BURST_SIZE DISPLAY_NAME "Maximum Burst Size"
+set_parameter_property MAX_BURST_SIZE AFFECTS_ELABORATION true
+
+add_parameter KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER 6
+set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE 6
+set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Kernel to global memory waitrequest allowance"
+set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
+
 add_parameter MBD_TO_MEMORY_PIPE_STAGES INTEGER 0
 set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE 0
 set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "MBD to Memory Pipeline Stages"
@@ -26,8 +41,17 @@ set_parameter_property MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
 
 proc compose { } {
   # Get parameters
-  set memory_bank_address_width [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
-  set mbd_to_memory_pipe_stages [ get_parameter_value MBD_TO_MEMORY_PIPE_STAGES ]
+  set memory_bank_address_width              [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
+  set data_width                             [ get_parameter_value DATA_WIDTH ]
+  set max_burst_size                         [ get_parameter_value MAX_BURST_SIZE ]
+  set kernel_globalmem_waitrequest_allowance [ get_parameter_value KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE ]
+  set mbd_to_memory_pipe_stages              [ get_parameter_value MBD_TO_MEMORY_PIPE_STAGES ]
+
+  # Compute parameters
+  set log2_burst [ expr log($max_burst_size) / log(2) ]
+  set log2_burst_plus_one [ expr $log2_burst + 1 ]
+  set symbol_width 8
+  set symbols_per_data_word [ expr $data_width / $symbol_width ]
 
   # Instances and instance parameters
   add_instance host_clk altera_clock_bridge 19.2.0
@@ -48,11 +72,11 @@ proc compose { } {
   set_instance_parameter_value global_reset {NUM_RESET_OUTPUTS} {1}
 
   add_instance ddr4_emif_pipe acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value ddr4_emif_pipe {DATA_WIDTH} {512}
-  set_instance_parameter_value ddr4_emif_pipe {SYMBOL_WIDTH} {8}
+  set_instance_parameter_value ddr4_emif_pipe {DATA_WIDTH} $data_width
+  set_instance_parameter_value ddr4_emif_pipe {SYMBOL_WIDTH} $symbol_width
   set_instance_parameter_value ddr4_emif_pipe {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_emif_pipe {ADDRESS_UNITS} {SYMBOLS}
-  set_instance_parameter_value ddr4_emif_pipe {MAX_BURST_SIZE} {16}
+  set_instance_parameter_value ddr4_emif_pipe {MAX_BURST_SIZE} $max_burst_size
   set_instance_parameter_value ddr4_emif_pipe {MAX_PENDING_RESPONSES} {16}
   set_instance_parameter_value ddr4_emif_pipe {LINEWRAPBURSTS} {0}
   set_instance_parameter_value ddr4_emif_pipe {SYNCHRONIZE_RESET} {1}
@@ -62,21 +86,21 @@ proc compose { } {
 
   add_instance ddr4_cross_to_kernel acl_clock_crossing_bridge 1.0
   set_instance_parameter_value ddr4_cross_to_kernel {ADDRESS_WIDTH} $memory_bank_address_width
-  set_instance_parameter_value ddr4_cross_to_kernel {DATA_WIDTH} {512}
-  set_instance_parameter_value ddr4_cross_to_kernel {BURSTCOUNT_WIDTH} {5}
-  set_instance_parameter_value ddr4_cross_to_kernel {BYTEENABLE_WIDTH} {64}
+  set_instance_parameter_value ddr4_cross_to_kernel {DATA_WIDTH} $data_width
+  set_instance_parameter_value ddr4_cross_to_kernel {BURSTCOUNT_WIDTH} $log2_burst_plus_one
+  set_instance_parameter_value ddr4_cross_to_kernel {BYTEENABLE_WIDTH} $symbols_per_data_word
   set_instance_parameter_value ddr4_cross_to_kernel {CMD_DCFIFO_MIN_DEPTH} {512}
   set_instance_parameter_value ddr4_cross_to_kernel {RSP_DCFIFO_MIN_DEPTH} {512}
-  set_instance_parameter_value ddr4_cross_to_kernel {AGENT_STALL_LATENCY} {6}
+  set_instance_parameter_value ddr4_cross_to_kernel {AGENT_STALL_LATENCY} $kernel_globalmem_waitrequest_allowance
   set_instance_parameter_value ddr4_cross_to_kernel {HOST_STALL_LATENCY} {0}
   set_instance_parameter_value ddr4_cross_to_kernel {USE_WRITE_ACK} {0}
 
   add_instance ddr4_pipe_to_kernel acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value ddr4_pipe_to_kernel {DATA_WIDTH} {512}
-  set_instance_parameter_value ddr4_pipe_to_kernel {SYMBOL_WIDTH} {8}
+  set_instance_parameter_value ddr4_pipe_to_kernel {DATA_WIDTH} $data_width
+  set_instance_parameter_value ddr4_pipe_to_kernel {SYMBOL_WIDTH} $symbol_width
   set_instance_parameter_value ddr4_pipe_to_kernel {ADDRESS_WIDTH} $memory_bank_address_width
   set_instance_parameter_value ddr4_pipe_to_kernel {ADDRESS_UNITS} {SYMBOLS}
-  set_instance_parameter_value ddr4_pipe_to_kernel {MAX_BURST_SIZE} {16}
+  set_instance_parameter_value ddr4_pipe_to_kernel {MAX_BURST_SIZE} $max_burst_size
   set_instance_parameter_value ddr4_pipe_to_kernel {MAX_PENDING_RESPONSES} {256}
   set_instance_parameter_value ddr4_pipe_to_kernel {LINEWRAPBURSTS} {0}
   set_instance_parameter_value ddr4_pipe_to_kernel {SYNCHRONIZE_RESET} {1}
@@ -86,9 +110,9 @@ proc compose { } {
 
   add_instance ddr4_cross_to_host acl_clock_crossing_bridge 1.0
   set_instance_parameter_value ddr4_cross_to_host {ADDRESS_WIDTH} $memory_bank_address_width
-  set_instance_parameter_value ddr4_cross_to_host {DATA_WIDTH} {512}
-  set_instance_parameter_value ddr4_cross_to_host {BURSTCOUNT_WIDTH} {5}
-  set_instance_parameter_value ddr4_cross_to_host {BYTEENABLE_WIDTH} {64}
+  set_instance_parameter_value ddr4_cross_to_host {DATA_WIDTH} $data_width
+  set_instance_parameter_value ddr4_cross_to_host {BURSTCOUNT_WIDTH} $log2_burst_plus_one
+  set_instance_parameter_value ddr4_cross_to_host {BYTEENABLE_WIDTH} $symbols_per_data_word
   set_instance_parameter_value ddr4_cross_to_host {CMD_DCFIFO_MIN_DEPTH} {512}
   set_instance_parameter_value ddr4_cross_to_host {RSP_DCFIFO_MIN_DEPTH} {512}
   set_instance_parameter_value ddr4_cross_to_host {AGENT_STALL_LATENCY} {0}
@@ -97,11 +121,11 @@ proc compose { } {
 
   for { set i 0} { $i < $mbd_to_memory_pipe_stages} {incr i} {
     add_instance ddr4_pipe_to_bankdiv$i acl_avalon_mm_bridge_s10 16.930
-    set_instance_parameter_value ddr4_pipe_to_bankdiv$i {DATA_WIDTH} {512}
-    set_instance_parameter_value ddr4_pipe_to_bankdiv$i {SYMBOL_WIDTH} {8}
+    set_instance_parameter_value ddr4_pipe_to_bankdiv$i {DATA_WIDTH} $data_width
+    set_instance_parameter_value ddr4_pipe_to_bankdiv$i {SYMBOL_WIDTH} $symbol_width
     set_instance_parameter_value ddr4_pipe_to_bankdiv$i {ADDRESS_WIDTH} $memory_bank_address_width
     set_instance_parameter_value ddr4_pipe_to_bankdiv$i {ADDRESS_UNITS} {SYMBOLS}
-    set_instance_parameter_value ddr4_pipe_to_bankdiv$i {MAX_BURST_SIZE} {16}
+    set_instance_parameter_value ddr4_pipe_to_bankdiv$i {MAX_BURST_SIZE} $max_burst_size
     set_instance_parameter_value ddr4_pipe_to_bankdiv$i {MAX_PENDING_RESPONSES} {256}
     set_instance_parameter_value ddr4_pipe_to_bankdiv$i {LINEWRAPBURSTS} {0}
     set_instance_parameter_value ddr4_pipe_to_bankdiv$i {SYNCHRONIZE_RESET} {1}
