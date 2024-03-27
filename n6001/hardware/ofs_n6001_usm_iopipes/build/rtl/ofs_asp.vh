@@ -40,7 +40,7 @@
     //USM-support
     `define INCLUDE_USM_SUPPORT 1
     `define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
-    //`define ASP_ENABLE_USM_CH_0 1
+    `define ASP_ENABLE_USM_CH_0 1
     //`define ASP_ENABLE_USM_CH_1 1
     //`define ASP_ENABLE_USM_CH_2 1
     //`define ASP_ENABLE_USM_CH_3 1
