@@ -17,6 +17,11 @@ set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE 4
 set_parameter_property NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Memory Banks"
 set_parameter_property NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
 
+add_parameter NUMBER_OF_DMA_CHANNELS INTEGER 1
+set_parameter_property NUMBER_OF_DMA_CHANNELS DEFAULT_VALUE 1
+set_parameter_property NUMBER_OF_DMA_CHANNELS DISPLAY_NAME "Number of DMA Channels"
+set_parameter_property NUMBER_OF_DMA_CHANNELS AFFECTS_ELABORATION true
+
 add_parameter MEMORY_BANK_ADDRESS_WIDTH INTEGER 32
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE 32
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
@@ -52,6 +57,7 @@ set_parameter_property MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
 proc compose { } {
   # Get parameters
   set number_of_memory_banks                 [ get_parameter_value NUMBER_OF_MEMORY_BANKS ]
+  set number_of_dma_channels                 [ get_parameter_value NUMBER_OF_DMA_CHANNELS ]
   set memory_bank_address_width              [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
   set data_width                             [ get_parameter_value DATA_WIDTH ]
   set max_burst_size                         [ get_parameter_value MAX_BURST_SIZE ]
@@ -124,31 +130,33 @@ proc compose { } {
   set_instance_parameter_value dma_localmem_rdwr_pipe {READDATA_PIPE_DEPTH} {2}
   set_instance_parameter_value dma_localmem_rdwr_pipe {CMD_PIPE_DEPTH} {1}
 
-  add_instance dma_localmem_rd_pipe acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value dma_localmem_rd_pipe {DATA_WIDTH} $data_width
-  set_instance_parameter_value dma_localmem_rd_pipe {SYMBOL_WIDTH} $symbol_width
-  set_instance_parameter_value dma_localmem_rd_pipe {ADDRESS_WIDTH} $total_address_width
-  set_instance_parameter_value dma_localmem_rd_pipe {ADDRESS_UNITS} {SYMBOLS}
-  set_instance_parameter_value dma_localmem_rd_pipe {MAX_BURST_SIZE} $max_burst_size
-  set_instance_parameter_value dma_localmem_rd_pipe {MAX_PENDING_RESPONSES} {64}
-  set_instance_parameter_value dma_localmem_rd_pipe {LINEWRAPBURSTS} {0}
-  set_instance_parameter_value dma_localmem_rd_pipe {SYNCHRONIZE_RESET} {1}
-  set_instance_parameter_value dma_localmem_rd_pipe {DISABLE_WAITREQUEST_BUFFERING} {0}
-  set_instance_parameter_value dma_localmem_rd_pipe {READDATA_PIPE_DEPTH} {2}
-  set_instance_parameter_value dma_localmem_rd_pipe {CMD_PIPE_DEPTH} {1}
-
-  add_instance dma_localmem_wr_pipe acl_avalon_mm_bridge_s10 16.930
-  set_instance_parameter_value dma_localmem_wr_pipe {DATA_WIDTH} $data_width
-  set_instance_parameter_value dma_localmem_wr_pipe {SYMBOL_WIDTH} $symbol_width
-  set_instance_parameter_value dma_localmem_wr_pipe {ADDRESS_WIDTH} $total_address_width
-  set_instance_parameter_value dma_localmem_wr_pipe {ADDRESS_UNITS} {SYMBOLS}
-  set_instance_parameter_value dma_localmem_wr_pipe {MAX_BURST_SIZE} $max_burst_size
-  set_instance_parameter_value dma_localmem_wr_pipe {MAX_PENDING_RESPONSES} {1}
-  set_instance_parameter_value dma_localmem_wr_pipe {LINEWRAPBURSTS} {0}
-  set_instance_parameter_value dma_localmem_wr_pipe {SYNCHRONIZE_RESET} {1}
-  set_instance_parameter_value dma_localmem_wr_pipe {DISABLE_WAITREQUEST_BUFFERING} {0}
-  set_instance_parameter_value dma_localmem_wr_pipe {READDATA_PIPE_DEPTH} {2}
-  set_instance_parameter_value dma_localmem_wr_pipe {CMD_PIPE_DEPTH} {1}
+  for { set i 0} { $i < $number_of_dma_channels } {incr i} {
+    add_instance dma_localmem_rd_pipe_$i acl_avalon_mm_bridge_s10 16.930
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {DATA_WIDTH} $data_width
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {SYMBOL_WIDTH} $symbol_width
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {ADDRESS_WIDTH} $total_address_width
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {ADDRESS_UNITS} {SYMBOLS}
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {MAX_BURST_SIZE} $max_burst_size
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {MAX_PENDING_RESPONSES} {64}
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {LINEWRAPBURSTS} {0}
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {SYNCHRONIZE_RESET} {1}
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {DISABLE_WAITREQUEST_BUFFERING} {0}
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {READDATA_PIPE_DEPTH} {2}
+    set_instance_parameter_value dma_localmem_rd_pipe_$i {CMD_PIPE_DEPTH} {1}
+    
+    add_instance dma_localmem_wr_pipe_$i acl_avalon_mm_bridge_s10 16.930
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {DATA_WIDTH} $data_width
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {SYMBOL_WIDTH} $symbol_width
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {ADDRESS_WIDTH} $total_address_width
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {ADDRESS_UNITS} {SYMBOLS}
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {MAX_BURST_SIZE} $max_burst_size
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {MAX_PENDING_RESPONSES} {1}
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {LINEWRAPBURSTS} {0}
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {SYNCHRONIZE_RESET} {1}
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {DISABLE_WAITREQUEST_BUFFERING} {0}
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {READDATA_PIPE_DEPTH} {2}
+    set_instance_parameter_value dma_localmem_wr_pipe_$i {CMD_PIPE_DEPTH} {1}
+  }
 
   add_instance null_dfh_inst afu_id_avmm_slave 1.0
   set_instance_parameter_value null_dfh_inst {AFU_ID_H} {0xda1182b1b3444e23}
@@ -172,8 +180,10 @@ proc compose { } {
 
   add_connection host_clk.out_clk memory_bank_divider.clk clock
   add_connection host_clk.out_clk dma_localmem_rdwr_pipe.clk clock
-  add_connection host_clk.out_clk dma_localmem_rd_pipe.clk clock
-  add_connection host_clk.out_clk dma_localmem_wr_pipe.clk clock
+  for { set i 0} { $i < $number_of_dma_channels } {incr i} {
+    add_connection host_clk.out_clk dma_localmem_rd_pipe_$i.clk clock
+    add_connection host_clk.out_clk dma_localmem_wr_pipe_$i.clk clock
+  }
   add_connection host_clk.out_clk null_dfh_inst.clock clock
   add_connection kernel_clk.out_clk kernel_reset.clk clock
 
@@ -190,8 +200,10 @@ proc compose { } {
   # Resets
   add_connection global_reset.out_reset memory_bank_divider.reset reset
   add_connection global_reset.out_reset dma_localmem_rdwr_pipe.reset reset
-  add_connection global_reset.out_reset dma_localmem_rd_pipe.reset reset
-  add_connection global_reset.out_reset dma_localmem_wr_pipe.reset reset
+  for { set i 0} { $i < $number_of_dma_channels } {incr i} {
+    add_connection global_reset.out_reset dma_localmem_rd_pipe_$i.reset reset
+    add_connection global_reset.out_reset dma_localmem_wr_pipe_$i.reset reset
+  }
   add_connection global_reset.out_reset null_dfh_inst.reset reset
 
   for { set i 0} { $i < $number_of_memory_banks } {incr i} {
@@ -202,15 +214,17 @@ proc compose { } {
   add_connection kernel_reset.out_reset memory_bank_divider.kernel_reset reset
 
   # Data
-  add_connection dma_localmem_wr_pipe.m0 dma_localmem_rdwr_pipe.s0 avalon
-  set_connection_parameter_value dma_localmem_wr_pipe.m0/dma_localmem_rdwr_pipe.s0 arbitrationPriority {1}
-  set_connection_parameter_value dma_localmem_wr_pipe.m0/dma_localmem_rdwr_pipe.s0 baseAddress {0x0}
-  set_connection_parameter_value dma_localmem_wr_pipe.m0/dma_localmem_rdwr_pipe.s0 defaultConnection {0}
+  for { set i 0} { $i < $number_of_dma_channels } {incr i} {
+    add_connection dma_localmem_wr_pipe_$i.m0 dma_localmem_rdwr_pipe.s0 avalon
+    set_connection_parameter_value dma_localmem_wr_pipe_$i.m0/dma_localmem_rdwr_pipe.s0 arbitrationPriority {1}
+    set_connection_parameter_value dma_localmem_wr_pipe_$i.m0/dma_localmem_rdwr_pipe.s0 baseAddress {0x0}
+    set_connection_parameter_value dma_localmem_wr_pipe_$i.m0/dma_localmem_rdwr_pipe.s0 defaultConnection {0}
 
-  add_connection dma_localmem_rd_pipe.m0 dma_localmem_rdwr_pipe.s0 avalon
-  set_connection_parameter_value dma_localmem_rd_pipe.m0/dma_localmem_rdwr_pipe.s0 arbitrationPriority {1}
-  set_connection_parameter_value dma_localmem_rd_pipe.m0/dma_localmem_rdwr_pipe.s0 baseAddress {0x0}
-  set_connection_parameter_value dma_localmem_rd_pipe.m0/dma_localmem_rdwr_pipe.s0 defaultConnection {0}
+    add_connection dma_localmem_rd_pipe_$i.m0 dma_localmem_rdwr_pipe.s0 avalon
+    set_connection_parameter_value dma_localmem_rd_pipe_$i.m0/dma_localmem_rdwr_pipe.s0 arbitrationPriority {1}
+    set_connection_parameter_value dma_localmem_rd_pipe_$i.m0/dma_localmem_rdwr_pipe.s0 baseAddress {0x0}
+    set_connection_parameter_value dma_localmem_rd_pipe_$i.m0/dma_localmem_rdwr_pipe.s0 defaultConnection {0}
+  }
 
   add_connection dma_localmem_rdwr_pipe.m0 memory_bank_divider.s avalon
   set_connection_parameter_value dma_localmem_rdwr_pipe.m0/memory_bank_divider.s arbitrationPriority {1}
@@ -258,10 +272,12 @@ proc compose { } {
   
   add_interface acl_asp_memorg_host conduit end
   set_interface_property acl_asp_memorg_host EXPORT_OF memory_bank_divider.acl_asp_memorg_host
-  add_interface dma_localmem_rd avalon slave
-  set_interface_property dma_localmem_rd EXPORT_OF dma_localmem_rd_pipe.s0
-  add_interface dma_localmem_wr avalon slave
-  set_interface_property dma_localmem_wr EXPORT_OF dma_localmem_wr_pipe.s0
+  for { set i 0} { $i < $number_of_dma_channels } {incr i} {
+    add_interface dma_localmem_rd_$i avalon slave
+    set_interface_property dma_localmem_rd_$i EXPORT_OF dma_localmem_rd_pipe_$i.s0
+    add_interface dma_localmem_wr_$i avalon slave
+    set_interface_property dma_localmem_wr_$i EXPORT_OF dma_localmem_wr_pipe_$i.s0
+  }
   add_interface null_dfh_id avalon slave
   set_interface_property null_dfh_id EXPORT_OF null_dfh_inst.afu_cfg_slave
 

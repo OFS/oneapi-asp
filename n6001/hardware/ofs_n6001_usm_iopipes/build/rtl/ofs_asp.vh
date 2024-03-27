@@ -7,15 +7,15 @@
 `ifndef ofs_asp_vh
 
     `define ofs_asp_vh
-	
-	//print some package/parameter information to the screen during synthesis
-	`define PRINT_OFS_ASP_PKG_PARAMETERS_DURING_SYNTHESIS 1
-	
-	//host-memory/PCIe channels
-	`define ASP_ENABLE_HOSTMEM_CH_0 1
-	//`define ASP_ENABLE_HOSTMEM_CH_1 1
-	//`define ASP_ENABLE_HOSTMEM_CH_2 1
-	//`define ASP_ENABLE_HOSTMEM_CH_3 1
+    
+    //print some package/parameter information to the screen during synthesis
+    `define PRINT_OFS_ASP_PKG_PARAMETERS_DURING_SYNTHESIS 1
+    
+    //host-memory/PCIe channels
+    `define ASP_ENABLE_HOSTMEM_CH_0 1
+    //`define ASP_ENABLE_HOSTMEM_CH_1 1
+    //`define ASP_ENABLE_HOSTMEM_CH_2 1
+    //`define ASP_ENABLE_HOSTMEM_CH_3 1
 
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_0
         `define ASP_ENABLE_DDR4_BANK_0 1
@@ -29,7 +29,7 @@
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_3
         `define ASP_ENABLE_DDR4_BANK_3 1
     `endif
-	
+    
     //DMA-support
     `define INCLUDE_ASP_DMA 1
     `define ASP_ENABLE_DMA_CH_0 1
