@@ -23,13 +23,18 @@ module dma_data_transfer #(
     parameter SRC_ADDR_WIDTH            = 0,
     parameter DST_ADDR_WIDTH            = 0,
     parameter XFER_LENGTH_WIDTH         = 0,
-    parameter DIR_FPGA_TO_HOST          = 1'b1
+    parameter DIR_FPGA_TO_HOST          = 1'b1,
+    parameter DMA_CHANNEL_NUM           = 0
 ) (
     input clk,
     input reset,
 
     //CSR interface to Dispatcher
     dma_ctrl_intf.ctrl disp_ctrl_if,
+    
+    //all parallel transfers are done - issue host-mem-write 
+    //(magic-number) for completion notification to mmd
+    input all_transfers_complete,
     
     //data-source AVMM
     ofs_plat_avalon_mem_if.to_sink src_avmm,
@@ -115,7 +120,7 @@ module dma_data_transfer #(
     logic wr_state_cur_is_idle, wr_state_cur_is_wait_for_write_burst_data, wr_state_cur_is_write, 
           wr_state_cur_is_a_write_data_state, wr_state_cur_is_write_magic_num, 
           wr_state_nxt_is_write_magic_num, wr_state_is_write_magic_num, 
-          wr_state_nxt_is_wait_for_write_burst_data;
+          wr_state_nxt_is_wait_for_write_burst_data, wr_state_cur_is_wait_to_write_magic_num;
     logic this_is_last_dst_write,this_is_last_dst_write_plus1_reg,this_is_last_dst_write_reg;
     logic rd_reqs_complete,rd_reqs_complete_reg,rd_reqs_complete_wire;
     logic [AVMM_BURSTCOUNT_BITS-1:0] src_burst_cnt, next_src_burst_cnt;
@@ -144,12 +149,13 @@ module dma_data_transfer #(
     logic databuf_has_enough_data_for_this_burst,databuf_has_enough_data_for_next_burst;
     logic successful_dst_int_write;
     logic this_is_first_burst_word;
+    logic all_transfers_complete_latched;
     
     logic rst;
     assign rst = reset | disp_ctrl_if.sclr;
     
     //pipeline and duplicate the reset signal
-    parameter RESET_PIPE_DEPTH = 4;
+    localparam RESET_PIPE_DEPTH = 4;
     logic [RESET_PIPE_DEPTH-1:0] rst_pipe;
     logic rst_local;
     always_ff @(posedge clk) begin
@@ -158,6 +164,18 @@ module dma_data_transfer #(
             rst_local <= '1;
             rst_pipe  <= '1;
         end
+    end
+    
+    //latch the incoming all_transfers_complete signal until we've sent the magic number (if appropriate)
+    always_ff @(posedge clk) begin
+        if (wr_state_cur_is_idle)
+            all_transfers_complete_latched <= 'b0;
+        else if (all_transfers_complete)
+            all_transfers_complete_latched <= 'b1;
+        else
+            all_transfers_complete_latched <= all_transfers_complete_latched;
+        if (rst_local)
+            all_transfers_complete_latched <= 'b0;
     end
     
     //
@@ -706,32 +724,49 @@ module dma_data_transfer #(
     always_comb begin
         wr_state_nxt = WXXX;
         case (wr_state_cur)
-            WIDLE:  if (latch_this_cmd)         wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
-                    else                        wr_state_nxt = WIDLE;
+            WIDLE:  
+                if (latch_this_cmd)         
+                    wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
+                else                        
+                    wr_state_nxt = WIDLE;
             WAIT_FOR_WRITE_BURST_DATA:
-                    //if we have enough data for a complete burst (either a max burst or the only/final burst)
-                    if (databuf_has_enough_data_for_this_burst)
-                                                wr_state_nxt = WRITE_COMPLETE_BURST;
-                    //else we don't have enough data to send the entire burst; so we wait for more read-responses
-                    else
-                                                wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
+                //if we have enough data for a complete burst (either a max burst or the only/final burst)
+                if (databuf_has_enough_data_for_this_burst)
+                    wr_state_nxt = WRITE_COMPLETE_BURST;
+                //else we don't have enough data to send the entire burst; so we wait for more read-responses
+                else
+                    wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
             WRITE_COMPLETE_BURST:
-                    //if end of this burst, check what to do next based on databuf.usedw and wr_xfer_remaining
-                    if (dst_avmm_int.burstcount == 'h1 && successful_dst_int_write) begin
-                        //if we done sending data? Go back to idle or send magic-number
-                        if (!wr_xfer_remaining_next)
-                                                wr_state_nxt = DIR_FPGA_TO_HOST ? WRITE_MAGIC_NUM : WIDLE;
-                        //elif there will be more data to send, but do we have enough in the databuf to send the 
-                        //  next complete burst?
-                        else if (databuf_has_enough_data_for_next_burst)
-                                                wr_state_nxt = WRITE_COMPLETE_BURST;
-                        //else we don't have enough data for the next complete burst, so we need to wait
-                        else                    wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
+                //if end of this burst, check what to do next based on databuf.usedw and wr_xfer_remaining
+                if (dst_avmm_int.burstcount == 'h1 && successful_dst_int_write) begin
+                    //if we done sending data? Go back to idle or send magic-number
+                    if (!wr_xfer_remaining_next) begin
+                        if (DIR_FPGA_TO_HOST & DO_F2H_MAGIC_NUMBER_WRITE & (DMA_CHANNEL_NUM==0) )
+                            wr_state_nxt = WAIT_TO_WRITE_MAGIC_NUM;
+                        else
+                            wr_state_nxt = WIDLE;
                     end
-                    //else we are mid-burst, stay here until we're done
-                    else                        wr_state_nxt = WRITE_COMPLETE_BURST;
-            WRITE_MAGIC_NUM: if (successful_dst_int_write) wr_state_nxt = WIDLE;
-                    else                        wr_state_nxt = WRITE_MAGIC_NUM;
+                    //elif there will be more data to send, but do we have enough in the databuf to send the 
+                    //  next complete burst?
+                    else if (databuf_has_enough_data_for_next_burst)
+                        wr_state_nxt = WRITE_COMPLETE_BURST;
+                    //else we don't have enough data for the next complete burst, so we need to wait
+                    else
+                        wr_state_nxt = WAIT_FOR_WRITE_BURST_DATA;
+                end
+                //else we are mid-burst, stay here until we're done
+                else    
+                    wr_state_nxt = WRITE_COMPLETE_BURST;
+            WAIT_TO_WRITE_MAGIC_NUM:
+                if (all_transfers_complete_latched)
+                    wr_state_nxt = WRITE_MAGIC_NUM;
+                else
+                    wr_state_nxt = WAIT_TO_WRITE_MAGIC_NUM;
+            WRITE_MAGIC_NUM: 
+                if (successful_dst_int_write) 
+                    wr_state_nxt = WIDLE;
+                else
+                    wr_state_nxt = WRITE_MAGIC_NUM;
         endcase
     end
     //We only want to write data when we have enough for a full burst (even if 'full' means 1 or less than
@@ -750,6 +785,7 @@ module dma_data_transfer #(
         wr_state_nxt_is_wait_for_write_burst_data = wr_state_nxt == WAIT_FOR_WRITE_BURST_DATA;
         wr_state_cur_is_write                = wr_state_cur == WRITE_COMPLETE_BURST;
         wr_state_cur_is_a_write_data_state   = wr_state_cur_is_wait_for_write_burst_data | wr_state_cur_is_write;
+        wr_state_cur_is_wait_to_write_magic_num = wr_state_cur == WAIT_TO_WRITE_MAGIC_NUM;
         wr_state_cur_is_write_magic_num      = wr_state_cur == WRITE_MAGIC_NUM;
         wr_state_nxt_is_write_magic_num      = wr_state_nxt == WRITE_MAGIC_NUM;
         wr_state_is_write_magic_num          = wr_state_cur_is_write_magic_num | wr_state_nxt_is_write_magic_num;
@@ -788,8 +824,8 @@ module dma_data_transfer #(
     //we should never get into the write-magic-num state if DIR_FPGA_TO_HOST is '0'.
     // synthesis translate_off
     always_comb begin
-        if ( (DIR_FPGA_TO_HOST == 0) && (wr_state_is_write_magic_num) )
-            $fatal("dma_data_transfer.sv: DIR_FPGA_TO_HOST is %s : We should never get into the write-magic-number state in the H2F DMA channel!", DIR_FPGA_TO_HOST);
+        if ( ( !DIR_FPGA_TO_HOST | (DIR_FPGA_TO_HOST & DO_F2H_MAGIC_NUMBER_WRITE & (DMA_CHANNEL_NUM != 0)) ) && (wr_state_is_write_magic_num) )
+            $fatal("dma_data_transfer.sv: DIR_FPGA_TO_HOST is %s and DMA_CHANNEL_NUM is %s: We should never get into the write-magic-number state in the H2F DMA channel!", DIR_FPGA_TO_HOST, DMA_CHANNEL_NUM);
     end
     // synthesis translate_on
     
@@ -1004,19 +1040,14 @@ module dma_data_transfer #(
     // synthesis translate on
     end
         
-`ifdef DO_F2H_MAGIC_NUMBER_WRITE
-    //only generate wr-fence signals for FPGA-to-HOST path.
-    generate
-        if (DIR_FPGA_TO_HOST == 1'b1) begin
-            assign disp_ctrl_if.f2h_wr_fence_flag = wr_state_cur_is_write_magic_num && successful_dst_int_write;
-        end
-        if (DIR_FPGA_TO_HOST == 1'b0) begin
-            assign disp_ctrl_if.f2h_wr_fence_flag = 'b0;
-        end
-    endgenerate
-`else
-    assign disp_ctrl_if.f2h_wr_fence_flag = 'b0;
-`endif
+    //only generate wr-fence signals for FPGA-to-HOST path on CH0
+    always_comb begin
+        if ( (DIR_FPGA_TO_HOST == 1'b1) && DO_F2H_MAGIC_NUMBER_WRITE & (DMA_CHANNEL_NUM == 0) )
+            disp_ctrl_if.f2h_wr_fence_flag = wr_state_cur_is_write_magic_num && successful_dst_int_write;
+        else
+            disp_ctrl_if.f2h_wr_fence_flag = 'b0;
+    end
+    
     logic [15:0] magic_number_counter;
     always_ff @(posedge clk) begin
         if (wr_state_cur_is_write_magic_num && successful_dst_int_write)
@@ -1026,12 +1057,28 @@ module dma_data_transfer #(
     assign disp_ctrl_if.magic_number_counter = magic_number_counter;
     
     //
-    // control/status stuff
+    // control/status stuff - slightly different if this is DMA CH[0] and F2H or another channel
     //
+    generate
+    if (DIR_FPGA_TO_HOST & DO_F2H_MAGIC_NUMBER_WRITE & (DMA_CHANNEL_NUM==0) ) begin
+        logic wr_state_cur_is_wait_to_write_magic_num_d;
+                
+        always_ff @(posedge clk) begin
+            wr_state_cur_is_wait_to_write_magic_num_d <= wr_state_cur_is_wait_to_write_magic_num;
+            if (rst_local)
+                wr_state_cur_is_wait_to_write_magic_num_d <= 'b0;
+        end
+        assign disp_ctrl_if.f2h_wait_for_magic_num_wr_pulse = !wr_state_cur_is_wait_to_write_magic_num_d &
+                                                                        wr_state_cur_is_wait_to_write_magic_num;
+    end else begin
+        assign disp_ctrl_if.f2h_wait_for_magic_num_wr_pulse = 'b0;
+    end
+    endgenerate
+    
     always_comb begin
         controller_busy <= disp_ctrl_if.controller_busy_wr | disp_ctrl_if.controller_busy_rd;
     end
-
+    
     //set interrupt on falling edge of controller-busy; clear when the clear-irq signal is asserted
     //create both a pulse and a level for the IRQ signal.
     always_ff @(posedge clk) begin

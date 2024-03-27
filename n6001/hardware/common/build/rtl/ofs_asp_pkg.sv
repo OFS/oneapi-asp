@@ -68,13 +68,6 @@ package ofs_asp_pkg;
     parameter ASP_KERNEL_IRQ_BIT   = 1;
     parameter ASP_DMA_1_IRQ_BIT    = 2;
     
-    // parameters to differentiate between DMA-only and DMA+USM ASPs
-    `ifdef INCLUDE_USM_SUPPORT
-        parameter NUM_VTP_PORTS = 4;
-    `else
-        parameter NUM_VTP_PORTS = 2;
-    `endif
-    
     `ifdef USE_KERNEL_CLK_EVERYWHERE_IN_PR_REGION
         parameter USE_PIM_CDC_HOSTCHAN = 1;
         `define USE_PIM_CDC_FOR_HOSTCHAN 1
@@ -92,15 +85,6 @@ package ofs_asp_pkg;
             parameter USE_PIM_CDC_LOCALMEM = 0;
          `endif
     `endif
-    // Byte address of VTP CSRs
-    parameter VTP_SVC_MMIO_BASE_ADDR = 'h2_4000;
-    // DFH end-of-list flag - '0' means this is the end of the DFH list
-    parameter MPF_VTP_DFH_NEXT_ADDR = 0;
-    
-    // USM kernel clock crossing bridge
-    parameter USM_CCB_RESPONSE_FIFO_DEPTH       = 512;
-    parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
-    parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
     
     //number of IO Channels/Pipes enabled in the ASP.
     `ifdef INCLUDE_IO_PIPES
@@ -110,5 +94,73 @@ package ofs_asp_pkg;
     `endif
     //Avalon Streaming data width - I/O Pipe connection to kernel-system
     parameter ASP_ETH_PKT_DATA_WIDTH = ofs_fim_eth_if_pkg::ETH_PACKET_WIDTH;
+    
+    //make these equal for now; maybe in the future this can be unbalanced but it
+    // could add a lot of complexity (tying-off the unused channels, for example)
+    parameter NUM_HOSTMEM_CHAN = 2;
+    //which hostmem-channel (ofs_plat_avalon_mem_rdwr_if at ofs_plat_afu) 
+    //is the default for VTP and MMIO?
+    parameter HOSTMEM_CHAN_DEFAULT_WITH_MMIO = 0;
+    //which hostmem-channel is used for the VTP-SVC connection?
+    parameter HOSTMEM_CHAN_VTP_SVC = HOSTMEM_CHAN_DEFAULT_WITH_MMIO;
+    `ifdef INCLUDE_ASP_DMA
+        parameter NUM_DMA_CHAN = NUM_HOSTMEM_CHAN;
+    `else
+        parameter NUM_DMA_CHAN = 0;
+    `endif
+    `ifdef INCLUDE_USM_SUPPORT
+        parameter NUM_USM_CHAN = NUM_HOSTMEM_CHAN;
+    `else
+        parameter NUM_USM_CHAN = 0;
+    `endif
+    
+    //eventually we might not want to group the USM/DMA channels and their
+    //sharing of VTP resources differently than alawys 1 DMA with 1 USM as 
+    //everything was initially designed to do. Leave it for now, but there
+    //may be a reason to mix-and-match in the future?
+    parameter NUM_ASP_DMA_AND_USM_CHAN = NUM_USM_CHAN + NUM_DMA_CHAN;
+    parameter MAX_NUM_ASP_DMA_AND_USM_CHAN = 2 * NUM_HOSTMEM_CHAN;
+    
+    //set the indices used by host_mem_if_vtp module
+    //currently assuming we have the same number of DMA (and USM, if enabled) channels
+    //as hostmem channels, which means the DMA/USM SVC indices will alternate with
+    //DMA as even channels and USM as odd channels (when both are enabled)
+    parameter HOSTMEM_VTP_SVC_CHAN_DMA = 0;
+    parameter DMA_VTP_SVC_CHAN = 0;
+    
+    parameter HOSTMEM_VTP_SVC_CHAN_USM = 1;
+    parameter USM_VTP_SVC_CHAN = 0;
+    
+    `ifdef INCLUDE_USM_SUPPORT
+        parameter NUM_VTP_PORTS = 4*NUM_HOSTMEM_CHAN;
+    `else
+        parameter NUM_VTP_PORTS = 2*NUM_HOSTMEM_CHAN;
+    `endif
+    parameter NUM_VTP_PORTS_PER_CHAN = 2;
+    
+    // Byte address of VTP CSRs
+    parameter VTP_SVC_MMIO_BASE_ADDR = 'h2_4000;
+    // DFH end-of-list flag - '0' means this is the end of the DFH list
+    parameter MPF_VTP_DFH_NEXT_ADDR = 0;
+        
+    // USM kernel clock crossing bridge
+    parameter USM_CCB_RESPONSE_FIFO_DEPTH       = 512;
+    parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
+    parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
+    
+    
+    function func_print_ofs_asp_pkg_parameters_during_synthesis ();
+        $display ("ofs_asp_pkg.sv: NUM_HOSTMEM_CHAN is %d", NUM_HOSTMEM_CHAN);
+        $display ("ofs_asp_pkg.sv: NUM_DMA_CHAN is %d", NUM_DMA_CHAN);
+        $display ("ofs_asp_pkg.sv: NUM_USM_CHAN is %d", NUM_USM_CHAN);
+        $display ("ofs_asp_pkg.sv: NUM_ASP_DMA_AND_USM_CHAN is %d", NUM_ASP_DMA_AND_USM_CHAN);
+        $display ("ofs_asp_pkg.sv: MAX_NUM_ASP_DMA_AND_USM_CHAN is %d", MAX_NUM_ASP_DMA_AND_USM_CHAN);
+        $display ("ofs_asp_pkg.sv: HOSTMEM_VTP_SVC_CHAN_DMA is %d", HOSTMEM_VTP_SVC_CHAN_DMA);
+        $display ("ofs_asp_pkg.sv: HOSTMEM_VTP_SVC_CHAN_USM is %d", HOSTMEM_VTP_SVC_CHAN_USM);
+        $display ("ofs_asp_pkg.sv: NUM_VTP_PORTS is %d", NUM_VTP_PORTS);
+        $display ("ofs_asp_pkg.sv: NUM_VTP_PORTS_PER_CHAN is %d", NUM_VTP_PORTS_PER_CHAN);
+        $display ("ofs_asp_pkg.sv: HOSTMEM_CHAN_VTP_SVC is %d", HOSTMEM_CHAN_VTP_SVC);
+        $display ("ofs_asp_pkg.sv: HOSTMEM_CHAN_DEFAULT_WITH_MMIO is %d", HOSTMEM_CHAN_DEFAULT_WITH_MMIO);
+    endfunction
     
 endpackage : ofs_asp_pkg
