@@ -41,7 +41,7 @@ module ofs_plat_afu
         .USER_WIDTH(AV_USER_WIDTH),
         .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
         )
-        host_mem_to_afu();
+        host_mem_to_afu [NUM_HOSTMEM_CHAN] ();
 
     // 64 bit read/write MMIO AFU sink
     ofs_plat_avalon_mem_if
@@ -51,6 +51,7 @@ module ofs_plat_afu
         )
         mmio64_to_afu();
 
+	//this is the default/primary hostmem interface - used for VTP_SVC + MMIO as well as basic host memory accesses
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
       #(
         .ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
@@ -59,13 +60,34 @@ module ofs_plat_afu
       primary_avalon
        (
         .to_fiu(plat_ifc.host_chan.ports[0]),
-        .host_mem_to_afu,
+        .host_mem_to_afu (host_mem_to_afu[HOSTMEM_CHAN_DEFAULT_WITH_MMIO]),
         .mmio_to_afu(mmio64_to_afu),
 
         //these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
         .afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
         .afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
+	
+	//this is/these are the secondary/side hostmem interface(s). They will not provide MMIO and will
+	//not carry VTP-SVC traffic, only host memory accesses
+	genvar h;
+	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : hostmem_channels
+		ofs_plat_host_chan_as_avalon_mem_rdwr
+		#(
+			.ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
+			.ADD_TIMING_REG_STAGES(1)
+        )
+		primary_avalon
+		(
+			.to_fiu(plat_ifc.host_chan.ports[h]),
+			.host_mem_to_afu (host_mem_to_afu[h]),
+
+			//these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
+			.afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
+			.afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
+        );
+	end : hostmem_channels
+	endgenerate
 
     // ====================================================================
     //
@@ -114,7 +136,7 @@ module ofs_plat_afu
         // Set a bit in the mask when a port is IN USE by the design.
         // This way, the AFU does not need to know about every available
         // device. By default, devices are tied off.
-        .HOST_CHAN_IN_USE_MASK(1),
+        .HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
         .LOCAL_MEM_IN_USE_MASK({ASP_LOCALMEM_NUM_CHANNELS{1'b1}})
         `ifdef INCLUDE_IO_PIPES
             // The argument to each parameter is a bit mask of channels used.

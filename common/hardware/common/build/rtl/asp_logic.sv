@@ -13,7 +13,7 @@ import ofs_asp_pkg::*;
     input           logic             kernel_clk_reset,
     
     // Host memory (Avalon)
-    ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
+    ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if [NUM_DMA_CHAN-1:0],
 
     // FPGA MMIO master (Avalon)
     ofs_plat_avalon_mem_if.to_source mmio64_if,
@@ -32,15 +32,17 @@ import ofs_asp_pkg::*;
 
 logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] ddr4_byte_address_bits [ASP_LOCALMEM_NUM_CHANNELS];
 logic [ASP_MMIO_QSYS_ADDR_WIDTH-1:0] avmm_mmio64_address;
-logic wr_fence_flag,f2h_dma_wr_fence_flag;
+logic wr_fence_flag;
+logic f2h_dma_wr_fence_flag;
 logic [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq;
-logic dma_irq_fpga2host, dma_irq_host2fpga;
+logic dma_irq_fpga2host;
+logic dma_irq_host2fpga;
 
 ofs_plat_avalon_mem_rdwr_if
   #(
-    `OFS_PLAT_AVALON_MEM_RDWR_IF_REPLICATE_PARAMS(host_mem_if)
+    `OFS_PLAT_AVALON_MEM_RDWR_IF_REPLICATE_PARAMS(host_mem_if[0])
     )
-    asp_mem_if();
+    dma2mux_host_mem_if [NUM_DMA_CHAN-1:0] ();
     
 // mmio64-if for the DMA controller
 ofs_plat_avalon_mem_if
@@ -53,26 +55,26 @@ ofs_plat_avalon_mem_if
     .ADDR_WIDTH(dma_pkg::DEVICE_MEM_ADDR_WIDTH),
     .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
     .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
-  ) local_mem_rd_avmm_if();
+  ) dma_local_mem_rd_avmm_if [NUM_DMA_CHAN-1:0] ();
   
 ofs_plat_avalon_mem_if 
   #(
     .ADDR_WIDTH(dma_pkg::DEVICE_MEM_ADDR_WIDTH),
     .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
     .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
-  ) local_mem_wr_avmm_if();
+  ) dma_local_mem_wr_avmm_if [NUM_DMA_CHAN-1:0] ();
 ofs_plat_avalon_mem_if 
   #(
     .ADDR_WIDTH(dma_pkg::HOST_MEM_ADDR_WIDTH),
     .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
     .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
-  ) host_mem_rd_avmm_if();
+  ) dma_host_mem_rd_avmm_if [NUM_DMA_CHAN-1:0] ();
 ofs_plat_avalon_mem_if 
   #(
     .ADDR_WIDTH(dma_pkg::HOST_MEM_ADDR_WIDTH),
     .DATA_WIDTH(dma_pkg::AVMM_DATA_WIDTH),
     .BURST_CNT_WIDTH(dma_pkg::AVMM_BURSTCOUNT_BITS)
-  ) host_mem_wr_avmm_if();
+  ) dma_host_mem_wr_avmm_if [NUM_DMA_CHAN-1:0] ();
 
 board board_inst (
     .clk_200_clk                        (clk),                          //   clk.clk
@@ -80,18 +82,18 @@ board board_inst (
     .kernel_clk_clk                     (),                             //   kernel_clk.clk (output from board.qsys)
     .kernel_clk_in_clk                  (kernel_clk),                   //   kernel_clk_in.clk (output from board.qsys)
 
-    .kernel_cra_waitrequest             (kernel_control.kernel_cra_waitrequest),                    //   kernel_cra.waitrequest
-    .kernel_cra_readdata                (kernel_control.kernel_cra_readdata),                       //             .readdata
-    .kernel_cra_readdatavalid           (kernel_control.kernel_cra_readdatavalid),                  //             .readdatavalid
-    .kernel_cra_burstcount              (kernel_control.kernel_cra_burstcount),                     //             .burstcount
-    .kernel_cra_writedata               (kernel_control.kernel_cra_writedata),                      //             .writedata
-    .kernel_cra_address                 (kernel_control.kernel_cra_address),                        //             .address
-    .kernel_cra_write                   (kernel_control.kernel_cra_write),                          //             .write
-    .kernel_cra_read                    (kernel_control.kernel_cra_read),                           //             .read
-    .kernel_cra_byteenable              (kernel_control.kernel_cra_byteenable),                     //             .byteenable
-    .kernel_cra_debugaccess             (kernel_control.kernel_cra_debugaccess),                    //             .debugaccess
-    .kernel_irq_irq                     (kernel_control.kernel_irq),                                //   kernel_irq.irq
-    .kernel_reset_reset_n               (kernel_control.kernel_reset_n),                            // kernel_reset.reset_n
+    .kernel_cra_waitrequest             (kernel_control.kernel_cra_waitrequest),    //   kernel_cra.waitrequest
+    .kernel_cra_readdata                (kernel_control.kernel_cra_readdata),       //             .readdata
+    .kernel_cra_readdatavalid           (kernel_control.kernel_cra_readdatavalid),  //             .readdatavalid
+    .kernel_cra_burstcount              (kernel_control.kernel_cra_burstcount),     //             .burstcount
+    .kernel_cra_writedata               (kernel_control.kernel_cra_writedata),      //             .writedata
+    .kernel_cra_address                 (kernel_control.kernel_cra_address),        //             .address
+    .kernel_cra_write                   (kernel_control.kernel_cra_write),          //             .write
+    .kernel_cra_read                    (kernel_control.kernel_cra_read),           //             .read
+    .kernel_cra_byteenable              (kernel_control.kernel_cra_byteenable),     //             .byteenable
+    .kernel_cra_debugaccess             (kernel_control.kernel_cra_debugaccess),    //             .debugaccess
+    .kernel_irq_irq                     (kernel_control.kernel_irq),                //   kernel_irq.irq
+    .kernel_reset_reset_n               (kernel_control.kernel_reset_n),            // kernel_reset.reset_n
     
     `ifdef ASP_ENABLE_DDR4_BANK_0
         .emif_ddr0_clk_clk         (local_mem[0].clk),
@@ -114,7 +116,7 @@ board board_inst (
         .kernel_ddr0_write         (kernel_mem[0].write),
         .kernel_ddr0_read          (kernel_mem[0].read),
         .kernel_ddr0_byteenable    (kernel_mem[0].byteenable),
-    `endif
+    `endif //ASP_ENABLE_DDR4_BANK_0
     `ifdef ASP_ENABLE_DDR4_BANK_1
         .emif_ddr1_clk_clk         (local_mem[1].clk),
         .emif_ddr1_waitrequest     (local_mem[1].waitrequest),
@@ -136,7 +138,7 @@ board board_inst (
         .kernel_ddr1_write         (kernel_mem[1].write),
         .kernel_ddr1_read          (kernel_mem[1].read),
         .kernel_ddr1_byteenable    (kernel_mem[1].byteenable),
-    `endif
+    `endif //ASP_ENABLE_DDR4_BANK_1
     `ifdef ASP_ENABLE_DDR4_BANK_2
         .emif_ddr2_clk_clk         (local_mem[2].clk),
         .emif_ddr2_waitrequest     (local_mem[2].waitrequest),
@@ -158,7 +160,7 @@ board board_inst (
         .kernel_ddr2_write         (kernel_mem[2].write),
         .kernel_ddr2_read          (kernel_mem[2].read),
         .kernel_ddr2_byteenable    (kernel_mem[2].byteenable),
-    `endif
+    `endif //ASP_ENABLE_DDR4_BANK_2
     `ifdef ASP_ENABLE_DDR4_BANK_3
         .emif_ddr3_clk_clk         (local_mem[3].clk),
         .emif_ddr3_waitrequest     (local_mem[3].waitrequest),
@@ -180,7 +182,7 @@ board board_inst (
         .kernel_ddr3_write         (kernel_mem[3].write),
         .kernel_ddr3_read          (kernel_mem[3].read),
         .kernel_ddr3_byteenable    (kernel_mem[3].byteenable),
-    `endif
+    `endif //ASP_ENABLE_DDR4_BANK_3
 
     .host_kernel_irq_irq                 (/*this port isn't used for kernel IRQ*/),
     
@@ -204,10 +206,10 @@ board board_inst (
     .dma_csr_mmio64_write                   (mmio64_if_dmac.write),
     .dma_csr_mmio64_read                    (mmio64_if_dmac.read),
     .dma_csr_mmio64_byteenable              (mmio64_if_dmac.byteenable),
-    .dma_csr_mmio64_debugaccess             (),
+    .dma_csr_mmio64_debugaccess             ()
     `ifdef INCLUDE_IO_PIPES
         //mmio64 signals for DMA controller
-        .uoe_csr_mmio64_waitrequest             (uoe_csr_avmm.waitrequest),
+       ,.uoe_csr_mmio64_waitrequest             (uoe_csr_avmm.waitrequest),
         .uoe_csr_mmio64_readdata                (uoe_csr_avmm.readdata),
         .uoe_csr_mmio64_readdatavalid           (uoe_csr_avmm.readdatavalid),
         .uoe_csr_mmio64_burstcount              (uoe_csr_avmm.burstcount),
@@ -216,30 +218,104 @@ board board_inst (
         .uoe_csr_mmio64_write                   (uoe_csr_avmm.write),
         .uoe_csr_mmio64_read                    (uoe_csr_avmm.read),
         .uoe_csr_mmio64_byteenable              (uoe_csr_avmm.byteenable),
-        .uoe_csr_mmio64_debugaccess             (),
-    `endif
-    //local-memory DMA reads
-    .dma_localmem_rd_waitrequest             (local_mem_rd_avmm_if.waitrequest),
-    .dma_localmem_rd_readdata                (local_mem_rd_avmm_if.readdata),
-    .dma_localmem_rd_readdatavalid           (local_mem_rd_avmm_if.readdatavalid),
-    .dma_localmem_rd_burstcount              (local_mem_rd_avmm_if.burstcount),
-    .dma_localmem_rd_writedata               (local_mem_rd_avmm_if.writedata),
-    .dma_localmem_rd_address                 (local_mem_rd_avmm_if.address),
-    .dma_localmem_rd_write                   (local_mem_rd_avmm_if.write),
-    .dma_localmem_rd_read                    (local_mem_rd_avmm_if.read),
-    .dma_localmem_rd_byteenable              (local_mem_rd_avmm_if.byteenable),
-    .dma_localmem_rd_debugaccess             (),
-    //local-memory DMA writes
-    .dma_localmem_wr_waitrequest             (local_mem_wr_avmm_if.waitrequest),
-    .dma_localmem_wr_readdata                (local_mem_wr_avmm_if.readdata),
-    .dma_localmem_wr_readdatavalid           (local_mem_wr_avmm_if.readdatavalid),
-    .dma_localmem_wr_burstcount              (local_mem_wr_avmm_if.burstcount),
-    .dma_localmem_wr_writedata               (local_mem_wr_avmm_if.writedata),
-    .dma_localmem_wr_address                 (local_mem_wr_avmm_if.address),
-    .dma_localmem_wr_write                   (local_mem_wr_avmm_if.write),
-    .dma_localmem_wr_read                    (local_mem_wr_avmm_if.read),
-    .dma_localmem_wr_byteenable              (local_mem_wr_avmm_if.byteenable),
-    .dma_localmem_wr_debugaccess             ()
+        .uoe_csr_mmio64_debugaccess             ()
+    `endif //INCLUDE_IO_PIPES
+    `ifdef ASP_ENABLE_DMA_CH_0
+        //local-memory DMA reads
+       ,.dma_localmem_rd_0_waitrequest             (dma_local_mem_rd_avmm_if[0].waitrequest),
+        .dma_localmem_rd_0_readdata                (dma_local_mem_rd_avmm_if[0].readdata),
+        .dma_localmem_rd_0_readdatavalid           (dma_local_mem_rd_avmm_if[0].readdatavalid),
+        .dma_localmem_rd_0_burstcount              (dma_local_mem_rd_avmm_if[0].burstcount),
+        .dma_localmem_rd_0_writedata               (dma_local_mem_rd_avmm_if[0].writedata),
+        .dma_localmem_rd_0_address                 (dma_local_mem_rd_avmm_if[0].address),
+        .dma_localmem_rd_0_write                   (dma_local_mem_rd_avmm_if[0].write),
+        .dma_localmem_rd_0_read                    (dma_local_mem_rd_avmm_if[0].read),
+        .dma_localmem_rd_0_byteenable              (dma_local_mem_rd_avmm_if[0].byteenable),
+        .dma_localmem_rd_0_debugaccess             (),
+        //local-memory DMA writes
+        .dma_localmem_wr_0_waitrequest             (dma_local_mem_wr_avmm_if[0].waitrequest),
+        .dma_localmem_wr_0_readdata                (dma_local_mem_wr_avmm_if[0].readdata),
+        .dma_localmem_wr_0_readdatavalid           (dma_local_mem_wr_avmm_if[0].readdatavalid),
+        .dma_localmem_wr_0_burstcount              (dma_local_mem_wr_avmm_if[0].burstcount),
+        .dma_localmem_wr_0_writedata               (dma_local_mem_wr_avmm_if[0].writedata),
+        .dma_localmem_wr_0_address                 (dma_local_mem_wr_avmm_if[0].address),
+        .dma_localmem_wr_0_write                   (dma_local_mem_wr_avmm_if[0].write),
+        .dma_localmem_wr_0_read                    (dma_local_mem_wr_avmm_if[0].read),
+        .dma_localmem_wr_0_byteenable              (dma_local_mem_wr_avmm_if[0].byteenable),
+        .dma_localmem_wr_0_debugaccess             ()
+    `endif //ASP_ENABLE_DMA_CH_0
+    `ifdef ASP_ENABLE_DMA_CH_1
+        //local-memory DMA reads
+       ,.dma_localmem_rd_1_waitrequest             (dma_local_mem_rd_avmm_if[1].waitrequest),
+        .dma_localmem_rd_1_readdata                (dma_local_mem_rd_avmm_if[1].readdata),
+        .dma_localmem_rd_1_readdatavalid           (dma_local_mem_rd_avmm_if[1].readdatavalid),
+        .dma_localmem_rd_1_burstcount              (dma_local_mem_rd_avmm_if[1].burstcount),
+        .dma_localmem_rd_1_writedata               (dma_local_mem_rd_avmm_if[1].writedata),
+        .dma_localmem_rd_1_address                 (dma_local_mem_rd_avmm_if[1].address),
+        .dma_localmem_rd_1_write                   (dma_local_mem_rd_avmm_if[1].write),
+        .dma_localmem_rd_1_read                    (dma_local_mem_rd_avmm_if[1].read),
+        .dma_localmem_rd_1_byteenable              (dma_local_mem_rd_avmm_if[1].byteenable),
+        .dma_localmem_rd_1_debugaccess             (),
+        //local-memory DMA writes
+        .dma_localmem_wr_1_waitrequest             (dma_local_mem_wr_avmm_if[1].waitrequest),
+        .dma_localmem_wr_1_readdata                (dma_local_mem_wr_avmm_if[1].readdata),
+        .dma_localmem_wr_1_readdatavalid           (dma_local_mem_wr_avmm_if[1].readdatavalid),
+        .dma_localmem_wr_1_burstcount              (dma_local_mem_wr_avmm_if[1].burstcount),
+        .dma_localmem_wr_1_writedata               (dma_local_mem_wr_avmm_if[1].writedata),
+        .dma_localmem_wr_1_address                 (dma_local_mem_wr_avmm_if[1].address),
+        .dma_localmem_wr_1_write                   (dma_local_mem_wr_avmm_if[1].write),
+        .dma_localmem_wr_1_read                    (dma_local_mem_wr_avmm_if[1].read),
+        .dma_localmem_wr_1_byteenable              (dma_local_mem_wr_avmm_if[1].byteenable),
+        .dma_localmem_wr_1_debugaccess             ()
+    `endif //ASP_ENABLE_DMA_CH_1
+    `ifdef ASP_ENABLE_DMA_CH_2
+        //local-memory DMA reads
+       ,.dma_localmem_rd_2_waitrequest             (dma_local_mem_rd_avmm_if[2].waitrequest),
+        .dma_localmem_rd_2_readdata                (dma_local_mem_rd_avmm_if[2].readdata),
+        .dma_localmem_rd_2_readdatavalid           (dma_local_mem_rd_avmm_if[2].readdatavalid),
+        .dma_localmem_rd_2_burstcount              (dma_local_mem_rd_avmm_if[2].burstcount),
+        .dma_localmem_rd_2_writedata               (dma_local_mem_rd_avmm_if[2].writedata),
+        .dma_localmem_rd_2_address                 (dma_local_mem_rd_avmm_if[2].address),
+        .dma_localmem_rd_2_write                   (dma_local_mem_rd_avmm_if[2].write),
+        .dma_localmem_rd_2_read                    (dma_local_mem_rd_avmm_if[2].read),
+        .dma_localmem_rd_2_byteenable              (dma_local_mem_rd_avmm_if[2].byteenable),
+        .dma_localmem_rd_2_debugaccess             (),
+        //local-memory DMA writes
+        .dma_localmem_wr_2_waitrequest             (dma_local_mem_wr_avmm_if[2].waitrequest),
+        .dma_localmem_wr_2_readdata                (dma_local_mem_wr_avmm_if[2].readdata),
+        .dma_localmem_wr_2_readdatavalid           (dma_local_mem_wr_avmm_if[2].readdatavalid),
+        .dma_localmem_wr_2_burstcount              (dma_local_mem_wr_avmm_if[2].burstcount),
+        .dma_localmem_wr_2_writedata               (dma_local_mem_wr_avmm_if[2].writedata),
+        .dma_localmem_wr_2_address                 (dma_local_mem_wr_avmm_if[2].address),
+        .dma_localmem_wr_2_write                   (dma_local_mem_wr_avmm_if[2].write),
+        .dma_localmem_wr_2_read                    (dma_local_mem_wr_avmm_if[2].read),
+        .dma_localmem_wr_2_byteenable              (dma_local_mem_wr_avmm_if[2].byteenable),
+        .dma_localmem_wr_2_debugaccess             ()
+    `endif //ASP_ENABLE_DMA_CH_2
+    `ifdef ASP_ENABLE_DMA_CH_3
+        //local-memory DMA reads
+       ,.dma_localmem_rd_3_waitrequest             (dma_local_mem_rd_avmm_if[3].waitrequest),
+        .dma_localmem_rd_3_readdata                (dma_local_mem_rd_avmm_if[3].readdata),
+        .dma_localmem_rd_3_readdatavalid           (dma_local_mem_rd_avmm_if[3].readdatavalid),
+        .dma_localmem_rd_3_burstcount              (dma_local_mem_rd_avmm_if[3].burstcount),
+        .dma_localmem_rd_3_writedata               (dma_local_mem_rd_avmm_if[3].writedata),
+        .dma_localmem_rd_3_address                 (dma_local_mem_rd_avmm_if[3].address),
+        .dma_localmem_rd_3_write                   (dma_local_mem_rd_avmm_if[3].write),
+        .dma_localmem_rd_3_read                    (dma_local_mem_rd_avmm_if[3].read),
+        .dma_localmem_rd_3_byteenable              (dma_local_mem_rd_avmm_if[3].byteenable),
+        .dma_localmem_rd_3_debugaccess             (),
+        //local-memory DMA writes
+        .dma_localmem_wr_3_waitrequest             (dma_local_mem_wr_avmm_if[3].waitrequest),
+        .dma_localmem_wr_3_readdata                (dma_local_mem_wr_avmm_if[3].readdata),
+        .dma_localmem_wr_3_readdatavalid           (dma_local_mem_wr_avmm_if[3].readdatavalid),
+        .dma_localmem_wr_3_burstcount              (dma_local_mem_wr_avmm_if[3].burstcount),
+        .dma_localmem_wr_3_writedata               (dma_local_mem_wr_avmm_if[3].writedata),
+        .dma_localmem_wr_3_address                 (dma_local_mem_wr_avmm_if[3].address),
+        .dma_localmem_wr_3_write                   (dma_local_mem_wr_avmm_if[3].write),
+        .dma_localmem_wr_3_read                    (dma_local_mem_wr_avmm_if[3].read),
+        .dma_localmem_wr_3_byteenable              (dma_local_mem_wr_avmm_if[3].byteenable),
+        .dma_localmem_wr_3_debugaccess             ()
+    `endif //ASP_ENABLE_DMA_CH_3
 );
 //Create the mmio64-address based on:
 //  [17:3] = mmio64_if.address left-shifted by 3
@@ -286,59 +362,104 @@ endgenerate
 //set unused interrupt lines to 0
 genvar i;
 generate
-    for (i = ASP_NUM_IRQ_USED; i < ASP_NUM_INTERRUPT_LINES ; i = i + 1) begin
+    for (i = ASP_NUM_IRQ_USED; i < ASP_NUM_INTERRUPT_LINES ; i = i + 1) begin : irq_clearing
         assign asp_irq[i] = 1'b0;
-    end
+    end : irq_clearing
 endgenerate
 
-asp_host_mem_if_mux asp_host_mem_if_mux_inst (
-    .clk,
-    .reset,
-    .asp_irq,
-    .wr_fence_flag,
-    .asp_mem_if,
-    .host_mem_if
-);
-
-//combine separate avmm interfaces into a single rd/wr interface
-always_comb begin
-    host_mem_wr_avmm_if.waitrequest     = asp_mem_if.wr_waitrequest;
-    asp_mem_if.wr_writedata             = host_mem_wr_avmm_if.writedata;
-    asp_mem_if.wr_write                 = host_mem_wr_avmm_if.write;
-    asp_mem_if.wr_address               = 'b0;
-    asp_mem_if.wr_address               = host_mem_wr_avmm_if.address >> 6;
-    asp_mem_if.wr_burstcount            = host_mem_wr_avmm_if.burstcount;
-    asp_mem_if.wr_byteenable            = host_mem_wr_avmm_if.byteenable;
+//combine separate avmm interfaces into a single rd/wr interface (per DMA channel)
+genvar d0;
+generate
+    for (d0=0; d0 < NUM_DMA_CHAN; d0=d0+1) begin : dma_channels_0
     
-    host_mem_rd_avmm_if.waitrequest     = asp_mem_if.rd_waitrequest;
-    host_mem_rd_avmm_if.readdata        = asp_mem_if.rd_readdata;
-    host_mem_rd_avmm_if.readdatavalid   = asp_mem_if.rd_readdatavalid;
-    asp_mem_if.rd_address               = 'b0;
-    asp_mem_if.rd_address               = host_mem_rd_avmm_if.address >> 6;
-    asp_mem_if.rd_burstcount            = host_mem_rd_avmm_if.burstcount;
-    asp_mem_if.rd_read                  = host_mem_rd_avmm_if.read;
-    asp_mem_if.rd_byteenable            = host_mem_rd_avmm_if.byteenable;
-end
+        asp_host_mem_if_mux #(.DMA_CHAN_NUM(d0)) asp_host_mem_if_mux_inst (
+            .clk,
+            .reset,
+            .asp_irq,
+            .wr_fence_flag,
+            .asp_mem_if (dma2mux_host_mem_if[d0]),
+            .host_mem_if (host_mem_if[d0])
+        );
+
+        always_comb begin
+            dma_host_mem_wr_avmm_if[d0].waitrequest     = dma2mux_host_mem_if[d0].wr_waitrequest;
+            dma2mux_host_mem_if[d0].wr_writedata        = dma_host_mem_wr_avmm_if[d0].writedata;
+            dma2mux_host_mem_if[d0].wr_write            = dma_host_mem_wr_avmm_if[d0].write;
+            dma2mux_host_mem_if[d0].wr_address          = 'b0;
+            dma2mux_host_mem_if[d0].wr_address          = dma_host_mem_wr_avmm_if[d0].address >> 6;
+            dma2mux_host_mem_if[d0].wr_burstcount       = dma_host_mem_wr_avmm_if[d0].burstcount;
+            dma2mux_host_mem_if[d0].wr_byteenable       = dma_host_mem_wr_avmm_if[d0].byteenable;
+            
+            dma_host_mem_rd_avmm_if[d0].waitrequest     = dma2mux_host_mem_if[d0].rd_waitrequest;
+            dma_host_mem_rd_avmm_if[d0].readdata        = dma2mux_host_mem_if[d0].rd_readdata;
+            dma_host_mem_rd_avmm_if[d0].readdatavalid   = dma2mux_host_mem_if[d0].rd_readdatavalid;
+            dma2mux_host_mem_if[d0].rd_address          = 'b0;
+            dma2mux_host_mem_if[d0].rd_address          = dma_host_mem_rd_avmm_if[d0].address >> 6;
+            dma2mux_host_mem_if[d0].rd_burstcount       = dma_host_mem_rd_avmm_if[d0].burstcount;
+            dma2mux_host_mem_if[d0].rd_read             = dma_host_mem_rd_avmm_if[d0].read;
+            dma2mux_host_mem_if[d0].rd_byteenable       = dma_host_mem_rd_avmm_if[d0].byteenable;
+        end
+    end : dma_channels_0
+endgenerate
 
 // DMA-top module
-dma_top dma_controller_inst (
-    .clk,
-    .reset,
-
-    // MMIO64 master from host (AVMM)
-    .mmio64_if (mmio64_if_dmac),
+`ifdef INCLUDE_ASP_DMA
+    dma_top dma_controller_inst (
+        .clk,
+        .reset,
     
-    // host-memory writes (read from local memory, write to host memory)
-    .host_mem_wr_avmm_if,
-    .local_mem_rd_avmm_if,
-    .dma_irq_fpga2host,
-    .f2h_dma_wr_fence_flag,
+        // MMIO64 master from host (AVMM)
+        .mmio64_if (mmio64_if_dmac),
+        
+        // host-memory writes (read from local memory, write to host memory)
+        .host_mem_wr_avmm_if (dma_host_mem_wr_avmm_if),
+        .local_mem_rd_avmm_if (dma_local_mem_rd_avmm_if),
+        .dma_irq_fpga2host,
+        .f2h_dma_wr_fence_flag,
+        
+        // host-memory reads (read from host memory, write to local memory)
+        .host_mem_rd_avmm_if (dma_host_mem_rd_avmm_if),
+        .local_mem_wr_avmm_if (dma_local_mem_wr_avmm_if),
+        .dma_irq_host2fpga
+    );
+    `ifdef USE_H2F_IRQ
+        assign asp_irq[ASP_DMA_0_IRQ_BIT] = dma_irq_host2fpga;
+    `else
+        assign asp_irq[ASP_DMA_0_IRQ_BIT] = 'b0;
+    `endif
     
-    // host-memory reads (read from host memory, write to local memory)
-    .host_mem_rd_avmm_if,
-    .local_mem_wr_avmm_if,
-    .dma_irq_host2fpga
-);
+    `ifdef USE_F2H_IRQ
+        assign asp_irq[ASP_DMA_1_IRQ_BIT] = dma_irq_fpga2host;
+    `else
+        assign asp_irq[ASP_DMA_1_IRQ_BIT] = 'b0;
+    `endif
+    
+    `ifdef USE_WR_FENCE_FLAG
+        assign wr_fence_flag = f2h_dma_wr_fence_flag;
+    `else
+        assign wr_fence_flag = 'b0;
+    `endif
+`else
+    genvar d;
+    generate
+        for (d=0; d < NUM_DMA_CHAN; d=d+1) begin : dma_channels
+            //the DMA controller is the host of each interface - drive '0' on 
+            // read and write so that everything downstream is optimized away
+            assign dma_local_mem_rd_avmm_if[d].write = 'b0;
+            assign dma_local_mem_rd_avmm_if[d].read  = 'b0;
+            assign dma_host_mem_wr_avmm_if[d].write  = 'b0;
+            assign dma_host_mem_wr_avmm_if[d].read   = 'b0;
+            assign dma_host_mem_rd_avmm_if[d].write  = 'b0;
+            assign dma_host_mem_rd_avmm_if[d].read   = 'b0;
+            assign dma_local_mem_wr_avmm_if[d].write = 'b0;
+            assign dma_local_mem_wr_avmm_if[d].read  = 'b0;
+            
+        end : dma_channels
+    endgenerate
+    assign asp_irq[ASP_DMA_0_IRQ_BIT] = 'b0;
+    assign asp_irq[ASP_DMA_1_IRQ_BIT] = 'b0;
+    assign wr_fence_flag = 'b0;
+`endif
 
 `ifdef USE_KERNEL_IRQ
     logic [2:0] kernel_irq_sync;
@@ -351,21 +472,6 @@ dma_top dma_controller_inst (
 `else
     assign asp_irq[ASP_KERNEL_IRQ_BIT] = 'b0;
 `endif
-`ifdef USE_H2F_IRQ
-    assign asp_irq[ASP_DMA_0_IRQ_BIT] = dma_irq_host2fpga;
-`else
-    assign asp_irq[ASP_DMA_0_IRQ_BIT] = 'b0;
-`endif
-`ifdef USE_F2H_IRQ
-    assign asp_irq[ASP_DMA_1_IRQ_BIT] = dma_irq_fpga2host;
-`else
-    assign asp_irq[ASP_DMA_1_IRQ_BIT] = 'b0;
-`endif
 
-`ifdef USE_WR_FENCE_FLAG
-    assign wr_fence_flag = f2h_dma_wr_fence_flag;
-`else
-    assign wr_fence_flag = 'b0;
-`endif
 
 endmodule : asp_logic
