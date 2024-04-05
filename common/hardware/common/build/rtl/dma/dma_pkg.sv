@@ -1,6 +1,8 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 
+`include "dma.vh"
+
 package dma_pkg;
 
     //Static register values for the DMA DFH Information
@@ -18,8 +20,12 @@ package dma_pkg;
     parameter MAGIC_NUMBER = 64'h5772_745F_5379_6e63;
     parameter MAGIC_NUMBER_BYTEENBLE_VALUE = {56'h0000_0000_0000_00,8'hFF};
 
-    parameter DFH_NEXT_AFU_OFFSET = 24'h01_0000;
+	parameter DO_F2H_MAGIC_NUMBER_WRITE = 1;
 
+    parameter DFH_NEXT_AFU_OFFSET = 24'h01_0000;
+	
+	parameter NUM_DMA_CHAN_BITS = $clog2(ofs_asp_pkg::NUM_DMA_CHAN);
+	
     //address widths
     parameter HOST_MEM_ADDR_WIDTH = ofs_asp_pkg::HOSTMEM_BYTE_ADDR_WIDTH;
     parameter DEVICE_MEM_ADDR_WIDTH = $clog2(ofs_asp_pkg::ASP_LOCALMEM_NUM_CHANNELS) + ofs_asp_pkg::ASP_LOCALMEM_AVMM_ADDR_WIDTH;
@@ -60,6 +66,7 @@ package dma_pkg;
     parameter DFH_NEXT_AFU_OFFSET_ADDR      = REG_ASP_GEN_BASE_ADDR + 'h03;
     parameter SCRATCHPAD_ADDR               = REG_ASP_GEN_BASE_ADDR + 'h05;
     parameter MAGICNUMBER_HOSTMEM_WR_ADDR   = REG_ASP_GEN_BASE_ADDR + 'h06;
+	parameter NUM_DMA_CHAN_ADDR				= REG_ASP_GEN_BASE_ADDR + 'h07;
     
     //general data-transfer control registers
     parameter REG_HOSTRD_BASE_ADDR          = 'h10;
@@ -77,6 +84,12 @@ package dma_pkg;
     parameter REG_WR_MAGICNUM_CNT           = 'h09;
     parameter REG_DST_WRDATA_CNT            = 'h0A;
     parameter REG_STATUS2_OFFSET            = 'h0B;
+	parameter REG_THIS_CHAN_SRC_ADDR_OFFSET = 'h0C;
+	parameter REG_THIS_CHAN_DST_ADDR_OFFSET = 'h0D;
+	parameter REG_THIS_CHAN_XFER_LEN_ADDR_OFFSET = 'h0E;
+	parameter REG_THIS_CHAN_NUM_ADDR_OFFSET = 'h0F;
+	//a read of this offset will increment the mux-counter in the CSR/dispatcher block.
+	parameter LAST_PER_CHAN_REG_ADDR_OFFSET = 'h0F;
     
     //combined address names
     //host-to-FPGA transfers (read)
@@ -92,6 +105,11 @@ package dma_pkg;
     parameter HOST_RD_MAGICNUM_CNT_ADDR     = REG_HOSTRD_BASE_ADDR + REG_WR_MAGICNUM_CNT ;
     parameter HOST_RD_WRDATA_CNT_ADDR       = REG_HOSTRD_BASE_ADDR + REG_DST_WRDATA_CNT ;
     parameter HOST_RD_STATUS2_ADDR          = REG_HOSTRD_BASE_ADDR + REG_STATUS2_OFFSET        ;
+	parameter HOST_RD_THIS_CHAN_SRC_ADDR    = REG_HOSTRD_BASE_ADDR + REG_THIS_CHAN_SRC_ADDR_OFFSET;
+	parameter HOST_RD_THIS_CHAN_DST_ADDR    = REG_HOSTRD_BASE_ADDR + REG_THIS_CHAN_DST_ADDR_OFFSET;
+	parameter HOST_RD_THIS_CHAN_XFER_LEN_ADDR = REG_HOSTRD_BASE_ADDR + REG_THIS_CHAN_XFER_LEN_ADDR_OFFSET;
+	parameter HOST_RD_THIS_CHAN_NUM_ADDR    = REG_HOSTRD_BASE_ADDR + REG_THIS_CHAN_NUM_ADDR_OFFSET;
+	parameter HOST_RD_LAST_REG_ADDR         = REG_HOSTRD_BASE_ADDR + LAST_PER_CHAN_REG_ADDR_OFFSET;
     //FPGA-to-host transfers (write)
     parameter HOST_WR_START_SRC_ADDR        = REG_HOSTWR_BASE_ADDR + REG_START_SRC_ADDR_OFFSET ;
     parameter HOST_WR_START_DST_ADDR        = REG_HOSTWR_BASE_ADDR + REG_START_DST_ADDR_OFFSET ;
@@ -105,6 +123,11 @@ package dma_pkg;
     parameter HOST_WR_MAGICNUM_CNT_ADDR     = REG_HOSTWR_BASE_ADDR + REG_WR_MAGICNUM_CNT ;
     parameter HOST_WR_WRDATA_CNT_ADDR       = REG_HOSTWR_BASE_ADDR + REG_DST_WRDATA_CNT ;
     parameter HOST_WR_STATUS2_ADDR          = REG_HOSTWR_BASE_ADDR + REG_STATUS2_OFFSET        ;
+	parameter HOST_WR_THIS_CHAN_SRC_ADDR    = REG_HOSTWR_BASE_ADDR + REG_THIS_CHAN_SRC_ADDR_OFFSET;
+	parameter HOST_WR_THIS_CHAN_DST_ADDR    = REG_HOSTWR_BASE_ADDR + REG_THIS_CHAN_DST_ADDR_OFFSET;
+	parameter HOST_WR_THIS_CHAN_XFER_LEN_ADDR = REG_HOSTWR_BASE_ADDR + REG_THIS_CHAN_XFER_LEN_ADDR_OFFSET;
+	parameter HOST_WR_THIS_CHAN_NUM_ADDR    = REG_HOSTWR_BASE_ADDR + REG_THIS_CHAN_NUM_ADDR_OFFSET;
+	parameter HOST_WR_LAST_REG_ADDR         = REG_HOSTWR_BASE_ADDR + LAST_PER_CHAN_REG_ADDR_OFFSET;
 
     //data to return on a read that ends up in the default case
     parameter REG_RD_BADADDR_DATA = 64'h0BAD_0ADD_0BAD_0ADD;

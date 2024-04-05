@@ -25,6 +25,7 @@ interface dma_ctrl_intf #(
     logic f2h_wr_fence_flag;
     logic [REGISTER_WIDTH-1:0] src_readdatavalid_counter, src_burst_cnt_counter, dst_write_counter;
     logic [15:0] magic_number_counter;
+    logic f2h_wait_for_magic_num_wr_pulse;
     
     //DMA command-queue status signals
     typedef struct packed {
@@ -61,9 +62,10 @@ interface dma_ctrl_intf #(
     //Dispatcher
     modport disp (
         input   controller_busy_rd, controller_busy_wr,
-                cmdq_status, databuf_status, irq, cntrl_sts,
+                cmdq_status, databuf_status, irq, irq_pulse, cntrl_sts,
                 src_burst_cnt_counter, src_readdatavalid_counter,
                 dst_write_counter, magic_number_counter,
+                f2h_wait_for_magic_num_wr_pulse,
         output  cmd, new_cmd, sclr, clear_irq,
                 host_mem_magicnumber_addr
     );
@@ -76,7 +78,7 @@ interface dma_ctrl_intf #(
                 cmdq_status, databuf_status, irq, irq_pulse,
                 f2h_wr_fence_flag, cntrl_sts, src_burst_cnt_counter, 
                 src_readdatavalid_counter, dst_write_counter,
-                magic_number_counter
+                magic_number_counter, f2h_wait_for_magic_num_wr_pulse
     );
 
 endinterface : dma_ctrl_intf

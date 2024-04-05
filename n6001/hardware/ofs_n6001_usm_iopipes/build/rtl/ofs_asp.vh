@@ -7,6 +7,15 @@
 `ifndef ofs_asp_vh
 
     `define ofs_asp_vh
+    
+    //print some package/parameter information to the screen during synthesis
+    `define PRINT_OFS_ASP_PKG_PARAMETERS_DURING_SYNTHESIS 1
+    
+    //host-memory/PCIe channels
+    `define ASP_ENABLE_HOSTMEM_CH_0 1
+    //`define ASP_ENABLE_HOSTMEM_CH_1 1
+    //`define ASP_ENABLE_HOSTMEM_CH_2 1
+    //`define ASP_ENABLE_HOSTMEM_CH_3 1
 
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_0
         `define ASP_ENABLE_DDR4_BANK_0 1
@@ -21,9 +30,20 @@
         `define ASP_ENABLE_DDR4_BANK_3 1
     `endif
     
-    //enable USM-support
+    //DMA-support
+    `define INCLUDE_ASP_DMA 1
+    `define ASP_ENABLE_DMA_CH_0 1
+    //`define ASP_ENABLE_DMA_CH_1 1
+    //`define ASP_ENABLE_DMA_CH_2 1
+    //`define ASP_ENABLE_DMA_CH_3 1
+    
+    //USM-support
     `define INCLUDE_USM_SUPPORT 1
     `define USM_DO_SINGLE_BURST_PARTIAL_WRITES 1
+    `define ASP_ENABLE_USM_CH_0 1
+    //`define ASP_ENABLE_USM_CH_1 1
+    //`define ASP_ENABLE_USM_CH_2 1
+    //`define ASP_ENABLE_USM_CH_3 1
     
     //enable kernel interrupts
     //`define USE_KERNEL_IRQ 1

@@ -17,19 +17,20 @@
 
 module asp_host_mem_if_mux 
 import ofs_asp_pkg::*;
-(
+#(
+	parameter DMA_CHAN_NUM = 0
+) (
     input clk,
     input reset,
 
     input [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq,
+    input wr_fence_flag,
     
     // Host memory (Avalon) (mux output)
     ofs_plat_avalon_mem_rdwr_if.to_sink host_mem_if,
     
     // AVMM from DMA channels in board.qsys
-    ofs_plat_avalon_mem_rdwr_if.to_source asp_mem_if,
-    
-    input wr_fence_flag
+    ofs_plat_avalon_mem_rdwr_if.to_source asp_mem_if
 );
 
 logic [ASP_NUM_INTERRUPT_LINES-1:0] asp_irq_d;
@@ -50,7 +51,7 @@ parameter RESET_PIPE_DEPTH = 4;
 logic [RESET_PIPE_DEPTH-1:0] rst_pipe;
 logic rst_local;
 always_ff @(posedge clk) begin
-    {rst_local,rst_pipe}  <= {rst_pipe[RESET_PIPE_DEPTH-1:0], 'b0};
+    {rst_local,rst_pipe}  <= {rst_pipe[RESET_PIPE_DEPTH-1:0], 1'b0};
     if (reset) begin
         rst_local <= '1;
         rst_pipe  <= '1;
@@ -76,19 +77,20 @@ end
 
 //latch the incoming rising edge of the IRQ inputs; ignore the level after it has been latched
 //because it will take some time for sw to clear it.
+//only issue IRQs on (DMA_CHAN_NUM==0), otherwise hold this logic in reset.
 genvar i;
 generate
     for (i=0; i<ASP_NUM_INTERRUPT_LINES; i++) begin : irq_handling
         
         always_ff @(posedge clk) begin
-            if (rst_local)
+            if (rst_local | (DMA_CHAN_NUM!=0))
                 asp_irq_d[i] <= 'b0;
-            else
+            else 
                 asp_irq_d[i] <= asp_irq[i];
         end
         
         always_ff @(posedge clk) begin
-            if (rst_local)
+            if (rst_local | (DMA_CHAN_NUM!=0))
                 irq_pending[i] <= 'b0;
             else begin
                 case ({set_irq_pending[i], clear_irq_pending[i]})

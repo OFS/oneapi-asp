@@ -34,6 +34,11 @@ set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_NUMBER_OF_MEMORY_
 set_parameter_property NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Memory Banks"
 set_parameter_property NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
 
+add_parameter NUMBER_OF_DMA_CHANNELS INTEGER $p_NUMBER_OF_DMA_CHANNELS
+set_parameter_property NUMBER_OF_DMA_CHANNELS DEFAULT_VALUE $p_NUMBER_OF_DMA_CHANNELS
+set_parameter_property NUMBER_OF_DMA_CHANNELS DISPLAY_NAME "Number of DMA Channels"
+set_parameter_property NUMBER_OF_DMA_CHANNELS AFFECTS_ELABORATION true
+
 add_parameter MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEMORY_BANK_ADDRESS_WIDTH
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEMORY_BANK_ADDRESS_WIDTH
 set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
@@ -72,6 +77,7 @@ proc compose { } {
   set afu_id_l                               [ get_parameter_value AFU_ID_L ]
   set iopipe_support                         [ get_parameter_value IOPIPE_SUPPORT ]
   set number_of_memory_banks                 [ get_parameter_value NUMBER_OF_MEMORY_BANKS ]
+  set number_of_dma_channels                 [ get_parameter_value NUMBER_OF_DMA_CHANNELS ]
   set memory_bank_address_width              [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
   set data_width                             [ get_parameter_value DATA_WIDTH ]
   set max_burst_size                         [ get_parameter_value MAX_BURST_SIZE ]
@@ -342,10 +348,12 @@ proc compose { } {
     set_interface_property kernel_ddr$i EXPORT_OF ddr_board.kernel_ddr$i
   }
 
-  add_interface dma_localmem_rd avalon slave
-  set_interface_property dma_localmem_rd EXPORT_OF ddr_board.dma_localmem_rd
-  add_interface dma_localmem_wr avalon slave
-  set_interface_property dma_localmem_wr EXPORT_OF ddr_board.dma_localmem_wr
+  for { set i 0} { $i < $number_of_dma_channels } {incr i} {
+    add_interface dma_localmem_rd_$i avalon slave
+    set_interface_property dma_localmem_rd_$i EXPORT_OF ddr_board.dma_localmem_rd_$i
+    add_interface dma_localmem_wr_$i avalon slave
+    set_interface_property dma_localmem_wr_$i EXPORT_OF ddr_board.dma_localmem_wr_$i
+  }
 
   # Interconnect requirements
   set_interconnect_requirement {$system} {qsys_mm.clockCrossingAdapter} {HANDSHAKE}
