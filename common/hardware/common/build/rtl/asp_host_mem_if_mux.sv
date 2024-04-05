@@ -77,7 +77,7 @@ end
 
 //latch the incoming rising edge of the IRQ inputs; ignore the level after it has been latched
 //because it will take some time for sw to clear it.
-//only issue resets on (DMA_CHAN_NUM==0), otherwise hold this logic in reset.
+//only issue IRQs on (DMA_CHAN_NUM==0), otherwise hold this logic in reset.
 genvar i;
 generate
     for (i=0; i<ASP_NUM_INTERRUPT_LINES; i++) begin : irq_handling

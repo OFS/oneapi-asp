@@ -55,15 +55,6 @@ assign host_mem_if_pa.clk = host_mem_if[0].clk;
 assign host_mem_if_pa.reset_n = host_mem_if[0].reset_n;
 assign host_mem_if_pa.instance_number = host_mem_if[0].instance_number;
 
-//genvar h;
-//generate
-//    for (h=0; h < NUM_HOSTMEM_CHAN; h=h+1) begin : hostmem_if_pa_0
-//        assign host_mem_if_pa[h].clk = host_mem_if[h].clk;
-//        assign host_mem_if_pa[h].reset_n = host_mem_if[h].reset_n;
-//        assign host_mem_if_pa[h].instance_number = host_mem_if[h].instance_number;
-//    end : hostmem_if_pa_0
-//endgenerate
-
 // Physical address interface for use by the source paths - DMA and USM. 
 // This instance will be the DMA/ASP side of the VTP service shim. (The 
 // service shim injects page table requests. It does not translate
@@ -111,8 +102,6 @@ mpf_vtp_svc_ofs_avalon_mem_rdwr
         .host_mem_va_if (host_mem_va_if_dma[DMA_VTP_SVC_CHAN]),
         .rd_error(),
         .wr_error(),
-        //.vtp_ports (vtp_ports[NUM_HOSTMEM_CHAN +: NUM_VTP_PORTS_PER_CHAN])
-        //.vtp_ports (vtp_ports[1:0])
         .vtp_ports (vtp_ports[HOSTMEM_VTP_SVC_CHAN_DMA +: NUM_VTP_PORTS_PER_CHAN])
     );
 `else
@@ -189,7 +178,6 @@ endgenerate
 ofs_plat_avalon_mem_rdwr_if_mux ofs_plat_avalon_mem_rdwr_if_mux_inst
 (
     .mem_sink   (host_mem_if_pa),
-    //.mem_source (host_mem_if_pa_asp[HOSTMEM_CHAN_VTP_SVC +: 2])
     .mem_source (host_mem_if_pa_asp[0:1])
 );
 
@@ -202,7 +190,6 @@ generate
         ofs_plat_avalon_mem_rdwr_if_mux ofs_plat_avalon_mem_rdwr_if_mux_inst
         (
             .mem_sink   (host_mem_if[c-1]),
-            //.mem_source (host_mem_if_pa_asp[c*2 +: 2])
             .mem_source (host_mem_if_pa_asp[2:3])
         );
     end : pa_mux_hostmem_channels
