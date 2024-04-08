@@ -1,8 +1,8 @@
 // Copyright 2022 Intel Corporation
 // SPDX-License-Identifier: MIT
 
-`include "ofs_ip_cfg_mem_ss.vh"
-`include "ofs_ip_cfg_hssi_ss.vh"
+//This is the database of header files included in the FIM-build.
+`include "ofs_ip_cfg_db.vh"
 
 `ifndef ofs_asp_vh
 
