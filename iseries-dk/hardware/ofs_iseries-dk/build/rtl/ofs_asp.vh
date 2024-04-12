@@ -17,16 +17,27 @@
     //`define ASP_ENABLE_HOSTMEM_CH_2 1
     //`define ASP_ENABLE_HOSTMEM_CH_3 1
 
+    //the FIM changed the 'mem_ss' define name to
+    // 'local_mem'; make it backward compatible (at 
+    // the expense of being verbose and ugly)
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_0
+        `define ASP_ENABLE_DDR4_BANK_0 1
+    `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_0
         `define ASP_ENABLE_DDR4_BANK_0 1
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_1
         `define ASP_ENABLE_DDR4_BANK_1 1
+    `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_1
+        `define ASP_ENABLE_DDR4_BANK_1 1
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_2
         `define ASP_ENABLE_DDR4_BANK_2 1
+    `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_1
+        `define ASP_ENABLE_DDR4_BANK_1 1
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_3
+        `define ASP_ENABLE_DDR4_BANK_3 1
+    `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_3
         `define ASP_ENABLE_DDR4_BANK_3 1
     `endif
     
