@@ -13,7 +13,7 @@
     
     //host-memory/PCIe channels
     `define ASP_ENABLE_HOSTMEM_CH_0 1
-    //`define ASP_ENABLE_HOSTMEM_CH_1 1
+    `define ASP_ENABLE_HOSTMEM_CH_1 1
     //`define ASP_ENABLE_HOSTMEM_CH_2 1
     //`define ASP_ENABLE_HOSTMEM_CH_3 1
 
@@ -44,7 +44,7 @@
     //DMA-support
     `define INCLUDE_ASP_DMA 1
     `define ASP_ENABLE_DMA_CH_0 1
-    //`define ASP_ENABLE_DMA_CH_1 1
+    `define ASP_ENABLE_DMA_CH_1 1
     //`define ASP_ENABLE_DMA_CH_2 1
     //`define ASP_ENABLE_DMA_CH_3 1
     

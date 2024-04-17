@@ -49,9 +49,17 @@ module ofs_plat_afu
         `HOST_CHAN_AVALON_MMIO_PARAMS(ASP_MMIO_DATA_WIDTH),
         .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
         )
-        mmio64_to_afu [NUM_HOSTMEM_CHAN] ();
+        mmio64_to_afu ();
 
-	//this is the default/primary hostmem interface - used for VTP_SVC + MMIO as well as basic host memory accesses
+	//this is the default/primary hostmem interface - used for VTP_SVC + MMIO as well 
+    //as basic host memory accesses.
+    
+    // Instantiate the parent feature at MMIO offset 0. The parent feature
+    // contains a parameter that lists the children. OPAE will discover the
+    // parameter and load children along with the parent.
+    //
+    // This module acts as a shim that implements only the one DFL entry.
+    // Other traffic to/from the AFU flows on host_chan_with_dfh.
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
       #(
         .ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
@@ -61,43 +69,57 @@ module ofs_plat_afu
        (
         .to_fiu(plat_ifc.host_chan.ports[0]),
         .host_mem_to_afu (host_mem_to_afu[HOSTMEM_CHAN_DEFAULT_WITH_MMIO]),
-        .mmio_to_afu(mmio64_to_afu[0]),
+        .mmio_to_afu(mmio64_to_afu),
 
         //these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
         .afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
         .afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
 	
-	//this is/these are the secondary/side hostmem interface(s). They will not provide MMIO into afu.sv and will
-	//not carry VTP-SVC traffic, only host memory accesses. They will, however, connect MMIO to a simple DFH CSR module
-    //so that any MMIO requests from the host will get a response.
+	//these are the child hostmem interface(s). They will not provide MMIO into afu.sv and will
+	//not carry VTP-SVC traffic, only host memory accesses. They will, however, connect MMIO 
+    //to a simple DFH CSR module so that any MMIO requests from the host will get a response.
 	genvar h;
 	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : hostmem_channels
-		ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
+        //(From multi_link OFS example design)
+        // New host channel wrappers -- the same interface as found in
+        // plat_ifc.host_chan.ports. The PIM-provided wrapper around
+        // the FIM's multi_link_afu_dfh module will connect the plat_ifc
+        // ports to these new host_chan_with_dfh ports. All traffic other
+        // than the MMIO associated with the AFU features will reach them.
+        //We won't use this for the parent link (yet), only the children,
+        //because of how the AFU_ID component is used/created in the ASP 
+        //(within Platform Designer).
+        ofs_plat_host_chan_axis_pcie_tlp_if child_host_chan_with_dfh[NUM_HOSTMEM_CHAN-1]();
+        
+        // Instantiate child features at MMIO offset 0 of the children.
+        // The same module is used. When NUM_CHILDREN is not set (defaults
+        // to 0), a child feature is constructed. Except for building
+        // a different header, the behavior is similar to the parent.
+        ofs_plat_host_chan_fim_multi_link_afu_dfh
+        #(
+            .GUID_H(64'b0),
+            .GUID_L(64'b0)
+        )
+        child_link_dfh
+        (
+            .to_fiu(plat_ifc.host_chan.ports[h]),
+            .to_afu(child_host_chan_with_dfh[h-1])
+        );
+                
+		ofs_plat_host_chan_as_avalon_mem_rdwr
 		#(
 			.ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
 			.ADD_TIMING_REG_STAGES(1)
         )
 		primary_avalon
 		(
-			.to_fiu(plat_ifc.host_chan.ports[h]),
-			.host_mem_to_afu (host_mem_to_afu[h]),
-            .mmio_to_afu(mmio64_to_afu[h]),
+			.to_fiu(child_host_chan_with_dfh[h-1]),
+			.host_mem_to_afu (host_mem_to_afu[h])
 
 			//these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
 			.afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
 			.afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
-        );
-        
-        //add a simply DFH CSR block to respond to any MMIO read requests over this channel.
-        dfh_csr
-        #(
-            .DFH_EOL(1'b1),
-            .MISC_DATA(h)
-        )
-        dfh_csr_inst
-        (
-            .dfh_avmm (mmio64_to_afu[h])
         );
         
 	end : hostmem_channels
@@ -186,7 +208,7 @@ module ofs_plat_afu
     afu afu_inst
       (
         .host_mem_if(host_mem_to_afu),
-        .mmio64_if(mmio64_to_afu[0]),
+        .mmio64_if(mmio64_to_afu),
         .local_mem(local_mem_to_afu),
         `ifdef INCLUDE_IO_PIPES
             .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),

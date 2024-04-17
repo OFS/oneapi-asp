@@ -96,7 +96,7 @@ package ofs_asp_pkg;
     
     //make these equal for now; maybe in the future this can be unbalanced but it
     // could add a lot of complexity (tying-off the unused channels, for example)
-    parameter NUM_HOSTMEM_CHAN = 1;
+    parameter NUM_HOSTMEM_CHAN = 2;
     //which hostmem-channel (ofs_plat_avalon_mem_rdwr_if at ofs_plat_afu) 
     //is the default for VTP and MMIO?
     parameter HOSTMEM_CHAN_DEFAULT_WITH_MMIO = 0;
