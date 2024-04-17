@@ -49,7 +49,7 @@ module ofs_plat_afu
         `HOST_CHAN_AVALON_MMIO_PARAMS(ASP_MMIO_DATA_WIDTH),
         .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
         )
-        mmio64_to_afu();
+        mmio64_to_afu [NUM_HOSTMEM_CHAN] ();
 
 	//this is the default/primary hostmem interface - used for VTP_SVC + MMIO as well as basic host memory accesses
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
@@ -61,18 +61,19 @@ module ofs_plat_afu
        (
         .to_fiu(plat_ifc.host_chan.ports[0]),
         .host_mem_to_afu (host_mem_to_afu[HOSTMEM_CHAN_DEFAULT_WITH_MMIO]),
-        .mmio_to_afu(mmio64_to_afu),
+        .mmio_to_afu(mmio64_to_afu[0]),
 
         //these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
         .afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
         .afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
 	
-	//this is/these are the secondary/side hostmem interface(s). They will not provide MMIO and will
-	//not carry VTP-SVC traffic, only host memory accesses
+	//this is/these are the secondary/side hostmem interface(s). They will not provide MMIO into afu.sv and will
+	//not carry VTP-SVC traffic, only host memory accesses. They will, however, connect MMIO to a simple DFH CSR module
+    //so that any MMIO requests from the host will get a response.
 	genvar h;
 	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : hostmem_channels
-		ofs_plat_host_chan_as_avalon_mem_rdwr
+		ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
 		#(
 			.ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
 			.ADD_TIMING_REG_STAGES(1)
@@ -81,11 +82,24 @@ module ofs_plat_afu
 		(
 			.to_fiu(plat_ifc.host_chan.ports[h]),
 			.host_mem_to_afu (host_mem_to_afu[h]),
+            .mmio_to_afu(mmio64_to_afu[h]),
 
 			//these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
 			.afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
 			.afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
+        
+        //add a simply DFH CSR block to respond to any MMIO read requests over this channel.
+        dfh_csr
+        #(
+            .DFH_EOL(1'b1),
+            .MISC_DATA(h)
+        )
+        dfh_csr_inst
+        (
+            .dfh_avmm (mmio64_to_afu[h])
+        );
+        
 	end : hostmem_channels
 	endgenerate
 
@@ -172,7 +186,7 @@ module ofs_plat_afu
     afu afu_inst
       (
         .host_mem_if(host_mem_to_afu),
-        .mmio64_if(mmio64_to_afu),
+        .mmio64_if(mmio64_to_afu[0]),
         .local_mem(local_mem_to_afu),
         `ifdef INCLUDE_IO_PIPES
             .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),
