@@ -65,7 +65,6 @@ module afu_id_avmm_slave #(
 					4'h5: avmm_readdata <= DFH_addr_5;
                     4'h6: avmm_readdata <= DFH_addr_6;
                     4'h7: avmm_readdata <= DFH_addr_7;
-                    };
 					default:  avmm_readdata <= 64'h0;
 				endcase
 			end
