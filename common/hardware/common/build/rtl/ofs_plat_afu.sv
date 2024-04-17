@@ -115,7 +115,7 @@ module ofs_plat_afu
 		primary_avalon
 		(
 			.to_fiu(child_host_chan_with_dfh[h-1]),
-			.host_mem_to_afu (host_mem_to_afu[h])
+			.host_mem_to_afu (host_mem_to_afu[h]),
 
 			//these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
 			.afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
