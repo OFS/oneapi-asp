@@ -80,7 +80,7 @@ module ofs_plat_afu
 	//not carry VTP-SVC traffic, only host memory accesses. They will, however, connect MMIO 
     //to a simple DFH CSR module so that any MMIO requests from the host will get a response.
 	genvar h;
-	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : hostmem_channels
+	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : child_hostmem_links
         //(From multi_link OFS example design)
         // New host channel wrappers -- the same interface as found in
         // plat_ifc.host_chan.ports. The PIM-provided wrapper around
@@ -122,7 +122,7 @@ module ofs_plat_afu
 			.afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
         
-	end : hostmem_channels
+	end : child_hostmem_links
 	endgenerate
 
     // ====================================================================
