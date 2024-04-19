@@ -32,8 +32,8 @@
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_2
         `define ASP_ENABLE_DDR4_BANK_2 1
-    `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_1
-        `define ASP_ENABLE_DDR4_BANK_1 1
+    `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_2
+        `define ASP_ENABLE_DDR4_BANK_2 1
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_3
         `define ASP_ENABLE_DDR4_BANK_3 1
