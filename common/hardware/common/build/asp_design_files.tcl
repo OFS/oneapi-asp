@@ -36,8 +36,6 @@ set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_gen.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_burst_to_word.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_wr_ack_tracker.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "rtl/avmm_single_burst_partial_writes.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "rtl/dfh_pkg.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "rtl/dfh_csr.sv"
 
 #--------------------
 # Search paths (for headers, etc)
