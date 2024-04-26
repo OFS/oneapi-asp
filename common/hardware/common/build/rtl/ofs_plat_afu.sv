@@ -103,7 +103,14 @@ module ofs_plat_afu
         )
         child_link_dfh
         (
-            .to_fiu(plat_ifc.host_chan.ports[h]),
+            //this should be some equation that takes 'h' into account. The 
+            //number of interfaces equals the number of links times the number of
+            //ports per link. Each link's ports are added in sequence to the full
+            //array of interfaces. ex each link (L0 and L1) has 3 ports (P0, P1, P2). 
+            //The total number of interfaces is 6 (0..5). We want to use P0 of each 
+            //link. The array of interfaces will be [L0P0, L0P1, L0P2, L1P0,L1P1,L1P2].
+            //.to_fiu(plat_ifc.host_chan.ports[h]),
+            .to_fiu(plat_ifc.host_chan.ports[3]),
             .to_afu(child_host_chan_with_dfh[h-1])
         );
                 
@@ -172,7 +179,8 @@ module ofs_plat_afu
         // Set a bit in the mask when a port is IN USE by the design.
         // This way, the AFU does not need to know about every available
         // device. By default, devices are tied off.
-        .HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
+        //.HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
+        .HOST_CHAN_IN_USE_MASK(6'b001001),
         .LOCAL_MEM_IN_USE_MASK({ASP_LOCALMEM_NUM_CHANNELS{1'b1}})
         `ifdef INCLUDE_IO_PIPES
             // The argument to each parameter is a bit mask of channels used.
