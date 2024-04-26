@@ -49,9 +49,17 @@ module ofs_plat_afu
         `HOST_CHAN_AVALON_MMIO_PARAMS(ASP_MMIO_DATA_WIDTH),
         .LOG_CLASS(ofs_plat_log_pkg::HOST_CHAN)
         )
-        mmio64_to_afu();
+        mmio64_to_afu ();
 
-	//this is the default/primary hostmem interface - used for VTP_SVC + MMIO as well as basic host memory accesses
+	//this is the default/primary hostmem interface - used for VTP_SVC + MMIO as well 
+    //as basic host memory accesses.
+    
+    // Instantiate the parent feature at MMIO offset 0. The parent feature
+    // contains a parameter that lists the children. OPAE will discover the
+    // parameter and load children along with the parent.
+    //
+    // This module acts as a shim that implements only the one DFL entry.
+    // Other traffic to/from the AFU flows on host_chan_with_dfh.
     ofs_plat_host_chan_as_avalon_mem_rdwr_with_mmio
       #(
         .ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
@@ -68,10 +76,44 @@ module ofs_plat_afu
         .afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
 	
-	//this is/these are the secondary/side hostmem interface(s). They will not provide MMIO and will
-	//not carry VTP-SVC traffic, only host memory accesses
+	//these are the child hostmem interface(s). They will not provide MMIO into afu.sv and will
+	//not carry VTP-SVC traffic, only host memory accesses. They will, however, connect MMIO 
+    //to a simple DFH CSR module so that any MMIO requests from the host will get a response.
 	genvar h;
-	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : hostmem_channels
+	generate for (h=1; h<NUM_HOSTMEM_CHAN; h=h+1) begin : child_hostmem_links
+        //(From multi_link OFS example design)
+        // New host channel wrappers -- the same interface as found in
+        // plat_ifc.host_chan.ports. The PIM-provided wrapper around
+        // the FIM's multi_link_afu_dfh module will connect the plat_ifc
+        // ports to these new host_chan_with_dfh ports. All traffic other
+        // than the MMIO associated with the AFU features will reach them.
+        //We won't use this for the parent link (yet), only the children,
+        //because of how the AFU_ID component is used/created in the ASP 
+        //(within Platform Designer).
+        ofs_plat_host_chan_axis_pcie_tlp_if child_host_chan_with_dfh[NUM_HOSTMEM_CHAN-1]();
+        
+        // Instantiate child features at MMIO offset 0 of the children.
+        // The same module is used. When NUM_CHILDREN is not set (defaults
+        // to 0), a child feature is constructed. Except for building
+        // a different header, the behavior is similar to the parent.
+        ofs_plat_host_chan_fim_multi_link_afu_dfh
+        #(
+            .GUID_H(64'b0),
+            .GUID_L(64'b0)
+        )
+        child_link_dfh
+        (
+            //this should be some equation that takes 'h' into account. The 
+            //number of interfaces equals the number of links times the number of
+            //ports per link. Each link's ports are added in sequence to the full
+            //array of interfaces. ex each link (L0 and L1) has 3 ports (P0, P1, P2). 
+            //The total number of interfaces is 6 (0..5). We want to use P0 of each 
+            //link. The array of interfaces will be [L0P0, L0P1, L0P2, L1P0,L1P1,L1P2].
+            //.to_fiu(plat_ifc.host_chan.ports[h]),
+            .to_fiu(plat_ifc.host_chan.ports[3]),
+            .to_afu(child_host_chan_with_dfh[h-1])
+        );
+                
 		ofs_plat_host_chan_as_avalon_mem_rdwr
 		#(
 			.ADD_CLOCK_CROSSING(USE_PIM_CDC_HOSTCHAN),
@@ -79,14 +121,15 @@ module ofs_plat_afu
         )
 		primary_avalon
 		(
-			.to_fiu(plat_ifc.host_chan.ports[h]),
+			.to_fiu(child_host_chan_with_dfh[h-1]),
 			.host_mem_to_afu (host_mem_to_afu[h]),
 
 			//these are only used if ADD_CLOCK_CROSSING is non-zero; ignored otherwise.
 			.afu_clk(plat_ifc.clocks.uClk_usrDiv2.clk),
 			.afu_reset_n(plat_ifc.clocks.uClk_usrDiv2.reset_n)
         );
-	end : hostmem_channels
+        
+	end : child_hostmem_links
 	endgenerate
 
     // ====================================================================
@@ -136,7 +179,8 @@ module ofs_plat_afu
         // Set a bit in the mask when a port is IN USE by the design.
         // This way, the AFU does not need to know about every available
         // device. By default, devices are tied off.
-        .HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
+        //.HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
+        .HOST_CHAN_IN_USE_MASK(6'b001001),
         .LOCAL_MEM_IN_USE_MASK({ASP_LOCALMEM_NUM_CHANNELS{1'b1}})
         `ifdef INCLUDE_IO_PIPES
             // The argument to each parameter is a bit mask of channels used.

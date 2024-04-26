@@ -35,29 +35,33 @@ module afu_id_avmm_slave #(
 	input reset
 );
 
-	logic [`AFU_ID_AVMM_SLAVE_DATA_WIDTH-1:0] scratch_reg;
+    //hack to work around the fact this file is used for both the AFU DFH as well
+    //as the null-DFH to set the end-of-list bit.
+    logic this_is_main_parent_dfh = (AFU_ID_H == 64'hda1182b1b3444e23) ? 1'b0 : 1'b1;
 
-	//TODO: always_ff
-	always@(posedge clk) begin
+    localparam NUM_CHILD_LINKS = 1;
+    logic [`AFU_ID_AVMM_SLAVE_DATA_WIDTH-1:0] DFH_addr_5, DFH_addr_6, DFH_addr_7;
+
+	always_ff @(posedge clk) begin
 		avmm_readdata <= '0;
-		scratch_reg <= scratch_reg;
 		if(reset) begin
 			avmm_readdata <= '0;
-			scratch_reg <= '0;
 		end
 		else begin
-			// set the registers on MMIO write request
-			// these are user-defined AFU registers at offset 0x40 and 0x41
-			if(avmm_write && CREATE_SCRATCH_REG) begin
-				case(avmm_address)
-					4'h5: scratch_reg <= avmm_writedata;
-				endcase
-			end
 			// serve MMIO read requests
 			if(avmm_read) begin
 				case(avmm_address)
 					// AFU header
-					4'h0: avmm_readdata <= {
+					4'h0: avmm_readdata <= this_is_main_parent_dfh ? {
+						DFH_FEATURE_TYPE, // [63:60] Feature type = AFU(4'h1)
+						8'h1,             // [59:52] DFH v1
+						DFH_AFU_MINOR_REV,    // afu minor revision = 0
+						7'b0,    // reserved
+						DFH_END_OF_LIST,    // end of DFH list = 1 
+						DFH_NEXT_OFFSET,   // next DFH offset = 0
+						DFH_AFU_MAJOR_REV,    // afu major revision = 0
+						DFH_FEATURE_ID    // feature ID = 0
+					} : {
 						DFH_FEATURE_TYPE, // Feature type = AFU
 						8'b0,    // reserved
 						DFH_AFU_MINOR_REV,    // afu minor revision = 0
@@ -66,16 +70,36 @@ module afu_id_avmm_slave #(
 						DFH_NEXT_OFFSET,   // next DFH offset = 0
 						DFH_AFU_MAJOR_REV,    // afu major revision = 0
 						DFH_FEATURE_ID    // feature ID = 0
-					};            
+					};
 					4'h1: avmm_readdata <= AFU_ID_L; // afu id low
 					4'h2: avmm_readdata <= AFU_ID_H; // afu id hi
 					4'h3: avmm_readdata <= {40'h0, NEXT_AFU_OFFSET}; // next AFU
-					4'h4: avmm_readdata <= 64'h0; // reserved
-					4'h5: avmm_readdata <= CREATE_SCRATCH_REG ? scratch_reg : 64'h0;
+					4'h4: avmm_readdata <= this_is_main_parent_dfh ? 
+                                            {32'b0, 1'b1, 31'b0} : // feature has parameter(s)
+                                            64'b0;
+					4'h5: avmm_readdata <= this_is_main_parent_dfh ? DFH_addr_5 : 'b0;
+                    4'h6: avmm_readdata <= this_is_main_parent_dfh ? DFH_addr_6 : 'b0;
+                    4'h7: avmm_readdata <= this_is_main_parent_dfh ? DFH_addr_7 : 'b0;
 					default:  avmm_readdata <= 64'h0;
 				endcase
 			end
 		end
 	end
+    
+    always_comb begin
+        DFH_addr_5        = '0;
+        // One parameter block -- the list of child GUIDs.
+        // Size of parameter block (8 byte words)
+        DFH_addr_5[63:35] = (2*NUM_CHILD_LINKS) + 1;
+        // EOP
+        DFH_addr_5[32]    = 1'b1;
+        // Parameter ID (child AFUs).
+        // See https://github.com/OFS/dfl-feature-id/blob/main/dfl-param-ids.rst
+        DFH_addr_5[15:0]  = 2; 
+        
+        //child DFH_LO/HI
+        DFH_addr_6 = 'b0;
+        DFH_addr_7 = 'b0;
+    end
 
 endmodule
