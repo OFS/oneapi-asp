@@ -255,7 +255,6 @@ kernel_system kernel_system_inst (
 			.kernel_mem_burstcount      (svm_avmm_kernelsystem[0].burstcount),
 			.kernel_mem_writedata       (svm_avmm_kernelsystem[0].writedata),
             .kernel_mem_address         ({svm_avmm_kernelsystem[0].address,svm_addr_shift[0]}),
-            //.kernel_mem_address         ({svm_addr_kernel_system[0],svm_addr_shift[0]}),
 			.kernel_mem_write           (svm_avmm_kernelsystem[0].write),
 			.kernel_mem_read            (svm_avmm_kernelsystem[0].read),
 			.kernel_mem_byteenable      (svm_avmm_kernelsystem[0].byteenable)
@@ -266,8 +265,7 @@ kernel_system kernel_system_inst (
 			.kernel_mem_1_readdatavalid   (svm_avmm_kernelsystem[1].readdatavalid),
 			.kernel_mem_1_burstcount      (svm_avmm_kernelsystem[1].burstcount),
 			.kernel_mem_1_writedata       (svm_avmm_kernelsystem[1].writedata),
-            //.kernel_mem_1_address         ({svm_avmm_kernelsystem[1].address,svm_addr_shift[1]}),
-            .kernel_mem_1_address         ({svm_addr_kernel_system[1],svm_addr_shift[1]}),
+            .kernel_mem_1_address         ({svm_avmm_kernelsystem[1].address,svm_addr_shift[1]}),
 			.kernel_mem_1_write           (svm_avmm_kernelsystem[1].write),
 			.kernel_mem_1_read            (svm_avmm_kernelsystem[1].read),
 			.kernel_mem_1_byteenable      (svm_avmm_kernelsystem[1].byteenable)
@@ -429,27 +427,14 @@ kernel_system kernel_system_inst (
 );
 
 `ifdef INCLUDE_USM_SUPPORT
-    ////if the USM memory space is split in half, need to set the upper 
-    ////address bit for the 2nd channel so the AVMM address-ranges don't overlap
-    ////when seen at VTP module.
-    //`ifdef ASP_ENABLE_USM_CH_1
-    //    always_comb begin
-    //        svm_avmm_kernelsystem[0].address = svm_addr_kernel_system[0];
-    //        svm_avmm_kernelsystem[0].address[USM_CH1_UPPER_ADDR_BIT] = 1'b1;
-    //        svm_avmm_kernelsystem[1].address = svm_addr_kernel_system[1];
-    //        svm_avmm_kernelsystem[1].address[USM_CH1_UPPER_ADDR_BIT] = 1'b1;
-    //    end
-    //`endif
-    genvar i;
-    generate for (i=1; i<NUM_USM_CHAN; i=i+1) begin: tie_off_extra_usm_chans
-            assign svm_avmm_kernelsystem[i].burstcount = 0;
-            assign svm_avmm_kernelsystem[i].writedata = 0;
-            assign svm_avmm_kernelsystem[i].address = 0;
-            assign svm_avmm_kernelsystem[i].write = 0;
-            assign svm_avmm_kernelsystem[i].read = 0;
-            assign svm_avmm_kernelsystem[i].byteenable = 0;
-    end : tie_off_extra_usm_chans
-    endgenerate
+    `ifndef ASP_ENABLE_USM_CH_1
+            assign svm_avmm_kernelsystem[1].burstcount = 0;
+            assign svm_avmm_kernelsystem[1].writedata = 0;
+            assign svm_avmm_kernelsystem[1].address = 0;
+            assign svm_avmm_kernelsystem[1].write = 0;
+            assign svm_avmm_kernelsystem[1].read = 0;
+            assign svm_avmm_kernelsystem[1].byteenable = 0;
+    `endif
     `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
 		genvar uu;
 		generate
