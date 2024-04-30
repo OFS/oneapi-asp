@@ -96,45 +96,45 @@ endgenerate
         .BURST_CNT_WIDTH (USM_AVMM_BURSTCOUNT_WIDTH)
     ) svm_avmm_kernelsystem [NUM_USM_CHAN-1:0] ();
     
-	genvar u;
-	generate
-		for (u = 0; u < NUM_USM_CHAN; u=u+1) begin : usm_channels
-			always_comb begin
-				kernel_svm[u].user  = 'b0;
-			end
-			
-			acl_avalon_mm_bridge_s10 #(
-				.DATA_WIDTH                     ( USM_AVMM_DATA_WIDTH ),
-				.SYMBOL_WIDTH                   ( 8   ),
-				.HDL_ADDR_WIDTH                 ( USM_AVMM_ADDR_WIDTH ),
-				.BURSTCOUNT_WIDTH               ( USM_AVMM_BURSTCOUNT_WIDTH),
-				.SYNCHRONIZE_RESET              ( 1   ),
-				.DISABLE_WAITREQUEST_BUFFERING  ( 1   ),
-				.READDATA_PIPE_DEPTH            ( KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
-			)  kernel_mem_acl_avalon_mm_bridge_s10 (
-				.clk                          (clk),
-				.reset                        (!reset_n),
-				.s0_waitrequest               (svm_avmm_bridge[u].waitrequest),
-				.s0_readdata                  (svm_avmm_bridge[u].readdata),
-				.s0_readdatavalid             (svm_avmm_bridge[u].readdatavalid),
-				.s0_burstcount                (svm_avmm_bridge[u].burstcount),
-				.s0_writedata                 (svm_avmm_bridge[u].writedata),
-				.s0_address                   (svm_avmm_bridge[u].address),
-				.s0_write                     (svm_avmm_bridge[u].write),
-				.s0_read                      (svm_avmm_bridge[u].read),
-				.s0_byteenable                (svm_avmm_bridge[u].byteenable),
-				.m0_waitrequest               (kernel_svm[u].waitrequest),
-				.m0_readdata                  (kernel_svm[u].readdata),
-				.m0_readdatavalid             (kernel_svm[u].readdatavalid),
-				.m0_burstcount                (kernel_svm[u].burstcount),
-				.m0_writedata                 (kernel_svm[u].writedata),
-				.m0_address                   (kernel_svm[u].address),
-				.m0_write                     (kernel_svm[u].write),
-				.m0_read                      (kernel_svm[u].read),
-				.m0_byteenable                (kernel_svm[u].byteenable)
-			);
-		end : usm_channels
-	endgenerate
+    genvar u;
+    generate
+        for (u = 0; u < NUM_USM_CHAN; u=u+1) begin : usm_channels
+            always_comb begin
+                kernel_svm[u].user  = 'b0;
+            end
+            
+            acl_avalon_mm_bridge_s10 #(
+                .DATA_WIDTH                     ( USM_AVMM_DATA_WIDTH ),
+                .SYMBOL_WIDTH                   ( 8   ),
+                .HDL_ADDR_WIDTH                 ( USM_AVMM_ADDR_WIDTH ),
+                .BURSTCOUNT_WIDTH               ( USM_AVMM_BURSTCOUNT_WIDTH),
+                .SYNCHRONIZE_RESET              ( 1   ),
+                .DISABLE_WAITREQUEST_BUFFERING  ( 1   ),
+                .READDATA_PIPE_DEPTH            ( KERNELWRAPPER_SVM_PIPELINE_STAGES_RDDATA   )
+            )  kernel_mem_acl_avalon_mm_bridge_s10 (
+                .clk                          (clk),
+                .reset                        (!reset_n),
+                .s0_waitrequest               (svm_avmm_bridge[u].waitrequest),
+                .s0_readdata                  (svm_avmm_bridge[u].readdata),
+                .s0_readdatavalid             (svm_avmm_bridge[u].readdatavalid),
+                .s0_burstcount                (svm_avmm_bridge[u].burstcount),
+                .s0_writedata                 (svm_avmm_bridge[u].writedata),
+                .s0_address                   (svm_avmm_bridge[u].address),
+                .s0_write                     (svm_avmm_bridge[u].write),
+                .s0_read                      (svm_avmm_bridge[u].read),
+                .s0_byteenable                (svm_avmm_bridge[u].byteenable),
+                .m0_waitrequest               (kernel_svm[u].waitrequest),
+                .m0_readdata                  (kernel_svm[u].readdata),
+                .m0_readdatavalid             (kernel_svm[u].readdatavalid),
+                .m0_burstcount                (kernel_svm[u].burstcount),
+                .m0_writedata                 (kernel_svm[u].writedata),
+                .m0_address                   (kernel_svm[u].address),
+                .m0_write                     (kernel_svm[u].write),
+                .m0_read                      (kernel_svm[u].read),
+                .m0_byteenable                (kernel_svm[u].byteenable)
+            );
+        end : usm_channels
+    endgenerate
 `endif
 
 //avmm pipeline for kernel cra
@@ -248,52 +248,50 @@ kernel_system kernel_system_inst (
     .kernel_cra_debugaccess         (kernel_cra_avmm_bridge.kernel_cra_debugaccess)
     
     `ifdef INCLUDE_USM_SUPPORT
-		`ifdef ASP_ENABLE_USM_CH_0
-			,.kernel_mem_waitrequest    (svm_avmm_kernelsystem[0].waitrequest),
-			.kernel_mem_readdata        (svm_avmm_kernelsystem[0].readdata),
-			.kernel_mem_readdatavalid   (svm_avmm_kernelsystem[0].readdatavalid),
-			.kernel_mem_burstcount      (svm_avmm_kernelsystem[0].burstcount),
-			.kernel_mem_writedata       (svm_avmm_kernelsystem[0].writedata),
+        `ifdef ASP_ENABLE_USM_CH_0
+            ,.kernel_mem_waitrequest    (svm_avmm_kernelsystem[0].waitrequest),
+            .kernel_mem_readdata        (svm_avmm_kernelsystem[0].readdata),
+            .kernel_mem_readdatavalid   (svm_avmm_kernelsystem[0].readdatavalid),
+            .kernel_mem_burstcount      (svm_avmm_kernelsystem[0].burstcount),
+            .kernel_mem_writedata       (svm_avmm_kernelsystem[0].writedata),
             .kernel_mem_address         ({svm_avmm_kernelsystem[0].address,svm_addr_shift[0]}),
-            //.kernel_mem_address         ({svm_addr_kernel_system[0],svm_addr_shift[0]}),
-			.kernel_mem_write           (svm_avmm_kernelsystem[0].write),
-			.kernel_mem_read            (svm_avmm_kernelsystem[0].read),
-			.kernel_mem_byteenable      (svm_avmm_kernelsystem[0].byteenable)
-		`endif //ASP_ENABLE_USM_CH_0
-		`ifdef ASP_ENABLE_USM_CH_1
-			,.kernel_mem_1_waitrequest    (svm_avmm_kernelsystem[1].waitrequest),
-			.kernel_mem_1_readdata        (svm_avmm_kernelsystem[1].readdata),
-			.kernel_mem_1_readdatavalid   (svm_avmm_kernelsystem[1].readdatavalid),
-			.kernel_mem_1_burstcount      (svm_avmm_kernelsystem[1].burstcount),
-			.kernel_mem_1_writedata       (svm_avmm_kernelsystem[1].writedata),
-            //.kernel_mem_1_address         ({svm_avmm_kernelsystem[1].address,svm_addr_shift[1]}),
-            .kernel_mem_1_address         ({svm_addr_kernel_system[1],svm_addr_shift[1]}),
-			.kernel_mem_1_write           (svm_avmm_kernelsystem[1].write),
-			.kernel_mem_1_read            (svm_avmm_kernelsystem[1].read),
-			.kernel_mem_1_byteenable      (svm_avmm_kernelsystem[1].byteenable)
-		`endif //ASP_ENABLE_USM_CH_1
-		`ifdef ASP_ENABLE_USM_CH_2
-			,.kernel_mem_2_waitrequest    (svm_avmm_kernelsystem[2].waitrequest),
-			.kernel_mem_2_readdata        (svm_avmm_kernelsystem[2].readdata),
-			.kernel_mem_2_readdatavalid   (svm_avmm_kernelsystem[2].readdatavalid),
-			.kernel_mem_2_burstcount      (svm_avmm_kernelsystem[2].burstcount),
-			.kernel_mem_2_writedata       (svm_avmm_kernelsystem[2].writedata),
-			.kernel_mem_2_address         ({svm_avmm_kernelsystem[2].address,svm_addr_shift[2]}),
-			.kernel_mem_2_write           (svm_avmm_kernelsystem[2].write),
-			.kernel_mem_2_read            (svm_avmm_kernelsystem[2].read),
-			.kernel_mem_2_byteenable      (svm_avmm_kernelsystem[2].byteenable)
-		`endif //ASP_ENABLE_USM_CH_2
-		`ifdef ASP_ENABLE_USM_CH_3
-			,.kernel_mem_3_waitrequest    (svm_avmm_kernelsystem[3].waitrequest),
-			.kernel_mem_3_readdata        (svm_avmm_kernelsystem[3].readdata),
-			.kernel_mem_3_readdatavalid   (svm_avmm_kernelsystem[3].readdatavalid),
-			.kernel_mem_3_burstcount      (svm_avmm_kernelsystem[3].burstcount),
-			.kernel_mem_3_writedata       (svm_avmm_kernelsystem[3].writedata),
-			.kernel_mem_3_address         ({svm_avmm_kernelsystem[3].address,svm_addr_shift[3]}),
-			.kernel_mem_3_write           (svm_avmm_kernelsystem[3].write),
-			.kernel_mem_3_read            (svm_avmm_kernelsystem[3].read),
-			.kernel_mem_3_byteenable      (svm_avmm_kernelsystem[3].byteenable)
-		`endif //ASP_ENABLE_USM_CH_3
+            .kernel_mem_write           (svm_avmm_kernelsystem[0].write),
+            .kernel_mem_read            (svm_avmm_kernelsystem[0].read),
+            .kernel_mem_byteenable      (svm_avmm_kernelsystem[0].byteenable)
+        `endif //ASP_ENABLE_USM_CH_0
+        `ifdef ASP_ENABLE_USM_CH_1
+            ,.kernel_mem_1_waitrequest    (svm_avmm_kernelsystem[1].waitrequest),
+            .kernel_mem_1_readdata        (svm_avmm_kernelsystem[1].readdata),
+            .kernel_mem_1_readdatavalid   (svm_avmm_kernelsystem[1].readdatavalid),
+            .kernel_mem_1_burstcount      (svm_avmm_kernelsystem[1].burstcount),
+            .kernel_mem_1_writedata       (svm_avmm_kernelsystem[1].writedata),
+            .kernel_mem_1_address         ({svm_avmm_kernelsystem[1].address,svm_addr_shift[1]}),
+            .kernel_mem_1_write           (svm_avmm_kernelsystem[1].write),
+            .kernel_mem_1_read            (svm_avmm_kernelsystem[1].read),
+            .kernel_mem_1_byteenable      (svm_avmm_kernelsystem[1].byteenable)
+        `endif //ASP_ENABLE_USM_CH_1
+        `ifdef ASP_ENABLE_USM_CH_2
+            ,.kernel_mem_2_waitrequest    (svm_avmm_kernelsystem[2].waitrequest),
+            .kernel_mem_2_readdata        (svm_avmm_kernelsystem[2].readdata),
+            .kernel_mem_2_readdatavalid   (svm_avmm_kernelsystem[2].readdatavalid),
+            .kernel_mem_2_burstcount      (svm_avmm_kernelsystem[2].burstcount),
+            .kernel_mem_2_writedata       (svm_avmm_kernelsystem[2].writedata),
+            .kernel_mem_2_address         ({svm_avmm_kernelsystem[2].address,svm_addr_shift[2]}),
+            .kernel_mem_2_write           (svm_avmm_kernelsystem[2].write),
+            .kernel_mem_2_read            (svm_avmm_kernelsystem[2].read),
+            .kernel_mem_2_byteenable      (svm_avmm_kernelsystem[2].byteenable)
+        `endif //ASP_ENABLE_USM_CH_2
+        `ifdef ASP_ENABLE_USM_CH_3
+            ,.kernel_mem_3_waitrequest    (svm_avmm_kernelsystem[3].waitrequest),
+            .kernel_mem_3_readdata        (svm_avmm_kernelsystem[3].readdata),
+            .kernel_mem_3_readdatavalid   (svm_avmm_kernelsystem[3].readdatavalid),
+            .kernel_mem_3_burstcount      (svm_avmm_kernelsystem[3].burstcount),
+            .kernel_mem_3_writedata       (svm_avmm_kernelsystem[3].writedata),
+            .kernel_mem_3_address         ({svm_avmm_kernelsystem[3].address,svm_addr_shift[3]}),
+            .kernel_mem_3_write           (svm_avmm_kernelsystem[3].write),
+            .kernel_mem_3_read            (svm_avmm_kernelsystem[3].read),
+            .kernel_mem_3_byteenable      (svm_avmm_kernelsystem[3].byteenable)
+        `endif //ASP_ENABLE_USM_CH_3
     `endif //INCLUDE_USM_SUPPORT
     
     `ifdef INCLUDE_IO_PIPES
@@ -429,66 +427,53 @@ kernel_system kernel_system_inst (
 );
 
 `ifdef INCLUDE_USM_SUPPORT
-    ////if the USM memory space is split in half, need to set the upper 
-    ////address bit for the 2nd channel so the AVMM address-ranges don't overlap
-    ////when seen at VTP module.
-    //`ifdef ASP_ENABLE_USM_CH_1
-    //    always_comb begin
-    //        svm_avmm_kernelsystem[0].address = svm_addr_kernel_system[0];
-    //        svm_avmm_kernelsystem[0].address[USM_CH1_UPPER_ADDR_BIT] = 1'b1;
-    //        svm_avmm_kernelsystem[1].address = svm_addr_kernel_system[1];
-    //        svm_avmm_kernelsystem[1].address[USM_CH1_UPPER_ADDR_BIT] = 1'b1;
-    //    end
-    //`endif
-    genvar i;
-    generate for (i=1; i<NUM_USM_CHAN; i=i+1) begin: tie_off_extra_usm_chans
-            assign svm_avmm_kernelsystem[i].burstcount = 0;
-            assign svm_avmm_kernelsystem[i].writedata = 0;
-            assign svm_avmm_kernelsystem[i].address = 0;
-            assign svm_avmm_kernelsystem[i].write = 0;
-            assign svm_avmm_kernelsystem[i].read = 0;
-            assign svm_avmm_kernelsystem[i].byteenable = 0;
-    end : tie_off_extra_usm_chans
-    endgenerate
+    `ifndef ASP_ENABLE_USM_CH_1
+            assign svm_avmm_kernelsystem[1].burstcount = 0;
+            assign svm_avmm_kernelsystem[1].writedata = 0;
+            assign svm_avmm_kernelsystem[1].address = 0;
+            assign svm_avmm_kernelsystem[1].write = 0;
+            assign svm_avmm_kernelsystem[1].read = 0;
+            assign svm_avmm_kernelsystem[1].byteenable = 0;
+    `endif
     `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
-		genvar uu;
-		generate
-			for (uu=0; uu < NUM_USM_CHAN; uu=uu+1) begin : usm_channels_partial_writes
-				avmm_single_burst_partial_writes avmm_single_burst_partial_writes_inst
-				(
-					.clk      ,
-					.reset_n  ,
-					.to_avmm_source (svm_avmm_kernelsystem[uu]),
-					.to_avmm_sink   (svm_avmm_bridge[uu])
-				);
-			end : usm_channels_partial_writes
-		endgenerate
+        genvar uu;
+        generate
+            for (uu=0; uu < NUM_USM_CHAN; uu=uu+1) begin : usm_channels_partial_writes
+                avmm_single_burst_partial_writes avmm_single_burst_partial_writes_inst
+                (
+                    .clk      ,
+                    .reset_n  ,
+                    .to_avmm_source (svm_avmm_kernelsystem[uu]),
+                    .to_avmm_sink   (svm_avmm_bridge[uu])
+                );
+            end : usm_channels_partial_writes
+        endgenerate
     `else
-		genvar uu;
-		generate
-			for (uu=0; uu < NUM_USM_CHAN; uu=uu+1) begin : usm_channels_partial_writes
-				//if not requiring partial-writes splitting, just pass the signals through
-				always_comb begin
-					svm_avmm_kernelsystem[uu].waitrequest    = svm_avmm_bridge[uu].waitrequest;
-					svm_avmm_kernelsystem[uu].readdata       = svm_avmm_bridge[uu].readdata;
-					svm_avmm_kernelsystem[uu].readdatavalid  = svm_avmm_bridge[uu].readdatavalid;
-					
-					svm_avmm_bridge[uu].burstcount     = svm_avmm_kernelsystem[uu].burstcount;
-					svm_avmm_bridge[uu].writedata      = svm_avmm_kernelsystem[uu].writedata ;
-					svm_avmm_bridge[uu].address        = svm_avmm_kernelsystem[uu].address   ;
-					svm_avmm_bridge[uu].byteenable     = svm_avmm_kernelsystem[uu].byteenable;
-					svm_avmm_bridge[uu].write          = svm_avmm_kernelsystem[uu].write     ;
-					svm_avmm_bridge[uu].read           = svm_avmm_kernelsystem[uu].read      ;
-					// Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
-					// driven by the kernel-system.
-					//drive with the modified version during simulation
-					// synthesis translate off
-						svm_avmm_bridge[uu].write = svm_avmm_kernelsystem[uu].write === 'X ? 'b0 : svm_avmm_kernelsystem[uu].write;
-						svm_avmm_bridge[uu].read  = svm_avmm_kernelsystem[uu].read  === 'X ? 'b0 : svm_avmm_kernelsystem[uu].read;
-					// synthesis translate on
-				end
-			end : usm_channels_partial_writes
-		endgenerate
+        genvar uu;
+        generate
+            for (uu=0; uu < NUM_USM_CHAN; uu=uu+1) begin : usm_channels_partial_writes
+                //if not requiring partial-writes splitting, just pass the signals through
+                always_comb begin
+                    svm_avmm_kernelsystem[uu].waitrequest    = svm_avmm_bridge[uu].waitrequest;
+                    svm_avmm_kernelsystem[uu].readdata       = svm_avmm_bridge[uu].readdata;
+                    svm_avmm_kernelsystem[uu].readdatavalid  = svm_avmm_bridge[uu].readdatavalid;
+                    
+                    svm_avmm_bridge[uu].burstcount     = svm_avmm_kernelsystem[uu].burstcount;
+                    svm_avmm_bridge[uu].writedata      = svm_avmm_kernelsystem[uu].writedata ;
+                    svm_avmm_bridge[uu].address        = svm_avmm_kernelsystem[uu].address   ;
+                    svm_avmm_bridge[uu].byteenable     = svm_avmm_kernelsystem[uu].byteenable;
+                    svm_avmm_bridge[uu].write          = svm_avmm_kernelsystem[uu].write     ;
+                    svm_avmm_bridge[uu].read           = svm_avmm_kernelsystem[uu].read      ;
+                    // Higher-level interfaces don't like 'X' during simulation. Drive 0's when not 
+                    // driven by the kernel-system.
+                    //drive with the modified version during simulation
+                    // synthesis translate off
+                        svm_avmm_bridge[uu].write = svm_avmm_kernelsystem[uu].write === 'X ? 'b0 : svm_avmm_kernelsystem[uu].write;
+                        svm_avmm_bridge[uu].read  = svm_avmm_kernelsystem[uu].read  === 'X ? 'b0 : svm_avmm_kernelsystem[uu].read;
+                    // synthesis translate on
+                end
+            end : usm_channels_partial_writes
+        endgenerate
     `endif
 `endif
 
