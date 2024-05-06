@@ -427,14 +427,18 @@ kernel_system kernel_system_inst (
 );
 
 `ifdef INCLUDE_USM_SUPPORT
-    `ifndef ASP_ENABLE_USM_CH_1
-            assign svm_avmm_kernelsystem[1].burstcount = 0;
-            assign svm_avmm_kernelsystem[1].writedata = 0;
-            assign svm_avmm_kernelsystem[1].address = 0;
-            assign svm_avmm_kernelsystem[1].write = 0;
-            assign svm_avmm_kernelsystem[1].read = 0;
-            assign svm_avmm_kernelsystem[1].byteenable = 0;
-    `endif
+    //Until we sort out the ASP/compiler support for multiple USM channels I'm tying them
+    //off here for channels higher than [0]. 
+    genvar i;
+    generate for (i=1; i<NUM_USM_CHAN; i=i+1) begin: tie_off_extra_usm_chans
+        assign svm_avmm_kernelsystem[i].burstcount = 0;
+        assign svm_avmm_kernelsystem[i].writedata = 0;
+        assign svm_avmm_kernelsystem[i].address = 0;
+        assign svm_avmm_kernelsystem[i].write = 0;
+        assign svm_avmm_kernelsystem[i].read = 0;
+        assign svm_avmm_kernelsystem[i].byteenable = 0;
+    end : tie_off_extra_usm_chans
+    endgenerate
     `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
         genvar uu;
         generate
