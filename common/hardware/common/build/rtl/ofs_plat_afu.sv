@@ -180,7 +180,7 @@ module ofs_plat_afu
         // This way, the AFU does not need to know about every available
         // device. By default, devices are tied off.
         .HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
-	//.HOST_CHAN_IN_USE_MASK(6'b001001), //for 2xGen5x8 iseries-dk
+	    //.HOST_CHAN_IN_USE_MASK(6'b001001), //for 2xGen5x8 iseries-dk
         .LOCAL_MEM_IN_USE_MASK({ASP_LOCALMEM_NUM_CHANNELS{1'b1}})
         `ifdef INCLUDE_IO_PIPES
             // The argument to each parameter is a bit mask of channels used.
