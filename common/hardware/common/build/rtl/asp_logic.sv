@@ -19,18 +19,55 @@ import ofs_asp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[ASP_LOCALMEM_NUM_CHANNELS],
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0
+      ofs_plat_avalon_mem_if.to_slave local_mem0[ASP_GLOBAL_MEM_0_NUM_CHANNELS],
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1
+      ofs_plat_avalon_mem_if.to_slave local_mem1[ASP_GLOBAL_MEM_1_NUM_CHANNELS],
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+      ofs_plat_avalon_mem_if.to_slave local_mem2[ASP_GLOBAL_MEM_2_NUM_CHANNELS],
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3
+      ofs_plat_avalon_mem_if.to_slave local_mem3[ASP_GLOBAL_MEM_3_NUM_CHANNELS],
+    `endif
     
     `ifdef INCLUDE_IO_PIPES
         ofs_plat_avalon_mem_if.to_sink uoe_csr_avmm,
     `endif
 
-   // kernel signals
-    kernel_control_intf.asp kernel_control,
-    kernel_mem_intf.asp kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]
+    // kernel signals
+    kernel_control_intf.asp kernel_control
+
+    // kernel connections
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0
+    ,kernel_mem_intf.asp kernel_mem0[ASP_GLOBAL_MEM_0_NUM_CHANNELS]
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1
+    ,kernel_mem_intf.asp kernel_mem1[ASP_GLOBAL_MEM_1_NUM_CHANNELS]
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+    ,kernel_mem_intf.asp kernel_mem2[ASP_GLOBAL_MEM_2_NUM_CHANNELS]
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+    ,kernel_mem_intf.asp kernel_mem3[ASP_GLOBAL_MEM_3_NUM_CHANNELS]
+    `endif
+	    
 );
 
-logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] ddr4_byte_address_bits [ASP_LOCALMEM_NUM_CHANNELS];
+`ifdef ASP_ENABLE_GLOBAL_MEM_0
+  logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] global_mem0_byte_address_bits [ASP_GLOBAL_MEM_0_NUM_CHANNELS];
+`endif
+`ifdef ASP_ENABLE_GLOBAL_MEM_1
+  logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] global_mem1_byte_address_bits [ASP_GLOBAL_MEM_1_NUM_CHANNELS];
+`endif
+`ifdef ASP_ENABLE_GLOBAL_MEM_2
+  logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] global_mem2_byte_address_bits [ASP_GLOBAL_MEM_2_NUM_CHANNELS];
+`endif
+`ifdef ASP_ENABLE_GLOBAL_MEM_3
+  logic [KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET-1:0] global_mem3_byte_address_bits [ASP_GLOBAL_MEM_3_NUM_CHANNELS];
+`endif
+
 logic [ASP_MMIO_QSYS_ADDR_WIDTH-1:0] avmm_mmio64_address;
 logic wr_fence_flag;
 logic f2h_dma_wr_fence_flag;
@@ -95,94 +132,361 @@ board board_inst (
     .kernel_irq_irq                     (kernel_control.kernel_irq),                //   kernel_irq.irq
     .kernel_reset_reset_n               (kernel_control.kernel_reset_n),            // kernel_reset.reset_n
     
-    `ifdef ASP_ENABLE_DDR4_BANK_0
-        .emif_ddr0_clk_clk         (local_mem[0].clk),
-        .emif_ddr0_waitrequest     (local_mem[0].waitrequest),
-        .emif_ddr0_readdata        (local_mem[0].readdata),
-        .emif_ddr0_readdatavalid   (local_mem[0].readdatavalid),
-        .emif_ddr0_burstcount      (local_mem[0].burstcount),
-        .emif_ddr0_writedata       (local_mem[0].writedata),
-        .emif_ddr0_address         ({local_mem[0].address, ddr4_byte_address_bits[0]}),
-        .emif_ddr0_write           (local_mem[0].write),
-        .emif_ddr0_read            (local_mem[0].read),
-        .emif_ddr0_byteenable      (local_mem[0].byteenable),
-        .emif_ddr0_debugaccess     (),
-        .kernel_ddr0_waitrequest   (kernel_mem[0].waitrequest),
-        .kernel_ddr0_readdata      (kernel_mem[0].readdata),
-        .kernel_ddr0_readdatavalid (kernel_mem[0].readdatavalid),
-        .kernel_ddr0_burstcount    (kernel_mem[0].burstcount),
-        .kernel_ddr0_writedata     (kernel_mem[0].writedata),
-        .kernel_ddr0_address       (kernel_mem[0].address),
-        .kernel_ddr0_write         (kernel_mem[0].write),
-        .kernel_ddr0_read          (kernel_mem[0].read),
-        .kernel_ddr0_byteenable    (kernel_mem[0].byteenable),
-    `endif //ASP_ENABLE_DDR4_BANK_0
-    `ifdef ASP_ENABLE_DDR4_BANK_1
-        .emif_ddr1_clk_clk         (local_mem[1].clk),
-        .emif_ddr1_waitrequest     (local_mem[1].waitrequest),
-        .emif_ddr1_readdata        (local_mem[1].readdata),
-        .emif_ddr1_readdatavalid   (local_mem[1].readdatavalid),
-        .emif_ddr1_burstcount      (local_mem[1].burstcount),
-        .emif_ddr1_writedata       (local_mem[1].writedata),
-        .emif_ddr1_write           (local_mem[1].write),
-        .emif_ddr1_read            (local_mem[1].read),
-        .emif_ddr1_byteenable      (local_mem[1].byteenable),
-        .emif_ddr1_address         ({local_mem[1].address, ddr4_byte_address_bits[1]}),
-        .emif_ddr1_debugaccess     (),
-        .kernel_ddr1_waitrequest   (kernel_mem[1].waitrequest),
-        .kernel_ddr1_readdata      (kernel_mem[1].readdata),
-        .kernel_ddr1_readdatavalid (kernel_mem[1].readdatavalid),
-        .kernel_ddr1_burstcount    (kernel_mem[1].burstcount),
-        .kernel_ddr1_writedata     (kernel_mem[1].writedata),
-        .kernel_ddr1_address       (kernel_mem[1].address),
-        .kernel_ddr1_write         (kernel_mem[1].write),
-        .kernel_ddr1_read          (kernel_mem[1].read),
-        .kernel_ddr1_byteenable    (kernel_mem[1].byteenable),
-    `endif //ASP_ENABLE_DDR4_BANK_1
-    `ifdef ASP_ENABLE_DDR4_BANK_2
-        .emif_ddr2_clk_clk         (local_mem[2].clk),
-        .emif_ddr2_waitrequest     (local_mem[2].waitrequest),
-        .emif_ddr2_readdata        (local_mem[2].readdata),
-        .emif_ddr2_readdatavalid   (local_mem[2].readdatavalid),
-        .emif_ddr2_burstcount      (local_mem[2].burstcount),
-        .emif_ddr2_writedata       (local_mem[2].writedata),
-        .emif_ddr2_write           (local_mem[2].write),
-        .emif_ddr2_read            (local_mem[2].read),
-        .emif_ddr2_byteenable      (local_mem[2].byteenable),
-        .emif_ddr2_address         ({local_mem[2].address, ddr4_byte_address_bits[2]}),
-        .emif_ddr2_debugaccess     (),
-        .kernel_ddr2_waitrequest   (kernel_mem[2].waitrequest),
-        .kernel_ddr2_readdata      (kernel_mem[2].readdata),
-        .kernel_ddr2_readdatavalid (kernel_mem[2].readdatavalid),
-        .kernel_ddr2_burstcount    (kernel_mem[2].burstcount),
-        .kernel_ddr2_writedata     (kernel_mem[2].writedata),
-        .kernel_ddr2_address       (kernel_mem[2].address),
-        .kernel_ddr2_write         (kernel_mem[2].write),
-        .kernel_ddr2_read          (kernel_mem[2].read),
-        .kernel_ddr2_byteenable    (kernel_mem[2].byteenable),
-    `endif //ASP_ENABLE_DDR4_BANK_2
-    `ifdef ASP_ENABLE_DDR4_BANK_3
-        .emif_ddr3_clk_clk         (local_mem[3].clk),
-        .emif_ddr3_waitrequest     (local_mem[3].waitrequest),
-        .emif_ddr3_readdata        (local_mem[3].readdata),
-        .emif_ddr3_readdatavalid   (local_mem[3].readdatavalid),
-        .emif_ddr3_burstcount      (local_mem[3].burstcount),
-        .emif_ddr3_writedata       (local_mem[3].writedata),
-        .emif_ddr3_write           (local_mem[3].write),
-        .emif_ddr3_read            (local_mem[3].read),
-        .emif_ddr3_byteenable      (local_mem[3].byteenable),
-        .emif_ddr3_address         ({local_mem[3].address, ddr4_byte_address_bits[3]}),
-        .emif_ddr3_debugaccess     (),
-        .kernel_ddr3_waitrequest   (kernel_mem[3].waitrequest),
-        .kernel_ddr3_readdata      (kernel_mem[3].readdata),
-        .kernel_ddr3_readdatavalid (kernel_mem[3].readdatavalid),
-        .kernel_ddr3_burstcount    (kernel_mem[3].burstcount),
-        .kernel_ddr3_writedata     (kernel_mem[3].writedata),
-        .kernel_ddr3_address       (kernel_mem[3].address),
-        .kernel_ddr3_write         (kernel_mem[3].write),
-        .kernel_ddr3_read          (kernel_mem[3].read),
-        .kernel_ddr3_byteenable    (kernel_mem[3].byteenable),
-    `endif //ASP_ENABLE_DDR4_BANK_3
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0_BANK_0
+        .emif_global_mem_0_bank_0_clk_clk         (local_mem0[0].clk),
+        .emif_global_mem_0_bank_0_waitrequest     (local_mem0[0].waitrequest),
+        .emif_global_mem_0_bank_0_readdata        (local_mem0[0].readdata),
+        .emif_global_mem_0_bank_0_readdatavalid   (local_mem0[0].readdatavalid),
+        .emif_global_mem_0_bank_0_burstcount      (local_mem0[0].burstcount),
+        .emif_global_mem_0_bank_0_writedata       (local_mem0[0].writedata),
+        .emif_global_mem_0_bank_0_address         ({local_mem0[0].address, global_mem0_byte_address_bits[0]}),
+        .emif_global_mem_0_bank_0_write           (local_mem0[0].write),
+        .emif_global_mem_0_bank_0_read            (local_mem0[0].read),
+        .emif_global_mem_0_bank_0_byteenable      (local_mem0[0].byteenable),
+        .emif_global_mem_0_bank_0_debugaccess     (),
+        .kernel_global_mem_0_bank_0_waitrequest   (kernel_mem0[0].waitrequest),
+        .kernel_global_mem_0_bank_0_readdata      (kernel_mem0[0].readdata),
+        .kernel_global_mem_0_bank_0_readdatavalid (kernel_mem0[0].readdatavalid),
+        .kernel_global_mem_0_bank_0_burstcount    (kernel_mem0[0].burstcount),
+        .kernel_global_mem_0_bank_0_writedata     (kernel_mem0[0].writedata),
+        .kernel_global_mem_0_bank_0_address       (kernel_mem0[0].address),
+        .kernel_global_mem_0_bank_0_write         (kernel_mem0[0].write),
+        .kernel_global_mem_0_bank_0_read          (kernel_mem0[0].read),
+        .kernel_global_mem_0_bank_0_byteenable    (kernel_mem0[0].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_0_BANK_0
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0_BANK_1
+        .emif_global_mem_0_bank_1_clk_clk         (local_mem0[1].clk),
+        .emif_global_mem_0_bank_1_waitrequest     (local_mem0[1].waitrequest),
+        .emif_global_mem_0_bank_1_readdata        (local_mem0[1].readdata),
+        .emif_global_mem_0_bank_1_readdatavalid   (local_mem0[1].readdatavalid),
+        .emif_global_mem_0_bank_1_burstcount      (local_mem0[1].burstcount),
+        .emif_global_mem_0_bank_1_writedata       (local_mem0[1].writedata),
+        .emif_global_mem_0_bank_1_write           (local_mem0[1].write),
+        .emif_global_mem_0_bank_1_read            (local_mem0[1].read),
+        .emif_global_mem_0_bank_1_byteenable      (local_mem0[1].byteenable),
+        .emif_global_mem_0_bank_1_address         ({local_mem0[1].address, global_mem0_byte_address_bits[1]}),
+        .emif_global_mem_0_bank_1_debugaccess     (),
+        .kernel_global_mem_0_bank_1_waitrequest   (kernel_mem0[1].waitrequest),
+        .kernel_global_mem_0_bank_1_readdata      (kernel_mem0[1].readdata),
+        .kernel_global_mem_0_bank_1_readdatavalid (kernel_mem0[1].readdatavalid),
+        .kernel_global_mem_0_bank_1_burstcount    (kernel_mem0[1].burstcount),
+        .kernel_global_mem_0_bank_1_writedata     (kernel_mem0[1].writedata),
+        .kernel_global_mem_0_bank_1_address       (kernel_mem0[1].address),
+        .kernel_global_mem_0_bank_1_write         (kernel_mem0[1].write),
+        .kernel_global_mem_0_bank_1_read          (kernel_mem0[1].read),
+        .kernel_global_mem_0_bank_1_byteenable    (kernel_mem0[1].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_0_BANK_1
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0_BANK_2
+        .emif_global_mem_0_bank_2_clk_clk         (local_mem0[2].clk),
+        .emif_global_mem_0_bank_2_waitrequest     (local_mem0[2].waitrequest),
+        .emif_global_mem_0_bank_2_readdata        (local_mem0[2].readdata),
+        .emif_global_mem_0_bank_2_readdatavalid   (local_mem0[2].readdatavalid),
+        .emif_global_mem_0_bank_2_burstcount      (local_mem0[2].burstcount),
+        .emif_global_mem_0_bank_2_writedata       (local_mem0[2].writedata),
+        .emif_global_mem_0_bank_2_write           (local_mem0[2].write),
+        .emif_global_mem_0_bank_2_read            (local_mem0[2].read),
+        .emif_global_mem_0_bank_2_byteenable      (local_mem0[2].byteenable),
+        .emif_global_mem_0_bank_2_address         ({local_mem0[2].address, global_mem0_byte_address_bits[2]}),
+        .emif_global_mem_0_bank_2_debugaccess     (),
+        .kernel_global_mem_0_bank_2_waitrequest   (kernel_mem0[2].waitrequest),
+        .kernel_global_mem_0_bank_2_readdata      (kernel_mem0[2].readdata),
+        .kernel_global_mem_0_bank_2_readdatavalid (kernel_mem0[2].readdatavalid),
+        .kernel_global_mem_0_bank_2_burstcount    (kernel_mem0[2].burstcount),
+        .kernel_global_mem_0_bank_2_writedata     (kernel_mem0[2].writedata),
+        .kernel_global_mem_0_bank_2_address       (kernel_mem0[2].address),
+        .kernel_global_mem_0_bank_2_write         (kernel_mem0[2].write),
+        .kernel_global_mem_0_bank_2_read          (kernel_mem0[2].read),
+        .kernel_global_mem_0_bank_2_byteenable    (kernel_mem0[2].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_0_BANK_2
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0_BANK_3
+        .emif_global_mem_0_bank_3_clk_clk         (local_mem0[3].clk),
+        .emif_global_mem_0_bank_3_waitrequest     (local_mem0[3].waitrequest),
+        .emif_global_mem_0_bank_3_readdata        (local_mem0[3].readdata),
+        .emif_global_mem_0_bank_3_readdatavalid   (local_mem0[3].readdatavalid),
+        .emif_global_mem_0_bank_3_burstcount      (local_mem0[3].burstcount),
+        .emif_global_mem_0_bank_3_writedata       (local_mem0[3].writedata),
+        .emif_global_mem_0_bank_3_write           (local_mem0[3].write),
+        .emif_global_mem_0_bank_3_read            (local_mem0[3].read),
+        .emif_global_mem_0_bank_3_byteenable      (local_mem0[3].byteenable),
+        .emif_global_mem_0_bank_3_address         ({local_mem0[3].address, global_mem0_byte_address_bits[3]}),
+        .emif_global_mem_0_bank_3_debugaccess     (),
+        .kernel_global_mem_0_bank_3_waitrequest   (kernel_mem0[3].waitrequest),
+        .kernel_global_mem_0_bank_3_readdata      (kernel_mem0[3].readdata),
+        .kernel_global_mem_0_bank_3_readdatavalid (kernel_mem0[3].readdatavalid),
+        .kernel_global_mem_0_bank_3_burstcount    (kernel_mem0[3].burstcount),
+        .kernel_global_mem_0_bank_3_writedata     (kernel_mem0[3].writedata),
+        .kernel_global_mem_0_bank_3_address       (kernel_mem0[3].address),
+        .kernel_global_mem_0_bank_3_write         (kernel_mem0[3].write),
+        .kernel_global_mem_0_bank_3_read          (kernel_mem0[3].read),
+        .kernel_global_mem_0_bank_3_byteenable    (kernel_mem0[3].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_0_BANK_3
+
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1_BANK_0
+        .emif_global_mem_1_bank_0_clk_clk         (local_mem1[0].clk),
+        .emif_global_mem_1_bank_0_waitrequest     (local_mem1[0].waitrequest),
+        .emif_global_mem_1_bank_0_readdata        (local_mem1[0].readdata),
+        .emif_global_mem_1_bank_0_readdatavalid   (local_mem1[0].readdatavalid),
+        .emif_global_mem_1_bank_0_burstcount      (local_mem1[0].burstcount),
+        .emif_global_mem_1_bank_0_writedata       (local_mem1[0].writedata),
+        .emif_global_mem_1_bank_0_address         ({local_mem1[0].address, global_mem1_byte_address_bits[0]}),
+        .emif_global_mem_1_bank_0_write           (local_mem1[0].write),
+        .emif_global_mem_1_bank_0_read            (local_mem1[0].read),
+        .emif_global_mem_1_bank_0_byteenable      (local_mem1[0].byteenable),
+        .emif_global_mem_1_bank_0_debugaccess     (),
+        .kernel_global_mem_1_bank_0_waitrequest   (kernel_mem1[0].waitrequest),
+        .kernel_global_mem_1_bank_0_readdata      (kernel_mem1[0].readdata),
+        .kernel_global_mem_1_bank_0_readdatavalid (kernel_mem1[0].readdatavalid),
+        .kernel_global_mem_1_bank_0_burstcount    (kernel_mem1[0].burstcount),
+        .kernel_global_mem_1_bank_0_writedata     (kernel_mem1[0].writedata),
+        .kernel_global_mem_1_bank_0_address       (kernel_mem1[0].address),
+        .kernel_global_mem_1_bank_0_write         (kernel_mem1[0].write),
+        .kernel_global_mem_1_bank_0_read          (kernel_mem1[0].read),
+        .kernel_global_mem_1_bank_0_byteenable    (kernel_mem1[0].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_1_BANK_0
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1_BANK_1
+        .emif_global_mem_1_bank_1_clk_clk         (local_mem1[1].clk),
+        .emif_global_mem_1_bank_1_waitrequest     (local_mem1[1].waitrequest),
+        .emif_global_mem_1_bank_1_readdata        (local_mem1[1].readdata),
+        .emif_global_mem_1_bank_1_readdatavalid   (local_mem1[1].readdatavalid),
+        .emif_global_mem_1_bank_1_burstcount      (local_mem1[1].burstcount),
+        .emif_global_mem_1_bank_1_writedata       (local_mem1[1].writedata),
+        .emif_global_mem_1_bank_1_write           (local_mem1[1].write),
+        .emif_global_mem_1_bank_1_read            (local_mem1[1].read),
+        .emif_global_mem_1_bank_1_byteenable      (local_mem1[1].byteenable),
+        .emif_global_mem_1_bank_1_address         ({local_mem1[1].address, global_mem1_byte_address_bits[1]}),
+        .emif_global_mem_1_bank_1_debugaccess     (),
+        .kernel_global_mem_1_bank_1_waitrequest   (kernel_mem1[1].waitrequest),
+        .kernel_global_mem_1_bank_1_readdata      (kernel_mem1[1].readdata),
+        .kernel_global_mem_1_bank_1_readdatavalid (kernel_mem1[1].readdatavalid),
+        .kernel_global_mem_1_bank_1_burstcount    (kernel_mem1[1].burstcount),
+        .kernel_global_mem_1_bank_1_writedata     (kernel_mem1[1].writedata),
+        .kernel_global_mem_1_bank_1_address       (kernel_mem1[1].address),
+        .kernel_global_mem_1_bank_1_write         (kernel_mem1[1].write),
+        .kernel_global_mem_1_bank_1_read          (kernel_mem1[1].read),
+        .kernel_global_mem_1_bank_1_byteenable    (kernel_mem1[1].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_1_BANK_1
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1_BANK_2
+        .emif_global_mem_1_bank_2_clk_clk         (local_mem1[2].clk),
+        .emif_global_mem_1_bank_2_waitrequest     (local_mem1[2].waitrequest),
+        .emif_global_mem_1_bank_2_readdata        (local_mem1[2].readdata),
+        .emif_global_mem_1_bank_2_readdatavalid   (local_mem1[2].readdatavalid),
+        .emif_global_mem_1_bank_2_burstcount      (local_mem1[2].burstcount),
+        .emif_global_mem_1_bank_2_writedata       (local_mem1[2].writedata),
+        .emif_global_mem_1_bank_2_write           (local_mem1[2].write),
+        .emif_global_mem_1_bank_2_read            (local_mem1[2].read),
+        .emif_global_mem_1_bank_2_byteenable      (local_mem1[2].byteenable),
+        .emif_global_mem_1_bank_2_address         ({local_mem1[2].address, global_mem1_byte_address_bits[2]}),
+        .emif_global_mem_1_bank_2_debugaccess     (),
+        .kernel_global_mem_1_bank_2_waitrequest   (kernel_mem1[2].waitrequest),
+        .kernel_global_mem_1_bank_2_readdata      (kernel_mem1[2].readdata),
+        .kernel_global_mem_1_bank_2_readdatavalid (kernel_mem1[2].readdatavalid),
+        .kernel_global_mem_1_bank_2_burstcount    (kernel_mem1[2].burstcount),
+        .kernel_global_mem_1_bank_2_writedata     (kernel_mem1[2].writedata),
+        .kernel_global_mem_1_bank_2_address       (kernel_mem1[2].address),
+        .kernel_global_mem_1_bank_2_write         (kernel_mem1[2].write),
+        .kernel_global_mem_1_bank_2_read          (kernel_mem1[2].read),
+        .kernel_global_mem_1_bank_2_byteenable    (kernel_mem1[2].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_1_BANK_2
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1_BANK_3
+        .emif_global_mem_1_bank_3_clk_clk         (local_mem1[3].clk),
+        .emif_global_mem_1_bank_3_waitrequest     (local_mem1[3].waitrequest),
+        .emif_global_mem_1_bank_3_readdata        (local_mem1[3].readdata),
+        .emif_global_mem_1_bank_3_readdatavalid   (local_mem1[3].readdatavalid),
+        .emif_global_mem_1_bank_3_burstcount      (local_mem1[3].burstcount),
+        .emif_global_mem_1_bank_3_writedata       (local_mem1[3].writedata),
+        .emif_global_mem_1_bank_3_write           (local_mem1[3].write),
+        .emif_global_mem_1_bank_3_read            (local_mem1[3].read),
+        .emif_global_mem_1_bank_3_byteenable      (local_mem1[3].byteenable),
+        .emif_global_mem_1_bank_3_address         ({local_mem1[3].address, global_mem1_byte_address_bits[3]}),
+        .emif_global_mem_1_bank_3_debugaccess     (),
+        .kernel_global_mem_1_bank_3_waitrequest   (kernel_mem1[3].waitrequest),
+        .kernel_global_mem_1_bank_3_readdata      (kernel_mem1[3].readdata),
+        .kernel_global_mem_1_bank_3_readdatavalid (kernel_mem1[3].readdatavalid),
+        .kernel_global_mem_1_bank_3_burstcount    (kernel_mem1[3].burstcount),
+        .kernel_global_mem_1_bank_3_writedata     (kernel_mem1[3].writedata),
+        .kernel_global_mem_1_bank_3_address       (kernel_mem1[3].address),
+        .kernel_global_mem_1_bank_3_write         (kernel_mem1[3].write),
+        .kernel_global_mem_1_bank_3_read          (kernel_mem1[3].read),
+        .kernel_global_mem_1_bank_3_byteenable    (kernel_mem1[3].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_1_BANK_3
+
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2_BANK_0
+        .emif_global_mem_2_bank_0_clk_clk         (local_mem2[0].clk),
+        .emif_global_mem_2_bank_0_waitrequest     (local_mem2[0].waitrequest),
+        .emif_global_mem_2_bank_0_readdata        (local_mem2[0].readdata),
+        .emif_global_mem_2_bank_0_readdatavalid   (local_mem2[0].readdatavalid),
+        .emif_global_mem_2_bank_0_burstcount      (local_mem2[0].burstcount),
+        .emif_global_mem_2_bank_0_writedata       (local_mem2[0].writedata),
+        .emif_global_mem_2_bank_0_address         ({local_mem2[0].address, global_mem2_byte_address_bits[0]}),
+        .emif_global_mem_2_bank_0_write           (local_mem2[0].write),
+        .emif_global_mem_2_bank_0_read            (local_mem2[0].read),
+        .emif_global_mem_2_bank_0_byteenable      (local_mem2[0].byteenable),
+        .emif_global_mem_2_bank_0_debugaccess     (),
+        .kernel_global_mem_2_bank_0_waitrequest   (kernel_mem2[0].waitrequest),
+        .kernel_global_mem_2_bank_0_readdata      (kernel_mem2[0].readdata),
+        .kernel_global_mem_2_bank_0_readdatavalid (kernel_mem2[0].readdatavalid),
+        .kernel_global_mem_2_bank_0_burstcount    (kernel_mem2[0].burstcount),
+        .kernel_global_mem_2_bank_0_writedata     (kernel_mem2[0].writedata),
+        .kernel_global_mem_2_bank_0_address       (kernel_mem2[0].address),
+        .kernel_global_mem_2_bank_0_write         (kernel_mem2[0].write),
+        .kernel_global_mem_2_bank_0_read          (kernel_mem2[0].read),
+        .kernel_global_mem_2_bank_0_byteenable    (kernel_mem2[0].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_2_BANK_0
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2_BANK_1
+        .emif_global_mem_2_bank_1_clk_clk         (local_mem2[1].clk),
+        .emif_global_mem_2_bank_1_waitrequest     (local_mem2[1].waitrequest),
+        .emif_global_mem_2_bank_1_readdata        (local_mem2[1].readdata),
+        .emif_global_mem_2_bank_1_readdatavalid   (local_mem2[1].readdatavalid),
+        .emif_global_mem_2_bank_1_burstcount      (local_mem2[1].burstcount),
+        .emif_global_mem_2_bank_1_writedata       (local_mem2[1].writedata),
+        .emif_global_mem_2_bank_1_write           (local_mem2[1].write),
+        .emif_global_mem_2_bank_1_read            (local_mem2[1].read),
+        .emif_global_mem_2_bank_1_byteenable      (local_mem2[1].byteenable),
+        .emif_global_mem_2_bank_1_address         ({local_mem2[1].address, global_mem2_byte_address_bits[1]}),
+        .emif_global_mem_2_bank_1_debugaccess     (),
+        .kernel_global_mem_2_bank_1_waitrequest   (kernel_mem2[1].waitrequest),
+        .kernel_global_mem_2_bank_1_readdata      (kernel_mem2[1].readdata),
+        .kernel_global_mem_2_bank_1_readdatavalid (kernel_mem2[1].readdatavalid),
+        .kernel_global_mem_2_bank_1_burstcount    (kernel_mem2[1].burstcount),
+        .kernel_global_mem_2_bank_1_writedata     (kernel_mem2[1].writedata),
+        .kernel_global_mem_2_bank_1_address       (kernel_mem2[1].address),
+        .kernel_global_mem_2_bank_1_write         (kernel_mem2[1].write),
+        .kernel_global_mem_2_bank_1_read          (kernel_mem2[1].read),
+        .kernel_global_mem_2_bank_1_byteenable    (kernel_mem2[1].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_2_BANK_1
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2_BANK_2
+        .emif_global_mem_2_bank_2_clk_clk         (local_mem2[2].clk),
+        .emif_global_mem_2_bank_2_waitrequest     (local_mem2[2].waitrequest),
+        .emif_global_mem_2_bank_2_readdata        (local_mem2[2].readdata),
+        .emif_global_mem_2_bank_2_readdatavalid   (local_mem2[2].readdatavalid),
+        .emif_global_mem_2_bank_2_burstcount      (local_mem2[2].burstcount),
+        .emif_global_mem_2_bank_2_writedata       (local_mem2[2].writedata),
+        .emif_global_mem_2_bank_2_write           (local_mem2[2].write),
+        .emif_global_mem_2_bank_2_read            (local_mem2[2].read),
+        .emif_global_mem_2_bank_2_byteenable      (local_mem2[2].byteenable),
+        .emif_global_mem_2_bank_2_address         ({local_mem2[2].address, global_mem2_byte_address_bits[2]}),
+        .emif_global_mem_2_bank_2_debugaccess     (),
+        .kernel_global_mem_2_bank_2_waitrequest   (kernel_mem2[2].waitrequest),
+        .kernel_global_mem_2_bank_2_readdata      (kernel_mem2[2].readdata),
+        .kernel_global_mem_2_bank_2_readdatavalid (kernel_mem2[2].readdatavalid),
+        .kernel_global_mem_2_bank_2_burstcount    (kernel_mem2[2].burstcount),
+        .kernel_global_mem_2_bank_2_writedata     (kernel_mem2[2].writedata),
+        .kernel_global_mem_2_bank_2_address       (kernel_mem2[2].address),
+        .kernel_global_mem_2_bank_2_write         (kernel_mem2[2].write),
+        .kernel_global_mem_2_bank_2_read          (kernel_mem2[2].read),
+        .kernel_global_mem_2_bank_2_byteenable    (kernel_mem2[2].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_2_BANK_2
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2_BANK_3
+        .emif_global_mem_2_bank_3_clk_clk         (local_mem2[3].clk),
+        .emif_global_mem_2_bank_3_waitrequest     (local_mem2[3].waitrequest),
+        .emif_global_mem_2_bank_3_readdata        (local_mem2[3].readdata),
+        .emif_global_mem_2_bank_3_readdatavalid   (local_mem2[3].readdatavalid),
+        .emif_global_mem_2_bank_3_burstcount      (local_mem2[3].burstcount),
+        .emif_global_mem_2_bank_3_writedata       (local_mem2[3].writedata),
+        .emif_global_mem_2_bank_3_write           (local_mem2[3].write),
+        .emif_global_mem_2_bank_3_read            (local_mem2[3].read),
+        .emif_global_mem_2_bank_3_byteenable      (local_mem2[3].byteenable),
+        .emif_global_mem_2_bank_3_address         ({local_mem2[3].address, global_mem2_byte_address_bits[3]}),
+        .emif_global_mem_2_bank_3_debugaccess     (),
+        .kernel_global_mem_2_bank_3_waitrequest   (kernel_mem2[3].waitrequest),
+        .kernel_global_mem_2_bank_3_readdata      (kernel_mem2[3].readdata),
+        .kernel_global_mem_2_bank_3_readdatavalid (kernel_mem2[3].readdatavalid),
+        .kernel_global_mem_2_bank_3_burstcount    (kernel_mem2[3].burstcount),
+        .kernel_global_mem_2_bank_3_writedata     (kernel_mem2[3].writedata),
+        .kernel_global_mem_2_bank_3_address       (kernel_mem2[3].address),
+        .kernel_global_mem_2_bank_3_write         (kernel_mem2[3].write),
+        .kernel_global_mem_2_bank_3_read          (kernel_mem2[3].read),
+        .kernel_global_mem_2_bank_3_byteenable    (kernel_mem2[3].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_2_BANK_3
+
+        `ifdef ASP_ENABLE_GLOBAL_MEM_3_BANK_0
+        .emif_global_mem_0_bank_3_clk_clk         (local_mem3[0].clk),
+        .emif_global_mem_0_bank_3_waitrequest     (local_mem3[0].waitrequest),
+        .emif_global_mem_0_bank_3_readdata        (local_mem3[0].readdata),
+        .emif_global_mem_0_bank_3_readdatavalid   (local_mem3[0].readdatavalid),
+        .emif_global_mem_0_bank_3_burstcount      (local_mem3[0].burstcount),
+        .emif_global_mem_0_bank_3_writedata       (local_mem3[0].writedata),
+        .emif_global_mem_0_bank_3_address         ({local_mem3[0].address, global_mem3_byte_address_bits[0]}),
+        .emif_global_mem_0_bank_3_write           (local_mem3[0].write),
+        .emif_global_mem_0_bank_3_read            (local_mem3[0].read),
+        .emif_global_mem_0_bank_3_byteenable      (local_mem3[0].byteenable),
+        .emif_global_mem_0_bank_3_debugaccess     (),
+        .kernel_global_mem_3_bank_0_waitrequest   (kernel_mem3[0].waitrequest),
+        .kernel_global_mem_3_bank_0_readdata      (kernel_mem3[0].readdata),
+        .kernel_global_mem_3_bank_0_readdatavalid (kernel_mem3[0].readdatavalid),
+        .kernel_global_mem_3_bank_0_burstcount    (kernel_mem3[0].burstcount),
+        .kernel_global_mem_3_bank_0_writedata     (kernel_mem3[0].writedata),
+        .kernel_global_mem_3_bank_0_address       (kernel_mem3[0].address),
+        .kernel_global_mem_3_bank_0_write         (kernel_mem3[0].write),
+        .kernel_global_mem_3_bank_0_read          (kernel_mem3[0].read),
+        .kernel_global_mem_3_bank_0_byteenable    (kernel_mem3[0].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_3_BANK_0
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3_BANK_1
+        .emif_global_mem_3_bank_1_clk_clk         (local_mem3[1].clk),
+        .emif_global_mem_3_bank_1_waitrequest     (local_mem3[1].waitrequest),
+        .emif_global_mem_3_bank_1_readdata        (local_mem3[1].readdata),
+        .emif_global_mem_3_bank_1_readdatavalid   (local_mem3[1].readdatavalid),
+        .emif_global_mem_3_bank_1_burstcount      (local_mem3[1].burstcount),
+        .emif_global_mem_3_bank_1_writedata       (local_mem3[1].writedata),
+        .emif_global_mem_3_bank_1_write           (local_mem3[1].write),
+        .emif_global_mem_3_bank_1_read            (local_mem3[1].read),
+        .emif_global_mem_3_bank_1_byteenable      (local_mem3[1].byteenable),
+        .emif_global_mem_3_bank_1_address         ({local_mem3[1].address, global_mem3_byte_address_bits[1]}),
+        .emif_global_mem_3_bank_1_debugaccess     (),
+        .kernel_global_mem_3_bank_1_waitrequest   (kernel_mem3[1].waitrequest),
+        .kernel_global_mem_3_bank_1_readdata      (kernel_mem3[1].readdata),
+        .kernel_global_mem_3_bank_1_readdatavalid (kernel_mem3[1].readdatavalid),
+        .kernel_global_mem_3_bank_1_burstcount    (kernel_mem3[1].burstcount),
+        .kernel_global_mem_3_bank_1_writedata     (kernel_mem3[1].writedata),
+        .kernel_global_mem_3_bank_1_address       (kernel_mem3[1].address),
+        .kernel_global_mem_3_bank_1_write         (kernel_mem3[1].write),
+        .kernel_global_mem_3_bank_1_read          (kernel_mem3[1].read),
+        .kernel_global_mem_3_bank_1_byteenable    (kernel_mem3[1].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_3_BANK_1
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3_BANK_2
+        .emif_global_mem_3_bank_2_clk_clk         (local_mem3[2].clk),
+        .emif_global_mem_3_bank_2_waitrequest     (local_mem3[2].waitrequest),
+        .emif_global_mem_3_bank_2_readdata        (local_mem3[2].readdata),
+        .emif_global_mem_3_bank_2_readdatavalid   (local_mem3[2].readdatavalid),
+        .emif_global_mem_3_bank_2_burstcount      (local_mem3[2].burstcount),
+        .emif_global_mem_3_bank_2_writedata       (local_mem3[2].writedata),
+        .emif_global_mem_3_bank_2_write           (local_mem3[2].write),
+        .emif_global_mem_3_bank_2_read            (local_mem3[2].read),
+        .emif_global_mem_3_bank_2_byteenable      (local_mem3[2].byteenable),
+        .emif_global_mem_3_bank_2_address         ({local_mem3[2].address, global_mem3_byte_address_bits[2]}),
+        .emif_global_mem_3_bank_2_debugaccess     (),
+        .kernel_global_mem_3_bank_2_waitrequest   (kernel_mem3[2].waitrequest),
+        .kernel_global_mem_3_bank_2_readdata      (kernel_mem3[2].readdata),
+        .kernel_global_mem_3_bank_2_readdatavalid (kernel_mem3[2].readdatavalid),
+        .kernel_global_mem_3_bank_2_burstcount    (kernel_mem3[2].burstcount),
+        .kernel_global_mem_3_bank_2_writedata     (kernel_mem3[2].writedata),
+        .kernel_global_mem_3_bank_2_address       (kernel_mem3[2].address),
+        .kernel_global_mem_3_bank_2_write         (kernel_mem3[2].write),
+        .kernel_global_mem_3_bank_2_read          (kernel_mem3[2].read),
+        .kernel_global_mem_3_bank_2_byteenable    (kernel_mem3[2].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_3_BANK_2
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3_BANK_3
+        .emif_global_mem_3_bank_3_clk_clk         (local_mem3[3].clk),
+        .emif_global_mem_3_bank_3_waitrequest     (local_mem3[3].waitrequest),
+        .emif_global_mem_3_bank_3_readdata        (local_mem3[3].readdata),
+        .emif_global_mem_3_bank_3_readdatavalid   (local_mem3[3].readdatavalid),
+        .emif_global_mem_3_bank_3_burstcount      (local_mem3[3].burstcount),
+        .emif_global_mem_3_bank_3_writedata       (local_mem3[3].writedata),
+        .emif_global_mem_3_bank_3_write           (local_mem3[3].write),
+        .emif_global_mem_3_bank_3_read            (local_mem3[3].read),
+        .emif_global_mem_3_bank_3_byteenable      (local_mem3[3].byteenable),
+        .emif_global_mem_3_bank_3_address         ({local_mem3[3].address, global_mem3_byte_address_bits[3]}),
+        .emif_global_mem_3_bank_3_debugaccess     (),
+        .kernel_global_mem_3_bank_3_waitrequest   (kernel_mem3[3].waitrequest),
+        .kernel_global_mem_3_bank_3_readdata      (kernel_mem3[3].readdata),
+        .kernel_global_mem_3_bank_3_readdatavalid (kernel_mem3[3].readdatavalid),
+        .kernel_global_mem_3_bank_3_burstcount    (kernel_mem3[3].burstcount),
+        .kernel_global_mem_3_bank_3_writedata     (kernel_mem3[3].writedata),
+        .kernel_global_mem_3_bank_3_address       (kernel_mem3[3].address),
+        .kernel_global_mem_3_bank_3_write         (kernel_mem3[3].write),
+        .kernel_global_mem_3_bank_3_read          (kernel_mem3[3].read),
+        .kernel_global_mem_3_bank_3_byteenable    (kernel_mem3[3].byteenable),
+    `endif //ASP_ENABLE_GLOBAL_MEM_3_BANK_3
 
     .host_kernel_irq_irq                 (/*this port isn't used for kernel IRQ*/),
     
@@ -207,6 +511,7 @@ board board_inst (
     .dma_csr_mmio64_read                    (mmio64_if_dmac.read),
     .dma_csr_mmio64_byteenable              (mmio64_if_dmac.byteenable),
     .dma_csr_mmio64_debugaccess             ()
+
     `ifdef INCLUDE_IO_PIPES
         //mmio64 signals for DMA controller
        ,.uoe_csr_mmio64_waitrequest             (uoe_csr_avmm.waitrequest),
@@ -328,9 +633,12 @@ always_comb begin
 end
 
 genvar lm;
+
+// Global Memory 0
+`ifdef ASP_ENABLE_GLOBAL_MEM_0
 generate
-    for (lm=0;lm<ASP_LOCALMEM_NUM_CHANNELS;lm++) begin : local_mem_stuff
-        assign local_mem[lm].user = 'b0;
+    for (lm=0;lm<ASP_GLOBAL_MEM_0_NUM_CHANNELS;lm++) begin : local_mem_stuff0
+        assign local_mem0[lm].user = 'b0;
         
         `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
             // local-memory/DDR write-ack tracking
@@ -338,26 +646,129 @@ generate
                 //AVMM from kernel-system to mux/emif
                 .kernel_avmm_clk        (kernel_clk),
                 .kernel_avmm_reset      (kernel_clk_reset),
-                .kernel_avmm_waitreq    (kernel_mem[lm].waitrequest),
-                .kernel_avmm_wr         (kernel_mem[lm].write),
-                .kernel_avmm_burstcnt   (kernel_mem[lm].burstcount),
-                .kernel_avmm_address    (kernel_mem[lm].address[ASP_LOCALMEM_AVMM_ADDR_WIDTH-1 : KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET]),
-                .kernel_avmm_wr_ack     (kernel_mem[lm].writeack),
+                .kernel_avmm_waitreq    (kernel_mem0[lm].waitrequest),
+                .kernel_avmm_wr         (kernel_mem0[lm].write),
+                .kernel_avmm_burstcnt   (kernel_mem0[lm].burstcount),
+                .kernel_avmm_address    (kernel_mem0[lm].address[ASP_GLOBAL_MEM_0_AVMM_ADDR_WIDTH-1 : KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET]),
+                .kernel_avmm_wr_ack     (kernel_mem0[lm].writeack),
                 
                 //AVMM channel up to PIM (AVMM-AXI conversion with write-ack)
-                .emif_avmm_clk          (local_mem[lm].clk),
-                .emif_avmm_reset        (!local_mem[lm].reset_n),
-                .emif_avmm_waitreq      (local_mem[lm].waitrequest),
-                .emif_avmm_wr           (local_mem[lm].write),
-                .emif_avmm_burstcnt     (local_mem[lm].burstcount),
-                .emif_avmm_address      (local_mem[lm].address),
-                .emif_avmm_wr_ack       (local_mem[lm].writeresponsevalid)
+                .emif_avmm_clk          (local_mem0[lm].clk),
+                .emif_avmm_reset        (!local_mem0[lm].reset_n),
+                .emif_avmm_waitreq      (local_mem0[lm].waitrequest),
+                .emif_avmm_wr           (local_mem0[lm].write),
+                .emif_avmm_burstcnt     (local_mem0[lm].burstcount),
+                .emif_avmm_address      (local_mem0[lm].address),
+                .emif_avmm_wr_ack       (local_mem0[lm].writeresponsevalid)
             );
         `else // not USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
-            assign kernel_mem[lm].writeack = 'b0;
+            assign kernel_mem0[lm].writeack = 'b0;
         `endif
     end //for
 endgenerate
+`endif
+
+// Global Memory 1
+`ifdef ASP_ENABLE_GLOBAL_MEM_1
+generate
+    for (lm=0;lm<ASP_GLOBAL_MEM_1_NUM_CHANNELS;lm++) begin : local_mem_stuff1
+        assign local_mem1[lm].user = 'b0;
+        
+        `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            // local-memory/DDR write-ack tracking
+            avmm_wr_ack_gen avmm_wr_ack_gen_inst (
+                //AVMM from kernel-system to mux/emif
+                .kernel_avmm_clk        (kernel_clk),
+                .kernel_avmm_reset      (kernel_clk_reset),
+                .kernel_avmm_waitreq    (kernel_mem1[lm].waitrequest),
+                .kernel_avmm_wr         (kernel_mem1[lm].write),
+                .kernel_avmm_burstcnt   (kernel_mem1[lm].burstcount),
+                .kernel_avmm_address    (kernel_mem1[lm].address[ASP_GLOBAL_MEM_1_AVMM_ADDR_WIDTH-1 : KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET]),
+                .kernel_avmm_wr_ack     (kernel_mem1[lm].writeack),
+                
+                //AVMM channel up to PIM (AVMM-AXI conversion with write-ack)
+                .emif_avmm_clk          (local_mem1[lm].clk),
+                .emif_avmm_reset        (!local_mem1[lm].reset_n),
+                .emif_avmm_waitreq      (local_mem1[lm].waitrequest),
+                .emif_avmm_wr           (local_mem1[lm].write),
+                .emif_avmm_burstcnt     (local_mem1[lm].burstcount),
+                .emif_avmm_address      (local_mem1[lm].address),
+                .emif_avmm_wr_ack       (local_mem1[lm].writeresponsevalid)
+            );
+        `else // not USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            assign kernel_mem1[lm].writeack = 'b0;
+        `endif
+    end //for
+endgenerate
+`endif
+
+// Global Memory 2
+`ifdef ASP_ENABLE_GLOBAL_MEM_2
+generate
+    for (lm=0;lm<ASP_GLOBAL_MEM_2_NUM_CHANNELS;lm++) begin : local_mem_stuff2
+        assign local_mem2[lm].user = 'b0;
+        
+        `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            // local-memory/DDR write-ack tracking
+            avmm_wr_ack_gen avmm_wr_ack_gen_inst (
+                //AVMM from kernel-system to mux/emif
+                .kernel_avmm_clk        (kernel_clk),
+                .kernel_avmm_reset      (kernel_clk_reset),
+                .kernel_avmm_waitreq    (kernel_mem2[lm].waitrequest),
+                .kernel_avmm_wr         (kernel_mem2[lm].write),
+                .kernel_avmm_burstcnt   (kernel_mem2[lm].burstcount),
+                .kernel_avmm_address    (kernel_mem2[lm].address[ASP_GLOBAL_MEM_2_AVMM_ADDR_WIDTH-1 : KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET]),
+                .kernel_avmm_wr_ack     (kernel_mem2[lm].writeack),
+                
+                //AVMM channel up to PIM (AVMM-AXI conversion with write-ack)
+                .emif_avmm_clk          (local_mem2[lm].clk),
+                .emif_avmm_reset        (!local_mem2[lm].reset_n),
+                .emif_avmm_waitreq      (local_mem2[lm].waitrequest),
+                .emif_avmm_wr           (local_mem2[lm].write),
+                .emif_avmm_burstcnt     (local_mem2[lm].burstcount),
+                .emif_avmm_address      (local_mem2[lm].address),
+                .emif_avmm_wr_ack       (local_mem2[lm].writeresponsevalid)
+            );
+        `else // not USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            assign kernel_mem2[lm].writeack = 'b0;
+        `endif
+    end //for
+endgenerate
+`endif
+
+// Global Memory 3
+`ifdef ASP_ENABLE_GLOBAL_MEM_3
+generate
+    for (lm=0;lm<ASP_GLOBAL_MEM_3_NUM_CHANNELS;lm++) begin : local_mem_stuff3
+        assign local_mem3[lm].user = 'b0;
+        
+        `ifdef USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            // local-memory/DDR write-ack tracking
+            avmm_wr_ack_gen avmm_wr_ack_gen_inst (
+                //AVMM from kernel-system to mux/emif
+                .kernel_avmm_clk        (kernel_clk),
+                .kernel_avmm_reset      (kernel_clk_reset),
+                .kernel_avmm_waitreq    (kernel_mem3[lm].waitrequest),
+                .kernel_avmm_wr         (kernel_mem3[lm].write),
+                .kernel_avmm_burstcnt   (kernel_mem3[lm].burstcount),
+                .kernel_avmm_address    (kernel_mem3[lm].address[ASP_GLOBAL_MEM_3_AVMM_ADDR_WIDTH-1 : KERNELSYSTEM_MEMORY_WORD_BYTE_OFFSET]),
+                .kernel_avmm_wr_ack     (kernel_mem3[lm].writeack),
+                
+                //AVMM channel up to PIM (AVMM-AXI conversion with write-ack)
+                .emif_avmm_clk          (local_mem3[lm].clk),
+                .emif_avmm_reset        (!local_mem3[lm].reset_n),
+                .emif_avmm_waitreq      (local_mem3[lm].waitrequest),
+                .emif_avmm_wr           (local_mem3[lm].write),
+                .emif_avmm_burstcnt     (local_mem3[lm].burstcount),
+                .emif_avmm_address      (local_mem3[lm].address),
+                .emif_avmm_wr_ack       (local_mem3[lm].writeresponsevalid)
+            );
+        `else // not USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES
+            assign kernel_mem3[lm].writeack = 'b0;
+        `endif
+    end //for
+endgenerate
+`endif
 
 //set unused interrupt lines to 0
 genvar i;
