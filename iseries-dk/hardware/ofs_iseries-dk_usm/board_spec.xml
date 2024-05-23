@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<board version="2024.0" name="ofs_iseries-dk_usm">
+<board version="24.1" name="ofs_iseries-dk_usm">
 
   <compile name="afu_flat" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
