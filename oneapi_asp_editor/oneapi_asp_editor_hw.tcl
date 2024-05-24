@@ -184,7 +184,7 @@ proc generate_package {} {
   set num_io_channels               [get_parameter_value NUM_IO_CHANNELS]
 
   set host_mem_data_width           [get_parameter_value HOST_MEM_DATA_WIDTH]
-  set host_mem_address_width        [get_parameter value HOST_MEM_ADDRESS_WIDTH]
+  set host_mem_address_width        [get_parameter_value HOST_MEM_ADDRESS_WIDTH]
   set host_mem_max_burst            [get_parameter_value HOST_MEM_MAX_BURST] 
   set log2_host_mem_max_burst       [expr int((log($host_mem_max_burst) / log(2)) + 1)]
   set host_mem_pipeline_stages      [get_parameter_value HOST_MEM_PIPELINE_STAGES]
@@ -979,12 +979,14 @@ namespace eval oneapi_asp_editor::global_mem {
 
   # Adding static parameters 
   add_display_item "Snoop port enable" SNOOP_PORT_ENABLE PARAMETER
-  set mem_static_param [list [list NUM_GLOBAL_MEM_SYSTEMS "Number of Global Memory Systems" "Global Memory (On-board)" INTEGER 1 "" "" "1:$GLOBAL_MEM_MAX" \
-                                   "" "" true true "" "" \
-                                   true "" "The number of global memory systems the oneAPI kernel connects to. The global memory system usually consists of the on-board external memory connected to FPGA. If your board has multiple memory banks of same type & size, these can be grouped as a single global memory system."] \
-                             [list SNOOP_PORT_ENABLE "Snoop port enable" "Global Memory (On-board)" BOOLEAN false "" "" "" "" "" true true "" "" false "" "Enable the snoop port on the memory bank divider. Useful for performance on Stratix 10 but degrades fMAX on Agilex based platforms."] \
-
-                       ]
+  set mem_static_param [list \
+    [list NUM_GLOBAL_MEM_SYSTEMS "Number of Global Memory Systems" "Global Memory (On-board)" INTEGER 1 "" "" "1:$GLOBAL_MEM_MAX" \
+      "" "" true true "" "" \
+      true "" "The number of global memory systems the oneAPI kernel connects to. The global memory system usually consists of the on-board external memory connected to FPGA. If your board has multiple memory banks of same type & size, these can be grouped as a single global memory system." \
+    ] \
+    [list SNOOP_PORT_ENABLE "Snoop port enable" "Global Memory (On-board)" BOOLEAN false "" "" "" "" "" true true "" "" false "" "Enable the snoop port on the memory bank divider. Useful for performance on Stratix 10 but degrades fMAX on Agilex based platforms." \
+    ] \
+  ]
 
   ::add_param $::parameter_properties $mem_static_param
 
@@ -999,44 +1001,57 @@ namespace eval oneapi_asp_editor::global_mem {
     }
     lappend mem_dynamic_param \
       [list MEM_${i}_NAME "Name" "Global Memory $i" STRING "device$i" "" "" "" \
-      "" "" false true "" "" \
-      "" "" "Name of the global memory system. By default this will be device0, device1 and so forth."] \
+        "" "" false true "" "" \
+        "" "" "Name of the global memory system. By default this will be device0, device1 and so forth." \
+      ] \
       [list MEM_${i}_MAX_BANDWIDTH "Maximum theoretical bandwidth" "Global Memory $i" INTEGER 76800 "" "" "" \
-      "" "MB/s" "" "" "" "" \
-      "" "" "This value should represent the maximum available theoretical bandwidth of all memory banks of the global memory system combined expressed in Megabyte per second."] \
+        "" "MB/s" "" "" "" "" \
+        "" "" "This value should represent the maximum available theoretical bandwidth of all memory banks of the global memory system combined expressed in Megabyte per second." \
+      ] \
       [list MEM_${i}_NUM_BANKS "Number of memory banks" "Global Memory $i" INTEGER 4 "" "" $MEM_BANK_MAX \
-      "" "" "" "" "" "" \
-      "" "" "This value specifies the number of memory banks that form the global memory system. On typical cards there are 1, 2 or 4 banks of DDR memory."] \
+        "" "" "" "" "" "" \
+        "" "" "This value specifies the number of memory banks that form the global memory system. On typical cards there are 1, 2 or 4 banks of DDR memory." \ 
+      ] \
       [list MEM_${i}_DATA_WIDTH "Data width" "Global Memory $i" INTEGER 512 "" "" "" \
-      "" "Bits" "" "" "" "" \
-      "" "" "The data width is usually the data bus width of the FIMs representation of the global memory system. It typically is 512 bits wide. Many paths within the ASP are by default 512 bits, so if the data bus width of the global memory system deviates from the 512 bits width converters will be introduced."] \
+        "" "Bits" "" "" "" "" \
+        "" "" "The data width is usually the data bus width of the FIMs representation of the global memory system. It typically is 512 bits wide. Many paths within the ASP are by default 512 bits, so if the data bus width of the global memory system deviates from the 512 bits width converters will be introduced." \
+      ] \
       [list MEM_${i}_BANK_ADDR_WIDTH "Address width per bank" "Global Memory $i" INTEGER 32 "" "" "" \
-      "" "Bits" "" "" "" "" \
-      "" "" "Address Width for a single memory bank in your global memory (i.e. if your global memory has four memory banks of 8GB each, the address width to be entered in this field will be 32 for the single 8GB bank)"] \
+        "" "Bits" "" "" "" "" \
+        "" "" "Address Width for a single memory bank in your global memory (i.e. if your global memory has four memory banks of 8GB each, the address width to be entered in this field will be 32 for the single 8GB bank)" \
+      ] \
       [list MEM_${i}_MAX_BURST "Burst size" "Global Memory $i" INTEGER 16 "" "" "" \
-      "" "Words" "" "" "" "" \
-      "" "" "This value is the maximum supported burst size for the global memory system. It typically is 16 words and most of the internal ASP logic will use 16 word bursts."] \
+        "" "Words" "" "" "" "" \
+        "" "" "This value is the maximum supported burst size for the global memory system. It typically is 16 words and most of the internal ASP logic will use 16 word bursts." \
+      ] \
       [list MEM_${i}_KERNEL_TO_CCB_PIPELINE_STAGES "Pipeline stages (kernel to clock crosser)" "Global Memory $i" INTEGER 2 "" "" "" \
-      "" "" "" "" "" "" \
-      true "" ""] \
+        "" "" "" "" "" "" \
+        true "" "The amount of additional pipeline stages between the kernel and the clock crosser towards the global memory subsystem. Additional pipeline stages can help with timing closure rate and improve fMAX." \
+      ] \
       [list MEM_${i}_WAITREQUEST_ALLOWANCE "Waitrequest allowance" "Global Memory $i" INTEGER 6 true "" "" \
-      "" "" false true "" "" \
-      false "" "TBD"] \
+        "" "" false true "" "" \
+        false "" "The waitrequest allowance value allows for extra buffering of data in the clock crosser during an ongoing transaction. This value is automatically calculated by the amount of pipeline stages between the kernel and the clock crosser." \
+      ] \
       [list MEM_${i}_MBD_TO_MEMORY_PIPE_STAGES "Pipeline stages (MBD to global memory)" "Global Memory $i" INTEGER 0 "" "" "" \
-      "" "" "" "" "" "" \
-      true "" "TBD"] \
+        "" "" "" "" "" "" \
+        true "" "This parameter introduces additional pipeline stages on the host to global memory path between the Memory Bank Divider IP and the clock crosser towards the global memory subsystem. Adding pipeline stages here can help with the timing closure rate and fMAX performance." \
+      ] \
       [list MEM_${i}_BSP_AVMM_WRITE_ACK "AVMM write acknowledge" "Global Memory $i" BOOLEAN true "" "" "" \
-      "" "" "" "" "" "" \
-      "" "" "TBD"] \
+        "" "" "" "" "" "" \
+        "" "" "For some memory controller and configurations in the FIM AVMM write acknowledge generation is used in the ASP logic to signal back to the write requestor that the write was acknowledged downstream." \
+      ] \
       [list MEM_${i}_CONFIG_ADDR "Configuration address" "Global Memory $i" STRING $configuration_address "" "" "" \
-      "" ""  false true "" "" \
-      "" "" "TBD"] \
+        "" ""  false true "" "" \
+        "" "" "With multiple global memory systems each one has its own configuration address to connect to the kernel interface IP. The connection is made between the dedicated Memory Bank Divider within the global memory system and the kernel interface IP to allow for different memory bank configurations, e.g. bank interleaving. This value is automatically generated by the oneAPI ASP Editor." \
+      ] \
       [list MEM_${i}_INTERLEAVED_BYTES "Interleaved bytes" "Global Memory $i" INTEGER 4096 true "" "" \
-      "" "Bytes" false true "" "" \
-      true "" "TBD"] \
+        "" "Bytes" false true "" "" \
+        true "" "The number of bytes that are interleaved between separate memory banks. This value is automatically computed based on the number of memory banks and the maximum burst length." \
+      ] \
       [list MEM_${i}_LATENCY "Latency (for oneAPI compiler)" "Global Memory $i" INTEGER 1500 "" "" "" \
-      "" "" "" "" "" "" \
-      "" "" "TBD"] 
+        "" "" "" "" "" "" \
+        "" "" "The latency of the global memory system in clock cycles" \
+      ] \     
   }
 
   ::add_param $::parameter_properties $mem_dynamic_param
@@ -1089,7 +1104,7 @@ namespace eval oneapi_asp_editor::usm {
   # Adding static parameters 
   set usm_static_param [list [list ENABLE_USM "Unified Shared Memory Interface" "Unified Shared Memory (USM)" BOOLEAN true "" "" "" \
                                    "" "" true true "" "" \
-                                   true "" "TBD: Enable kernel to Unified Shared Memory (USM) interface, Refer to TBD for more information on USM." \
+                                   true "" "Enable kernel to Unified Shared Memory (USM) interface." \
                              ] \
 		       ]
 
@@ -1100,43 +1115,43 @@ namespace eval oneapi_asp_editor::usm {
   set usm_dynamic_param [list \
     [list HOST_MEM_NAME "Name" "USM Memory 0" STRING "host" "" "" "" \
       "" "" false true "" "" \
-      false "" "TBD" \
+      false "" "The name of the USM memory interface that the oneAPI kernel will connect to. This will be automatically generated and have the prefix 'host'." \
     ] \
     [list HOST_MEM_MAX_BANDWIDTH "Maximum theoretical bandwidth" "USM Memory 0" INTEGER 30000 "" "" "" \
       "" "MB/s" true true "" "" \
-      false "" "TBD" \ 
+      false "" "The USM memory interface maximum theoretical bandwidth in Megabytes per second. This value will be used for estimating throughput." \ 
     ] \
     [list HOST_MEM_NUM_MEM_BANKS "Number of interfaces" "USM Memory 0" INTEGER 1 $MEM_BANK_MAX "" "" \
       "" "" false true "" "" \
-      false "" "TBD" \ 
+      false "" "The number of interfaces for the USM memory system. Currently there is only 1 supported, but in future there can be enhancements to allow for multiple USM interfaces to increase throughput." \ 
     ] \
     [list HOST_MEM_DATA_WIDTH "Data width" "USM Memory 0" INTEGER 512 "" "" "" \
       "" "Bits" true true "" "" \
-      false "" "TBD" \ 
+      false "" "The data width of the USM memory interface. Typically this is set to 512 bits." \ 
     ] \
     [list HOST_MEM_ADDRESS_WIDTH "Address width" "USM Memory 0" INTEGER 48 "" "" "" \
       "" "Bits" true true "" "" \
-      false "" "TBD" \ 
+      false "" "The address width of the USM memory interface." \ 
     ] \
     [list HOST_MEM_MAX_BURST "Burst size" "USM Memory 0" INTEGER 16 "" "" "" \
       "" "Words" true true "" "" \
-      false "" "TBD" \ 
+      false "" "The maximum burst size for the USM memory interface. Typically this is set to 16 words." \ 
     ] \
     [list HOST_MEM_PIPELINE_STAGES "Pipeline stages" "USM Memory 0" INTEGER 3 "" "" "" \
       "" "" "" "" "" "" \
-      true "" "TBD" \
+      true "" "The additional amount of pipeline stages between the oneAPI kernel and the USM memory system clock crosser. Increasing this value can lead to better timing closure rate and increased fMAX performance but comes with additional logic resource cost." \
     ] \
     [list HOST_MEM_WAITREQUEST_ALLOWANCE "Waitrequest allowance" "USM Memory 0" INTEGER 7 true "" "" \
       "" "" false true "" "" \
-      false "" "TBD" \
+      false "" "This value will be automatically calculated by taking the pipeline stages between the oneAPI kernel and the USM memory system clock crosser into account." \
     ] \
     [list HOST_MEM_INTERLEAVED_BYTES "Interleaved bytes" "USM Memory 0" INTEGER 1024 "" "" "" \
       "" "" false true "" "" \
-      false "" "TBD" \
+      false "" "The number of bytes that will be used to interleave between multiple USM memory interfaces. Currently there is only support for one memory interface, so this value is fixed." \
     ] \
     [list HOST_MEM_LATENCY "Latency (for oneAPI compiler)" "USM Memory 0" INTEGER 800 "" "" "" \
       "" "" true true "" "" \
-      false "" "TBD" \ 
+      false "" "The latency for the USM memory path in clock cycles." \ 
     ] 
   ]
   ::add_param $::parameter_properties $usm_dynamic_param
@@ -1251,12 +1266,12 @@ namespace eval oneapi_asp_editor::project {
   add_display_item "Supported ASP flows" ASP_FLOWS PARAMETER
   set DEVICE_FAMILY_RANGE {"Agilex 7" "Stratix 10"}
   lappend project_dynamic_param \
-    [list DEVICE_FAMILY "Device family" "ASP settings" STRING "Agilex 7" "" "" $DEVICE_FAMILY_RANGE "" "" true true "" "" true "" "TDB"] \
-    [list PLATFORM_NAME "Platform name" "ASP settings" STRING "n6001" "" "" "" "" "" true true "" "" false "" "TBD"] \
-    [list BOARD_VARIANT_NAME "Board variant name" "ASP settings" STRING "ofs_n6001_usm_iopipes" "" "" "" "" "" true true "" "" false "" "TBD"] \
-    [list QUARTUS_VERSION "Quartus version" "ASP settings" STRING "23.4" "" "" "" "" "" true true "" "" false "" "TBD"] \
-    [list ONEAPI_VERSION "OneAPI compiler version" "ASP settings" STRING "2024.0" "" "" "" "" "" true true "" "" false "" "TBD"] \
-    [list ASP_FLOWS "Supported ASP flows" "ASP settings" STRING "afu_flat afu_flat_kclk" "" "" "" "" "" false false "" "" false "" "TBD"] \
+    [list DEVICE_FAMILY "Device family" "ASP settings" STRING "Agilex 7" "" "" $DEVICE_FAMILY_RANGE "" "" true true "" "" true "" "FPGA Device family"] \
+    [list PLATFORM_NAME "Platform name" "ASP settings" STRING "n6001" "" "" "" "" "" true true "" "" false "" "The name of the platform to be targeted. This value will result in the generated ASP name to be used."] \
+    [list BOARD_VARIANT_NAME "Board variant name" "ASP settings" STRING "ofs_n6001_usm_iopipes" "" "" "" "" "" true true "" "" false "" "The name of the board variant that will be created with the current settings."] \
+    [list QUARTUS_VERSION "Quartus version" "ASP settings" STRING "23.4" "" "" "" "" "" true true "" "" false "" "The Quartus version that will be used when targeting this ASP."] \
+    [list ONEAPI_VERSION "OneAPI compiler version" "ASP settings" STRING "2024.0" "" "" "" "" "" true true "" "" false "" "The oneAPI compiler version that will be used when targeting this ASP."] \
+    [list ASP_FLOWS "Supported ASP flows" "ASP settings" STRING "afu_flat afu_flat_kclk" "" "" "" "" "" false false "" "" false "" "The supported ASP flows. This value is currently fixed and cannot be changed from its default afu_flat and afu_flat_kclk flow"] \
 
   add_display_item "Project Settings" "Quartus project settings" group
   set_display_item_property "Quartus project settings" VISIBLE true
@@ -1264,9 +1279,9 @@ namespace eval oneapi_asp_editor::project {
   add_display_item "Revision name" QUARTUS_REVISION_NAME PARAMETER
   add_display_item "Device model file" DEVICE_MODEL PARAMETER
   lappend project_dynamic_param \
-    [list QUARTUS_PROJECT_NAME "Quartus project name" "Quartus project settings" STRING "ofs_top" "" "" "" "" "" true true "" "" false "" "TBD"] \
-    [list QUARTUS_REVISION_NAME "Quartus revision name" "Quartus project settings" STRING "ofs_pr_afu" "" "" "" "" "" true true "" "" false "" "TBD"] \
-    [list DEVICE_MODEL "Device model" "Quartus project settings" STRING "agfb014r24a3e3vr0_dm.xml" "" "" "" "" "" true true "" "" false "" "TBD"] 
+    [list QUARTUS_PROJECT_NAME "Quartus project name" "Quartus project settings" STRING "ofs_top" "" "" "" "" "" true true "" "" false "" "The name of the Quartus project. This should remain ofs_top as it is used by default by the FIM compile."] \
+    [list QUARTUS_REVISION_NAME "Quartus revision name" "Quartus project settings" STRING "ofs_pr_afu" "" "" "" "" "" true true "" "" false "" "The name of the Quartus project revision. This should remain ofs_pr_afu as it is used by default by the FIM out of tree AFU compile."] \
+    [list DEVICE_MODEL "Device model" "Quartus project settings" STRING "agfb014r24a3e3vr0_dm.xml" "" "" "" "" "" true true "" "" false "" "The device model string name. This are usually supplied and shipped with the oneAPI compiler."] 
 
   add_display_item "Project Settings" "FPGA resources for kernel region" group
   set_display_item_property "FPGA resources for kernel region" VISIBLE true
@@ -1275,10 +1290,10 @@ namespace eval oneapi_asp_editor::project {
   add_display_item "DSPs" RESOURCES_DSPS PARAMETER
   add_display_item "M20Ks" RESOURCES_RAMS PARAMETER
   lappend project_dynamic_param \
-    [list RESOURCES_ALMS "ALMs" "FPGA resources for kernel region" INTEGER 351138 "" "" "" "" "" true true "" "" true "" "TBD"] \
-    [list RESOURCES_FFS "FFs" "FPGA resources for kernel region" INTEGER 1269922 "" "" "" "" "" true true "" "" true "TBD"] \
-    [list RESOURCES_DSPS "DSPs" "FPGA resources for kernel region" INTEGER 2284 "" "" "" "" "" true true "" "" true "TBD"] \
-    [list RESOURCES_RAMS "M20Ks" "FPGA resources for kernel region" INTEGER 4198 "" "" "" "" "" true true "" "" true "TBD"] 
+    [list RESOURCES_ALMS "ALMs" "FPGA resources for kernel region" INTEGER 351138 "" "" "" "" "" true true "" "" true "" "The number of ALMs available for the oneAPI kernel."] \
+    [list RESOURCES_FFS "FFs" "FPGA resources for kernel region" INTEGER 1269922 "" "" "" "" "" true true "" "" true "The number of registers available for the oneAPI kernel."] \
+    [list RESOURCES_DSPS "DSPs" "FPGA resources for kernel region" INTEGER 2284 "" "" "" "" "" true true "" "" true "The number of DSPs available for the oneAPI kernel."] \
+    [list RESOURCES_RAMS "M20Ks" "FPGA resources for kernel region" INTEGER 4198 "" "" "" "" "" true true "" "" true "The number of M20K blocks available for the oneAPI kernel."] 
 
   add_display_item "Project Settings" "Kernel CRA" group
   set_display_item_property "Kernel CRA" VISIBLE true
@@ -1286,9 +1301,9 @@ namespace eval oneapi_asp_editor::project {
   add_display_item "Kernel CRA pipeline stages" KERNEL_CRA_PIPELINE_STAGES PARAMETER
   add_display_item "Kernel CRA waitrequest allowance" KERNEL_CRA_WAITREQUEST_ALLOWANCE PARAMETER
   lappend project_dynamic_param \
-    [list KERNEL_CRA_DATA_WIDTH "Kernel CRA data width" "Kernel CRA" INTEGER 64 "" "" "" "" "" false true "" "" false "" "TBD"] \
-    [list KERNEL_CRA_PIPELINE_STAGES "Kernel CRA pipeline stages" "Kernel CRA" INTEGER 2 "" "" "" "" "" true true "" "" true "" "TBD"] \
-    [list KERNEL_CRA_WAITREQUEST_ALLOWANCE "Kernel CRA waitrequest allowance" "Kernel CRA" INTEGER 5 true "" "" "" "" true true "" "" false "" "TBD"] 
+    [list KERNEL_CRA_DATA_WIDTH "Kernel CRA data width" "Kernel CRA" INTEGER 64 "" "" "" "" "" false true "" "" false "" "The data width of the kernel CRA interface. This value should be left at 64 as currently the kernel interface IP only supports 64 bit."] \
+    [list KERNEL_CRA_PIPELINE_STAGES "Kernel CRA pipeline stages" "Kernel CRA" INTEGER 2 "" "" "" "" "" true true "" "" true "" "The number of pipeline stages between the kernel interface IP and the oneAPI kernel configuration interface. Adding pipeline stages here can increase timing closure rate and improve fMAX performance."] \
+    [list KERNEL_CRA_WAITREQUEST_ALLOWANCE "Kernel CRA waitrequest allowance" "Kernel CRA" INTEGER 5 true "" "" "" "" true true "" "" false "" "The waitrequest allowance value is automatically calculated based on the amount of pipeline stages between the kernel interface IP and the oneAPI kernel configuration interface."] 
 
   add_display_item "Project Settings" "Kernel clock settings" group
   set_display_item_property "Kernel clock settings" VISIBLE true
@@ -1297,8 +1312,8 @@ namespace eval oneapi_asp_editor::project {
   set CLOCK_FREQUENCY_LOW_RANGE {"auto-400" "auto-600"}
   set CLOCK_FREQUENCY_HIGH_RANGE {"auto-800" "auto-1200"}
   lappend project_dynamic_param \
-    [list CLOCK_FREQUENCY_LOW "Range for low clock" "Kernel clock settings" STRING "auto-600" true "" $CLOCK_FREQUENCY_LOW_RANGE "" "" true true "" "" false "" "TBD"] \
-    [list CLOCK_FREQUENCY_HIGH "Range for high clock" "Kernel clock settings" STRING "auto-1200" true "" $CLOCK_FREQUENCY_HIGH_RANGE "" "" true true "" "" false "" "TBD"]
+    [list CLOCK_FREQUENCY_LOW "Range for low clock" "Kernel clock settings" STRING "auto-600" true "" $CLOCK_FREQUENCY_LOW_RANGE "" "" true true "" "" false "" "The clock range for the oneAPI kernel frequency. Typically this is up to 400MHz for Stratix 10 based ASPs and 600MHz for Agilex based ASPs."] \
+    [list CLOCK_FREQUENCY_HIGH "Range for high clock" "Kernel clock settings" STRING "auto-1200" true "" $CLOCK_FREQUENCY_HIGH_RANGE "" "" true true "" "" false "" "The clock range for the oneAPI kernel frequency for double pumped memories. This is double the kernel clock frequency and is typically up to 800MHz for Stratix 10 based ASPs and 1200 MHz for Agilex based ASPs."]
 
   ::add_param $::parameter_properties $project_dynamic_param
 
