@@ -216,13 +216,26 @@ module ofs_plat_afu
     afu afu_inst
       (
         .host_mem_if(host_mem_to_afu),
-        .mmio64_if(mmio64_to_afu),
-        .local_mem(local_mem_to_afu),
+        .mmio64_if(mmio64_to_afu)
+
+	`ifdef ASP_ENABLE_GLOBAL_MEM_0
+          ,.local_mem0(local_mem_to_afu)
+        `endif
+	`ifdef ASP_ENABLE_GLOBAL_MEM_1
+          ,.local_mem1(local_mem_to_afu)
+        `endif
+	`ifdef ASP_ENABLE_GLOBAL_MEM_2
+          ,.local_mem2(local_mem_to_afu)
+        `endif
+	`ifdef ASP_ENABLE_GLOBAL_MEM_3
+          ,.local_mem3(local_mem_to_afu)
+        `endif
+
         `ifdef INCLUDE_IO_PIPES
-            .hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1]),
+          ,.hssi_pipes(plat_ifc.hssi.channels[0:IO_PIPES_NUM_CHAN-1])
         `endif
        
-        .pClk(pclk_asp),
+        ,.pClk(pclk_asp),
         .pClk_reset(pclk_asp_reset),
 
         .uClk_usr(plat_ifc.clocks.uClk_usr.clk),

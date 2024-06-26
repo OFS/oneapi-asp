@@ -14,10 +14,11 @@
     //`define ASP_ENABLE_HOSTMEM_CH_2 1
     //`define ASP_ENABLE_HOSTMEM_CH_3 1
 
-    `define ASP_ENABLE_DDR4_BANK_0 1
-    `define ASP_ENABLE_DDR4_BANK_1 1
-    `define ASP_ENABLE_DDR4_BANK_2 1
-    `define ASP_ENABLE_DDR4_BANK_3 1
+    `define ASP_ENABLE_GLOBAL_MEM_0
+    `define ASP_ENABLE_GLOBAL_MEM_0_BANK_0 1
+    `define ASP_ENABLE_GLOBAL_MEM_0_BANK_1 1
+    `define ASP_ENABLE_GLOBAL_MEM_0_BANK_2 1
+    `define ASP_ENABLE_GLOBAL_MEM_0_BANK_3 1
     
     //DMA-support
     `define INCLUDE_ASP_DMA 1

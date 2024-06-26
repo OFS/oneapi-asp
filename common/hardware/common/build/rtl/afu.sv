@@ -16,8 +16,19 @@ import ofs_asp_pkg::*;
     ofs_plat_avalon_mem_if.to_source mmio64_if,
 
     // Local memory interface.
-    ofs_plat_avalon_mem_if.to_slave local_mem[ASP_LOCALMEM_NUM_CHANNELS],
-    
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0
+      ofs_plat_avalon_mem_if.to_slave local_mem0[ASP_GLOBAL_MEM_0_NUM_CHANNELS],
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1
+      ofs_plat_avalon_mem_if.to_slave local_mem1[ASP_GLOBAL_MEM_1_NUM_CHANNELS],
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+      ofs_plat_avalon_mem_if.to_slave local_mem2[ASP_GLOBAL_MEM_2_NUM_CHANNELS],
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3
+      ofs_plat_avalon_mem_if.to_slave local_mem3[ASP_GLOBAL_MEM_3_NUM_CHANNELS],
+    `endif
+
     `ifdef INCLUDE_IO_PIPES
         // Ethernet
         ofs_plat_hssi_channel_if hssi_pipes[IO_PIPES_NUM_CHAN],
@@ -45,7 +56,19 @@ assign clk   = pClk;
 
 //local wires to connect between asp_logic and kernel_wrapper - kernel control and memory-interface
 kernel_control_intf kernel_control();
-kernel_mem_intf kernel_mem[ASP_LOCALMEM_NUM_CHANNELS]();
+    
+`ifdef ASP_ENABLE_GLOBAL_MEM_0
+kernel_mem_intf kernel_mem0[ASP_GLOBAL_MEM_0_NUM_CHANNELS]();
+`endif
+`ifdef ASP_ENABLE_GLOBAL_MEM_1
+kernel_mem_intf kernel_mem1[ASP_GLOBAL_MEM_1_NUM_CHANNELS]();
+`endif
+`ifdef ASP_ENABLE_GLOBAL_MEM_2
+kernel_mem_intf kernel_mem2[ASP_GLOBAL_MEM_2_NUM_CHANNELS]();
+`endif
+`ifdef ASP_ENABLE_GLOBAL_MEM_3
+kernel_mem_intf kernel_mem3[ASP_GLOBAL_MEM_3_NUM_CHANNELS]();
+`endif
 
 // The width of the Avalon-MM user field is narrower on the AFU side
 // of VTP, since VTP uses a bit to flag VTP page table traffic.
@@ -181,14 +204,37 @@ asp_logic asp_logic_inst (
     .kernel_clk             ( uClk_usrDiv2 ),
     .kernel_clk_reset       ( uClk_usrDiv2_reset ),
     .host_mem_if            ( host_mem_va_if_dma ),
-    .mmio64_if              ( mmio64_if_shim ),
+    .mmio64_if              ( mmio64_if_shim )
     `ifdef INCLUDE_IO_PIPES
-        .uoe_csr_avmm,
+      ,.uoe_csr_avmm
     `endif
-    .local_mem,
-    
-    .kernel_control,
-    .kernel_mem
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0
+      ,.local_mem0 
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1
+      ,.local_mem1 
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+      ,.local_mem2 
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3
+      ,.local_mem3 
+    `endif
+
+    ,.kernel_control
+
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0
+      ,.kernel_mem0(kernel_mem0)
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1
+      ,.kernel_mem1(kernel_mem1)
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+      ,.kernel_mem2(kernel_mem2)
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3
+      ,.kernel_mem3(kernel_mem3)
+    `endif
 );
 
 kernel_wrapper kernel_wrapper_inst (
@@ -196,15 +242,28 @@ kernel_wrapper kernel_wrapper_inst (
     .clk2x      (uClk_usr),
     .reset_n    (!uClk_usrDiv2_reset),
     
-    .kernel_control,
-    .kernel_mem
+    .kernel_control
+
+    `ifdef ASP_ENABLE_GLOBAL_MEM_0
+      ,.kernel_mem0
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_1
+      ,.kernel_mem1
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_2
+      ,.kernel_mem2
+    `endif
+    `ifdef ASP_ENABLE_GLOBAL_MEM_3
+      ,.kernel_mem3
+    `endif
+
     `ifdef INCLUDE_USM_SUPPORT
-        , .kernel_svm (kernel_svm_kclk)
+      ,.kernel_svm (kernel_svm_kclk)
     `endif
 
     `ifdef INCLUDE_IO_PIPES
-        ,.udp_avst_from_kernel,
-         .udp_avst_to_kernel
+      ,.udp_avst_from_kernel
+      ,.udp_avst_to_kernel
     `endif
 );
 

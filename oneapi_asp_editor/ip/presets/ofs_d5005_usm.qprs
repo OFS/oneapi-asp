@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ip>
+ <presets version="12.1">
+  <preset
+     name="ofs_d5005_usm"
+     kind="oneapi_asp_editor"
+     version="All"
+     description=""
+     board="default"
+     preset_category="">
+   <parameter name="DEVICE_FAMILY" value="Stratix 10" />
+   <parameter name="DEVICE_MODEL" value="1SX280HN2F43E2VG_dm.xml" />
+   <parameter name="PLATFORM_NAME" value="d5005" />
+   <parameter name="BOARD_VARIANT_NAME" value="ofs_d5005_usm" />
+   <parameter name="QUARTUS_PROJECT_NAME" value="d5005" />
+   <parameter name="QUARTUS_REVISION_NAME" value="iofs_pr_afu" />
+   <parameter name="QUARTUS_VERSION" value="23.4" />
+   <parameter name="ONEAPI_VERSION" value="2024.0" />
+   <parameter name="ASP_FLOWS" value="afu_flat afu_flat_kclk" />
+
+   <parameter name="AFU_ID_H" value="BB664B904F0346E6" />
+   <parameter name="AFU_ID_L" value="BC04DB601B45B75D" />
+
+   <parameter name="ENABLE_USM" value="true" />
+   <parameter name="NUM_IO_CHANNELS" value="0" />
+   <parameter name="SNOOP_PORT_ENABLE" value="true" />
+   <parameter name="NUM_DMA_CHANNELS" value="1" />
+
+   <parameter name="NUM_GLOBAL_MEM_SYSTEMS" value="1" />
+   <parameter name="MEM_0_NAME" value="device0" />
+   <parameter name="MEM_0_MAX_BANDWIDTH" value="76800" />
+   <parameter name="MEM_0_NUM_BANKS" value="4" />
+   <parameter name="MEM_0_BANK_ADDR_WIDTH" value="33" />
+   <parameter name="MEM_0_DATA_WIDTH" value="512" /> 
+   <parameter name="MEM_0_MAX_BURST" value="16" />
+   <parameter name="MEM_0_KERNEL_TO_CCB_PIPELINE_STAGES" value="2" />
+   <parameter name="MEM_0_MBD_TO_MEMORY_PIPE_STAGES" value="3" />
+   <parameter name="MEM_0_BSP_AVMM_WRITE_ACK" value="false" />
+   <parameter name="MEM_0_CONFIG_ADDR" value="0x018" />
+   <parameter name="MEM_0_INTERLEAVED_BYTES" value="4096" />
+   <parameter name="MEM_0_LATENCY" value="1500" />
+
+   <parameter name="HOST_MEM_NAME" value="host" />
+   <parameter name="HOST_MEM_MAX_BANDWIDTH" value="30000" />
+   <parameter name="HOST_MEM_ADDRESS_WIDTH" value="48" />
+   <parameter name="HOST_MEM_DATA_WIDTH" value="512" />
+   <parameter name="HOST_MEM_MAX_BURST" value="16" />
+   <parameter name="HOST_MEM_PIPELINE_STAGES" value="3" />
+   <parameter name="HOST_MEM_INTERLEAVED_BYTES" value="1024" />
+   <parameter name="HOST_MEM_LATENCY" value="800" />
+
+   <parameter name="KERNEL_CRA_DATA_WIDTH" value="64" />
+   <parameter name="KERNEL_CRA_PIPELINE_STAGES" value="2" />
+
+   <parameter name="RESOURCES_ALMS" value="297140" />
+   <parameter name="RESOURCES_DSPS" value="1779" />
+   <parameter name="RESOURCES_RAMS" value="3737" />
+   <parameter name="RESOURCES_FFS" value="1182643" />
+  </preset>
+ </presets>
+</ip>

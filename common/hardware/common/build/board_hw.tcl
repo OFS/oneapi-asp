@@ -28,46 +28,149 @@ add_parameter IOPIPE_SUPPORT BOOLEAN $p_IOPIPE_SUPPORT
 set_parameter_property IOPIPE_SUPPORT DEFAULT_VALUE $p_IOPIPE_SUPPORT
 set_parameter_property IOPIPE_SUPPORT DISPLAY_NAME "IO Pipe Support"
 set_parameter_property IOPIPE_SUPPORT AFFECTS_ELABORATION true
- 
-add_parameter NUMBER_OF_MEMORY_BANKS INTEGER $p_NUMBER_OF_MEMORY_BANKS
-set_parameter_property NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_NUMBER_OF_MEMORY_BANKS
-set_parameter_property NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Memory Banks"
-set_parameter_property NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
+
+add_parameter NUMBER_OF_GLOBAL_MEMORY_SYSTEMS INTEGER $p_NUMBER_OF_GLOBAL_MEMORY_SYSTEMS
+set_parameter_property NUMBER_OF_GLOBAL_MEMORY_SYSTEMS DEFAULT_VALUE $p_NUMBER_OF_GLOBAL_MEMORY_SYSTEMS
+set_parameter_property NUMBER_OF_GLOBAL_MEMORY_SYSTEMS DISPLAY_NAME "Number of Global Memory Systems"
+set_parameter_property NUMBER_OF_GLOBAL_MEMORY_SYSTEMS AFFECTS_ELABORATION true
+
+if { $p_NUMBER_OF_GLOBAL_MEMORY_SYSTEMS > 0 } {
+  add_parameter MEM_0_NUMBER_OF_MEMORY_BANKS INTEGER $p_MEM_0_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_0_NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_MEM_0_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_0_NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Global Memory 0 Banks"
+  set_parameter_property MEM_0_NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
+
+  add_parameter MEM_0_MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEM_0_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_0_MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEM_0_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_0_MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Global Memory 0 Memory Bank Address Width"
+  set_parameter_property MEM_0_MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
+
+  add_parameter MEM_0_DATA_WIDTH INTEGER $p_MEM_0_DATA_WIDTH
+  set_parameter_property MEM_0_DATA_WIDTH DEFAULT_VALUE $p_MEM_0_DATA_WIDTH
+  set_parameter_property MEM_0_DATA_WIDTH DISPLAY_NAME "Global Memory 0 Data Width"
+  set_parameter_property MEM_0_DATA_WIDTH AFFECTS_ELABORATION true
+
+  add_parameter MEM_0_MAX_BURST_SIZE INTEGER $p_MEM_0_MAX_BURST_SIZE
+  set_parameter_property MEM_0_MAX_BURST_SIZE DEFAULT_VALUE $p_MEM_0_MAX_BURST_SIZE
+  set_parameter_property MEM_0_MAX_BURST_SIZE DISPLAY_NAME "Global Memory 0 Maximum Burst Size"
+  set_parameter_property MEM_0_MAX_BURST_SIZE AFFECTS_ELABORATION true
+
+  add_parameter MEM_0_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER $p_MEM_0_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_0_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE $p_MEM_0_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_0_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Global Memory 0 Kernel to global memory waitrequest allowance"
+  set_parameter_property MEM_0_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
+  
+  add_parameter MEM_0_MBD_TO_MEMORY_PIPE_STAGES INTEGER $p_MEM_0_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_0_MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE $p_MEM_0_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_0_MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "Global Memory 0 MBD to Memory Pipeline Stages"
+  set_parameter_property MEM_0_MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
+}
+
+if { $p_NUMBER_OF_GLOBAL_MEMORY_SYSTEMS > 1 } {
+  add_parameter MEM_1_NUMBER_OF_MEMORY_BANKS INTEGER $p_MEM_1_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_1_NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_MEM_1_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_1_NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Global Memory 1 Banks"
+  set_parameter_property MEM_1_NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
+
+  add_parameter MEM_1_MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEM_1_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_1_MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEM_1_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_1_MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Global Memory 1 Memory Bank Address Width"
+  set_parameter_property MEM_1_MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
+  
+  add_parameter MEM_1_DATA_WIDTH INTEGER $p_MEM_1_DATA_WIDTH
+  set_parameter_property MEM_1_DATA_WIDTH DEFAULT_VALUE $p_MEM_1_DATA_WIDTH
+  set_parameter_property MEM_1_DATA_WIDTH DISPLAY_NAME "Global Memory 1 Data Width"
+  set_parameter_property MEM_1_DATA_WIDTH AFFECTS_ELABORATION true
+
+  add_parameter MEM_1_MAX_BURST_SIZE INTEGER $p_MEM_1_MAX_BURST_SIZE
+  set_parameter_property MEM_1_MAX_BURST_SIZE DEFAULT_VALUE $p_MEM_1_MAX_BURST_SIZE
+  set_parameter_property MEM_1_MAX_BURST_SIZE DISPLAY_NAME "Global Memory 1 Maximum Burst Size"
+  set_parameter_property MEM_1_MAX_BURST_SIZE AFFECTS_ELABORATION true
+
+  add_parameter MEM_1_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER $p_MEM_1_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_1_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE $p_MEM_1_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_1_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Global Memory 1 Kernel to global memory waitrequest allowance"
+  set_parameter_property MEM_1_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
+
+  add_parameter MEM_1_MBD_TO_MEMORY_PIPE_STAGES INTEGER $p_MEM_1_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_1_MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE $p_MEM_1_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_1_MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "Global Memory 1 MBD to Memory Pipeline Stages"
+  set_parameter_property MEM_1_MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
+}
+
+if { $p_NUMBER_OF_GLOBAL_MEMORY_SYSTEMS > 2 } {
+  add_parameter MEM_2_NUMBER_OF_MEMORY_BANKS INTEGER $p_MEM_2_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_2_NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_MEM_2_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_2_NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Global Memory 2 Banks"
+  set_parameter_property MEM_2_NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
+  
+  add_parameter MEM_2_MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEM_2_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_2_MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEM_2_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_2_MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Global Memory 2 Memory Bank Address Width"
+  set_parameter_property MEM_2_MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
+  
+  add_parameter MEM_2_DATA_WIDTH INTEGER $p_MEM_2_DATA_WIDTH
+  set_parameter_property MEM_2_DATA_WIDTH DEFAULT_VALUE $p_MEM_2_DATA_WIDTH
+  set_parameter_property MEM_2_DATA_WIDTH DISPLAY_NAME "Global Memory 2 Data Width"
+  set_parameter_property MEM_2_DATA_WIDTH AFFECTS_ELABORATION true
+
+  add_parameter MEM_2_MAX_BURST_SIZE INTEGER $p_MEM_2_MAX_BURST_SIZE
+  set_parameter_property MEM_2_MAX_BURST_SIZE DEFAULT_VALUE $p_MEM_2_MAX_BURST_SIZE
+  set_parameter_property MEM_2_MAX_BURST_SIZE DISPLAY_NAME "Global Memory 2 Maximum Burst Size"
+  set_parameter_property MEM_2_MAX_BURST_SIZE AFFECTS_ELABORATION true
+
+  add_parameter MEM_2_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER $p_MEM_2_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_2_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE $p_MEM_2_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_2_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Global Memory 2 Kernel to global memory waitrequest allowance"
+  set_parameter_property MEM_2_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
+
+  add_parameter MEM_2_MBD_TO_MEMORY_PIPE_STAGES INTEGER $p_MEM_2_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_2_MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE $p_MEM_2_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_2_MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "Global Memory 2 MBD to Memory Pipeline Stages"
+  set_parameter_property MEM_2_MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
+}
+
+if { $p_NUMBER_OF_GLOBAL_MEMORY_SYSTEMS > 3 } {
+  add_parameter MEM_3_NUMBER_OF_MEMORY_BANKS INTEGER $p_MEM_3_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_3_NUMBER_OF_MEMORY_BANKS DEFAULT_VALUE $p_MEM_3_NUMBER_OF_MEMORY_BANKS
+  set_parameter_property MEM_3_NUMBER_OF_MEMORY_BANKS DISPLAY_NAME "Number of Global Memory 3 Banks"
+  set_parameter_property MEM_3_NUMBER_OF_MEMORY_BANKS AFFECTS_ELABORATION true
+
+  add_parameter MEM_3_MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEM_3_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_3_MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEM_3_MEMORY_BANK_ADDRESS_WIDTH
+  set_parameter_property MEM_3_MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Global Memory 3 Memory Bank Address Width"
+  set_parameter_property MEM_3_MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
+  
+  add_parameter MEM_3_DATA_WIDTH INTEGER $p_MEM_3_DATA_WIDTH
+  set_parameter_property MEM_3_DATA_WIDTH DEFAULT_VALUE $p_MEM_3_DATA_WIDTH
+  set_parameter_property MEM_3_DATA_WIDTH DISPLAY_NAME "Global Memory 3 Data Width"
+  set_parameter_property MEM_3_DATA_WIDTH AFFECTS_ELABORATION true
+
+  add_parameter MEM_3_MAX_BURST_SIZE INTEGER $p_MEM_3_MAX_BURST_SIZE
+  set_parameter_property MEM_3_MAX_BURST_SIZE DEFAULT_VALUE $p_MEM_3_MAX_BURST_SIZE
+  set_parameter_property MEM_3_MAX_BURST_SIZE DISPLAY_NAME "Global Memory 3 Maximum Burst Size"
+  set_parameter_property MEM_3_MAX_BURST_SIZE AFFECTS_ELABORATION true
+
+  add_parameter MEM_3_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER $p_MEM_3_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_3_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE $p_MEM_3_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
+  set_parameter_property MEM_3_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Global Memory 3 Kernel to global memory waitrequest allowance"
+  set_parameter_property MEM_3_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
+
+  add_parameter MEM_3_MBD_TO_MEMORY_PIPE_STAGES INTEGER $p_MEM_3_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_3_MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE $p_MEM_3_MBD_TO_MEMORY_PIPE_STAGES
+  set_parameter_property MEM_3_MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "Global Memory 3 MBD to Memory Pipeline Stages"
+  set_parameter_property MEM_3_MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
+}
 
 add_parameter NUMBER_OF_DMA_CHANNELS INTEGER $p_NUMBER_OF_DMA_CHANNELS
 set_parameter_property NUMBER_OF_DMA_CHANNELS DEFAULT_VALUE $p_NUMBER_OF_DMA_CHANNELS
 set_parameter_property NUMBER_OF_DMA_CHANNELS DISPLAY_NAME "Number of DMA Channels"
 set_parameter_property NUMBER_OF_DMA_CHANNELS AFFECTS_ELABORATION true
 
-add_parameter MEMORY_BANK_ADDRESS_WIDTH INTEGER $p_MEMORY_BANK_ADDRESS_WIDTH
-set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DEFAULT_VALUE $p_MEMORY_BANK_ADDRESS_WIDTH
-set_parameter_property MEMORY_BANK_ADDRESS_WIDTH DISPLAY_NAME "Memory Bank Address Width"
-set_parameter_property MEMORY_BANK_ADDRESS_WIDTH AFFECTS_ELABORATION true
-
-add_parameter DATA_WIDTH INTEGER $p_DATA_WIDTH
-set_parameter_property DATA_WIDTH DEFAULT_VALUE $p_DATA_WIDTH
-set_parameter_property DATA_WIDTH DISPLAY_NAME "Data Width"
-set_parameter_property DATA_WIDTH AFFECTS_ELABORATION true
-
-add_parameter MAX_BURST_SIZE INTEGER $p_MAX_BURST_SIZE
-set_parameter_property MAX_BURST_SIZE DEFAULT_VALUE $p_MAX_BURST_SIZE
-set_parameter_property MAX_BURST_SIZE DISPLAY_NAME "Maximum Burst Size"
-set_parameter_property MAX_BURST_SIZE AFFECTS_ELABORATION true
-
-add_parameter KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE INTEGER $p_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
-set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DEFAULT_VALUE $p_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE
-set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE DISPLAY_NAME "Kernel to global memory waitrequest allowance"
-set_parameter_property KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE AFFECTS_ELABORATION true
-
 add_parameter SNOOP_PORT_ENABLE BOOLEAN $p_SNOOP_PORT_ENABLE
 set_parameter_property SNOOP_PORT_ENABLE DEFAULT_VALUE $p_SNOOP_PORT_ENABLE
 set_parameter_property SNOOP_PORT_ENABLE DISPLAY_NAME "Enable Snoop Port"
 set_parameter_property SNOOP_PORT_ENABLE AFFECTS_ELABORATION true
-
-add_parameter MBD_TO_MEMORY_PIPE_STAGES INTEGER $p_MBD_TO_MEMORY_PIPE_STAGES
-set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DEFAULT_VALUE $p_MBD_TO_MEMORY_PIPE_STAGES
-set_parameter_property MBD_TO_MEMORY_PIPE_STAGES DISPLAY_NAME "MBD to Memory Pipeline Stages"
-set_parameter_property MBD_TO_MEMORY_PIPE_STAGES AFFECTS_ELABORATION true
 # | 
 # +-----------------------------------
 
@@ -76,14 +179,25 @@ proc compose { } {
   set afu_id_h                               [ get_parameter_value AFU_ID_H ]
   set afu_id_l                               [ get_parameter_value AFU_ID_L ]
   set iopipe_support                         [ get_parameter_value IOPIPE_SUPPORT ]
-  set number_of_memory_banks                 [ get_parameter_value NUMBER_OF_MEMORY_BANKS ]
+  set number_of_global_memory_systems        [ get_parameter_value NUMBER_OF_GLOBAL_MEMORY_SYSTEMS ]
+
+  array set number_of_memory_banks {}
+  array set memory_bank_address_width {}
+  array set data_width {}
+  array set max_burst_size {}
+  array set kernel_globalmem_waitrequest_allowance {}
+  array set mbd_to_memory_pipe_stages {}
+  for {set i 0} {$i < $number_of_global_memory_systems} {incr i} {
+    set number_of_memory_banks($i)                 [ get_parameter_value MEM_${i}_NUMBER_OF_MEMORY_BANKS ]
+    set memory_bank_address_width($i)              [ get_parameter_value MEM_${i}_MEMORY_BANK_ADDRESS_WIDTH ]
+    set data_width($i)                             [ get_parameter_value MEM_${i}_DATA_WIDTH ]
+    set max_burst_size($i)                         [ get_parameter_value MEM_${i}_MAX_BURST_SIZE ]
+    set kernel_globalmem_waitrequest_allowance($i) [ get_parameter_value MEM_${i}_KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE ]
+    set mbd_to_memory_pipe_stages($i)              [ get_parameter_value MEM_${i}_MBD_TO_MEMORY_PIPE_STAGES ]
+  }
+
   set number_of_dma_channels                 [ get_parameter_value NUMBER_OF_DMA_CHANNELS ]
-  set memory_bank_address_width              [ get_parameter_value MEMORY_BANK_ADDRESS_WIDTH ]
-  set data_width                             [ get_parameter_value DATA_WIDTH ]
-  set max_burst_size                         [ get_parameter_value MAX_BURST_SIZE ]
-  set kernel_globalmem_waitrequest_allowance [ get_parameter_value KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE ]
   set snoop_port_enable                      [ get_parameter_value SNOOP_PORT_ENABLE ]
-  set mbd_to_memory_pipe_stages              [ get_parameter_value MBD_TO_MEMORY_PIPE_STAGES ]
 
   # Compute parameters
   set symbol_width 8
@@ -98,10 +212,12 @@ proc compose { } {
   set_instance_parameter_value kernel_clk_in {EXPLICIT_CLOCK_RATE} {450000000.0}
   set_instance_parameter_value kernel_clk_in {NUM_CLOCK_OUTPUTS} {1}
 
-  for { set i 0} { $i < $number_of_memory_banks } {incr i} {
-    add_instance emif_ddr${i}_clk altera_clock_bridge 19.2.0
-    set_instance_parameter_value emif_ddr${i}_clk {EXPLICIT_CLOCK_RATE} {300000000.0}
-    set_instance_parameter_value emif_ddr${i}_clk {NUM_CLOCK_OUTPUTS} {1}
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    for { set j 0} { $j < $number_of_memory_banks($i) } {incr j} {
+    add_instance emif_global_mem_${i}_bank_${j}_clk altera_clock_bridge 19.2.0
+    set_instance_parameter_value emif_global_mem_${i}_bank_${j}_clk {EXPLICIT_CLOCK_RATE} {300000000.0}
+    set_instance_parameter_value emif_global_mem_${i}_bank_${j}_clk {NUM_CLOCK_OUTPUTS} {1}
+    }
   }
 
   add_instance global_reset_in altera_reset_bridge 19.2.0
@@ -190,14 +306,16 @@ proc compose { } {
   set_instance_parameter_value board_afu_id_avmm_slave {NEXT_AFU_OFFSET} {0x000000}
   set_instance_parameter_value board_afu_id_avmm_slave {CREATE_SCRATCH_REG} {0x0}
 
-  add_instance ddr_board ddr_board 23.2
-  set_instance_parameter_value ddr_board {NUMBER_OF_MEMORY_BANKS} $number_of_memory_banks
-  set_instance_parameter_value ddr_board {MEMORY_BANK_ADDRESS_WIDTH} $memory_bank_address_width
-  set_instance_parameter_value ddr_board {DATA_WIDTH} $data_width
-  set_instance_parameter_value ddr_board {MAX_BURST_SIZE} $max_burst_size
-  set_instance_parameter_value ddr_board {KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE} $kernel_globalmem_waitrequest_allowance
-  set_instance_parameter_value ddr_board {SNOOP_PORT_ENABLE} $snoop_port_enable
-  set_instance_parameter_value ddr_board {MBD_TO_MEMORY_PIPE_STAGES} $mbd_to_memory_pipe_stages
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    add_instance ddr_board$i ddr_board 23.2
+    set_instance_parameter_value ddr_board$i {NUMBER_OF_MEMORY_BANKS} $number_of_memory_banks($i)
+    set_instance_parameter_value ddr_board$i {MEMORY_BANK_ADDRESS_WIDTH} $memory_bank_address_width($i)
+    set_instance_parameter_value ddr_board$i {DATA_WIDTH} $data_width($i)
+    set_instance_parameter_value ddr_board$i {MAX_BURST_SIZE} $max_burst_size($i)
+    set_instance_parameter_value ddr_board$i {KERNEL_GLOBALMEM_WAITREQUEST_ALLOWANCE} $kernel_globalmem_waitrequest_allowance($i)
+    set_instance_parameter_value ddr_board$i {SNOOP_PORT_ENABLE} $snoop_port_enable
+    set_instance_parameter_value ddr_board$i {MBD_TO_MEMORY_PIPE_STAGES} $mbd_to_memory_pipe_stages($i)
+  }
 
   # Connections and connection parameters
   # Clocks
@@ -212,15 +330,19 @@ proc compose { } {
   add_connection clk_200.out_clk kernel_interface.clk clock
   add_connection clk_200.out_clk board_irq_ctrl.Clock clock
   add_connection clk_200.out_clk board_afu_id_avmm_slave.clock clock
-  add_connection clk_200.out_clk ddr_board.host_clk clock
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    add_connection clk_200.out_clk ddr_board$i.host_clk clock
+    add_connection kernel_clk_in.out_clk ddr_board$i.kernel_clk clock
+  }
   add_connection kernel_clk_in.out_clk kernel_interface.kernel_clk clock
   add_connection kernel_clk_in.out_clk board_kernel_cra_pipe.clk clock
   add_connection kernel_clk_in.out_clk board_kernel_cra_reset.clk clock
   add_connection kernel_clk_in.out_clk kernel_clk_export.clk_in clock
-  add_connection kernel_clk_in.out_clk ddr_board.kernel_clk clock
 
-  for { set i 0} { $i < $number_of_memory_banks } {incr i} {
-    add_connection emif_ddr${i}_clk.out_clk ddr_board.ddr_clk$i clock
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    for { set j 0 } { $j < $number_of_memory_banks($i) } {incr j} {
+      add_connection emif_global_mem_${i}_bank_${j}_clk.out_clk ddr_board$i.ddr_clk$j clock
+    }
   }
 
   # Resets
@@ -236,16 +358,18 @@ proc compose { } {
   add_connection global_reset_in.out_reset board_kernel_cra_reset.in_reset reset
   add_connection global_reset_in.out_reset board_irq_ctrl.Resetn reset
   add_connection global_reset_in.out_reset board_afu_id_avmm_slave.reset reset
-  add_connection global_reset_in.out_reset ddr_board.global_reset reset
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    add_connection global_reset_in.out_reset ddr_board$i.global_reset reset
+    add_connection kernel_interface.kernel_reset ddr_board$i.kernel_reset reset
+  }
   add_connection kernel_interface.kernel_reset kernel_clk_export.clk_in_reset reset
-  add_connection kernel_interface.kernel_reset ddr_board.kernel_reset reset
   add_connection board_kernel_cra_reset.out_reset board_kernel_cra_pipe.reset reset
 
   # IRQs
   add_connection board_irq_ctrl.interrupt_receiver kernel_interface.kernel_irq_to_host irq
 
   # Conduits
-  add_connection kernel_interface.acl_asp_memorg_host0x018 ddr_board.acl_asp_memorg_host conduit
+  add_connection kernel_interface.acl_asp_memorg_host0x018 ddr_board0.acl_asp_memorg_host conduit
 
   # Data
   add_connection pipe_stage_host_ctrl.m0 pipe_stage_dma_csr.s0 avalon
@@ -280,14 +404,14 @@ proc compose { } {
   set_connection_parameter_value pipe_stage_host_ctrl.m0/board_afu_id_avmm_slave.afu_cfg_slave baseAddress {0x0}
   set_connection_parameter_value pipe_stage_host_ctrl.m0/board_afu_id_avmm_slave.afu_cfg_slave defaultConnection {0}
 
-  add_connection pipe_stage_host_ctrl.m0 ddr_board.null_dfh_id avalon
-  set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board.null_dfh_id arbitrationPriority {1}
+  add_connection pipe_stage_host_ctrl.m0 ddr_board0.null_dfh_id avalon
+  set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board0.null_dfh_id arbitrationPriority {1}
   if { $iopipe_support == true } {
-    set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board.null_dfh_id baseAddress {0x21000}
+    set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board0.null_dfh_id baseAddress {0x21000}
   } else {
-    set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board.null_dfh_id baseAddress {0x20800}
+    set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board0.null_dfh_id baseAddress {0x20800}
   }
-  set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board.null_dfh_id defaultConnection {0}
+  set_connection_parameter_value pipe_stage_host_ctrl.m0/ddr_board0.null_dfh_id defaultConnection {0}
 
   add_connection kernel_interface.kernel_cra board_kernel_cra_pipe.s0 avalon
   set_connection_parameter_value kernel_interface.kernel_cra/board_kernel_cra_pipe.s0 arbitrationPriority {1}
@@ -301,10 +425,11 @@ proc compose { } {
   add_interface kernel_clk_in clock sink
   set_interface_property kernel_clk_in EXPORT_OF kernel_clk_in.in_clk
 
-  for { set i 0} { $i < $number_of_memory_banks } {incr i} {
-    add_interface emif_ddr${i}_clk clock sink
-    set_interface_property emif_ddr${i}_clk EXPORT_OF emif_ddr${i}_clk.in_clk
-
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    for { set j 0 } { $j < $number_of_memory_banks($i) } {incr j} {
+      add_interface emif_global_mem_${i}_bank_${j}_clk clock sink
+      set_interface_property emif_global_mem_${i}_bank_${j}_clk EXPORT_OF emif_global_mem_${i}_bank_${j}_clk.in_clk
+    }
   }
 
   add_interface kernel_clk clock source
@@ -338,21 +463,23 @@ proc compose { } {
 
   if { $snoop_port_enable == true } {
     add_interface acl_internal_snoop avalon_streaming start
-    set_interface_property acl_internal_snoop EXPORT_OF ddr_board.acl_asp_snoop
+    set_interface_property acl_internal_snoop EXPORT_OF ddr_board0.acl_asp_snoop
   }
 
-  for { set i 0} { $i < $number_of_memory_banks } {incr i} {
-    add_interface emif_ddr$i avalon master
-    set_interface_property emif_ddr$i EXPORT_OF ddr_board.emif_ddr$i
-    add_interface kernel_ddr$i avalon slave
-    set_interface_property kernel_ddr$i EXPORT_OF ddr_board.kernel_ddr$i
+  for { set i 0 } { $i < $number_of_global_memory_systems } {incr i} {
+    for { set j 0 } { $j < $number_of_memory_banks($i) } {incr j} {
+      add_interface emif_global_mem_${i}_bank_${j} avalon master
+      set_interface_property emif_global_mem_${i}_bank_${j} EXPORT_OF ddr_board$i.emif_ddr$j
+      add_interface kernel_global_mem_${i}_bank_${j} avalon slave
+      set_interface_property kernel_global_mem_${i}_bank_${j} EXPORT_OF ddr_board$i.kernel_ddr$j
+    }
   }
 
   for { set i 0} { $i < $number_of_dma_channels } {incr i} {
     add_interface dma_localmem_rd_$i avalon slave
-    set_interface_property dma_localmem_rd_$i EXPORT_OF ddr_board.dma_localmem_rd_$i
+    set_interface_property dma_localmem_rd_$i EXPORT_OF ddr_board0.dma_localmem_rd_$i
     add_interface dma_localmem_wr_$i avalon slave
-    set_interface_property dma_localmem_wr_$i EXPORT_OF ddr_board.dma_localmem_wr_$i
+    set_interface_property dma_localmem_wr_$i EXPORT_OF ddr_board0.dma_localmem_wr_$i
   }
 
   # Interconnect requirements

@@ -20,25 +20,26 @@
     //the FIM changed the 'mem_ss' define name to
     // 'local_mem'; make it backward compatible (at 
     // the expense of being verbose and ugly)
+    `define ASP_ENABLE_GLOBAL_MEM_0
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_0
-        `define ASP_ENABLE_DDR4_BANK_0 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_0
     `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_0
-        `define ASP_ENABLE_DDR4_BANK_0 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_0
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_1
-        `define ASP_ENABLE_DDR4_BANK_1 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_1
     `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_1
-        `define ASP_ENABLE_DDR4_BANK_1 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_1
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_2
-        `define ASP_ENABLE_DDR4_BANK_2 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_2
     `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_2
-        `define ASP_ENABLE_DDR4_BANK_2 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_2
     `endif
     `ifdef OFS_FIM_IP_CFG_MEM_SS_EN_MEM_3
-        `define ASP_ENABLE_DDR4_BANK_3 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_3
     `elsif OFS_FIM_IP_CFG_LOCAL_MEM_EN_MEM_3
-        `define ASP_ENABLE_DDR4_BANK_3 1
+        `define ASP_ENABLE_GLOBAL_MEM_0_BANK_3
     `endif
     
     //DMA-support
