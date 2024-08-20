@@ -98,7 +98,7 @@ EOF
 ################################################################################
 set_hugepages()
 {
-  NUM_HUGE_PAGES=${OFS_ASP_ENV_NUM_HUGEPAGES:-1024}
+  NUM_HUGE_PAGES=${OFS_ASP_ENV_NUM_HUGEPAGES:-2048}
   echo "Configuring system with $NUM_HUGE_PAGES 2M hugepages"
   sudo sh -c "cat > /etc/sysctl.d/intel-fpga-opencl-sysctl.conf" << EOF
 vm.nr_hugepages = $NUM_HUGE_PAGES
