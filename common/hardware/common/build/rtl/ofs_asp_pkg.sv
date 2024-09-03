@@ -12,7 +12,12 @@ package ofs_asp_pkg;
     parameter ASP_MMIO_DATA_WIDTH = ofs_plat_host_chan_pkg::MMIO_DATA_WIDTH;
     parameter ASP_MMIO_ADDR_WIDTH = ofs_plat_host_chan_pkg::MMIO_ADDR_WIDTH_BYTES;
     parameter ASP_MMIO_QSYS_ADDR_WIDTH = 18;
-    
+   
+    parameter ASP_GLOBAL_MEM_0_NUM_CHANNELS        = local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS;
+    parameter ASP_GLOBAL_MEM_0_AVMM_DATA_WIDTH     = local_mem_cfg_pkg::LOCAL_MEM_DATA_WIDTH;
+    parameter ASP_GLOBAL_MEM_0_AVMM_ADDR_WIDTH     = local_mem_cfg_pkg::LOCAL_MEM_BYTE_ADDR_WIDTH;
+    parameter ASP_GLOBAL_MEM_0_AVMM_BURSTCNT_WIDTH = local_mem_cfg_pkg::LOCAL_MEM_BURST_CNT_WIDTH; 
+
     parameter ASP_LOCALMEM_NUM_CHANNELS     = local_mem_cfg_pkg::LOCAL_MEM_NUM_BANKS;
     parameter ASP_LOCALMEM_AVMM_DATA_WIDTH  = local_mem_cfg_pkg::LOCAL_MEM_DATA_WIDTH;
     parameter ASP_LOCALMEM_AVMM_ADDR_WIDTH  = local_mem_cfg_pkg::LOCAL_MEM_BYTE_ADDR_WIDTH;

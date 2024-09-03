@@ -1,0 +1,2277 @@
+<?xml version="1.0" ?>
+<!--Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.-->
+<ipxact:component xmlns:altera="http://www.altera.com/XMLSchema/IPXact2014/extensions" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014">
+  <ipxact:vendor>Altera Corporation</ipxact:vendor>
+  <ipxact:library>oneapi_asp_editor</ipxact:library>
+  <ipxact:name>oneapi_asp_editor</ipxact:name>
+  <ipxact:version>1.0</ipxact:version>
+  <ipxact:busInterfaces></ipxact:busInterfaces>
+  <ipxact:model>
+    <ipxact:views>
+      <ipxact:view>
+        <ipxact:name>QUARTUS_SYNTH</ipxact:name>
+        <ipxact:envIdentifier>:quartus.altera.com:</ipxact:envIdentifier>
+        <ipxact:componentInstantiationRef>QUARTUS_SYNTH</ipxact:componentInstantiationRef>
+      </ipxact:view>
+    </ipxact:views>
+    <ipxact:instantiations>
+      <ipxact:componentInstantiation>
+        <ipxact:name>QUARTUS_SYNTH</ipxact:name>
+        <ipxact:moduleName>oneapi_asp_editor</ipxact:moduleName>
+        <ipxact:fileSetRef>
+          <ipxact:localName>QUARTUS_SYNTH</ipxact:localName>
+        </ipxact:fileSetRef>
+      </ipxact:componentInstantiation>
+    </ipxact:instantiations>
+    <ipxact:ports></ipxact:ports>
+  </ipxact:model>
+  <ipxact:vendorExtensions>
+    <altera:entity_info>
+      <ipxact:vendor>Altera Corporation</ipxact:vendor>
+      <ipxact:library>oneapi_asp_editor</ipxact:library>
+      <ipxact:name>oneapi_asp_editor</ipxact:name>
+      <ipxact:version>1.0</ipxact:version>
+    </altera:entity_info>
+    <altera:altera_module_parameters>
+      <ipxact:parameters>
+        <ipxact:parameter parameterId="AFU_ID_H" type="string">
+          <ipxact:name>AFU_ID_H</ipxact:name>
+          <ipxact:displayName>32-bit AFU ID MSB</ipxact:displayName>
+          <ipxact:value>5D9FEF7BC4914DCE</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="AFU_ID_L" type="string">
+          <ipxact:name>AFU_ID_L</ipxact:name>
+          <ipxact:displayName>32-bit AFU ID LSB</ipxact:displayName>
+          <ipxact:value>95FCF979F6F061BE</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="NUM_GLOBAL_MEM_SYSTEMS" type="int">
+          <ipxact:name>NUM_GLOBAL_MEM_SYSTEMS</ipxact:name>
+          <ipxact:displayName>Number of Global Memory Systems</ipxact:displayName>
+          <ipxact:value>1</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_NAME" type="string">
+          <ipxact:name>MEM_0_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_0_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_NUM_BANKS" type="int">
+          <ipxact:name>MEM_0_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_0_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_0_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_MAX_BURST" type="int">
+          <ipxact:name>MEM_0_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_0_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_0_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_0_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_0_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x018</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_0_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_0_LATENCY" type="int">
+          <ipxact:name>MEM_0_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_NAME" type="string">
+          <ipxact:name>MEM_1_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_1_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_NUM_BANKS" type="int">
+          <ipxact:name>MEM_1_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_1_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_1_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_MAX_BURST" type="int">
+          <ipxact:name>MEM_1_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_1_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_1_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_1_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_1_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x100</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_1_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_1_LATENCY" type="int">
+          <ipxact:name>MEM_1_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_NAME" type="string">
+          <ipxact:name>MEM_2_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_2_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_NUM_BANKS" type="int">
+          <ipxact:name>MEM_2_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_2_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_2_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_MAX_BURST" type="int">
+          <ipxact:name>MEM_2_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_2_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_2_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_2_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_2_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x104</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_2_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_2_LATENCY" type="int">
+          <ipxact:name>MEM_2_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_NAME" type="string">
+          <ipxact:name>MEM_3_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_3_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_NUM_BANKS" type="int">
+          <ipxact:name>MEM_3_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_3_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_3_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_MAX_BURST" type="int">
+          <ipxact:name>MEM_3_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_3_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_3_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_3_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_3_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x108</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_3_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_3_LATENCY" type="int">
+          <ipxact:name>MEM_3_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_NAME" type="string">
+          <ipxact:name>MEM_4_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_4_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_NUM_BANKS" type="int">
+          <ipxact:name>MEM_4_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_4_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_4_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_MAX_BURST" type="int">
+          <ipxact:name>MEM_4_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_4_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_4_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_4_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_4_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x10C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_4_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_4_LATENCY" type="int">
+          <ipxact:name>MEM_4_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_NAME" type="string">
+          <ipxact:name>MEM_5_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_5_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_NUM_BANKS" type="int">
+          <ipxact:name>MEM_5_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_5_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_5_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_MAX_BURST" type="int">
+          <ipxact:name>MEM_5_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_5_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_5_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_5_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_5_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x110</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_5_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_5_LATENCY" type="int">
+          <ipxact:name>MEM_5_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_NAME" type="string">
+          <ipxact:name>MEM_6_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_6_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_NUM_BANKS" type="int">
+          <ipxact:name>MEM_6_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_6_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_6_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_MAX_BURST" type="int">
+          <ipxact:name>MEM_6_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_6_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_6_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_6_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_6_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x114</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_6_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_6_LATENCY" type="int">
+          <ipxact:name>MEM_6_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_NAME" type="string">
+          <ipxact:name>MEM_7_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_7_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_NUM_BANKS" type="int">
+          <ipxact:name>MEM_7_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_7_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_7_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_MAX_BURST" type="int">
+          <ipxact:name>MEM_7_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_7_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_7_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_7_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_7_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x118</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_7_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_7_LATENCY" type="int">
+          <ipxact:name>MEM_7_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_NAME" type="string">
+          <ipxact:name>MEM_8_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_8_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_NUM_BANKS" type="int">
+          <ipxact:name>MEM_8_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_8_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_8_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_MAX_BURST" type="int">
+          <ipxact:name>MEM_8_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_8_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_8_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_8_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_8_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x11C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_8_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_8_LATENCY" type="int">
+          <ipxact:name>MEM_8_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_NAME" type="string">
+          <ipxact:name>MEM_9_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_9_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_NUM_BANKS" type="int">
+          <ipxact:name>MEM_9_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_9_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_9_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_MAX_BURST" type="int">
+          <ipxact:name>MEM_9_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_9_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_9_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_9_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_9_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x120</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_9_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_9_LATENCY" type="int">
+          <ipxact:name>MEM_9_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_NAME" type="string">
+          <ipxact:name>MEM_10_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_10_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_NUM_BANKS" type="int">
+          <ipxact:name>MEM_10_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_10_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_10_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_MAX_BURST" type="int">
+          <ipxact:name>MEM_10_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_10_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_10_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_10_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_10_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x124</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_10_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_10_LATENCY" type="int">
+          <ipxact:name>MEM_10_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_NAME" type="string">
+          <ipxact:name>MEM_11_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_11_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_NUM_BANKS" type="int">
+          <ipxact:name>MEM_11_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_11_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_11_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_MAX_BURST" type="int">
+          <ipxact:name>MEM_11_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_11_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_11_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_11_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_11_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x128</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_11_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_11_LATENCY" type="int">
+          <ipxact:name>MEM_11_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_NAME" type="string">
+          <ipxact:name>MEM_12_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_12_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_NUM_BANKS" type="int">
+          <ipxact:name>MEM_12_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_12_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_12_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_MAX_BURST" type="int">
+          <ipxact:name>MEM_12_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_12_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_12_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_12_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_12_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x12C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_12_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_12_LATENCY" type="int">
+          <ipxact:name>MEM_12_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_NAME" type="string">
+          <ipxact:name>MEM_13_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_13_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_NUM_BANKS" type="int">
+          <ipxact:name>MEM_13_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_13_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_13_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_MAX_BURST" type="int">
+          <ipxact:name>MEM_13_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_13_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_13_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_13_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_13_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x130</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_13_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_13_LATENCY" type="int">
+          <ipxact:name>MEM_13_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_NAME" type="string">
+          <ipxact:name>MEM_14_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_14_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_NUM_BANKS" type="int">
+          <ipxact:name>MEM_14_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_14_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_14_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_MAX_BURST" type="int">
+          <ipxact:name>MEM_14_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_14_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_14_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_14_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_14_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x134</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_14_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_14_LATENCY" type="int">
+          <ipxact:name>MEM_14_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_NAME" type="string">
+          <ipxact:name>MEM_15_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_15_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_NUM_BANKS" type="int">
+          <ipxact:name>MEM_15_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_15_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_15_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_MAX_BURST" type="int">
+          <ipxact:name>MEM_15_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_15_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_15_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_15_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_15_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x138</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_15_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_15_LATENCY" type="int">
+          <ipxact:name>MEM_15_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_NAME" type="string">
+          <ipxact:name>MEM_16_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_16_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_NUM_BANKS" type="int">
+          <ipxact:name>MEM_16_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_16_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_16_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_MAX_BURST" type="int">
+          <ipxact:name>MEM_16_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_16_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_16_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_16_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_16_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x13C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_16_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_16_LATENCY" type="int">
+          <ipxact:name>MEM_16_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_NAME" type="string">
+          <ipxact:name>MEM_17_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_17_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_NUM_BANKS" type="int">
+          <ipxact:name>MEM_17_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_17_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_17_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_MAX_BURST" type="int">
+          <ipxact:name>MEM_17_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_17_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_17_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_17_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_17_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x140</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_17_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_17_LATENCY" type="int">
+          <ipxact:name>MEM_17_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_NAME" type="string">
+          <ipxact:name>MEM_18_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_18_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_NUM_BANKS" type="int">
+          <ipxact:name>MEM_18_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_18_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_18_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_MAX_BURST" type="int">
+          <ipxact:name>MEM_18_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_18_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_18_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_18_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_18_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x144</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_18_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_18_LATENCY" type="int">
+          <ipxact:name>MEM_18_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_NAME" type="string">
+          <ipxact:name>MEM_19_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_19_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_NUM_BANKS" type="int">
+          <ipxact:name>MEM_19_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_19_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_19_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_MAX_BURST" type="int">
+          <ipxact:name>MEM_19_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_19_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_19_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_19_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_19_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x148</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_19_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_19_LATENCY" type="int">
+          <ipxact:name>MEM_19_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_NAME" type="string">
+          <ipxact:name>MEM_20_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_20_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_NUM_BANKS" type="int">
+          <ipxact:name>MEM_20_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_20_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_20_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_MAX_BURST" type="int">
+          <ipxact:name>MEM_20_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_20_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_20_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_20_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_20_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x14C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_20_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_20_LATENCY" type="int">
+          <ipxact:name>MEM_20_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_NAME" type="string">
+          <ipxact:name>MEM_21_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_21_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_NUM_BANKS" type="int">
+          <ipxact:name>MEM_21_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_21_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_21_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_MAX_BURST" type="int">
+          <ipxact:name>MEM_21_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_21_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_21_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_21_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_21_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x150</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_21_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_21_LATENCY" type="int">
+          <ipxact:name>MEM_21_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_NAME" type="string">
+          <ipxact:name>MEM_22_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_22_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_NUM_BANKS" type="int">
+          <ipxact:name>MEM_22_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_22_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_22_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_MAX_BURST" type="int">
+          <ipxact:name>MEM_22_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_22_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_22_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_22_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_22_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x154</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_22_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_22_LATENCY" type="int">
+          <ipxact:name>MEM_22_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_NAME" type="string">
+          <ipxact:name>MEM_23_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_23_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_NUM_BANKS" type="int">
+          <ipxact:name>MEM_23_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_23_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_23_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_MAX_BURST" type="int">
+          <ipxact:name>MEM_23_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_23_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_23_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_23_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_23_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x158</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_23_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_23_LATENCY" type="int">
+          <ipxact:name>MEM_23_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_NAME" type="string">
+          <ipxact:name>MEM_24_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_24_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_NUM_BANKS" type="int">
+          <ipxact:name>MEM_24_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_24_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_24_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_MAX_BURST" type="int">
+          <ipxact:name>MEM_24_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_24_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_24_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_24_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_24_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x15C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_24_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_24_LATENCY" type="int">
+          <ipxact:name>MEM_24_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_NAME" type="string">
+          <ipxact:name>MEM_25_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_25_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_NUM_BANKS" type="int">
+          <ipxact:name>MEM_25_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_25_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_25_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_MAX_BURST" type="int">
+          <ipxact:name>MEM_25_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_25_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_25_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_25_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_25_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x160</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_25_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_25_LATENCY" type="int">
+          <ipxact:name>MEM_25_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_NAME" type="string">
+          <ipxact:name>MEM_26_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_26_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_NUM_BANKS" type="int">
+          <ipxact:name>MEM_26_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_26_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_26_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_MAX_BURST" type="int">
+          <ipxact:name>MEM_26_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_26_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_26_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_26_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_26_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x164</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_26_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_26_LATENCY" type="int">
+          <ipxact:name>MEM_26_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_NAME" type="string">
+          <ipxact:name>MEM_27_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_27_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_NUM_BANKS" type="int">
+          <ipxact:name>MEM_27_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_27_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_27_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_MAX_BURST" type="int">
+          <ipxact:name>MEM_27_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_27_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_27_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_27_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_27_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x168</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_27_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_27_LATENCY" type="int">
+          <ipxact:name>MEM_27_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_NAME" type="string">
+          <ipxact:name>MEM_28_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_28_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_NUM_BANKS" type="int">
+          <ipxact:name>MEM_28_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_28_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_28_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_MAX_BURST" type="int">
+          <ipxact:name>MEM_28_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_28_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_28_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_28_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_28_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x16C</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_28_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_28_LATENCY" type="int">
+          <ipxact:name>MEM_28_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_NAME" type="string">
+          <ipxact:name>MEM_29_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_29_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_NUM_BANKS" type="int">
+          <ipxact:name>MEM_29_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_29_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_29_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_MAX_BURST" type="int">
+          <ipxact:name>MEM_29_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_29_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_29_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_29_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_29_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x170</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_29_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_29_LATENCY" type="int">
+          <ipxact:name>MEM_29_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_NAME" type="string">
+          <ipxact:name>MEM_30_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_30_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_NUM_BANKS" type="int">
+          <ipxact:name>MEM_30_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_30_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_30_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_MAX_BURST" type="int">
+          <ipxact:name>MEM_30_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_30_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_30_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_30_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_30_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x174</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_30_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_30_LATENCY" type="int">
+          <ipxact:name>MEM_30_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_NAME" type="string">
+          <ipxact:name>MEM_31_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>device</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_MAX_BANDWIDTH" type="int">
+          <ipxact:name>MEM_31_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>76800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_NUM_BANKS" type="int">
+          <ipxact:name>MEM_31_NUM_BANKS</ipxact:name>
+          <ipxact:displayName>Number of memory banks</ipxact:displayName>
+          <ipxact:value>4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_DATA_WIDTH" type="int">
+          <ipxact:name>MEM_31_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_BANK_ADDR_WIDTH" type="int">
+          <ipxact:name>MEM_31_BANK_ADDR_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width per bank</ipxact:displayName>
+          <ipxact:value>32</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_MAX_BURST" type="int">
+          <ipxact:name>MEM_31_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_KERNEL_TO_CCB_PIPELINE_STAGES" type="int">
+          <ipxact:name>MEM_31_KERNEL_TO_CCB_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (kernel to clock crosser)</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_MBD_TO_MEMORY_PIPE_STAGES" type="int">
+          <ipxact:name>MEM_31_MBD_TO_MEMORY_PIPE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages (MBD to global memory)</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_BSP_AVMM_WRITE_ACK" type="bit">
+          <ipxact:name>MEM_31_BSP_AVMM_WRITE_ACK</ipxact:name>
+          <ipxact:displayName>AVMM write acknowledge</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_CONFIG_ADDR" type="string">
+          <ipxact:name>MEM_31_CONFIG_ADDR</ipxact:name>
+          <ipxact:displayName>Configuration address</ipxact:displayName>
+          <ipxact:value>0x178</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>MEM_31_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>4096</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="MEM_31_LATENCY" type="int">
+          <ipxact:name>MEM_31_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>1500</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="ENABLE_USM" type="bit">
+          <ipxact:name>ENABLE_USM</ipxact:name>
+          <ipxact:displayName>Unified Shared Memory Interface</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_NAME" type="string">
+          <ipxact:name>HOST_MEM_NAME</ipxact:name>
+          <ipxact:displayName>Name</ipxact:displayName>
+          <ipxact:value>host</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_MAX_BANDWIDTH" type="int">
+          <ipxact:name>HOST_MEM_MAX_BANDWIDTH</ipxact:name>
+          <ipxact:displayName>Maximum theoretical bandwidth</ipxact:displayName>
+          <ipxact:value>30000</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_DATA_WIDTH" type="int">
+          <ipxact:name>HOST_MEM_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data width</ipxact:displayName>
+          <ipxact:value>512</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_ADDRESS_WIDTH" type="int">
+          <ipxact:name>HOST_MEM_ADDRESS_WIDTH</ipxact:name>
+          <ipxact:displayName>Address width</ipxact:displayName>
+          <ipxact:value>48</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_MAX_BURST" type="int">
+          <ipxact:name>HOST_MEM_MAX_BURST</ipxact:name>
+          <ipxact:displayName>Burst size</ipxact:displayName>
+          <ipxact:value>16</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_PIPELINE_STAGES" type="int">
+          <ipxact:name>HOST_MEM_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Pipeline stages</ipxact:displayName>
+          <ipxact:value>3</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_INTERLEAVED_BYTES" type="int">
+          <ipxact:name>HOST_MEM_INTERLEAVED_BYTES</ipxact:name>
+          <ipxact:displayName>Interleaved bytes</ipxact:displayName>
+          <ipxact:value>1024</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="HOST_MEM_LATENCY" type="int">
+          <ipxact:name>HOST_MEM_LATENCY</ipxact:name>
+          <ipxact:displayName>Latency (for oneAPI compiler)</ipxact:displayName>
+          <ipxact:value>800</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="NUM_DMA_CHANNELS" type="int">
+          <ipxact:name>NUM_DMA_CHANNELS</ipxact:name>
+          <ipxact:displayName>Number of DMA Channels</ipxact:displayName>
+          <ipxact:value>1</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="NUM_IO_CHANNELS" type="int">
+          <ipxact:name>NUM_IO_CHANNELS</ipxact:name>
+          <ipxact:displayName>Number of I/O Channels</ipxact:displayName>
+          <ipxact:value>8</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_0_DATA_WIDTH" type="int">
+          <ipxact:name>CH_0_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 0</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_1_DATA_WIDTH" type="int">
+          <ipxact:name>CH_1_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 1</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_2_DATA_WIDTH" type="int">
+          <ipxact:name>CH_2_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 2</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_3_DATA_WIDTH" type="int">
+          <ipxact:name>CH_3_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 3</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_4_DATA_WIDTH" type="int">
+          <ipxact:name>CH_4_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 4</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_5_DATA_WIDTH" type="int">
+          <ipxact:name>CH_5_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 5</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_6_DATA_WIDTH" type="int">
+          <ipxact:name>CH_6_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 6</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_7_DATA_WIDTH" type="int">
+          <ipxact:name>CH_7_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 7</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_8_DATA_WIDTH" type="int">
+          <ipxact:name>CH_8_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 8</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_9_DATA_WIDTH" type="int">
+          <ipxact:name>CH_9_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 9</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_10_DATA_WIDTH" type="int">
+          <ipxact:name>CH_10_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 10</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_11_DATA_WIDTH" type="int">
+          <ipxact:name>CH_11_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 11</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_12_DATA_WIDTH" type="int">
+          <ipxact:name>CH_12_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 12</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_13_DATA_WIDTH" type="int">
+          <ipxact:name>CH_13_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 13</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_14_DATA_WIDTH" type="int">
+          <ipxact:name>CH_14_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 14</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="CH_15_DATA_WIDTH" type="int">
+          <ipxact:name>CH_15_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Data Width for I/O Channel 15</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="DEVICE_FAMILY" type="string">
+          <ipxact:name>DEVICE_FAMILY</ipxact:name>
+          <ipxact:displayName>Device family</ipxact:displayName>
+          <ipxact:value>Agilex 7</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="PLATFORM_NAME" type="string">
+          <ipxact:name>PLATFORM_NAME</ipxact:name>
+          <ipxact:displayName>Platform name</ipxact:displayName>
+          <ipxact:value>n6001</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="BOARD_VARIANT_NAME" type="string">
+          <ipxact:name>BOARD_VARIANT_NAME</ipxact:name>
+          <ipxact:displayName>Board variant name</ipxact:displayName>
+          <ipxact:value>ofs_n6001_usm_iopipes</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="QUARTUS_VERSION" type="string">
+          <ipxact:name>QUARTUS_VERSION</ipxact:name>
+          <ipxact:displayName>Quartus version</ipxact:displayName>
+          <ipxact:value>23.4</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="ONEAPI_VERSION" type="string">
+          <ipxact:name>ONEAPI_VERSION</ipxact:name>
+          <ipxact:displayName>OneAPI compiler version</ipxact:displayName>
+          <ipxact:value>2024.0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="ASP_FLOWS" type="string">
+          <ipxact:name>ASP_FLOWS</ipxact:name>
+          <ipxact:displayName>Supported ASP flows</ipxact:displayName>
+          <ipxact:value>afu_flat afu_flat_kclk</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="SNOOP_PORT_ENABLE" type="bit">
+          <ipxact:name>SNOOP_PORT_ENABLE</ipxact:name>
+          <ipxact:displayName>Snoop port enable</ipxact:displayName>
+          <ipxact:value>false</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="QUARTUS_PROJECT_NAME" type="string">
+          <ipxact:name>QUARTUS_PROJECT_NAME</ipxact:name>
+          <ipxact:displayName>Quartus project name</ipxact:displayName>
+          <ipxact:value>ofs_top</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="QUARTUS_REVISION_NAME" type="string">
+          <ipxact:name>QUARTUS_REVISION_NAME</ipxact:name>
+          <ipxact:displayName>Quartus revision name</ipxact:displayName>
+          <ipxact:value>ofs_pr_afu</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="DEVICE_MODEL" type="string">
+          <ipxact:name>DEVICE_MODEL</ipxact:name>
+          <ipxact:displayName>Device model</ipxact:displayName>
+          <ipxact:value>agfb014r24a3e3vr0_dm.xml</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="RESOURCES_ALMS" type="int">
+          <ipxact:name>RESOURCES_ALMS</ipxact:name>
+          <ipxact:displayName>ALMs</ipxact:displayName>
+          <ipxact:value>351138</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="RESOURCES_FFS" type="int">
+          <ipxact:name>RESOURCES_FFS</ipxact:name>
+          <ipxact:displayName>FFs</ipxact:displayName>
+          <ipxact:value>1269922</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="RESOURCES_DSPS" type="int">
+          <ipxact:name>RESOURCES_DSPS</ipxact:name>
+          <ipxact:displayName>DSPs</ipxact:displayName>
+          <ipxact:value>2284</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="RESOURCES_RAMS" type="int">
+          <ipxact:name>RESOURCES_RAMS</ipxact:name>
+          <ipxact:displayName>M20Ks</ipxact:displayName>
+          <ipxact:value>4198</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="KERNEL_CRA_DATA_WIDTH" type="int">
+          <ipxact:name>KERNEL_CRA_DATA_WIDTH</ipxact:name>
+          <ipxact:displayName>Kernel CRA data width</ipxact:displayName>
+          <ipxact:value>64</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="KERNEL_CRA_PIPELINE_STAGES" type="int">
+          <ipxact:name>KERNEL_CRA_PIPELINE_STAGES</ipxact:name>
+          <ipxact:displayName>Kernel CRA pipeline stages</ipxact:displayName>
+          <ipxact:value>2</ipxact:value>
+        </ipxact:parameter>
+      </ipxact:parameters>
+    </altera:altera_module_parameters>
+    <altera:altera_system_parameters>
+      <ipxact:parameters>
+        <ipxact:parameter parameterId="board" type="string">
+          <ipxact:name>board</ipxact:name>
+          <ipxact:displayName>Board</ipxact:displayName>
+          <ipxact:value>default</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="device" type="string">
+          <ipxact:name>device</ipxact:name>
+          <ipxact:displayName>Device</ipxact:displayName>
+          <ipxact:value>AGFB014R24A3E3V</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="deviceFamily" type="string">
+          <ipxact:name>deviceFamily</ipxact:name>
+          <ipxact:displayName>Device family</ipxact:displayName>
+          <ipxact:value>Agilex 7</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="deviceSpeedGrade" type="string">
+          <ipxact:name>deviceSpeedGrade</ipxact:name>
+          <ipxact:displayName>Device Speed Grade</ipxact:displayName>
+          <ipxact:value>3</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="generationId" type="int">
+          <ipxact:name>generationId</ipxact:name>
+          <ipxact:displayName>Generation Id</ipxact:displayName>
+          <ipxact:value>0</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="bonusData" type="string">
+          <ipxact:name>bonusData</ipxact:name>
+          <ipxact:displayName>bonusData</ipxact:displayName>
+          <ipxact:value>bonusData 
+{
+   element oneapi_asp_editor
+   {
+      datum _sortIndex
+      {
+         value = "0";
+         type = "int";
+      }
+   }
+}
+</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="hideFromIPCatalog" type="bit">
+          <ipxact:name>hideFromIPCatalog</ipxact:name>
+          <ipxact:displayName>Hide from IP Catalog</ipxact:displayName>
+          <ipxact:value>true</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="lockedInterfaceDefinition" type="string">
+          <ipxact:name>lockedInterfaceDefinition</ipxact:name>
+          <ipxact:displayName>lockedInterfaceDefinition</ipxact:displayName>
+          <ipxact:value></ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="systemInfos" type="string">
+          <ipxact:name>systemInfos</ipxact:name>
+          <ipxact:displayName>systemInfos</ipxact:displayName>
+          <ipxact:value>&lt;systemInfosDefinition&gt;
+    &lt;connPtSystemInfos/&gt;
+&lt;/systemInfosDefinition&gt;</ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="dflBitArray" type="string">
+          <ipxact:name>dflBitArray</ipxact:name>
+          <ipxact:displayName>dflBitArray</ipxact:displayName>
+          <ipxact:value></ipxact:value>
+        </ipxact:parameter>
+        <ipxact:parameter parameterId="cpuInfo" type="string">
+          <ipxact:name>cpuInfo</ipxact:name>
+          <ipxact:displayName>cpuInfo</ipxact:displayName>
+          <ipxact:value></ipxact:value>
+        </ipxact:parameter>
+      </ipxact:parameters>
+    </altera:altera_system_parameters>
+    <altera:altera_interface_boundary></altera:altera_interface_boundary>
+    <altera:altera_has_warnings>true</altera:altera_has_warnings>
+    <altera:altera_has_errors>false</altera:altera_has_errors>
+  </ipxact:vendorExtensions>
+</ipxact:component>

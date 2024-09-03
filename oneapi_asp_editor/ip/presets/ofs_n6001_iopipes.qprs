@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ip>
+ <presets version="12.1">
+  <preset
+     name="ofs_n6001_iopipes"
+     kind="oneapi_asp_editor"
+     version="All"
+     description=""
+     board="default"
+     preset_category="">
+   <parameter name="DEVICE_FAMILY" value="Agilex 7" />
+   <parameter name="DEVICE_MODEL" value="agfb014r24a3e3vr0_dm.xml" />
+   <parameter name="PLATFORM_NAME" value="n6001" />
+   <parameter name="BOARD_VARIANT_NAME" value="ofs_n6001_iopipes" />
+   <parameter name="QUARTUS_PROJECT_NAME" value="ofs_top" />
+   <parameter name="QUARTUS_REVISION_NAME" value="ofs_pr_afu" />
+   <parameter name="QUARTUS_VERSION" value="23.4" />
+   <parameter name="ONEAPI_VERSION" value="2024.0" />
+   <parameter name="ASP_FLOWS" value="afu_flat afu_flat_kclk" />
+
+   <parameter name="AFU_ID_H" value="51ED2F4AFEA24261" />
+   <parameter name="AFU_ID_L" value="A595918500575509" />
+
+   <parameter name="ENABLE_USM" value="false" />
+   <parameter name="NUM_IO_CHANNELS" value="8" />
+   <parameter name="SNOOP_PORT_ENABLE" value="false" />
+   <parameter name="NUM_DMA_CHANNELS" value="1" />
+
+   <parameter name="NUM_GLOBAL_MEM_SYSTEMS" value="1" />
+   <parameter name="MEM_0_NAME" value="device0" />
+   <parameter name="MEM_0_MAX_BANDWIDTH" value="38400" />
+   <parameter name="MEM_0_NUM_BANKS" value="4" />
+   <parameter name="MEM_0_BANK_ADDR_WIDTH" value="32" />
+   <parameter name="MEM_0_DATA_WIDTH" value="512" /> 
+   <parameter name="MEM_0_MAX_BURST" value="16" />
+   <parameter name="MEM_0_KERNEL_TO_CCB_PIPELINE_STAGES" value="2" />
+   <parameter name="MEM_0_MBD_TO_MEMORY_PIPE_STAGES" value="0" />
+   <parameter name="MEM_0_BSP_AVMM_WRITE_ACK" value="true" />
+   <parameter name="MEM_0_CONFIG_ADDR" value="0x018" />
+   <parameter name="MEM_0_INTERLEAVED_BYTES" value="4096" />
+   <parameter name="MEM_0_LATENCY" value="1500" />
+
+   <parameter name="CH_0_DATA_WIDTH" value="64" />
+   <parameter name="CH_1_DATA_WIDTH" value="64" />
+   <parameter name="CH_2_DATA_WIDTH" value="64" />
+   <parameter name="CH_3_DATA_WIDTH" value="64" />
+   <parameter name="CH_4_DATA_WIDTH" value="64" />
+   <parameter name="CH_5_DATA_WIDTH" value="64" />
+   <parameter name="CH_6_DATA_WIDTH" value="64" />
+   <parameter name="CH_7_DATA_WIDTH" value="64" />
+
+   <parameter name="KERNEL_CRA_DATA_WIDTH" value="64" />
+   <parameter name="KERNEL_CRA_PIPELINE_STAGES" value="2" />
+
+   <parameter name="RESOURCES_ALMS" value="344709" />
+   <parameter name="RESOURCES_DSPS" value="2284" />
+   <parameter name="RESOURCES_RAMS" value="4148" />
+   <parameter name="RESOURCES_FFS" value="1249098" />
+  </preset>
+ </presets>
+</ip>
