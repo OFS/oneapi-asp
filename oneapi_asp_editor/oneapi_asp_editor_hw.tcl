@@ -1051,7 +1051,7 @@ namespace eval oneapi_asp_editor::global_mem {
       [list MEM_${i}_LATENCY "Latency (for oneAPI compiler)" "Global Memory $i" INTEGER 1500 "" "" "" \
         "" "" "" "" "" "" \
         "" "" "The latency of the global memory system in clock cycles" \
-      ] \     
+      ] \
   }
 
   ::add_param $::parameter_properties $mem_dynamic_param
