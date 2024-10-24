@@ -41,8 +41,8 @@ import local_mem_cfg_pkg::*;
 logic [1:0] kernel_avmm_reset_d;
 logic kernel_avmm_reset_lcl;
 always_ff @(posedge kernel_avmm_clk or posedge kernel_avmm_reset) begin
-    kernel_avmm_reset_d <= {kernel_avmm_reset_d[0], 1'b0};
     if (kernel_avmm_reset) kernel_avmm_reset_d <= 2'b11;
+    else                   kernel_avmm_reset_d <= {kernel_avmm_reset_d[0], 1'b0};
 end
 assign kernel_avmm_reset_lcl = kernel_avmm_reset_d[1];
 
