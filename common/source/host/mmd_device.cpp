@@ -1146,7 +1146,17 @@ int Device::read_mmio(void *host_addr, size_t mmio_addr, size_t size) {
   DCP_DEBUG_MEM("read_mmio start: %p\t 0x%zx\t 0x%zx\n", host_addr, mmio_addr,
                 size);
   if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Device::read_mmio start: host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr, mmio_addr, size );
+    DEBUG_LOG("DEBUG LOG : Device::read_mmio start: host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, size);
+  }
+
+  constexpr size_t read_size32 = sizeof(uint32_t);
+  constexpr size_t read_size64 = sizeof(uint64_t);
+
+  if (mmio_addr % read_size32 != 0) {
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Error in read_mmio() mmio_addr : 0x%zx\t is not aligned to %zx\n", mmio_addr, read_size32);
+    }
+    return -1;
   }
 
   // HACK: need extra delay for oneapi sw reset
@@ -1154,48 +1164,67 @@ int Device::read_mmio(void *host_addr, size_t mmio_addr, size_t size) {
     OPENCL_SW_RESET_DELAY();
 
   uint64_t *host_addr64 = static_cast<uint64_t *>(host_addr);
-  while (size >= 8) {
+  if (size >= read_size64 && mmio_addr % read_size64 != 0) {
+    // Address doesn't start at base of a CSR, read the first half CSR
+    // to make sure fpgaReadMMIO64 doesn't write across a CSR
+    uint32_t *host_addr32 = static_cast<uint32_t *>(host_addr);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO64()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x8\n",host_addr,mmio_addr);
-    }
-    res = fpgaReadMMIO64(mmio_handle, 0, mmio_addr, host_addr64);
-    if (res != FPGA_OK){
-      if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x8\n",host_addr,mmio_addr);
-      }
-      return -1;
-    }
-    host_addr64 += 1;
-    mmio_addr += 8;
-    size -= 8;
-  }
-
-  uint32_t *host_addr32 = reinterpret_cast<uint32_t *>(host_addr64);
-  while (size >= 4) {
-    if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x4\n",host_addr,mmio_addr);
+      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, read_size32);
     }
     res = fpgaReadMMIO32(mmio_handle, 0, mmio_addr, host_addr32);
     if (res != FPGA_OK){
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x4\n",host_addr,mmio_addr);
+        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, read_size32);
       }
       return -1;
     }
     host_addr32 += 1;
-    mmio_addr += 4;
-    size -= 4;
+    mmio_addr += read_size32;
+    size -= read_size32;
+    host_addr64 = reinterpret_cast<uint64_t *>(host_addr32);
+  }
+  while (size >= read_size64) {
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO64()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, read_size64);
+    }
+    res = fpgaReadMMIO64(mmio_handle, 0, mmio_addr, host_addr64);
+    if (res != FPGA_OK){
+      if(std::getenv("MMD_ENABLE_DEBUG")){
+        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, read_size64);
+      }
+      return -1;
+    }
+    host_addr64 += 1;
+    mmio_addr += read_size64;
+    size -= read_size64;
+  }
+
+  uint32_t *host_addr32 = reinterpret_cast<uint32_t *>(host_addr64);
+  while (size >= read_size32) {
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, read_size32);
+    }
+    res = fpgaReadMMIO32(mmio_handle, 0, mmio_addr, host_addr32);
+    if (res != FPGA_OK){
+      if(std::getenv("MMD_ENABLE_DEBUG")){
+        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, read_size32);
+      }
+      return -1;
+    }
+    host_addr32 += 1;
+    mmio_addr += read_size32;
+    size -= read_size32;
   }
 
   if (size > 0) {
     uint32_t read_data;
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr,mmio_addr,size);
+      DEBUG_LOG("DEBUG LOG : Using fpgaReadMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, size);
     }
     res = fpgaReadMMIO32(mmio_handle, 0, mmio_addr, &read_data);
     if (res != FPGA_OK){
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr,mmio_addr,size);
+        DEBUG_LOG("DEBUG LOG : Error in read_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, size);
       }
       return -1;
     }
@@ -1214,7 +1243,17 @@ int Device::write_mmio(const void *host_addr, size_t mmio_addr,
 
   DEBUG_PRINT("write_mmio\n");
   if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Device::write_mmio start: host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr, mmio_addr, size );
+    DEBUG_LOG("DEBUG LOG : Device::write_mmio start: host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, size);
+  }
+
+  constexpr size_t write_size32 = sizeof(uint32_t);
+  constexpr size_t write_size64 = sizeof(uint64_t);
+
+  if (mmio_addr % write_size32 != 0) {
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Error in write_mmio() mmio_addr : 0x%zx\t is not aligned to %zx\n", mmio_addr, write_size32);
+    }
+    return -1;
   }
 
   // HACK: need extra delay for oneapi sw reset
@@ -1222,34 +1261,54 @@ int Device::write_mmio(const void *host_addr, size_t mmio_addr,
     OPENCL_SW_RESET_DELAY();
 
   const uint64_t *host_addr64 = static_cast<const uint64_t *>(host_addr);
-  while (size >= 8) {
+  if (size >= write_size64 && mmio_addr % write_size64 != 0) {
+    // Address doesn't start at base of a CSR, write the first half CSR
+    // to make sure fpgaWriteMMIO64 doesn't write across a CSR
+    const uint32_t *host_addr32 = static_cast<const uint32_t *>(host_addr);
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Using fpgaWriteMMIO64()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x8\n",host_addr,mmio_addr);
+      DEBUG_LOG("DEBUG LOG : Using fpgaWriteMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, write_size32);
+    }
+    res = fpgaWriteMMIO32(mmio_handle, 0, mmio_addr, *host_addr32);
+    if (res != FPGA_OK){
+      if(std::getenv("MMD_ENABLE_DEBUG")){
+        DEBUG_LOG("DEBUG LOG : Error in write_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, write_size32);
+      }
+      return -1;
+    }
+    host_addr32 += 1;
+    mmio_addr += write_size32;
+    size -= write_size32;
+    host_addr64 = reinterpret_cast<const uint64_t *>(host_addr32);
+  }
+
+  while (size >= write_size64) {
+    if(std::getenv("MMD_ENABLE_DEBUG")){
+      DEBUG_LOG("DEBUG LOG : Using fpgaWriteMMIO64()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, write_size64);
     }
     res = fpgaWriteMMIO64(mmio_handle, 0, mmio_addr, *host_addr64);
     if (res != FPGA_OK){
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : Error in write_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x8\n",host_addr,mmio_addr);
+        DEBUG_LOG("DEBUG LOG : Error in write_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, write_size64);
       }
       return -1;
     }
     host_addr64 += 1;
-    mmio_addr += 8;
-    size -= 8;
+    mmio_addr += write_size64;
+    size -= write_size64;
   }
 
   const uint32_t *host_addr32 = reinterpret_cast<const uint32_t *>(host_addr64);
   while (size > 0) {
+    size_t chunk_size = (size >= write_size32) ? write_size32 : size;
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Using fpgaWriteMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr,mmio_addr,size);
+      DEBUG_LOG("DEBUG LOG : Using fpgaWriteMMIO32()       host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, chunk_size);
     }
     uint32_t tmp_data32 = 0;
-    size_t chunk_size = (size >= 4) ? 4 : size;
     memcpy(&tmp_data32, host_addr32, chunk_size);
     res = fpgaWriteMMIO32(mmio_handle, 0, mmio_addr, tmp_data32);
     if (res != FPGA_OK){
       if(std::getenv("MMD_ENABLE_DEBUG")){
-        DEBUG_LOG("DEBUG LOG : Error in write_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n",host_addr,mmio_addr,size);
+        DEBUG_LOG("DEBUG LOG : Error in write_mmio() host_addr : %p\t mmio_addr : 0x%zx\t size : 0x%zx\n", host_addr, mmio_addr, chunk_size);
       }
       return -1;
     }
@@ -1272,14 +1331,14 @@ void *Device::pin_alloc(void **addr, size_t size) {
   assert(mpf_handle);
   const int flags = FPGA_BUF_PREALLOCATED;
   if(std::getenv("MMD_ENABLE_DEBUG")){
-    DEBUG_LOG("DEBUG LOG : Device::pin_allo()c Using mpfVtpPrepareBuffer()");
+    DEBUG_LOG("DEBUG LOG : Device::pin_alloc() Using mpfVtpPrepareBuffer()\n");
   }
   int rc = mpfVtpPrepareBuffer(mpf_handle, size, addr, flags);
   if (rc == FPGA_OK) {
     return *addr;
   } else {
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Device::pin_alloc() Error");
+      DEBUG_LOG("DEBUG LOG : Device::pin_alloc() Error\n");
     }
     return nullptr;
   }
@@ -1296,7 +1355,7 @@ int Device::free_prepinned_mem(void *mem) {
   int rc = mpfVtpReleaseBuffer(mpf_handle, mem);
   if (rc != FPGA_OK) {
     if(std::getenv("MMD_ENABLE_DEBUG")){
-      DEBUG_LOG("DEBUG LOG : Device::free_prepinned_mem() Error");
+      DEBUG_LOG("DEBUG LOG : Device::free_prepinned_mem() Error\n");
     }
   }
   return rc;
