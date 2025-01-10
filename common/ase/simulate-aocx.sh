@@ -109,8 +109,12 @@ cp -prf vlog_files_base.list vlog_files.list
 sed -i '/.iv$/d' ./vlog_files.list
 sed -i '/.vh$/d' ./vlog_files.list
 sed -i '/.csv$/d' ./vlog_files.list
-sed -i '/inst\.v$/d' ./vlog_files.list
+sed -i '/inst\.*\.\(v\|sv\)$/d' ./vlog_files.list
 sed -i '/.hex$/d' ./vlog_files.list
+
+#find the opae-sim Makefile and add the ' -ignore initializer_driver_checks' flag to SNPS_VCS_OPT
+THIS_MAKEFILE='Makefile'
+sed -i -e 's/SNPS_VCS_OPT+= -j 4/SNPS_VCS_OPT+= -ignore initializer_driver_checks -j 4/' $THIS_MAKEFILE
 
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./qsys_files/
 cp -prf "$ASE_DIR_PATH"/hack_ip_files/* ./sim_files/

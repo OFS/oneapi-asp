@@ -73,8 +73,10 @@ if ! command -v vcs; then
 fi
 
 export OFS_ASP_ENV_ENABLE_ASE=1
-if [ ! -f "$ASP_ROOT/hardware/ofs_*/*.qpf" ]; then
-  echo "The qpf file doesn't exist, so we need to run build-asp.sh"
+#the qpf files are now symbolic links, so the previous check doesn't work anymore.
+found_qpf_files=$(find $ASP_ROOT/hardware/ -name *.qpf 2>/dev/null)
+if [[ -z "$found_qpf_files" ]]; then
+  echo "The ASP hasn't been set up yet, so we need to run build-asp.sh"
   "$ASP_ROOT/scripts/build-asp.sh"
   set_libopae_c_root
 else
