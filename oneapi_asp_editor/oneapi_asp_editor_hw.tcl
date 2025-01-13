@@ -149,6 +149,10 @@ proc generate_vh {} {
     puts $fp "  // if this is disabled, you also need to remove the" 
     puts $fp "  // bsp_avmm_write_ack=\"1\" setting(s) board_spec.xml."
     puts $fp "  `define USE_WRITEACKS_FOR_KERNELSYSTEM_LOCALMEMORY_ACCESSES 1\n"
+    puts $fp "  `define USE_WRITEACKS_FOR_KERNELSYSTEM_GLOBAL_MEMORY_0_ACCESSES 1\n"
+    puts $fp "  //`define USE_WRITEACKS_FOR_KERNELSYSTEM_GLOBAL_MEMORY_0_ACCESSES 1\n"
+    puts $fp "  //`define USE_WRITEACKS_FOR_KERNELSYSTEM_GLOBAL_MEMORY_0_ACCESSES 1\n"
+    puts $fp "  //`define USE_WRITEACKS_FOR_KERNELSYSTEM_GLOBAL_MEMORY_0_ACCESSES 1\n"
   }
 
   # IO channels
