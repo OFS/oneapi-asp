@@ -997,6 +997,7 @@ kernel_system kernel_system_inst (
 );
 
 `ifdef INCLUDE_USM_SUPPORT
+    `ifndef ASP_ENABLE_USM_CH_1
     //Until we sort out the ASP/compiler support for multiple USM channels I'm tying them
     //off here for channels higher than [0]. 
     genvar i;
@@ -1009,6 +1010,7 @@ kernel_system kernel_system_inst (
         assign svm_avmm_kernelsystem[i].byteenable = 0;
     end : tie_off_extra_usm_chans
     endgenerate
+    `endif
     `ifdef USM_DO_SINGLE_BURST_PARTIAL_WRITES
         genvar uu;
         generate
