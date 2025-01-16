@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<board version="24.1" name="ofs_iseries-dk_usm_2link">
+<board version="24.1" name="ofs_iseries-dk_usm">
 
   <compile name="afu_flat" project="ofs_top" revision="ofs_pr_afu" qsys_file="none" generic_kernel="1">
     <generate cmd="echo"/>
@@ -31,14 +31,17 @@
   <global_mem name="host" max_bandwidth="30000" interleaved_bytes="1024" config_addr="0x018" allocation_type="host, shared">
     <interface name="board" port="kernel_host0" type="agent" width="512" maxburst="16" address="0x000000000" size="0x1000000000000" latency="800" waitrequest_allowance="7"/>
   </global_mem>
+  <global_mem name="host2" max_bandwidth="30000" interleaved_bytes="1024" config_addr="0x018" allocation_type="host, shared">
+    <interface name="board" port="kernel_host1" type="agent" width="512" maxburst="16" address="0x1000000000000" size="0x1000000000000" latency="800" waitrequest_allowance="7"/>
+  </global_mem>
   
   <!-- DDR4-2400 -->
   <!-- max-bandwidth: (interface freq) * 2 (bits per clock) * (num interfaces) * (data bytes per interface) -->
   <global_mem name="device0" max_bandwidth="76800" interleaved_bytes="4096" config_addr="0x018" allocation_type="device" default="1">
-    <interface name="board" port="kernel_device0_0" type="agent" width="512" maxburst="16" address="0x1000000000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_device0_1" type="agent" width="512" maxburst="16" address="0x1000200000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_device0_2" type="agent" width="512" maxburst="16" address="0x1000400000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
-    <interface name="board" port="kernel_device0_3" type="agent" width="512" maxburst="16" address="0x1000600000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_device0_0" type="agent" width="512" maxburst="16" address="0x2000000000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_device0_1" type="agent" width="512" maxburst="16" address="0x2000200000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_device0_2" type="agent" width="512" maxburst="16" address="0x2000400000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
+    <interface name="board" port="kernel_device0_3" type="agent" width="512" maxburst="16" address="0x2000600000000" size="0x200000000" latency="1500" waitrequest_allowance="6" bsp_avmm_write_ack="1"/>
   </global_mem>
     
   <host>
