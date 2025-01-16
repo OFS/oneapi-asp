@@ -179,7 +179,7 @@ module ofs_plat_afu
         // Set a bit in the mask when a port is IN USE by the design.
         // This way, the AFU does not need to know about every available
         // device. By default, devices are tied off.
-        `ifdef OFS_FIM_IP_CFG_PCIE_SS_NUM_PHYS_LINKS_IS_2
+        `ifdef ASP_ENABLE_HOSTMEM_CH_1
 	        .HOST_CHAN_IN_USE_MASK(6'b001001), //for 2xGen5x8 iseries-dk
 	    `else
 	        .HOST_CHAN_IN_USE_MASK({NUM_HOSTMEM_CHAN{1'b1}}),
