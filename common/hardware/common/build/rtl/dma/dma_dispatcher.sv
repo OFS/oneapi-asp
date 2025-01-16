@@ -42,6 +42,7 @@ import ofs_asp_pkg::*;
     logic [2:0] rd_ctrl_new_cmd_d, wr_ctrl_new_cmd_d;
     logic [NUM_DMA_CHAN_BITS-1:0] rd_ctrl_chan_cntr, wr_ctrl_chan_cntr;
     logic [NUM_DMA_CHAN-1:0] rd_rxd_irq, rd_wait_irq, wr_rxd_irq, wr_wait_irq;
+    logic rd_ctrl_only_ch0_cmd, wr_ctrl_only_ch0_cmd;
 
     
     //pipeline and duplicate the reset signal
@@ -262,6 +263,7 @@ import ofs_asp_pkg::*;
             //if the transfer is very small it might only land on
             //CH0; if so, don't issue a 'new-cmd' flag to CH1.
             rd_ctrl[1].new_cmd <= (rd_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS) ? rd_ctrl_new_cmd_d[2] : 'b0;
+            rd_ctrl_only_ch0_cmd <= !(rd_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS);
             
             //host-mem write commands for ch0 - use original src/dst addresses,
             //also include any uneven number of bytes relative to # of channels.
@@ -279,6 +281,7 @@ import ofs_asp_pkg::*;
             //if the transfer is very small it might only land on
             //CH0; if so, don't issue a 'new-cmd' flag to CH1.
             wr_ctrl[1].new_cmd <= (wr_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS) ? wr_ctrl_new_cmd_d[2] : 'b0;
+            wr_ctrl_only_ch0_cmd <= !(wr_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS);
             if (rst_local) begin
                 rd_ctrl[0].new_cmd <= 'b0;
                 wr_ctrl[0].new_cmd <= 'b0;
@@ -292,10 +295,10 @@ import ofs_asp_pkg::*;
             // to find the ch1 src/dst start addresses.
             rd_ctrl_new_cmd_d <= {rd_ctrl_new_cmd_d[1:0],rd_ctrl_new_cmd};
             if (rd_ctrl_new_cmd)
-                rd_ctrl_cmd_xfer_length_ch0 = (rd_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS) + rd_ctrl_cmd_xfer_length[NUM_DMA_CHAN_BITS-1:0];
+                rd_ctrl_cmd_xfer_length_ch0 <= (rd_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS) + rd_ctrl_cmd_xfer_length[NUM_DMA_CHAN_BITS-1:0];
             if (rd_ctrl_new_cmd_d[0]) begin
-                rd_ctrl_cmd_src_start_addr_ch1 = rd_ctrl_cmd_src_start_addr + rd_ctrl_cmd_xfer_length_ch0;
-                rd_ctrl_cmd_dst_start_addr_ch1 = rd_ctrl_cmd_dst_start_addr + rd_ctrl_cmd_xfer_length_ch0;
+                rd_ctrl_cmd_src_start_addr_ch1 <= rd_ctrl_cmd_src_start_addr + rd_ctrl_cmd_xfer_length_ch0;
+                rd_ctrl_cmd_dst_start_addr_ch1 <= rd_ctrl_cmd_dst_start_addr + rd_ctrl_cmd_xfer_length_ch0;
             end
             if (rst_local)
                 rd_ctrl_new_cmd_d <= 'b0;
@@ -303,10 +306,10 @@ import ofs_asp_pkg::*;
             // to find the ch1 src/dst start addresses.
             wr_ctrl_new_cmd_d <= {wr_ctrl_new_cmd_d[1:0],wr_ctrl_new_cmd};
             if (wr_ctrl_new_cmd)
-                wr_ctrl_cmd_xfer_length_ch0 = (wr_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS) + wr_ctrl_cmd_xfer_length[NUM_DMA_CHAN_BITS-1:0];
+                wr_ctrl_cmd_xfer_length_ch0 <= (wr_ctrl_cmd_xfer_length>>NUM_DMA_CHAN_BITS) + wr_ctrl_cmd_xfer_length[NUM_DMA_CHAN_BITS-1:0];
             if (wr_ctrl_new_cmd_d[0]) begin
-                wr_ctrl_cmd_src_start_addr_ch1 = wr_ctrl_cmd_src_start_addr + wr_ctrl_cmd_xfer_length_ch0;
-                wr_ctrl_cmd_dst_start_addr_ch1 = wr_ctrl_cmd_dst_start_addr + wr_ctrl_cmd_xfer_length_ch0;
+                wr_ctrl_cmd_src_start_addr_ch1 <= wr_ctrl_cmd_src_start_addr + wr_ctrl_cmd_xfer_length_ch0;
+                wr_ctrl_cmd_dst_start_addr_ch1 <= wr_ctrl_cmd_dst_start_addr + wr_ctrl_cmd_xfer_length_ch0;
             end
             if (rst_local)
                 wr_ctrl_new_cmd_d <= 'b0;
@@ -325,14 +328,14 @@ import ofs_asp_pkg::*;
                 rd_rxd_irq[1] <= 'b0;
             end else begin
                 rd_rxd_irq[0] <= rd_ctrl[0].irq_pulse ? 'b1 : rd_rxd_irq[0];
-                rd_rxd_irq[1] <= rd_ctrl[1].irq_pulse ? 'b1 : rd_rxd_irq[1];
+                rd_rxd_irq[1] <= rd_ctrl[1].irq_pulse | rd_ctrl_only_ch0_cmd ? 'b1 : rd_rxd_irq[1];
             end
             if (host_mem_rd_xfer_done) begin
                 rd_wait_irq[0] <= 'b0;
                 rd_wait_irq[1] <= 'b0;
             end else begin
                 rd_wait_irq[0] <= rd_ctrl[0].new_cmd ? 'b1 : rd_wait_irq[0];
-                rd_wait_irq[1] <= rd_ctrl[1].new_cmd ? 'b1 : rd_wait_irq[1];
+                rd_wait_irq[1] <= rd_ctrl[1].new_cmd | rd_ctrl_only_ch0_cmd ? 'b1 : rd_wait_irq[1];
             end
             if (rst_local) begin
                 rd_wait_irq <= 'b0;
@@ -345,14 +348,14 @@ import ofs_asp_pkg::*;
                 wr_rxd_irq[1] <= 'b0;
             end else begin
                 wr_rxd_irq[0] <= wr_ctrl[0].f2h_wait_for_magic_num_wr_pulse ? 'b1 : wr_rxd_irq[0];
-                wr_rxd_irq[1] <= wr_ctrl[1].irq_pulse ? 'b1 : wr_rxd_irq[1];
+                wr_rxd_irq[1] <= wr_ctrl[1].irq_pulse | wr_ctrl_only_ch0_cmd ? 'b1 : wr_rxd_irq[1];
             end
             if (host_mem_wr_xfer_done) begin
                 wr_wait_irq[0] <= 'b0;
                 wr_wait_irq[1] <= 'b0;
             end else begin
                 wr_wait_irq[0] <= wr_ctrl[0].new_cmd ? 'b1 : wr_wait_irq[0];
-                wr_wait_irq[1] <= wr_ctrl[1].new_cmd ? 'b1 : wr_wait_irq[1];
+                wr_wait_irq[1] <= wr_ctrl[1].new_cmd | wr_ctrl_only_ch0_cmd ? 'b1 : wr_wait_irq[1];
             end
             if (rst_local) begin
                 wr_wait_irq <= 'b0;

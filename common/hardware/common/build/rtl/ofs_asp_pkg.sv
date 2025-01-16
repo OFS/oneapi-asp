@@ -152,6 +152,8 @@ package ofs_asp_pkg;
     parameter USM_CCB_COMMAND_FIFO_DEPTH        = 256;
     parameter USM_CCB_COMMAND_ALMFULL_THRESHOLD = 16;
     
+    parameter MULTI_LINK_CHILD_GUID_H = 64'h8f74726a4efc4259;
+    parameter MULTI_LINK_CHILD_GUID_L = 64'hb18b8e71f932f113;
     
     function func_print_ofs_asp_pkg_parameters_during_synthesis ();
         $display ("ofs_asp_pkg.sv: NUM_HOSTMEM_CHAN is %d", NUM_HOSTMEM_CHAN);

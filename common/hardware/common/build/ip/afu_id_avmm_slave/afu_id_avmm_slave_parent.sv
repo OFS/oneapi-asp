@@ -41,6 +41,11 @@ module afu_id_avmm_slave #(
 
     localparam NUM_CHILD_LINKS = 1;
     logic [`AFU_ID_AVMM_SLAVE_DATA_WIDTH-1:0] DFH_addr_5, DFH_addr_6, DFH_addr_7;
+    
+    //because we're within PD we can't access the ofs_asp_pkg.sv file, so we need
+    //to explicitly set the DFH L/H values here rather than use the package values.
+    parameter MULTI_LINK_CHILD_GUID_H = 64'h8f74726a4efc4259;
+    parameter MULTI_LINK_CHILD_GUID_L = 64'hb18b8e71f932f113;
 
 	always_ff @(posedge clk) begin
 		avmm_readdata <= '0;
@@ -98,8 +103,8 @@ module afu_id_avmm_slave #(
         DFH_addr_5[15:0]  = 2; 
         
         //child DFH_LO/HI
-        DFH_addr_6 = 'b0;
-        DFH_addr_7 = 'b0;
+        DFH_addr_6 = MULTI_LINK_CHILD_GUID_L;
+        DFH_addr_7 = MULTI_LINK_CHILD_GUID_H;
     end
 
 endmodule

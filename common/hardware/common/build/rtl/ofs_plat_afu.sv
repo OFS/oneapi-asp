@@ -98,8 +98,8 @@ module ofs_plat_afu
         // a different header, the behavior is similar to the parent.
         ofs_plat_host_chan_fim_multi_link_afu_dfh
         #(
-            .GUID_H(64'b0),
-            .GUID_L(64'b0)
+            .GUID_H(MULTI_LINK_CHILD_GUID_H),
+            .GUID_L(MULTI_LINK_CHILD_GUID_L)
         )
         child_link_dfh
         (
