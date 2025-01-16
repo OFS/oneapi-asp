@@ -1,0 +1,1 @@
+arc shell -- bash ./copy_exe d5005 iofs_test_guest 10.233.115.155
