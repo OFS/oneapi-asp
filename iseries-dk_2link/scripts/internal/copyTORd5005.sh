@@ -1,1 +1,0 @@
-arc shell -- bash ./copy_exe d5005 hlduser 10.228.58.17

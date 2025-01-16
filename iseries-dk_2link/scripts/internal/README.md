@@ -1,1 +1,0 @@
-https://wiki.ith.intel.com/pages/viewpage.action?spaceKey=HLD&title=OFS+Compatibility+Script+Testing

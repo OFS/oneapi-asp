@@ -1,1 +1,0 @@
-arc shell -- bash ./copy_exe n6001 hlduser 10.228.58.30
