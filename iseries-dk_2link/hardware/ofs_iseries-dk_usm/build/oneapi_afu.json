@@ -11,7 +11,7 @@
       "accelerator-clusters":
          [
             {
-               "name": "ofs_iseries-dk_usm_2link",
+               "name": "ofs_iseries-dk_usm",
                "total-contexts": 1,
                "accelerator-type-uuid": "5D9FEF7B-C491-4DCE-95FC-F979F6F061BE"
             }

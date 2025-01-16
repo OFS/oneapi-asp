@@ -2,9 +2,9 @@
 
 ## Overview
 This repository contains files necessary to generate ASP for the OFS I-series devkit 
-reference platform. The hardware currently relies on platforms that implement 
-the OFS PCIe TLP format using AXI-S interfaces, and the software uses OPAE SDK 
-interfaces.
+reference platform with 2 separate PCIe links from the FIM. The hardware currently 
+relies on platforms that implement the OFS PCIe TLP format using AXI-S interfaces, 
+and the software uses OPAE SDK interfaces.
 
 ## Repo Structure
 
