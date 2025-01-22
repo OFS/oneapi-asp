@@ -165,6 +165,11 @@ for board in "${BOARD_VARIANTS[@]}"; do
   if ! python3 "$SCRIPT_DIR_PATH/setup-asp.py" "$board"; then
     failed_asps="${failed_asps:+$failed_asps }$board"
   fi
+  echo "For 2-link variant(s), we need to change the AFU ID component to"
+  echo "be the parent version with a pointer to the child DFH. Replacing"
+  echo "the default component with the parent version."
+  AFUID_IP_DIR="$ASP_ROOT/hardware/$board/build/ip/afu_id_avmm_slave"
+  cp -prf "$AFUID_IP_DIR/afu_id_avmm_slave_parent.sv" "$AFUID_IP_DIR/afu_id_avmm_slave.sv"
   echo "---------------------------------------------------------------"
 done
 if [ -n "$failed_asps" ]; then
